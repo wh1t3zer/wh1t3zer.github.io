@@ -11,7 +11,7 @@
   <!-- Global site tag (gtag.js) - Google Analytics -->
 
 
-  <title>friends | wh1t3zer</title>
+  <title>利用webshell获得服务器的权限 | wh1t3zer</title>
 
   <link rel="icon" type="image/x-icon, image/vnd.microsoft.icon" href="/favicon.ico">
   <link rel="stylesheet" href="https://at.alicdn.com/t/font_1911880_c1nvbyezg17.css">
@@ -554,17 +554,36 @@
 
 
 <div class="post-detail-header" id="thumbnail_canvas" style="background-repeat: no-repeat; background-size: cover; 
-  background-position: center center;position: relative;background-image:url('/medias/11.jpg')">
+  background-position: center center;position: relative;background-image:url('/medias/2.jpg')">
   <div class="post-detail-header-mask"></div>
   <canvas id="header_canvas"style="position:absolute;bottom:0;pointer-events:none;"></canvas>
   
   <div class="post-detail-header_info-box">
     <div class="title-box">
       <span class="title">
-        friends
+        利用webshell获得服务器的权限
       </span>
     </div>
     
+    
+      
+        <span class="post-detail-header_date">
+          <i class="fas fa-calendar"></i> Published in：2021-08-31 |
+        </span>
+      
+
+      
+        <span class="post-detail-header_categories">
+          <i class="iconfont iconbookmark1"></i> category：
+          
+            <a href="/categories/webshell-CTF/" class="post-detail-header_category">
+              webshell | CTF
+            </a>
+          
+        </span>
+      
+
+      
     
   </div>
   
@@ -582,9 +601,23 @@
   <div class="main-content">
     <article class="post post-detail">
       <div class="post-content">
-        
+        <h2 id="1-编写一句话木马"><a href="#1-编写一句话木马" class="headerlink" title="1.编写一句话木马"></a>1.编写一句话木马</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&lt;?php</span><br><span class="line">@eval([&#x27;jacky&#x27;]);</span><br><span class="line">?&gt;</span><br></pre></td></tr></table></figure>
+<h2 id="2-寻找服务器上传点"><a href="#2-寻找服务器上传点" class="headerlink" title="2.寻找服务器上传点"></a>2.寻找服务器上传点</h2><p>以我的博客为例<br>如图<br><img src="/upload/2021/09/upload-0867395d4dde41298a60b2ba2048e3f2.png" class="lazyload placeholder" data-srcset="/upload/2021/09/upload-0867395d4dde41298a60b2ba2048e3f2.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"><br>我的博客里有一个上传附件的功能</p>
+<h2 id="3-利用文件上传漏洞（检查有无文件上传格式过滤、大小限制）"><a href="#3-利用文件上传漏洞（检查有无文件上传格式过滤、大小限制）" class="headerlink" title="3.利用文件上传漏洞（检查有无文件上传格式过滤、大小限制）"></a>3.利用文件上传漏洞（检查有无文件上传格式过滤、大小限制）</h2><p>发现里面没有做过滤，直接上传一句话木马(假如进了别人网站需注意上传文件是否限制php或者jpg格式的大小)</p>
+<h2 id="4-打开中国蚁剑"><a href="#4-打开中国蚁剑" class="headerlink" title="4.打开中国蚁剑"></a>4.打开中国蚁剑</h2><p>中国蚁剑在资源中心，安全无后门，可到[资源中心]下载(<a target="_blank" rel="noopener" href="http://www.jacky666.top:8090/s/download">http://www.jacky666.top:8090/s/download</a>)<br><img src="/upload/2021/09/%E4%B8%AD%E5%9B%BD%E8%9A%81%E5%89%91-86a940737c6c4c019d7f4c74703cc52d.png" class="lazyload placeholder" data-srcset="/upload/2021/09/%E4%B8%AD%E5%9B%BD%E8%9A%81%E5%89%91-86a940737c6c4c019d7f4c74703cc52d.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"></p>
+<h2 id="5-右键添加数据"><a href="#5-右键添加数据" class="headerlink" title="5.右键添加数据"></a>5.右键添加数据</h2><p><img src="/upload/2021/09/%E6%B7%BB%E5%8A%A0%E6%95%B0%E6%8D%AE-d8b874b47db0433ea8c6fb0e273cdb5a.png" class="lazyload placeholder" data-srcset="/upload/2021/09/%E6%B7%BB%E5%8A%A0%E6%95%B0%E6%8D%AE-d8b874b47db0433ea8c6fb0e273cdb5a.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"></p>
+<h4 id="输入url地址，url指的是一句话木马上传点的绝对路径"><a href="#输入url地址，url指的是一句话木马上传点的绝对路径" class="headerlink" title="输入url地址，url指的是一句话木马上传点的绝对路径"></a>输入url地址，url指的是一句话木马上传点的绝对路径</h4><p><img src="/upload/2021/09/%E8%BE%93%E5%85%A5url-8cd2087daf3542afa9aff45ff89f11b2.png" class="lazyload placeholder" data-srcset="/upload/2021/09/%E8%BE%93%E5%85%A5url-8cd2087daf3542afa9aff45ff89f11b2.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"></p>
+<h4 id="输入连接密码，连接密码指的是一句话木马里面-的字符"><a href="#输入连接密码，连接密码指的是一句话木马里面-的字符" class="headerlink" title="输入连接密码，连接密码指的是一句话木马里面[ ]的字符"></a>输入连接密码，连接密码指的是一句话木马里面[ ]的字符</h4><h4 id="连接类型为php（若为jsp、asp木马，可选择对应的类型）"><a href="#连接类型为php（若为jsp、asp木马，可选择对应的类型）" class="headerlink" title="连接类型为php（若为jsp、asp木马，可选择对应的类型）"></a>连接类型为php（若为jsp、asp木马，可选择对应的类型）</h4><h4 id="连接成功，已经通过木马获得服务器的权限（但是有些权限不足，需要通过其他方法进行提权）"><a href="#连接成功，已经通过木马获得服务器的权限（但是有些权限不足，需要通过其他方法进行提权）" class="headerlink" title="连接成功，已经通过木马获得服务器的权限（但是有些权限不足，需要通过其他方法进行提权）"></a>连接成功，已经通过木马获得服务器的权限（但是有些权限不足，需要通过其他方法进行提权）</h4>
       </div>
       <div class="post-tags-categories">
+        
+        <div class="tags">
+          
+            <a href="/tags/webshell-ctf/" class="">
+              webshell | ctf
+            </a>
+          
+        </div>
         
       </div>
       
@@ -595,7 +628,7 @@
     </li>
     <li class="post-copyright-link">
     <strong>link:  </strong>
-    <a href="/friends/index.html" target="_blank" title="friends">https://wh1t3zer.github.io/friends/index.html</a>
+    <a href="/2021/08/31/利用webshell获得服务器的权限-利用webshell获得服务器的权限/" target="_blank" title="利用webshell获得服务器的权限">https://wh1t3zer.github.io/2021/08/31/利用webshell获得服务器的权限-利用webshell获得服务器的权限/</a>
     </li>
     <li class="post-copyright-license">
       <strong>Copyright notice:   </strong>
@@ -613,7 +646,42 @@
 
 
 
+  
+  <div class="post-nav-prev post-nav-item">
+    <div class="post-nav-img" style="background-size: cover; 
+      background-position: center center;">
+      <img class="lazyload lazyload placeholder" src="/medias/14.jpg" class="lazyload placeholder" data-srcset="/medias/14.jpg" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="">
+    </div>
+    <a href="/2021/09/01/java%E6%9C%9F%E6%9C%AB%E8%AF%BE%E7%A8%8B%E8%AE%BE%E8%AE%A1%E3%80%8A%E5%AD%A6%E7%94%9F%E4%BF%A1%E6%81%AF%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F%E3%80%8B-%E5%A4%A7%E4%B8%80%E6%9C%9F%E6%9C%ABjava%E7%A8%8B%E5%BA%8F%E8%AE%BE%E8%AE%A1/" class="post-nav-link">
+      <div class="title">
+        <i class="fas fa-angle-left"></i> Prev:
+        <div class="title-text">java期末课程设计《学生信息管理系统》</div>
+      </div>
+      
+      <!-- <div class="content">
+        前言随着学校的规模不断扩大，学生数量急剧增长，需要管理的各种信息也成倍增加。同时由于计算机和网络技术的普及，本系统主要实
+      </div> -->
+    </a>
+  </div>
 
+
+
+  
+  <div class="post-nav-next post-nav-item">
+    <div class="post-nav-img" style="background-size: cover; 
+      background-position: center center;">
+      <img class="lazyload lazyload placeholder" src="/medias/4.jpg" class="lazyload placeholder" data-srcset="/medias/4.jpg" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" src="" alt="">
+    </div>
+    <a href="/2021/08/09/%E6%B5%85%E8%B0%88%E6%B8%B8%E6%88%8F%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%8C%B9%E9%85%8D%E7%AE%97%E6%B3%95%E6%9C%BA%E5%88%B6-%E6%B5%85%E8%B0%88%E6%B8%B8%E6%88%8F%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%8C%B9%E9%85%8D%E7%AE%97%E6%B3%95%E6%9C%BA%E5%88%B6/" class="post-nav-link">
+      <div class="title">
+        Next: <i class="fas fa-angle-right"></i>
+        <div class="title-text">浅谈游戏服务器匹配算法机制</div>
+      </div>
+      <!-- <div class="content">
+        导言如今在游戏市场，越来越多的游戏都加入了多人匹配系统，如data2,lol,守望先锋等竞技型游戏所有的战斗都是典型的多
+      </div> -->
+    </a>
+  </div>
 
 </div>
 
@@ -742,6 +810,25 @@
   <!-- 目录 -->
   <!-- 文章详情页右侧目录 -->
 
+  <div class="toc-aside">
+    <div class="toc-main">
+      <div class="toc-aside-title">
+        <i class="fas fa-list-ul" aria-hidden="true"></i><span>catalog</span>
+        
+          <div class="toc-open-close">catalog</div>
+        
+      </div>
+      <div class="toc-content">
+        <div class="toc"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 手机端目录按钮 -->
+  <div id="toc-mobile-btn">
+    <i class="fas fa-list-ul" aria-hidden="true"></i>
+  </div>
+
 
 <script>
   function closeToc(init) {
@@ -774,7 +861,7 @@
 
   function initCloseTocWidth(init) {
     if (window.innerWidth >= 992) {
-      let isClose = true;
+      let isClose = false;
       isClose && closeToc(init)
     }
   }

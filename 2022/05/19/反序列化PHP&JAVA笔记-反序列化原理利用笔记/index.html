@@ -11,7 +11,7 @@
   <!-- Global site tag (gtag.js) - Google Analytics -->
 
 
-  <title>friends | wh1t3zer</title>
+  <title>反序列化PHP&amp;JAVA笔记 | wh1t3zer</title>
 
   <link rel="icon" type="image/x-icon, image/vnd.microsoft.icon" href="/favicon.ico">
   <link rel="stylesheet" href="https://at.alicdn.com/t/font_1911880_c1nvbyezg17.css">
@@ -561,10 +561,20 @@
   <div class="post-detail-header_info-box">
     <div class="title-box">
       <span class="title">
-        friends
+        反序列化PHP&amp;JAVA笔记
       </span>
     </div>
     
+    
+      
+        <span class="post-detail-header_date">
+          <i class="fas fa-calendar"></i> Published in：2022-05-19 |
+        </span>
+      
+
+      
+
+      
     
   </div>
   
@@ -582,7 +592,60 @@
   <div class="main-content">
     <article class="post post-detail">
       <div class="post-content">
-        
+        <h1 id="1、原理"><a href="#1、原理" class="headerlink" title="1、原理"></a>1、原理</h1><p>序列化就是将对象转换成字符串，反序列化相反，数据的格式的转换对象的序列化利于对象的保存和传输，也可以让多个文件共享对象</p>
+<p>java、php、js、c#通过序列化转换成二进制、XML、json等其他字符</p>
+<h1 id="2、技术"><a href="#2、技术" class="headerlink" title="2、技术"></a>2、技术</h1><h2 id="有类"><a href="#有类" class="headerlink" title="有类"></a>有类</h2><p>触发魔术方法</p>
+<p>1、__construct</p>
+<p>2、__destruct</p>
+<p>3、__wakeup</p>
+<p>4、__toString</p>
+<p>…..</p>
+<h2 id="无类"><a href="#无类" class="headerlink" title="无类"></a>无类</h2><h1 id="3、利用"><a href="#3、利用" class="headerlink" title="3、利用"></a>3、利用</h1><p>真实应用</p>
+<p>CTF比赛</p>
+<h1 id="4、危害"><a href="#4、危害" class="headerlink" title="4、危害"></a>4、危害</h1><p>SQL注入</p>
+<p>代码执行</p>
+<p>目录遍历</p>
+<p>…</p>
+<h1 id="PHP反序列化"><a href="#PHP反序列化" class="headerlink" title="PHP反序列化"></a>PHP反序列化</h1><p>原理：未对用户输入的序列化字符串进行检测，导致攻击者可以控制反序列化进程，从而导致代码执行。</p>
+<p>serialize()   &#x2F;&#x2F;将一个对象转换成一个字符串</p>
+<p>unserialize()   &#x2F;&#x2F;将字符串还原成一个对象</p>
+<p>触发unserialize函数的变量可控，文件中存在可利用的类，类中有魔术方法</p>
+<p>__construct() &#x2F;&#x2F;创建对象时触发</p>
+<p>__destruct()  &#x2F;&#x2F;对象被销毁时触发</p>
+<p>__call()      &#x2F;&#x2F;在对象上下文中调用不可访问的方法时触发</p>
+<p>__callStatic()  &#x2F;&#x2F;在静态上下文中调用不可访问的方法时触发</p>
+<p>__get()      &#x2F;&#x2F;用于从不可访问的属性读取数据</p>
+<p>__isset()   &#x2F;&#x2F;在不可访问的属性上调用isset()或empty()触发</p>
+<p>__unset()  &#x2F;&#x2F;在不可访问的属性上使用unset()触发</p>
+<p>__invoke() &#x2F;&#x2F;当脚本尝试将对象调用为函数时触发</p>
+<p>__toString() &#x2F;&#x2F;当有echo或者拼接字符串或隐性调用该方法都会被触发</p>
+<p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/20175211lyz/p/11403397.html">https://www.cnblogs.com/20175211lyz/p/11403397.html</a></p>
+<p>调用serialize()会自动调用sleep()魔术方法，调用unserialize()会自动调用wakeup()魔术方法 </p>
+<h1 id="JAVA反序列化"><a href="#JAVA反序列化" class="headerlink" title="JAVA反序列化"></a>JAVA反序列化</h1><p>ObjectOutputStream类  —-&gt; writeObject()  序列化</p>
+<p>ObjectInputStream类  —-&gt; readObject()     反序列化</p>
+<h2 id="1、利用"><a href="#1、利用" class="headerlink" title="1、利用"></a>1、利用</h2><p>1、Payload生成器    ysoserial</p>
+<p>2、自定义检测工具或脚本</p>
+<h2 id="2、检测"><a href="#2、检测" class="headerlink" title="2、检测"></a>2、检测</h2><h3 id="黑盒"><a href="#黑盒" class="headerlink" title="黑盒"></a>黑盒</h3><h4 id="一、数据格式点"><a href="#一、数据格式点" class="headerlink" title="一、数据格式点"></a>一、数据格式点</h4><p>1、HTTP请求中的参数</p>
+<p>2、自定义协议</p>
+<p>3、RMI协议</p>
+<p>4、子主题5</p>
+<p>….</p>
+<h4 id="二、特定扫描"><a href="#二、特定扫描" class="headerlink" title="二、特定扫描"></a>二、特定扫描</h4><h3 id="白盒"><a href="#白盒" class="headerlink" title="白盒"></a>白盒</h3><h4 id="一、函数点"><a href="#一、函数点" class="headerlink" title="一、函数点"></a>一、函数点</h4><p>ObjectInputStream.readObject</p>
+<p>ObjectInputStream.readUnshared</p>
+<p>XMLDecoder.readObject</p>
+<p>XStream.fromXML</p>
+<p>ObjectMapper.readValue</p>
+<p>JSON.parseObject</p>
+<p>…</p>
+<h4 id="二、组件点"><a href="#二、组件点" class="headerlink" title="二、组件点"></a>二、组件点</h4><p>ysoserial库</p>
+<p><a target="_blank" rel="noopener" href="https://github.com/frohoff/ysoserial">https://github.com/frohoff/ysoserial</a></p>
+<h4 id="三、代码点"><a href="#三、代码点" class="headerlink" title="三、代码点"></a>三、代码点</h4><p>RCE执行</p>
+<p>数据认证</p>
+<p>….</p>
+<p>下方特征可作为序列化的标志参考</p>
+<p>一段数据以rO0AB开头，基本可以确定这串就是JAVA序列化base64加密的数据</p>
+<p>如果以aced开头，那么它就是这一段JAVA序列化的16进制</p>
+
       </div>
       <div class="post-tags-categories">
         
@@ -595,7 +658,7 @@
     </li>
     <li class="post-copyright-link">
     <strong>link:  </strong>
-    <a href="/friends/index.html" target="_blank" title="friends">https://wh1t3zer.github.io/friends/index.html</a>
+    <a href="/2022/05/19/反序列化PHP&JAVA笔记-反序列化原理利用笔记/" target="_blank" title="反序列化PHP&amp;JAVA笔记">https://wh1t3zer.github.io/2022/05/19/反序列化PHP&JAVA笔记-反序列化原理利用笔记/</a>
     </li>
     <li class="post-copyright-license">
       <strong>Copyright notice:   </strong>
@@ -614,6 +677,23 @@
 
 
 
+
+  
+  <div class="post-nav-next post-nav-item">
+    <div class="post-nav-img" style="background-size: cover; 
+      background-position: center center;">
+      <img class="lazyload lazyload placeholder" src="/medias/10.jpg" class="lazyload placeholder" data-srcset="/medias/10.jpg" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" src="" alt="">
+    </div>
+    <a href="/2022/03/15/XSS%E9%9D%B6%E5%9C%BA%E5%AE%9E%E6%88%98%E4%BA%8C%EF%BC%8811-20%E5%85%B3%EF%BC%89-xss%E9%9D%B6%E5%9C%BA%E5%AE%9E%E6%88%98%E4%BA%8C11-20%E5%85%B3/" class="post-nav-link">
+      <div class="title">
+        Next: <i class="fas fa-angle-right"></i>
+        <div class="title-text">XSS靶场实战二（11-20关）</div>
+      </div>
+      <!-- <div class="content">
+        0x11F12发现多了一个参数，也把这个参数加入到url。发现还是出现在t_sort参数，尝试使用上一关的payload
+      </div> -->
+    </a>
+  </div>
 
 </div>
 
@@ -742,6 +822,25 @@
   <!-- 目录 -->
   <!-- 文章详情页右侧目录 -->
 
+  <div class="toc-aside">
+    <div class="toc-main">
+      <div class="toc-aside-title">
+        <i class="fas fa-list-ul" aria-hidden="true"></i><span>catalog</span>
+        
+          <div class="toc-open-close">catalog</div>
+        
+      </div>
+      <div class="toc-content">
+        <div class="toc"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 手机端目录按钮 -->
+  <div id="toc-mobile-btn">
+    <i class="fas fa-list-ul" aria-hidden="true"></i>
+  </div>
+
 
 <script>
   function closeToc(init) {
@@ -774,7 +873,7 @@
 
   function initCloseTocWidth(init) {
     if (window.innerWidth >= 992) {
-      let isClose = true;
+      let isClose = false;
       isClose && closeToc(init)
     }
   }

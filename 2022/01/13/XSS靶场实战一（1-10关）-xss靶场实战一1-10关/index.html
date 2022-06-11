@@ -11,7 +11,7 @@
   <!-- Global site tag (gtag.js) - Google Analytics -->
 
 
-  <title>friends | wh1t3zer</title>
+  <title>XSS靶场实战一（1-10关） | wh1t3zer</title>
 
   <link rel="icon" type="image/x-icon, image/vnd.microsoft.icon" href="/favicon.ico">
   <link rel="stylesheet" href="https://at.alicdn.com/t/font_1911880_c1nvbyezg17.css">
@@ -554,17 +554,36 @@
 
 
 <div class="post-detail-header" id="thumbnail_canvas" style="background-repeat: no-repeat; background-size: cover; 
-  background-position: center center;position: relative;background-image:url('/medias/11.jpg')">
+  background-position: center center;position: relative;background-image:url('/medias/10.jpg')">
   <div class="post-detail-header-mask"></div>
   <canvas id="header_canvas"style="position:absolute;bottom:0;pointer-events:none;"></canvas>
   
   <div class="post-detail-header_info-box">
     <div class="title-box">
       <span class="title">
-        friends
+        XSS靶场实战一（1-10关）
       </span>
     </div>
     
+    
+      
+        <span class="post-detail-header_date">
+          <i class="fas fa-calendar"></i> Published in：2022-01-13 |
+        </span>
+      
+
+      
+        <span class="post-detail-header_categories">
+          <i class="iconfont iconbookmark1"></i> category：
+          
+            <a href="/categories/CTF-XSS%E6%B3%A8%E5%85%A5/" class="post-detail-header_category">
+              CTF | XSS注入
+            </a>
+          
+        </span>
+      
+
+      
     
   </div>
   
@@ -582,7 +601,37 @@
   <div class="main-content">
     <article class="post post-detail">
       <div class="post-content">
-        
+        <p>记录一下学习和打XSS靶场的一些思路和经验<br>当前靶场来源于Github<a target="_blank" rel="noopener" href="https://github.com/do0dl3/xss-labs">XSS-labs</a></p>
+<h1 id="0x01"><a href="#0x01" class="headerlink" title="0x01"></a>0x01</h1><p><img src="/upload/2022/03/1646132574(1)-c25941af8a214118a4cf2ba890c2baf8.jpg" class="lazyload placeholder" data-srcset="/upload/2022/03/1646132574(1)-c25941af8a214118a4cf2ba890c2baf8.jpg" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"><br>看到url有参数可以尝试利用，修改参数，直接插入XSS语句<br><img src="/upload/2022/03/1646132594(1)-8a445f1760c34f08b06898a675693ec6.png" class="lazyload placeholder" data-srcset="/upload/2022/03/1646132594(1)-8a445f1760c34f08b06898a675693ec6.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"></p>
+<h1 id="0x02"><a href="#0x02" class="headerlink" title="0x02"></a>0x02</h1><p><img src="/upload/2022/03/1646133462(1)-a6e169fb9b89447aba05348fc146055b.jpg" class="lazyload placeholder" data-srcset="/upload/2022/03/1646133462(1)-a6e169fb9b89447aba05348fc146055b.jpg" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"><br><img src="/upload/2022/03/1646133481(1)-8ecaace20462494ab678cadd934759b0.jpg" class="lazyload placeholder" data-srcset="/upload/2022/03/1646133481(1)-8ecaace20462494ab678cadd934759b0.jpg" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"><br>尝试将XSS语句插入输入框，发现没有效果，原因是这关插入的是在标签里，而第一关是在标签外。标签中的内容会直接输出不会被解析，需要加入”&gt;完成闭合后再执行XSS语句。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&gt;&lt;script&gt;alert(1)&lt;/script&gt;#</span><br></pre></td></tr></table></figure>
+
+<p><img src="/upload/2022/03/image-494909e82372414aba689685ecc249c4.png" class="lazyload placeholder" data-srcset="/upload/2022/03/image-494909e82372414aba689685ecc249c4.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"><br>后面的#是为了注释掉&gt;</p>
+<h1 id="0x03"><a href="#0x03" class="headerlink" title="0x03"></a>0x03</h1><p><img src="/upload/2022/03/1646137017(1)-e1f47de4debb4ca4b6ba6105cfc0de47.jpg" class="lazyload placeholder" data-srcset="/upload/2022/03/1646137017(1)-e1f47de4debb4ca4b6ba6105cfc0de47.jpg" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"><br>使用上一关的payload，发现不行，打开F12查看。<br><img src="/upload/2022/03/1646137089(1)-38091e69bcd34b3291cd04b65cb352b6.jpg" class="lazyload placeholder" data-srcset="/upload/2022/03/1646137089(1)-38091e69bcd34b3291cd04b65cb352b6.jpg" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"><br>发现是过滤了双引号，可以使用单引号闭合,发现html对value的内容进行了实体化编码<br><img src="/upload/2022/03/1646137210(1)-859c424104d04d52a5229d99a84f6707.jpg" class="lazyload placeholder" data-srcset="/upload/2022/03/1646137210(1)-859c424104d04d52a5229d99a84f6707.jpg" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"><br>可以使用点击事件，构造payload<br>‘onclick&#x3D;’alert(1)’<br><img src="/upload/2022/03/1646137287(1)-af09d734128c42c49f77e774ddb8495e.jpg" class="lazyload placeholder" data-srcset="/upload/2022/03/1646137287(1)-af09d734128c42c49f77e774ddb8495e.jpg" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"></p>
+<h1 id="0x04"><a href="#0x04" class="headerlink" title="0x04"></a>0x04</h1><p><img src="/upload/2022/03/1646208642(1)-9395c2a7ccaf495dad278b72ec9d4494.png" class="lazyload placeholder" data-srcset="/upload/2022/03/1646208642(1)-9395c2a7ccaf495dad278b72ec9d4494.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"><br>使用第三关的payload发现不行，查看源码<br><img src="/upload/2022/03/1646208683(1)-6f3985ba9a5f49f3a48895291ef87e37.png" class="lazyload placeholder" data-srcset="/upload/2022/03/1646208683(1)-6f3985ba9a5f49f3a48895291ef87e37.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"><br>不仅对&lt;&gt;括号进行了过滤，而且还进行了htmlspecialchars()函数过滤。尝试不添加&lt;&gt;并根据input标签构造payload。<br><img src="/upload/2022/03/image-38649dfe2b684c04bcaf39d46d566d7a.png" class="lazyload placeholder" data-srcset="/upload/2022/03/image-38649dfe2b684c04bcaf39d46d566d7a.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"><br><img src="/upload/2022/03/1646210027(1)-b1b6619c8c794487aefe1d589348bdc4.png" class="lazyload placeholder" data-srcset="/upload/2022/03/1646210027(1)-b1b6619c8c794487aefe1d589348bdc4.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"></p>
+<h1 id="0x05"><a href="#0x05" class="headerlink" title="0x05"></a>0x05</h1><p><img src="/upload/2022/03/1646210814(1)-cd4afb3c1fc5462881f30724464fd228.png" class="lazyload placeholder" data-srcset="/upload/2022/03/1646210814(1)-cd4afb3c1fc5462881f30724464fd228.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"><br>尝试上一关的payload，F12查看，发现这关对on进行了过滤，尝试大小写，仍然不行。<br><img src="/upload/2022/03/1646210820(1)-a08d01d3f477414594ce231d8f58a5d4.png" class="lazyload placeholder" data-srcset="/upload/2022/03/1646210820(1)-a08d01d3f477414594ce231d8f58a5d4.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"><br>试试最原始的方法插入&gt;查看结果<br><img src="/upload/2022/03/1646210840(1)-be3105d7d8ff4b7fac5e46990bac6157.png" class="lazyload placeholder" data-srcset="/upload/2022/03/1646210840(1)-be3105d7d8ff4b7fac5e46990bac6157.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"><br>发现没有屏蔽掉&gt;闭合，尝试构造payload</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&quot;/&gt;&lt;a href=&quot;javascript:alert(1)&quot;/&gt;</span><br></pre></td></tr></table></figure>
+
+<p><img src="/upload/2022/03/1646210868(1)-88a91782c15e444ea2a87b5aa888bd3d.png" class="lazyload placeholder" data-srcset="/upload/2022/03/1646210868(1)-88a91782c15e444ea2a87b5aa888bd3d.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"><br>发现有个类似超链接的&gt;，尝试点击。<br><img src="/upload/2022/03/1646210872(1)-f179bd6a02b8410d9bf37afeb047f43d.png" class="lazyload placeholder" data-srcset="/upload/2022/03/1646210872(1)-f179bd6a02b8410d9bf37afeb047f43d.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"></p>
+<h1 id="0x06"><a href="#0x06" class="headerlink" title="0x06"></a>0x06</h1><p><img src="/upload/2022/03/1646213434(1)-8d45acc4d8d84e2db77cc2bb0d9f156c.png" class="lazyload placeholder" data-srcset="/upload/2022/03/1646213434(1)-8d45acc4d8d84e2db77cc2bb0d9f156c.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"><br>尝试使用上一关的payload，结果当然是失败的，看看失败原因<br><img src="/upload/2022/03/1646213489(1)-f5fd14c5bed64433bd73fea681b92b0f.png" class="lazyload placeholder" data-srcset="/upload/2022/03/1646213489(1)-f5fd14c5bed64433bd73fea681b92b0f.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"><br>发现对href进行了过滤，使用大小写混合，尝试一下结果。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/&gt;&lt;a hREf=&#x27;javascript:alert(1)&#x27;&gt;</span><br></pre></td></tr></table></figure>
+
+<p><img src="/upload/2022/03/1646213675(1)-f37219437969491884de54bb59e351b0.png" class="lazyload placeholder" data-srcset="/upload/2022/03/1646213675(1)-f37219437969491884de54bb59e351b0.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"><br><img src="/upload/2022/03/1646213683(1)-2df7ee6e70c149558d6d885134dcfa9f.png" class="lazyload placeholder" data-srcset="/upload/2022/03/1646213683(1)-2df7ee6e70c149558d6d885134dcfa9f.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"></p>
+<h1 id="0x07"><a href="#0x07" class="headerlink" title="0x07"></a>0x07</h1><p><img src="/upload/2022/03/1646213136(1)-0579da56f7134679824685f7640ebd55.png" class="lazyload placeholder" data-srcset="/upload/2022/03/1646213136(1)-0579da56f7134679824685f7640ebd55.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"><br>使用第六关的payload发现没有效果，F12查看内容<br><img src="/upload/2022/03/1646737481(1)-889dac8638904cadabc6d8a00ee4ef31.png" class="lazyload placeholder" data-srcset="/upload/2022/03/1646737481(1)-889dac8638904cadabc6d8a00ee4ef31.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"><br>发现是过滤了href、script字符<br><img src="/upload/2022/03/1646738277(1)-4a63a9ee9d564c739223f5b535c20111.png" class="lazyload placeholder" data-srcset="/upload/2022/03/1646738277(1)-4a63a9ee9d564c739223f5b535c20111.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"><br>在偶然的尝试中发现通过复写html事件的敏感字符可以绕过，尝试插入复写的XSS的payload</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&quot;/&gt;&lt;scrSCRIPTipt&gt;alert(1)&lt;/scrSCRIPTipt&gt;</span><br></pre></td></tr></table></figure>
+<p>onclick等html事件也可以绕过<br><img src="/upload/2022/03/image-6e74655c47604253b6dd47ddbc658e09.png" class="lazyload placeholder" data-srcset="/upload/2022/03/image-6e74655c47604253b6dd47ddbc658e09.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"></p>
+<h1 id="0x08"><a href="#0x08" class="headerlink" title="0x08"></a>0x08</h1><p><img src="/upload/2022/03/1646739011(1)-f8515163ef474e1cbcd82fb7b6a0cd63.png" class="lazyload placeholder" data-srcset="/upload/2022/03/1646739011(1)-f8515163ef474e1cbcd82fb7b6a0cd63.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"><br>输入123，点击按钮，发现跳转到名为123的页面，实际上就是url的跳转。<br>试试使用</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">javascript:alert(1)</span><br></pre></td></tr></table></figure>
+<p>发现系统过滤了script字符，使用复写，发现也被过滤了<br><img src="/upload/2022/03/1646739166(1)-2e014a8a67c34f2cb3ab23917a51bed0.png" class="lazyload placeholder" data-srcset="/upload/2022/03/1646739166(1)-2e014a8a67c34f2cb3ab23917a51bed0.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"><br>试试将payload编码<br><img src="/upload/2022/03/1646742589(1)-9e6efda1288443e4890a228d058b9b48.jpg" class="lazyload placeholder" data-srcset="/upload/2022/03/1646742589(1)-9e6efda1288443e4890a228d058b9b48.jpg" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"><br>成功弹窗<br><img src="/upload/2022/03/1646739331(1)-a20a898eae0340979afb298e8ef8d938.png" class="lazyload placeholder" data-srcset="/upload/2022/03/1646739331(1)-a20a898eae0340979afb298e8ef8d938.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"></p>
+<h1 id="0x09"><a href="#0x09" class="headerlink" title="0x09"></a>0x09</h1><p><img src="/upload/2022/03/1646742297(1)-a9428e6849104cf780725bdc20ac7e60.png" class="lazyload placeholder" data-srcset="/upload/2022/03/1646742297(1)-a9428e6849104cf780725bdc20ac7e60.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"><br>继续使用上一关的百度链接，发现返回错误提示<br><img src="/upload/2022/03/1646742290(1)-cdf2c9349fa7462ba329e9f9cb1be76e.png" class="lazyload placeholder" data-srcset="/upload/2022/03/1646742290(1)-cdf2c9349fa7462ba329e9f9cb1be76e.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"><br>尝试随便输入字符123<br><img src="/upload/2022/03/image-a0de7747d70b47f98bdbcee927e3c1a2.png" class="lazyload placeholder" data-srcset="/upload/2022/03/image-a0de7747d70b47f98bdbcee927e3c1a2.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"><br>仍然不行，尝试加入http或者https，发现http可以生成链接https不行<br><img src="/upload/2022/03/1646742468(1)-ecf049ce8e1e47cea05f48ea244bc499.png" class="lazyload placeholder" data-srcset="/upload/2022/03/1646742468(1)-ecf049ce8e1e47cea05f48ea244bc499.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"><br>查看源码发现加入了php的strpos函数，该函数的作用是对该字符串进行目的字符的搜索，若搜索不到则出现错误页面。<br>payload仍然使用上一关进行unicode编码，<br><img src="/upload/2022/03/1646742589(1)-ce6567738a6640df8b7557f5ae9c8227.jpg" class="lazyload placeholder" data-srcset="/upload/2022/03/1646742589(1)-ce6567738a6640df8b7557f5ae9c8227.jpg" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"><br>尝试在unicode编码后的payload加入http:&#x2F;&#x2F;<br><img src="/upload/2022/03/1646742647(1)-2a45240c949c41449ceeb87470a9e180.jpg" class="lazyload placeholder" data-srcset="/upload/2022/03/1646742647(1)-2a45240c949c41449ceeb87470a9e180.jpg" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"><br>发现可以成功转成我们想要的payload，但是有一个http的阻挡，仍然不成功。只需在http前面加入一个&#x2F;&#x2F;</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&amp;#106;&amp;#97;&amp;#118;&amp;#97;&amp;#115;&amp;#99;&amp;#114;&amp;#105;&amp;#112;&amp;#116;&amp;#58;&amp;#97;&amp;#108;&amp;#101;&amp;#114;&amp;#116;&amp;#40;&amp;#49;&amp;#41;//http://www.baidu.com</span><br></pre></td></tr></table></figure>
+<p><img src="/upload/2022/03/1646742835(1)-bd2e06c1d3a346b2aa9fc7d29db9a8a5.jpg" class="lazyload placeholder" data-srcset="/upload/2022/03/1646742835(1)-bd2e06c1d3a346b2aa9fc7d29db9a8a5.jpg" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"></p>
+<h1 id="0x10"><a href="#0x10" class="headerlink" title="0x10"></a>0x10</h1><p><img src="/upload/2022/03/1647317936(1)-bee57e8c42a2406dbd5b6349a4d0b262.png" class="lazyload placeholder" data-srcset="/upload/2022/03/1647317936(1)-bee57e8c42a2406dbd5b6349a4d0b262.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"><br>这关发现好像没有可以注入的点，打开F12，查看有参数keyword，尝试从url注入。同时发现了隐藏的输入框，并附带各自的参数。<br><img src="/upload/2022/03/1647317960(1)-9cca4cf94bac4338b1601872980f6814.png" class="lazyload placeholder" data-srcset="/upload/2022/03/1647317960(1)-9cca4cf94bac4338b1601872980f6814.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"><br><img src="/upload/2022/03/1647317965(1)-71230ccf2d0143ed98d7d615bc8e9439.png" class="lazyload placeholder" data-srcset="/upload/2022/03/1647317965(1)-71230ccf2d0143ed98d7d615bc8e9439.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"><br><img src="/upload/2022/03/1647317977(1)-2dbafa4ed0fd4efdab0c985056b7023a.png" class="lazyload placeholder" data-srcset="/upload/2022/03/1647317977(1)-2dbafa4ed0fd4efdab0c985056b7023a.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"><br>尝试输入参数变量，查看页面返回的结果。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://192.168.1.106/xss-labs/level10.php?keyword=123&amp;t_link=1&amp;t_history=2&amp;t_sort=3</span><br></pre></td></tr></table></figure>
+<p><img src="/upload/2022/03/1647318028(1)-59667ad76b5345b1a1b15951c1d0ec12.png" class="lazyload placeholder" data-srcset="/upload/2022/03/1647318028(1)-59667ad76b5345b1a1b15951c1d0ec12.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"><br>发现sort变量的3被填入页面，猜测可能是sort有注入点，尝试插入XSS语句</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://192.168.1.106/xss-labs/level10.php?t_sort=3&quot;onclick=&quot;alert(1)&quot;</span><br></pre></td></tr></table></figure>
+<p>但是好像没有变化，可能是隐藏属性影响了语句的执行，因为需要通过点击，但是页面是不显示输入框，所以无法点击，在url后面写入 type&#x3D;text<br><img src="/upload/2022/03/1647318403-0286cc3b57d340de9108cacd39b8ef04.png" class="lazyload placeholder" data-srcset="/upload/2022/03/1647318403-0286cc3b57d340de9108cacd39b8ef04.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"><br>点击输入框<br><img src="/upload/2022/03/1647318410(1)-09cf2e41aebd44049eb6ef21e21037ea.png" class="lazyload placeholder" data-srcset="/upload/2022/03/1647318410(1)-09cf2e41aebd44049eb6ef21e21037ea.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"></p>
+
       </div>
       <div class="post-tags-categories">
         
@@ -595,7 +644,7 @@
     </li>
     <li class="post-copyright-link">
     <strong>link:  </strong>
-    <a href="/friends/index.html" target="_blank" title="friends">https://wh1t3zer.github.io/friends/index.html</a>
+    <a href="/2022/01/13/XSS靶场实战一（1-10关）-xss靶场实战一1-10关/" target="_blank" title="XSS靶场实战一（1-10关）">https://wh1t3zer.github.io/2022/01/13/XSS靶场实战一（1-10关）-xss靶场实战一1-10关/</a>
     </li>
     <li class="post-copyright-license">
       <strong>Copyright notice:   </strong>
@@ -613,7 +662,42 @@
 
 
 
+  
+  <div class="post-nav-prev post-nav-item">
+    <div class="post-nav-img" style="background-size: cover; 
+      background-position: center center;">
+      <img class="lazyload lazyload placeholder" src="/medias/10.jpg" class="lazyload placeholder" data-srcset="/medias/10.jpg" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="">
+    </div>
+    <a href="/2022/03/15/XSS%E9%9D%B6%E5%9C%BA%E5%AE%9E%E6%88%98%E4%BA%8C%EF%BC%8811-20%E5%85%B3%EF%BC%89-xss%E9%9D%B6%E5%9C%BA%E5%AE%9E%E6%88%98%E4%BA%8C11-20%E5%85%B3/" class="post-nav-link">
+      <div class="title">
+        <i class="fas fa-angle-left"></i> Prev:
+        <div class="title-text">XSS靶场实战二（11-20关）</div>
+      </div>
+      
+      <!-- <div class="content">
+        0x11F12发现多了一个参数，也把这个参数加入到url。发现还是出现在t_sort参数，尝试使用上一关的payload
+      </div> -->
+    </a>
+  </div>
 
+
+
+  
+  <div class="post-nav-next post-nav-item">
+    <div class="post-nav-img" style="background-size: cover; 
+      background-position: center center;">
+      <img class="lazyload lazyload placeholder" src="/medias/3.jpg" class="lazyload placeholder" data-srcset="/medias/3.jpg" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" src="" alt="">
+    </div>
+    <a href="/2021/12/06/%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E9%9D%B6%E5%9C%BA%E4%BA%8C%EF%BC%8813-21%E5%85%B3%EF%BC%89-%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E9%9D%B6%E5%9C%BA%E4%BA%8C13-21%E5%85%B3/" class="post-nav-link">
+      <div class="title">
+        Next: <i class="fas fa-angle-right"></i>
+        <div class="title-text">文件上传靶场二（13-21关）</div>
+      </div>
+      <!-- <div class="content">
+        Pass-13（图片马绕过）本关开始为图片关，需要配合文件包含运行木马语句还是老样子，查看下源码该关卡检测头文件的2个字
+      </div> -->
+    </a>
+  </div>
 
 </div>
 
@@ -742,6 +826,25 @@
   <!-- 目录 -->
   <!-- 文章详情页右侧目录 -->
 
+  <div class="toc-aside">
+    <div class="toc-main">
+      <div class="toc-aside-title">
+        <i class="fas fa-list-ul" aria-hidden="true"></i><span>catalog</span>
+        
+          <div class="toc-open-close">catalog</div>
+        
+      </div>
+      <div class="toc-content">
+        <div class="toc"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 手机端目录按钮 -->
+  <div id="toc-mobile-btn">
+    <i class="fas fa-list-ul" aria-hidden="true"></i>
+  </div>
+
 
 <script>
   function closeToc(init) {
@@ -774,7 +877,7 @@
 
   function initCloseTocWidth(init) {
     if (window.innerWidth >= 992) {
-      let isClose = true;
+      let isClose = false;
       isClose && closeToc(init)
     }
   }
