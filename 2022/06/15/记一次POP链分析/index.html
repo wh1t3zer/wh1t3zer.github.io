@@ -574,7 +574,8 @@
   <div class="main-content">
     <article class="post post-detail">
       <div class="post-content">
-        <h2 id="0x01前言"><a href="#0x01前言" class="headerlink" title="0x01前言"></a>0x01前言</h2><p>TP5反序列化入口都是在Windows类的析构方法，通过<code>file_exists()</code>函数触发<code>__toString</code> 魔术方法，然后以<code>__toString</code>为中间跳板寻找代码执行点，造成反序列化任意命令执行。有关TP5的分析可以看挖掘暗藏thinkphp中的反序列利用链这篇文章，感觉分析的思路比较好。</p>
+        <p>title: 记一次POP链分析<br>date: 2022-06-16 18:02:45.865<br>updated: 2022-06-16 18:02:50.43<br>url: &#x2F;archives&#x2F;记一次POP链分析<br>categories: CTF | 反序列化<br>tags: 反序列化</p>
+<h2 id="0x01前言"><a href="#0x01前言" class="headerlink" title="0x01前言"></a>0x01前言</h2><p>TP5反序列化入口都是在Windows类的析构方法，通过<code>file_exists()</code>函数触发<code>__toString</code> 魔术方法，然后以<code>__toString</code>为中间跳板寻找代码执行点，造成反序列化任意命令执行。有关TP5的分析可以看挖掘暗藏thinkphp中的反序列利用链这篇文章，感觉分析的思路比较好。</p>
 <p>TP6的不同之处就是没有了Windows类，也就无法利用其中的析构方法作为反序列化入口，需要重新挖掘其他入口点。</p>
 <h2 id="0x02补充知识"><a href="#0x02补充知识" class="headerlink" title="0x02补充知识"></a>0x02补充知识</h2><p>call	调用不可访问或不存在的方法时被调用<br>__callStatic	调用不可访问或不存在的静态方法时被调用<br>__clone	进行对象clone时被调用，用来调整对象的克隆行为<br>__constuct	构建对象的时被调用<br>__debuginfo	当调用var_dump()打印对象时被调用（当你不想打印所有属性）适用于PHP5.6版本<br>__destruct	明确销毁对象或脚本结束时被调用<br>___get	读取不可访问或不存在属性时被调用<br>__invoke	当以函数方式调用对象时被调用<br>__isset	对不可访问或不存在的属性调用isset()或empty()时被调用<br>__set	当给不可访问或不存在属性赋值时被调用<br>__set_state	当调用var_export()导出类时,此静态方法被调用,用__set_state的返回值做为var_export的返回值<br>__sleep	当使用serialize时被调用,当你不需要保存大对象的所有数据时很有用<br>__toString	当一个类被转换成字符串时被调用</p>
 <p>__unset	对不可访问或不存在的属性进行unset时被调用<br>wakeup	当使用unserialize时被调用,可用于做些对象的初始化操作</p>
