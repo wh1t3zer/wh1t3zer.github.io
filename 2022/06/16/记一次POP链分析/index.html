@@ -585,27 +585,52 @@
       <div class="post-content">
         <h2 id="0x01前言"><a href="#0x01前言" class="headerlink" title="0x01前言"></a>0x01前言</h2><p>TP5反序列化入口都是在Windows类的析构方法，通过<code>file_exists()</code>函数触发<code>__toString</code> 魔术方法，然后以<code>__toString</code>为中间跳板寻找代码执行点，造成反序列化任意命令执行。有关TP5的分析可以看挖掘暗藏thinkphp中的反序列利用链这篇文章，感觉分析的思路比较好。</p>
 <p>TP6的不同之处就是没有了Windows类，也就无法利用其中的析构方法作为反序列化入口，需要重新挖掘其他入口点。</p>
-<h2 id="0x02补充知识"><a href="#0x02补充知识" class="headerlink" title="0x02补充知识"></a>0x02补充知识</h2><p>call	调用不可访问或不存在的方法时被调用<br>__callStatic	调用不可访问或不存在的静态方法时被调用<br>__clone	进行对象clone时被调用，用来调整对象的克隆行为<br>__constuct()	构建对象的时被调用</p>
-<p>__debuginfo()	当调用var_dump()打印对象时被调用（当你不想打印所有属性）适用于PHP5.6版本</p>
-<p>__destruct()	明确销毁对象或脚本结束时被调用</p>
-<p>__get()	读取不可访问或不存在属性时被调用</p>
-<p>__invoke()	当以函数方式调用对象时被调用</p>
-<p>__isset	对不可访问或不存在的属性调用isset()或empty()时被调用</p>
-<p>__set()	当给不可访问或不存在属性赋值时被调用</p>
-<p>__set_state()	当调用var_export()导出类时,此静态方法被调用,返回值做为var_export的返回值</p>
-<p>__sleep()	当使用serialize时被调用,当你不需要保存大对象的所有数据时很有用</p>
-<p>__toString()	当一个类被转换成字符串时被调用</p>
-<p>__unset()	对不可访问或不存在的属性进行unset时被调用</p>
-<p>__wakeup()	当使用unserialize时被调用,可用于做些对象的初始化操作</p>
-<h2 id="0x03分析"><a href="#0x03分析" class="headerlink" title="0x03分析"></a>0x03分析</h2><p>ThinkPHP存在反序列化的漏洞利用链</p>
-<p>查看版本</p>
+<h2 id="0x02补充知识"><a href="#0x02补充知识" class="headerlink" title="0x02补充知识"></a>0x02补充知识</h2><h3 id="反序列化过程中一些能自动执行的魔术方法"><a href="#反序列化过程中一些能自动执行的魔术方法" class="headerlink" title="反序列化过程中一些能自动执行的魔术方法"></a>反序列化过程中一些能自动执行的魔术方法</h3><p><code>__call()</code>	调用不可访问或不存在的方法时被调用</p>
+<p><code>__callStatic()</code>	调用不可访问或不存在的静态方法时被调用</p>
+<p><code>__clone()</code>	进行对象clone时被调用，用来调整对象的克隆行为</p>
+<p><code>__onstuct()</code>	构建对象的时被调用</p>
+<p><code>__debuginfo()</code>	当调用var_dump()打印对象时被调用（当你不想打印所有属性）适用于PHP5.6版本</p>
+<p><code>__destruct()</code>	明确销毁对象或脚本结束时被调用</p>
+<p><code>__get()</code>	读取不可访问或不存在属性时被调用</p>
+<p><code>__invoke()</code>	当以函数方式调用对象时被调用</p>
+<p><code>__isset()</code>	对不可访问或不存在的属性调用isset()或empty()时被调用</p>
+<p><code>__set()</code>	当给不可访问或不存在属性赋值时被调用</p>
+<p><code>__set_state()</code>	当调用var_export()导出类时,此静态方法被调用,返回值做为var_export的返回值</p>
+<p><code>__sleep()</code>	当使用serialize时被调用,当你不需要保存大对象的所有数据时很有用</p>
+<p><code>__toString()</code>	当一个类被转换成字符串时被调用</p>
+<p><code>__unset()</code>	对不可访问或不存在的属性进行unset时被调用</p>
+<p><code>__wakeup()</code>	当使用unserialize时被调用,可用于做些对象的初始化操作</p>
+<h3 id="常见的一些起点"><a href="#常见的一些起点" class="headerlink" title="常见的一些起点"></a>常见的一些起点</h3><p><code>__destruct()</code>一定会触发，在对象销毁时触发</p>
+<p><code>__construct()</code>一定会触发，在对象创建时触发</p>
+<p><code>__toString()</code>当一个类被转换成字符串时被调用</p>
+<h3 id="常见的一些中间跳板"><a href="#常见的一些中间跳板" class="headerlink" title="常见的一些中间跳板"></a>常见的一些中间跳板</h3><p><code>__toString()</code>当一个类被转换成字符串时被调用</p>
+<p><code>__get()</code> 读取不可访问或不存在的属性时被调用</p>
+<p><code>__set()</code>当给不可访问或不存在的属性赋值时被调用</p>
+<p><code>__isset()</code>对不可访问或不存在的属性调用<code>isset()</code>或<code>empty()</code>时被调用，如<code>$this-&gt;$func()</code></p>
+<h3 id="反序列化的常见终点"><a href="#反序列化的常见终点" class="headerlink" title="反序列化的常见终点"></a>反序列化的常见终点</h3><p><code>__call()</code>调用不可访问或不存在的方法时被调用</p>
+<p><code>call_user_fun</code>一般php代码执行都会选择这里</p>
+<p><code>call_user_fun_array</code>一般php代码执行都会选择这里</p>
+<h2 id="0x03分析"><a href="#0x03分析" class="headerlink" title="0x03分析"></a>0x03分析</h2><p>查看版本</p>
 <p><img src="/" class="lazyload placeholder" data-srcset="/" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="/upload/2022/06/1.png"></p>
 <p>是5.1.39LTS</p>
-<p>TP5的POP链入口是Windows.php中的_destruct()函数，</p>
-<p>看到有个removeFiles()函数，继续跳转，发现该函数的功能是当filename存在的时候，执行unlink()函数删除文件名，该变量是可控的。</p>
-<p>跳转到file_exists()，该函数会将传入的参数当做字符串处理，随即会调用__toString()方法，发现该页没有这个方法。</p>
-<p>全局搜索__toString()，发现在Conversion.php里，查看跟进toJson()方法</p>
-<p>跟进toArray()方法</p>
+<h3 id="寻找起始点"><a href="#寻找起始点" class="headerlink" title="寻找起始点"></a>寻找起始点</h3><p>TP5的POP链入口是thinkphp\library\think\process\pipes\Windows.php中的<code>__destruct()</code>函数，</p>
+<p><img src="/" class="lazyload placeholder" data-srcset="/" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="/upload/2022/06/2.png"></p>
+<p>看到有个<code>removeFiles()</code>函数，继续跟进，发现该函数的功能是当filename存在的时候，执行<code>unlink()</code>函数删除文件名，该变量是可控的。</p>
+<p><img src="/" class="lazyload placeholder" data-srcset="/" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="/upload/2022/06/3.png"></p>
+<p>跳转到<code>file_exists()</code>，可以触发<code>toString()</code>方法，$file可控</p>
+<h3 id="寻找中件跳板"><a href="#寻找中件跳板" class="headerlink" title="寻找中件跳板"></a>寻找中件跳板</h3><p>寻找一个<code>__toString()</code>作为跳板，发现有一个在thinkphp&#x2F;library&#x2F;think&#x2F;Collection.php里</p>
+<p><img src="/" class="lazyload placeholder" data-srcset="/" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="/upload/2022/06/4.png"></p>
+<p>查看跟进<code>toJson()</code>方法</p>
+<p><img src="/" class="lazyload placeholder" data-srcset="/" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="/upload/2022/06/5.png"></p>
+<p><code>toArray()</code>方法中寻找 $可控变量 -&gt; 方法（参数可控），可以触发某个类的<code>__call()</code>方法</p>
+<p>跟进到thinkphp&#x2F;library&#x2F;think&#x2F;model&#x2F;concern&#x2F;Conversion.php</p>
+<p>在 <code>toArray</code> 方法中找到一个符合条件的 <code>$relation-&gt;visible($name)</code></p>
+<h3 id="寻找执行点"><a href="#寻找执行点" class="headerlink" title="寻找执行点"></a>寻找执行点</h3><p>需要寻找一个类满足以下2个条件，全局搜索 <code>__call</code>，跟进 <code>thinkphp/library/think/Request.php</code></p>
+<blockquote>
+<p>该类中没有”visible”方法 </p>
+<p>实现了__call方法</p>
+</blockquote>
+<p><img src="/" class="lazyload placeholder" data-srcset="/" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="/upload/2022/06/6.png"></p>
 
       </div>
       <div class="post-tags-categories">
