@@ -597,10 +597,11 @@
 <p>__toString()	当一个类被转换成字符串时被调用</p>
 <p>__unset()	对不可访问或不存在的属性进行unset时被调用</p>
 <p>__wakeup()	当使用unserialize时被调用,可用于做些对象的初始化操作</p>
-<h2 id="0x02分析"><a href="#0x02分析" class="headerlink" title="0x02分析"></a>0x02分析</h2><p>ThinkPHP存在反序列化的漏洞利用链</p>
+<h2 id="0x03分析"><a href="#0x03分析" class="headerlink" title="0x03分析"></a>0x03分析</h2><p>ThinkPHP存在反序列化的漏洞利用链</p>
 <p>查看版本</p>
+<p><img src="/" class="lazyload placeholder" data-srcset="/" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="/upload/2022/06/1.png"></p>
 <p>是5.1.39LTS</p>
-<p>通过网上了解到TP5的POP链入口是Windows.php中的_destruct()函数，</p>
+<p>TP5的POP链入口是Windows.php中的_destruct()函数，</p>
 <p>看到有个removeFiles()函数，继续跳转，发现该函数的功能是当filename存在的时候，执行unlink()函数删除文件名，该变量是可控的。</p>
 <p>跳转到file_exists()，该函数会将传入的参数当做字符串处理，随即会调用__toString()方法，发现该页没有这个方法。</p>
 <p>全局搜索__toString()，发现在Conversion.php里，查看跟进toJson()方法</p>
