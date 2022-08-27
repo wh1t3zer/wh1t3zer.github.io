@@ -11,7 +11,7 @@
   <!-- Global site tag (gtag.js) - Google Analytics -->
 
 
-  <title>记一次POP链分析(练习) | wh1t3zer</title>
+  <title>wh1t3zer</title>
 
   <link rel="icon" type="image/x-icon, image/vnd.microsoft.icon" href="/favicon.ico">
   <link rel="stylesheet" href="https://at.alicdn.com/t/font_1911880_c1nvbyezg17.css">
@@ -505,535 +505,1150 @@
 </header>
         <!-- 内容区域 -->
         
- <!-- prismjs 代码高亮 -->
- 
-
-
-<div class="bg-dark-floor" style="position: fixed;left: 0;top: 0;width: 100%;height: 100%;z-index: -1;"></div>
-
-
-  <!-- 文章详情页顶部图片和标题 -->
-
-
-
-
-<div class="post-detail-header" id="thumbnail_canvas" style="background-repeat: no-repeat; background-size: cover; 
-  background-position: center center;position: relative;background-image:url('/medias/4.jpg')">
-  <div class="post-detail-header-mask"></div>
-  <canvas id="header_canvas"style="position:absolute;bottom:0;pointer-events:none;"></canvas>
+  <!-- 首页轮播 -->
   
-  <div class="post-detail-header_info-box">
-    <div class="title-box">
-      <span class="title">
-        记一次POP链分析(练习)
-      </span>
+
+  <link href="/js/vue-typed-js/index.css" rel="stylesheet">
+
+
+
+
+
+
+<div class="swiper-length" style="display: none;">0</div>
+<div id="appSwiper"
+  class="swiper-no-swiping"
+  @mouseenter="stopAutoPlay()" 
+  @mouseleave="startAutoPlay()"
+>
+  <swiper v-cloak ref="mySwiper" :options="swiperOptions" @slideChangeTransitionEnd="slideChangeTransitionEnd">
+    
+      <swiper-slide>
+        <div class="item swiper-lazy" data-background="https://img11.360buyimg.com/ddimg/jfs/t1/160978/33/20686/2476596/6083e62dEa588862b/63f8f2163ab61b2f.png" style="background-size: 300000px; 
+          background-position: left center;" style="position: relative;">
+          <div class="swiper-bgmask" style="position: absolute;top: 0;left: 0;width: 100%;height: 100%;"></div>
+            <div class="flag">
+              
+              <div class="img-mask swiper-lazy swiper-default-bgImg" data-background="https://img11.360buyimg.com/ddimg/jfs/t1/160978/33/20686/2476596/6083e62dEa588862b/63f8f2163ab61b2f.png" style="height: 100%; background-size: cover; 
+                background-position: center center;">
+                <div class="swiper-lazy-preloader swiper-lazy-preloader-white"></div>   
+              </div>
+              <div class="flag-text">
+                <div class="flag-text-content">
+                  <div class="title ani animated" swiper-animate-effect="fadeInDown" swiper-animate-duration="0.2s" swiper-animate-delay="0.1s">故笙诉离歌</div>
+                  
+                    <div class="ani animated default-excerpt" swiper-animate-effect="fadeInDown" swiper-animate-duration="0.2s" swiper-animate-delay="0.1s">
+                      <vue-typed-js :strings="defaultDesc" :loop="defaultDescTypedLoop" :type-speed="100" :back-speed="50">
+                        <h1 class="typing"></h1>
+                      </vue-typed-js>
+                    </div>
+                    
+                </div>
+                <div style="display: flex;" class="flag-text-btns">
+                  
+                  
+                </div>
+              </div>
+            </div>
+          </div>
+      </swiper-slide>
+    
+  </swiper>
+  
+    <div id="scroll-down" @click="toPostContent()">
+      <a href="javascript:;">
+        <i class="fas fa-angle-down scroll-down-effects"></i>
+      </a>
     </div>
-    
-    
-      
-        <span class="post-detail-header_date">
-          <i class="fas fa-calendar"></i> Published in：2022-06-16 |
-        </span>
-      
-
-      
-        <span class="post-detail-header_categories">
-          <i class="iconfont iconbookmark1"></i> category：
-          
-            <a href="/categories/CTF-%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/" class="post-detail-header_category">
-              CTF | 反序列化
-            </a>
-          
-        </span>
-      
-
-      
-    
-  </div>
   
+  <canvas id="header_canvas"style="position:absolute;bottom:0;width:100%;pointer-events:none;"></canvas>
   
-    <script src="/js/bubble/bubble.js"></script>
-  
+    <svg class="hans-container" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 24 150 28" preserveAspectRatio="none"><defs><path id="hans-wave" d="M-160 44c30 0 58-18 88-18s 58 18 88 18 58-18 88-18 58 18 88 18 v44h-352z"></path></defs><g class="hans-parallax"><use xlink:href="#hans-wave" x="50" y="0" fill="rgba(224,233,239,.5)"></use><use xlink:href="#hans-wave" x="50" y="3" fill="rgba(224,233,239,.5)"></use><use xlink:href="#hans-wave" x="50" y="6" fill="rgba(224,233,239,.5)"></use></g></svg>
+    
 </div>
 
 
+<style>.hans-parallax>use{animation:hans-wave-move 12s linear infinite}.hans-parallax>use:nth-child(1){animation-delay:-2s}.hans-parallax>use:nth-child(2){animation-delay:-2s;animation-duration:5s}.hans-parallax>use:nth-child(3){animation-delay:-4s;animation-duration:3s}@keyframes hans-wave-move{0%{transform:translate(-90px,0)}100%{transform:translate(85px,0)}}</style>
+<style>
+  .hans-container {
+    position: absolute!important;
+    bottom: 0;
+    width: 100%;
+    height: 120px;
+    z-index: 100;
+    pointer-events:none;
+  }
+</style>
 
-
-
-<div class="row justify-position" 
-  style="padding-top: 0px;">
-  <div class="main-content">
-    <article class="post post-detail">
-      <div class="post-content">
-        <h2 id="0x01前言"><a href="#0x01前言" class="headerlink" title="0x01前言"></a>0x01前言</h2><p>TP5反序列化入口都是在Windows类的析构方法，通过<code>file_exists()</code>函数触发<code>__toString</code> 魔术方法，然后以<code>__toString</code>为中间跳板寻找代码执行点，造成反序列化任意命令执行。有关TP5的分析可以看挖掘暗藏thinkphp中的反序列利用链这篇文章，感觉分析的思路比较好。</p>
-<p>TP6的不同之处就是没有了Windows类，也就无法利用其中的析构方法作为反序列化入口，需要重新挖掘其他入口点。</p>
-<h2 id="0x02补充知识"><a href="#0x02补充知识" class="headerlink" title="0x02补充知识"></a>0x02补充知识</h2><h3 id="反序列化过程中一些能自动执行的魔术方法"><a href="#反序列化过程中一些能自动执行的魔术方法" class="headerlink" title="反序列化过程中一些能自动执行的魔术方法"></a>反序列化过程中一些能自动执行的魔术方法</h3><p><code>__call()</code>	调用不可访问或不存在的方法时被调用</p>
-<p><code>__callStatic()</code>	调用不可访问或不存在的静态方法时被调用</p>
-<p><code>__clone()</code>	进行对象clone时被调用，用来调整对象的克隆行为</p>
-<p><code>__onstuct()</code>	构建对象的时被调用</p>
-<p><code>__debuginfo()</code>	当调用var_dump()打印对象时被调用（当你不想打印所有属性）适用于PHP5.6版本</p>
-<p><code>__destruct()</code>	明确销毁对象或脚本结束时被调用</p>
-<p><code>__get()</code>	读取不可访问或不存在属性时被调用</p>
-<p><code>__invoke()</code>	当以函数方式调用对象时被调用</p>
-<p><code>__isset()</code>	对不可访问或不存在的属性调用isset()或empty()时被调用</p>
-<p><code>__set()</code>	当给不可访问或不存在属性赋值时被调用</p>
-<p><code>__set_state()</code>	当调用var_export()导出类时,此静态方法被调用,返回值做为var_export的返回值</p>
-<p><code>__sleep()</code>	当使用serialize时被调用,当你不需要保存大对象的所有数据时很有用</p>
-<p><code>__toString()</code>	当一个类被转换成字符串时被调用</p>
-<p><code>__unset()</code>	对不可访问或不存在的属性进行unset时被调用</p>
-<p><code>__wakeup()</code>	当使用unserialize时被调用,可用于做些对象的初始化操作</p>
-<h3 id="常见的一些起点"><a href="#常见的一些起点" class="headerlink" title="常见的一些起点"></a>常见的一些起点</h3><p><code>__destruct()</code>一定会触发，在对象销毁时触发</p>
-<p><code>__construct()</code>一定会触发，在对象创建时触发</p>
-<p><code>__toString()</code>当一个类被转换成字符串时被调用</p>
-<h3 id="常见的一些中间跳板"><a href="#常见的一些中间跳板" class="headerlink" title="常见的一些中间跳板"></a>常见的一些中间跳板</h3><p><code>__toString()</code>当一个类被转换成字符串时被调用</p>
-<p><code>__get()</code> 读取不可访问或不存在的属性时被调用</p>
-<p><code>__set()</code>当给不可访问或不存在的属性赋值时被调用</p>
-<p><code>__isset()</code>对不可访问或不存在的属性调用<code>isset()</code>或<code>empty()</code>时被调用，如<code>$this-&gt;$func()</code></p>
-<h3 id="反序列化的常见终点"><a href="#反序列化的常见终点" class="headerlink" title="反序列化的常见终点"></a>反序列化的常见终点</h3><p><code>__call()</code>调用不可访问或不存在的方法时被调用</p>
-<p><code>call_user_fun</code>一般php代码执行都会选择这里</p>
-<p><code>call_user_fun_array</code>一般php代码执行都会选择这里</p>
-<h2 id="0x03分析"><a href="#0x03分析" class="headerlink" title="0x03分析"></a>0x03分析</h2><p>查看版本</p>
-<p><img src="/" class="lazyload placeholder" data-srcset="/" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="/upload/2022/06/1.png"></p>
-<p>是5.1.39LTS</p>
-<h3 id="寻找起始点"><a href="#寻找起始点" class="headerlink" title="寻找起始点"></a>寻找起始点</h3><p>TP5的POP链入口是thinkphp\library\think\process\pipes\Windows.php中的<code>__destruct()</code>函数，</p>
-<p><img src="/" class="lazyload placeholder" data-srcset="/" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="/upload/2022/06/2.png"></p>
-<p>看到有个<code>removeFiles()</code>函数，继续跟进，发现该函数的功能是当filename存在的时候，执行<code>unlink()</code>函数删除文件名，该变量是可控的。</p>
-<p><img src="/" class="lazyload placeholder" data-srcset="/" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="/upload/2022/06/3.png"></p>
-<p>跳转到<code>file_exists()</code>，可以触发<code>toString()</code>方法，$file可控</p>
-<h3 id="寻找中件跳板"><a href="#寻找中件跳板" class="headerlink" title="寻找中件跳板"></a>寻找中件跳板</h3><p>寻找一个<code>__toString()</code>作为跳板，发现有一个在thinkphp&#x2F;library&#x2F;think&#x2F;Collection.php里</p>
-<p><img src="/" class="lazyload placeholder" data-srcset="/" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="/upload/2022/06/4.png"></p>
-<p>查看跟进<code>toJson()</code>方法</p>
-<p><img src="/" class="lazyload placeholder" data-srcset="/" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="/upload/2022/06/5.png"></p>
-<p><code>toArray()</code>方法中寻找 $可控变量 -&gt; 方法（参数可控），可以触发某个类的<code>__call()</code>方法</p>
-<p>跟进到thinkphp&#x2F;library&#x2F;think&#x2F;model&#x2F;concern&#x2F;Conversion.php</p>
-<p>在 <code>toArray</code> 方法中找到一个符合条件的 <code>$relation-&gt;visible($name)</code></p>
-<h3 id="寻找执行点"><a href="#寻找执行点" class="headerlink" title="寻找执行点"></a>寻找执行点</h3><p>需要寻找一个类满足以下2个条件，全局搜索 <code>__call</code>，跟进 <code>thinkphp/library/think/Request.php</code></p>
-<blockquote>
-<p>该类中没有”visible”方法 </p>
-<p>实现了__call方法</p>
-</blockquote>
-<p><img src="/" class="lazyload placeholder" data-srcset="/" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="/upload/2022/06/6.png"></p>
-
-      </div>
-      <div class="post-tags-categories">
-        
-        <div class="tags">
-          
-            <a href="/tags/%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/" class="">
-              反序列化
-            </a>
-          
-        </div>
-        
-      </div>
-      
-        <div class="copyright">
-  <ul class="post-copyright">
-    <li class="post-copyright-author">
-    <strong>author:  </strong>wh1t3zer</a>
-    </li>
-    <li class="post-copyright-link">
-    <strong>link:  </strong>
-    <a href="/2022/06/16/记一次POP链分析/" target="_blank" title="记一次POP链分析(练习)">https://wh1t3zer.github.io/2022/06/16/记一次POP链分析/</a>
-    </li>
-    <li class="post-copyright-license">
-      <strong>Copyright notice:   </strong>
-      All articles on this website, unless otherwise stated, adopt <a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank" title="Attribution-NonCommercial-NoDerivatives 4.0 International (CC BY-NC-ND 4.0)">CC BY-NC-ND 4.0</a>
-      reprint policy. If reproduced, please indicate source!
-    </li>
-  </ul>
-<div>
-      
-    </article>
-    <!-- 上一篇文章和下一篇文章 -->
-    
-      <!-- 文章详情页的上一页和下一页 -->
-<div class="post-nav">
-
-
-
-  
-  <div class="post-nav-prev post-nav-item">
-    <div class="post-nav-img" style="background-size: cover; 
-      background-position: center center;">
-      <img class="lazyload lazyload placeholder" src="/medias/5.jpg" class="lazyload placeholder" data-srcset="/medias/5.jpg" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="">
-    </div>
-    <a href="/2022/08/25/%E9%80%86%E5%90%91%E5%85%A5%E9%97%A8%E7%9A%84%E4%B8%80%E4%BA%9B%E5%B0%8F%E7%9F%A5%E8%AF%86/" class="post-nav-link">
-      <div class="title">
-        <i class="fas fa-angle-left"></i> Prev:
-        <div class="title-text">浅谈逆向入门有关的知识</div>
-      </div>
-      
-      <!-- <div class="content">
-        逆向的解释逆向的本质就是将一个程序反编译成一段段代码，可能是伪代码，也可能是汇编代码。总的来说就是把一个完整的程序分成一
-      </div> -->
-    </a>
-  </div>
-
-
-
-  
-  <div class="post-nav-next post-nav-item">
-    <div class="post-nav-img" style="background-size: cover; 
-      background-position: center center;">
-      <img class="lazyload lazyload placeholder" src="/medias/10.jpg" class="lazyload placeholder" data-srcset="/medias/10.jpg" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" src="" alt="">
-    </div>
-    <a href="/2022/03/15/XSS%E9%9D%B6%E5%9C%BA%E5%AE%9E%E6%88%98%E4%BA%8C%EF%BC%8811-20%E5%85%B3%EF%BC%89-xss%E9%9D%B6%E5%9C%BA%E5%AE%9E%E6%88%98%E4%BA%8C11-20%E5%85%B3/" class="post-nav-link">
-      <div class="title">
-        Next: <i class="fas fa-angle-right"></i>
-        <div class="title-text">XSS靶场实战二（11-20关）</div>
-      </div>
-      <!-- <div class="content">
-        0x11F12发现多了一个参数，也把这个参数加入到url。发现还是出现在t_sort参数，尝试使用上一关的payload
-      </div> -->
-    </a>
-  </div>
-
-</div>
-
-    
-    
-
-    <!-- 打赏 -->
-    
-      <div id="appDonate" class="post-donate">
-  <div id="donate_board" class="donate_bar center" ref="donate">
-    <a id="btn_donate" class="btn_donate" href="javascript:;" title="打赏" @click="showDialogDrawer()"></a>
-  </div>
-  <transition name="fade">
-    <div 
-      class="donate-box-mask"
-      v-cloak 
-      v-show="visible"
-      @click="cancelDialogDrawer()"
-    >
-    </div>
-  </transition>
-  <transition name="bounce">
-    <div class="donate-box" v-cloak v-show="visible">
-      <div class="donate-box_close">
-        <i class="fas fa-times" aria-hidden="true" @click="cancelDialogDrawer" pointer></i>
-      </div>
-      <div class="donate-box_title">
-        <h4>
-          你的赏识是我前进的动力
-        </h4>
-      </div>
-      <div class="donate-box_tab">
-        <div class="Alipay" pointer :class="{'active': tabActive === 'Alipay'}" @click="changeTabActive('Alipay')">
-          支付宝
-        </div>
-        <div class="WeChatpay" pointer :class="{'active': tabActive === 'WeChatpay'}" @click="changeTabActive('WeChatpay')">
-          微信
-        </div>
-      </div>
-      <div class="donate-box_img">
-        <div class="AlipayImg" v-show="tabActive === 'Alipay'">
-          <img src="/medias/1.jpg" class="lazyload placeholder" data-srcset="/medias/1.jpg" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="支付宝打赏" />
-        </div> 
-        <div class="WeChatpayImg" v-show="tabActive === 'WeChatpay'">
-          <img src="/medias/2.jpg" class="lazyload placeholder" data-srcset="/medias/2.jpg" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="微信打赏" />
-        </div>
-      </div>
-    </div>
-  </transition>
-</div>
 
 <script>
-  var body = document.body || document.documentElement || window;
+  var autoplay = JSON.parse('false');
+  var delay = '5000';
+  var loop = JSON.parse('true') ? false : JSON.parse('true');
+  var effect = 'slide';
+  var swiperLength = parseInt(document.querySelector(".swiper-length").innerText);
+  var defaultDesc = '我本无意穿堂风，偏偏孤倨引山洪';
+  defaultDesc = defaultDesc.split(',');
+  var defaultDescTypedLoop = JSON.parse('false');
   var vm = new Vue({
-    el: '#appDonate',
+    el: '#appSwiper',
     data: {
-      visible: false,
-      tabActive: 'Alipay',
-      top: 0,
+      defaultDesc: defaultDesc,
+      defaultDescTypedLoop,
+      swiperOptions: {
+        pagination: {
+          el: '.swiper-pagination',
+          clickable: true // 允许点击小圆点跳转
+        },
+        loop: loop ? true : false,
+        effect, // fade
+        autoplay: (autoplay && swiperLength > 1) ? {
+  　　　　delay,
+  　　　　disableOnInteraction: false // 手动切换之后继续自动轮播
+    　　} : false,
+        navigation: {
+          nextEl: '.swiper-button-next',
+          prevEl: '.swiper-button-prev',
+        },
+        lazy: {
+          loadPrevNext: true,
+        },
+        on:{
+          init: function() {
+            swiperAnimateCache(this); //隐藏动画元素 
+            swiperAnimate(this); //初始化完成开始动画
+          }, 
+          slideChangeTransitionEnd: function(){ 
+            swiperAnimate(this); //每个slide切换结束时也运行当前slide动画
+          } 
+        }
+        // Some Swiper option/callback...
+      }
     },
     computed: {
+      swiper() {
+        return this.$refs.mySwiper.$swiper
+      }
     },
     mounted() {
+      // console.log('Current Swiper instance object', this.swiper)
+      // this.swiper.slideTo(0, 1000, false)
     },
     methods: {
-      showDialogDrawer() {
-        this.visible = true;
-        // 防止页面滚动，只能让弹框滚动
-        // function getScroll() {
-        //   return {
-        //     left: window.pageXOffset || document.documentElement.scrollLeft || document.body.scrollLeft || 0,
-        //     top: window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0
-        //   };
-        // }
-        this.top = $(document).scrollTop() // or getScroll().top
-        // console.log('aa', $('.main-content'));
-        body.style.cssText = 'overflow: hidden;';
+      stopAutoPlay() {
+        (autoplay && swiperLength > 1) && this.swiper.autoplay.stop();
       },
-      cancelDialogDrawer() {
-        this.visible = false;
-        body.removeAttribute('style');
-        $(document).scrollTop(this.top)
+      startAutoPlay() {
+        (autoplay && swiperLength > 1) && this.swiper.autoplay.start();
       },
-      changeTabActive(name) {
-        this.tabActive = name;
+      slideChangeTransitionEnd() {
+        console.log('1');
+      },
+      toPostContent() {
+        const fullHeight = $(window).height() - 60;
+        $('html,body').animate({scrollTop: fullHeight},500);
       }
     },
     created() {}
   })
 </script>
-    
 
-    <!-- 分享 -->
-    
-      <!-- https://github.com/overtrue/share.js -->
-<!-- 文章详情页的分享 -->
-<div class="social-share" data-sites="twitter,facebook,google,qq,qzone,wechat,weibo,douban,linkedin" data-wechat-qrcode-helper="<p>微信扫一扫即可分享！</p>"></div>
-
-<script src="/js/shareJs/social-share.min.js"></script>
-</script>
+  <script src="/js/bubble/homeBubble.js"></script>
 
 <style>
-  .social-share {
-    margin: 20px 0;
+#appSwiper {
+  position: relative;
+  user-select: none;
+  overflow: hidden;
+}
+.default-excerpt {
+  font-size: 1.6rem;
+  margin-top: 1rem;
+  font-family: Titillium Web,'PingFang SC','Hiragino Sans GB','Microsoft JhengHei','Microsoft YaHei',sans-serif;
+}
+.bottom-one-btn {
+  margin-top: 15px;
+}
+.swiper-container {
+  overflow: hidden;
+  z-index: 0;
+}
+.swiper-slide {
+  height: 350px;
+  position: relative;
+}
+.swiper-button-prev,
+.swiper-button-next {
+  padding: 10px 10px;
+  transition: background 0.2s;
+}
+.swiper-button-prev:hover,
+.swiper-button-next:hover {
+  background: rgba(0, 0, 0, 0.2);
+}
+.swiper-slide .item {
+  width: 100%;
+  height: 100%;
+}
+.flag {
+  position: relative;
+  width: 70%;
+  margin: 0 auto;
+  color: #ffffff;
+  height: 100%;
+  background: #000;
+}
+.flag img {
+  min-height: 100%;
+}
+.flag-text {
+  position: absolute;
+  top: 50px;
+  left: 50px;
+  width: 80%;
+  height: 280px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  z-index: 9999;
+}
+.flag-text .title {
+  font-size: 1.8rem;
+  font-family: Long Cang,cursive;
+}
+.flag-text .title a {
+  color: #fff;
+  transition: color 0.3s;
+}
+.flag-text .title a:hover {
+  color: #42b983;
+}
+.flag-text .excerpt {
+  color: #eee;
+  font-family: Ubuntu,-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen,Cantarell,Fira Sans,Droid Sans,Helvetica Neue,sans-serif;
+  width: 70%;
+  line-height: 30px;
+  height: 150px;
+  margin-top: 2%;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 5;
+  overflow: hidden;
+}
+.swiper-pagination-bullet-active {
+  opacity: 1;
+  background-color: #42b983;
+}
+.img-mask {
+  opacity:0.6; filter: alpha(opacity=60);
+}
+.flag-text .read-more {
+  margin-bottom: 30px;
+  padding: 5px 15px;
+  color: #ffffff;
+  border-radius: 20px;
+}
+#scroll-down {
+  position: absolute;
+  bottom: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 2.5rem;
+  color: #fff;
+  cursor: pointer;
+  z-index: 2;
+}
+#scroll-down a {
+  color: #fff;
+}
+@-webkit-keyframes rightan
+  {
+  
+  0%
+  {
+    transform: translateY(0);
+    opacity: 0.5;
   }
+  50% {
+    transform: translateY(-30px);
+    opacity: 1;
+  }
+  100%
+  {
+    transform: translateY(0);
+    opacity: 0.5;
+  }
+}
+.scroll-down-effects {
+  animation: rightan 1.5s infinite;
+}
+/* 当头部导航设置为背景透明的时候 */
+
+  .swiper-slide {
+    height: 400px;
+  }
+  .flag-text {
+    top: 80px;
+  }
+
+
+@media (min-width: 992px) {
+  .swiper-button-prev {
+    margin-left: 15%;
+    transform: translateX(-180%);
+  }
+  .swiper-button-next {
+    margin-right: 15%;
+    transform: translateX(180%);
+  }
+  .flag-text .title {
+    width: 80%;
+    line-height: 35px;
+    max-height: 70px;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    overflow: hidden;
+  }
+}
+@media screen and (max-width: 1200px) { 
+  .flag {
+    width: 80%;
+  }
+  .swiper-button-prev {
+    margin-left: 10%;
+    transform: translateX(-180%);
+  }
+  .swiper-button-next {
+    margin-right: 10%;
+    transform: translateX(180%);
+  }
+}
+@media (max-width: 992px) {
+  .flag {
+    width: 100%;
+  }
+  .flag-text .title {
+    font-size: 1.5rem;
+    margin-top: 50px;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    overflow: hidden;
+  }
+  .flag-text {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 80%;
+    height: 100%;
+    margin-left: 50%;
+    transform: translateX(-50%);
+  }
+  .flag-text .excerpt {
+    width: 100%;
+    line-height: 25px;
+    height: 125px;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 5;
+    overflow: hidden;
+  }
+  .flag-text .read-more {
+    margin-bottom: 80px;
+  }
+}
+@media (max-width: 992px) and (min-width: 551px) {
+  .flag-text .excerpt {
+    width: 70%;
+  }
+}
+@media (max-width: 551px) {
+  .swiper-slide {
+    height: 250px;
+  }
+  .flag-text .title {
+    line-height: 30px;
+    max-height: 60px;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    overflow: hidden;
+    margin-top: 20px;
+  }
+  .flag-text .excerpt {
+    font-size: 1rem;
+    line-height: 20px;
+    height: 80px;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 4;
+  }
+  .flag-text .excerpt { 
+    margin-top: 10px;
+  }
+  .flag-text .read-more {
+    margin-top: 10px;
+    margin-bottom: 50px;
+  }
+  .swiper-button-prev,
+  .swiper-button-next {
+    transform: scale(0.5);
+  }
+  .swiper-button-prev {
+    left: 0;
+  }
+  .swiper-button-next {
+    right: 0;
+  }
+}
+/* 当头部导航设置为背景透明的时候 */
+
+  @media (max-width: 992px) {
+    .flag-text {
+      top: 60px;
+      height: 80%;
+    }
+  }
+  @media (max-width: 551px) {
+    .swiper-slide {
+      height: 310px;
+    }
+  }
+
+
+/* 文字或者按钮居中显示 */
+
+  .flag-text {
+    left: 10%;
+  }
+  .flag-text .flag-text-content {
+    width: 100%;
+    text-align: center;
+  }
+  .flag-text .title {
+    width: 100%;
+    text-align: center;
+  }
+  .flag-text .excerpt { 
+    width: 100%;
+    text-align: center;
+  }
+  .bottom-one-btn {
+    display: flex;
+    justify-content: center;
+  }
+  .default-excerpt {
+    display: flex;
+    justify-content: center;
+    font-size: 1.6rem;
+    font-family: Titillium Web,'PingFang SC','Hiragino Sans GB','Microsoft JhengHei','Microsoft YaHei',sans-serif;
+  }
+  .flag-text-btns {
+    justify-content: center;
+  }
+  @media (min-width: 992px) {
+    .flag-text .excerpt {
+      line-height: 30px;
+      display: -webkit-box;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 5;
+      overflow: hidden;
+    }
+  }
+  @media (max-width: 992px) {
+    .flag-text {
+      margin-left: 0;
+      transform: translateX(0);
+    }
+  }
+
+
+
+
+/* 全屏显示 */
+
+  .flag {
+    width: 100%;
+  }
+  .swiper-slide {
+    height: calc(100vh - 60px);
+    
+      height: 100vh;
+    
+  }
+  .flag-text {
+    top: 50%;
+    left: 15%;
+    transform: translateY(-50%);
+    width: 70%;
+    height: auto;
+  }
+  .flag-text .title {
+    font-size: 2.8rem;
+    line-height: 1.5em;
+    max-height: none;
+    /* overflow: visible; */
+  }
+  .flag-text .excerpt {
+    font-size: 1.25rem;
+    height: 150px;
+  }
+  .flag-text .read-more {
+    margin-top: 10px;
+  }
+  .swiper-button-prev,
+  .swiper-button-next {
+    margin-top: -60px!important;
+  }
+  .swiper-btn-color,
+  .swiper-btn-color2 {
+    background-color: transparent;
+    border: 1px solid #fff;
+  }
+  .swiper-btn-color:hover,
+  .swiper-btn-color2:hover {
+    background-color: #42b983;
+    border: 1px solid #42b983!important;
+  }
+  .flag-text-btns {
+    justify-content: center;
+  }
+  .swiper-button-prev {
+    margin-left: 10px;
+    transform: translateX(0);
+    border-radius: 50%;
+    padding: 0;
+    width: 50px;
+    height: 50px;
+  }
+  .swiper-button-next {
+    margin-right: 10px;
+    transform: translateX(0);
+    border-radius: 50%;
+    padding: 0;
+    width: 50px;
+    height: 50px;
+  }
+  .swiper-button-next:after, .swiper-button-prev:after {
+    font-size: 1.2rem;
+  }
+  @media (min-width: 992px) {
+    .flag-text .excerpt {
+      line-height: 35px;
+      height: 175px;
+    }
+    .default-excerpt {
+      min-height: 150px;
+    }
+    .typed-element {
+      align-items: unset;
+    }
+  }
+  @media (max-width: 992px) {
+    .flag-text {
+      margin-left: 0;
+      height: 60%;
+      top: 55%;
+    }
+    .flag-text .title {
+      font-size: 2.4rem;
+      margin-top: 0;
+      display: -webkit-box;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 2;
+      overflow: hidden;
+    }
+    .flag-text .excerpt {
+      line-height: 35px;
+      height: 185px;
+    }
+    .flag-text .read-more {
+      margin-top: 20px;
+    }
+  }
+  @media (max-width: 551px) {
+    .flag-text {
+      height: 60%;
+    }
+    .flag-text .title {
+      font-size: 2.2rem;
+    }
+    .flag-text .excerpt {
+      line-height: 30px;
+    }
+    .flag-text .read-more {
+      margin-top: 50px;
+      padding: 10px 30px;
+    }
+    .swiper-button-prev {
+      margin-left: 0;
+    }
+    .swiper-button-next {
+      margin-right: 0;
+    }
+    .default-excerpt {
+      margin-top: 1rem;
+    }
+  }
+
+
+/* video */
+.swiper-video {
+  width: 100%;
+  height: 100%;
+}
+.swiper-video video {
+  pointer-events: none;
+}
+.swiper-video-maskBox{
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  background-color: #000;
+  opacity: 0.2;
+  z-index: 1;
+}
+@media (min-width: 992px) {
+  
+    .swiper-video {
+      display: none;
+    }
+    .swiper-default-bgImg {
+      display: block;  
+    }
+  
+}
+@media (max-width: 992px) {
+  .swiper-video {
+    display: none;
+  }
+  .swiper-default-bgImg {
+    display: block;  
+  }
+}
+/* video-end */
 </style>
 
 
+<div id="l_main">
+  <div class="l_content">
+    <!-- 自定义的内容 -->
     
+    <!-- 首页座右铭 -->
     
-    <!-- 评论 -->
-    <!-- 评论 -->
+    <!-- 首页公告 -->
+    
+    <!-- 首页文章置顶 -->
+    
 
-  <div id="myComment">
-    
-      <div id="gitment-container"></div>
 
+
+    <div class="bg-floor" id="home-bg-floor" style="position: fixed;left: 0;top: 0;width: 100%;height: 100%;z-index: -2;"></div>
+    <!-- 每一篇文章卡片 -->
+    <!-- hash算法 -->
+
+<section class="posts">
+  
+    
+    <article class="post reveal" style="flex-direction: row-reverse;   ">
+      <div class="post-main">
+        <div class="post-info">
+          <div class="post-time">
+            <i class="fas fa-clock" aria-hidden="true"></i>
+            <span class="post-time">2021-08-09</span>
+          </div>
+          <div class="post-title">
+            <a class="post-title-link" href="/2021/08/09/%E6%B5%85%E8%B0%88%E6%B8%B8%E6%88%8F%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%8C%B9%E9%85%8D%E7%AE%97%E6%B3%95%E6%9C%BA%E5%88%B6-%E6%B5%85%E8%B0%88%E6%B8%B8%E6%88%8F%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%8C%B9%E9%85%8D%E7%AE%97%E6%B3%95%E6%9C%BA%E5%88%B6/">浅谈游戏服务器匹配算法机制</a>
+          </div>
+          <div class="post-meta">
+            <div class="post-tags">
+              <!-- 文章详情页的标签 -->
+
+    <i class="iconfont icontag"></i>
+    <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/java/" rel="tag">java</a></li></ul>
+
+            </div>
+            <div class="post-categories">
+              <!-- 文章详情页的分类 -->
+
+<div class="article-category">
+  <i class="iconfont iconbookmark1"></i>
+  <a class="article-category-link" href="/categories/java-%E6%9C%8D%E5%8A%A1%E5%99%A8%E7%AE%97%E6%B3%95/">java | 服务器算法</a>
+</div>
+
+
+            </div>
+          </div>
+          <div class="post-img-mobile">
+            <a href="/2021/08/09/%E6%B5%85%E8%B0%88%E6%B8%B8%E6%88%8F%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%8C%B9%E9%85%8D%E7%AE%97%E6%B3%95%E6%9C%BA%E5%88%B6-%E6%B5%85%E8%B0%88%E6%B8%B8%E6%88%8F%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%8C%B9%E9%85%8D%E7%AE%97%E6%B3%95%E6%9C%BA%E5%88%B6/" style="background-size: cover; 
+              background-position: center center;">
+              <img class="lazyload lazyload placeholder" src="/medias/4.jpg" class="lazyload placeholder" data-srcset="/medias/4.jpg" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="">
+            </a>
+          </div>
+          <div class="post-content">
+            导言如今在游戏市场，越来越多的游戏都加入了多人匹配系统，如data2,lol,守望先锋等竞技型游戏所有的战斗都是典型的多人联机对战的模式，如何保证对战的双方的平衡性，和公平性，就很重要。如lol等竞技性很强的游戏采用的都是ELO算法来实现的
+          </div>
+        </div>
+        <div class="post-more">
+          <a href="/2021/08/09/%E6%B5%85%E8%B0%88%E6%B8%B8%E6%88%8F%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%8C%B9%E9%85%8D%E7%AE%97%E6%B3%95%E6%9C%BA%E5%88%B6-%E6%B5%85%E8%B0%88%E6%B8%B8%E6%88%8F%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%8C%B9%E9%85%8D%E7%AE%97%E6%B3%95%E6%9C%BA%E5%88%B6/">
+            <i class="iconfont iconmore" pointer style="float: right;  " title="阅读更多"></i>
+          </a>
+        </div>
+      </div>
+      <div class="post-img">
+        <a href="/2021/08/09/%E6%B5%85%E8%B0%88%E6%B8%B8%E6%88%8F%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%8C%B9%E9%85%8D%E7%AE%97%E6%B3%95%E6%9C%BA%E5%88%B6-%E6%B5%85%E8%B0%88%E6%B8%B8%E6%88%8F%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%8C%B9%E9%85%8D%E7%AE%97%E6%B3%95%E6%9C%BA%E5%88%B6/" style="background-size: cover; 
+          background-position: center center;">
+          <img class="lazyload lazyload placeholder" src="/medias/4.jpg" class="lazyload placeholder" data-srcset="/medias/4.jpg" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="">
+        </a>
+      </div>
+    </article>
+  
+</section>
+    <!-- 翻页 -->
+    
+  <!-- <nav class="page-nav">
+    <a class="extend prev" rel="prev" href="/">Prev</a><a class="page-number" href="/">1</a><span class="page-number current">2</span>
+  </nav> -->
+  <div class="page-nav">
+    
+      <a href="/"
+         class="page-nav-pre">
+         <i class="fas fa-angle-left"></i><span class="ml-5">Prev</span>
+      </a>
+    
+    <div class="page-info">
+        <div class="page-info-text">2 / 2</div>
+    </div>
     
   </div>
 
-<!-- comment script in themes\hexo-theme-bamboo\layout\_partial\scripts\index.ejs -->
-
-
   </div>
 
-  <!-- 目录 -->
-  <!-- 文章详情页右侧目录 -->
-
-  <div class="toc-aside">
-    <div class="toc-main">
-      <div class="toc-aside-title">
-        <i class="fas fa-list-ul" aria-hidden="true"></i><span>catalog</span>
+  
+<aside id='l_side'>
+  
+    
+      
+        <section class="widget side_blogger">
+  <div class='content'>
+    
+      
+        <a class='avatar flat-box rectangle' href='/about/'>
+          <img src='https://tva3.sinaimg.cn/large/9bd9b167gy1g1p9vy7vu6j20b40b4dgh.jpg'/>
+        </a>
+      
+    
+    
+      <div class='text'>
         
-          <div class="toc-open-close">catalog</div>
+          <h2>故笙诉离歌</h2>
+        
+        
+        
+          <p><span id="jinrishici-sentence">wh1t3zer</span></p>
+          <script src="https://sdk.jinrishici.com/v2/browser/jinrishici.js" charset="utf-8"></script>
         
       </div>
-      <div class="toc-content">
-        <div class="toc"></div>
+    
+    
+      <div class="social-wrapper">
+        
+          
+            <a href="/atom.xml"
+              class="social fas fa-rss flat-btn"
+              target="_blank"
+              rel="external nofollow noopener noreferrer">
+              
+            </a>
+          
+        
+          
+            <a href="mailto:602468057@qq.com"
+              class="social fas fa-envelope flat-btn"
+              target="_blank"
+              rel="external nofollow noopener noreferrer">
+              
+            </a>
+          
+        
+          
+            <a href="https://github.com/wh1t3zer"
+              class="social fab fa-github flat-btn"
+              target="_blank"
+              rel="external nofollow noopener noreferrer">
+              
+            </a>
+          
+        
+          
+            <a href="tencent://AddContact/?fromId=50&amp;fromSubId=1&amp;subcmd=all&amp;uin=602468057"
+              class="social fab fa-qq flat-btn"
+              target="_blank"
+              rel="external nofollow noopener noreferrer">
+              
+            </a>
+          
+        
+      </div>
+    
+  </div>
+</section>
+
+      
+    
+  
+  
+  
+
+  <div class="layout_sticky">
+    
+      
+    <section class="widget side_category">
+      
+  <header>
+    
+      <a style="color: " href='/blog/categories/'><i class="fas fa-folder-open fa-fw" aria-hidden="true"></i><span class='name'>文章分类</span></a>
+    
+  </header>
+
+
+      <div class='content'>
+        <ul class="entry navigation">
+          
+            <li><a class="flat-box"
+              title="/categories/CTF-SQL%E6%B3%A8%E5%85%A5/" href="/categories/CTF-SQL%E6%B3%A8%E5%85%A5/"
+              id="categoriesCTF-SQLE6B3A8E585A5"
+              ><div class='name'>CTF | SQL注入</div><div class='badge'>(1)</div></a></li>
+          
+            <li><a class="flat-box"
+              title="/categories/CTF-XSS%E6%B3%A8%E5%85%A5/" href="/categories/CTF-XSS%E6%B3%A8%E5%85%A5/"
+              id="categoriesCTF-XSSE6B3A8E585A5"
+              ><div class='name'>CTF | XSS注入</div><div class='badge'>(1)</div></a></li>
+          
+            <li><a class="flat-box"
+              title="/categories/CTF-%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/" href="/categories/CTF-%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/"
+              id="categoriesCTF-E58F8DE5BA8FE58897E58C96"
+              ><div class='name'>CTF | 反序列化</div><div class='badge'>(1)</div></a></li>
+          
+            <li><a class="flat-box"
+              title="/categories/CTF-%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0/" href="/categories/CTF-%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0/"
+              id="categoriesCTF-E69687E4BBB6E4B88AE4BCA0"
+              ><div class='name'>CTF | 文件上传</div><div class='badge'>(2)</div></a></li>
+          
+            <li><a class="flat-box"
+              title="/categories/java-%E6%9C%8D%E5%8A%A1%E5%99%A8%E7%AE%97%E6%B3%95/" href="/categories/java-%E6%9C%8D%E5%8A%A1%E5%99%A8%E7%AE%97%E6%B3%95/"
+              id="categoriesjava-E69C8DE58AA1E599A8E7AE97E6B395"
+              ><div class='name'>java | 服务器算法</div><div class='badge'>(1)</div></a></li>
+          
+            <li><a class="flat-box"
+              title="/categories/java-%E6%9C%9F%E6%9C%AB/" href="/categories/java-%E6%9C%9F%E6%9C%AB/"
+              id="categoriesjava-E69C9FE69CAB"
+              ><div class='name'>java | 期末</div><div class='badge'>(1)</div></a></li>
+          
+            <li><a class="flat-box"
+              title="/categories/webshell-CTF/" href="/categories/webshell-CTF/"
+              id="categorieswebshell-CTF"
+              ><div class='name'>webshell | CTF</div><div class='badge'>(1)</div></a></li>
+          
+            <li><a class="flat-box"
+              title="/categories/%E9%BB%98%E8%AE%A4%E5%88%86%E7%B1%BB-CTF-XSS%E6%B3%A8%E5%85%A5/" href="/categories/%E9%BB%98%E8%AE%A4%E5%88%86%E7%B1%BB-CTF-XSS%E6%B3%A8%E5%85%A5/"
+              id="categoriesE9BB98E8AEA4E58886E7B1BB-CTF-XSSE6B3A8E585A5"
+              ><div class='name'>默认分类 | CTF | XSS注入</div><div class='badge'>(1)</div></a></li>
+          
+            <li><a class="flat-box"
+              title="/categories/%E9%BB%98%E8%AE%A4%E5%88%86%E7%B1%BB-CTF-reverse/" href="/categories/%E9%BB%98%E8%AE%A4%E5%88%86%E7%B1%BB-CTF-reverse/"
+              id="categoriesE9BB98E8AEA4E58886E7B1BB-CTF-reverse"
+              ><div class='name'>默认分类 | CTF | reverse</div><div class='badge'>(1)</div></a></li>
+          
+        </ul>
+      </div>
+    </section>
+  
+  
+    
+    
+      
+<section class="widget side_tagcloud">
+    
+  <header>
+    
+      <a style="color: " href='/tags/'><i class="fas fa-tags fa-fw" aria-hidden="true"></i><span class='name'>热门标签</span></a>
+    
+  </header>
+
+
+    <div class='content'>
+    <a href="/tags/SQL-ctf/" style="font-size: 14px; color: #999">SQL | ctf</a> <a href="/tags/ctf-reverse/" style="font-size: 14px; color: #999">ctf | reverse</a> <a href="/tags/ctf-xss/" style="font-size: 14px; color: #999">ctf | xss</a> <a href="/tags/ctf-%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0/" style="font-size: 24px; color: #555">ctf | 文件上传</a> <a href="/tags/java/" style="font-size: 24px; color: #555">java</a> <a href="/tags/webshell-ctf/" style="font-size: 14px; color: #999">webshell | ctf</a> <a href="/tags/%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/" style="font-size: 14px; color: #999">反序列化</a>
+    </div>
+</section>
+
+  
+    
+    
+  <section class="widget side_recent_post">
+    
+  <header>
+    
+      <a style="color: " href='/tags/'><i class="fas fa-book fa-fw" aria-hidden="true"></i><span class='name'>最新文章</span></a>
+    
+  </header>
+
+
+    <div class='content'>
+      
+      <!-- hash算法 -->
+      
+      <div class="aside-list">
+        
+          <div class="aside-list-item">
+            
+            
+            
+
+            <div class="post-img-box">
+              <a href="/2022/08/25/%E9%80%86%E5%90%91%E5%85%A5%E9%97%A8%E7%9A%84%E4%B8%80%E4%BA%9B%E5%B0%8F%E7%9F%A5%E8%AF%86/" class="post-img " style="background-size: cover; 
+                background-position: center center;">
+                <img class="lazyload lazyload placeholder" style="width:100%;height:100%;object-fit:cover;" data-src="/medias/5.jpg" class="lazyload placeholder" data-srcset="/medias/5.jpg" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="">
+              </a>
+            </div>
+            <div class="post-date-title">
+              <div>
+                
+                  <span class="post-date">08-25</span>
+                
+              </div>
+              <a class="post-title" href="/2022/08/25/%E9%80%86%E5%90%91%E5%85%A5%E9%97%A8%E7%9A%84%E4%B8%80%E4%BA%9B%E5%B0%8F%E7%9F%A5%E8%AF%86/">浅谈逆向入门有关的知识</a>
+            </div>
+          </div>
+        
+          <div class="aside-list-item">
+            
+            
+            
+
+            <div class="post-img-box">
+              <a href="/2022/06/16/%E8%AE%B0%E4%B8%80%E6%AC%A1POP%E9%93%BE%E5%88%86%E6%9E%90/" class="post-img " style="background-size: cover; 
+                background-position: center center;">
+                <img class="lazyload lazyload placeholder" style="width:100%;height:100%;object-fit:cover;" data-src="/medias/4.jpg" class="lazyload placeholder" data-srcset="/medias/4.jpg" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="">
+              </a>
+            </div>
+            <div class="post-date-title">
+              <div>
+                
+                  <span class="post-date">06-16</span>
+                
+              </div>
+              <a class="post-title" href="/2022/06/16/%E8%AE%B0%E4%B8%80%E6%AC%A1POP%E9%93%BE%E5%88%86%E6%9E%90/">记一次POP链分析(练习)</a>
+            </div>
+          </div>
+        
+          <div class="aside-list-item">
+            
+            
+            
+
+            <div class="post-img-box">
+              <a href="/2022/03/15/XSS%E9%9D%B6%E5%9C%BA%E5%AE%9E%E6%88%98%E4%BA%8C%EF%BC%8811-20%E5%85%B3%EF%BC%89-xss%E9%9D%B6%E5%9C%BA%E5%AE%9E%E6%88%98%E4%BA%8C11-20%E5%85%B3/" class="post-img " style="background-size: cover; 
+                background-position: center center;">
+                <img class="lazyload lazyload placeholder" style="width:100%;height:100%;object-fit:cover;" data-src="/medias/10.jpg" class="lazyload placeholder" data-srcset="/medias/10.jpg" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="">
+              </a>
+            </div>
+            <div class="post-date-title">
+              <div>
+                
+                  <span class="post-date">03-15</span>
+                
+              </div>
+              <a class="post-title" href="/2022/03/15/XSS%E9%9D%B6%E5%9C%BA%E5%AE%9E%E6%88%98%E4%BA%8C%EF%BC%8811-20%E5%85%B3%EF%BC%89-xss%E9%9D%B6%E5%9C%BA%E5%AE%9E%E6%88%98%E4%BA%8C11-20%E5%85%B3/">XSS靶场实战二（11-20关）</a>
+            </div>
+          </div>
+        
+          <div class="aside-list-item">
+            
+            
+            
+
+            <div class="post-img-box">
+              <a href="/2022/01/13/XSS%E9%9D%B6%E5%9C%BA%E5%AE%9E%E6%88%98%E4%B8%80%EF%BC%881-10%E5%85%B3%EF%BC%89-xss%E9%9D%B6%E5%9C%BA%E5%AE%9E%E6%88%98%E4%B8%801-10%E5%85%B3/" class="post-img " style="background-size: cover; 
+                background-position: center center;">
+                <img class="lazyload lazyload placeholder" style="width:100%;height:100%;object-fit:cover;" data-src="/medias/10.jpg" class="lazyload placeholder" data-srcset="/medias/10.jpg" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="">
+              </a>
+            </div>
+            <div class="post-date-title">
+              <div>
+                
+                  <span class="post-date">01-13</span>
+                
+              </div>
+              <a class="post-title" href="/2022/01/13/XSS%E9%9D%B6%E5%9C%BA%E5%AE%9E%E6%88%98%E4%B8%80%EF%BC%881-10%E5%85%B3%EF%BC%89-xss%E9%9D%B6%E5%9C%BA%E5%AE%9E%E6%88%98%E4%B8%801-10%E5%85%B3/">XSS靶场实战一（1-10关）</a>
+            </div>
+          </div>
+        
+          <div class="aside-list-item">
+            
+            
+            
+
+            <div class="post-img-box">
+              <a href="/2021/12/06/%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E9%9D%B6%E5%9C%BA%E4%BA%8C%EF%BC%8813-21%E5%85%B3%EF%BC%89-%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E9%9D%B6%E5%9C%BA%E4%BA%8C13-21%E5%85%B3/" class="post-img " style="background-size: cover; 
+                background-position: center center;">
+                <img class="lazyload lazyload placeholder" style="width:100%;height:100%;object-fit:cover;" data-src="/medias/3.jpg" class="lazyload placeholder" data-srcset="/medias/3.jpg" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="">
+              </a>
+            </div>
+            <div class="post-date-title">
+              <div>
+                
+                  <span class="post-date">12-06</span>
+                
+              </div>
+              <a class="post-title" href="/2021/12/06/%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E9%9D%B6%E5%9C%BA%E4%BA%8C%EF%BC%8813-21%E5%85%B3%EF%BC%89-%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E9%9D%B6%E5%9C%BA%E4%BA%8C13-21%E5%85%B3/">文件上传靶场二（13-21关）</a>
+            </div>
+          </div>
+        
       </div>
     </div>
-  </div>
+  </section>
 
-  <!-- 手机端目录按钮 -->
-  <div id="toc-mobile-btn">
-    <i class="fas fa-list-ul" aria-hidden="true"></i>
-  </div>
+    
+  <section class="widget side_archives">
+    
+    <header><a style="color: red" href='/archives/'><i class="fas fa-archive fa-fw" aria-hidden="true"></i><span class='name'>归档</span></a></header><div class="content"><ul class="card-archive-list"><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2022/08/"><span class="card-archive-list-date">August 2022</span><span class="card-archive-list-count">1</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2022/06/"><span class="card-archive-list-date">June 2022</span><span class="card-archive-list-count">1</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2022/03/"><span class="card-archive-list-date">March 2022</span><span class="card-archive-list-count">1</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2022/01/"><span class="card-archive-list-date">January 2022</span><span class="card-archive-list-count">1</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2021/12/"><span class="card-archive-list-date">December 2021</span><span class="card-archive-list-count">1</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2021/11/"><span class="card-archive-list-date">November 2021</span><span class="card-archive-list-count">3</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2021/09/"><span class="card-archive-list-date">September 2021</span><span class="card-archive-list-count">1</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2021/08/"><span class="card-archive-list-date">August 2021</span><span class="card-archive-list-count">2</span></a></li></ul></div>
+  </section>
 
-
-<script>
-  function closeToc(init) {
-    $(".toc-aside").css({'width': 0, 'padding': 0, 'transition': init ?  'noe' : 'width 0.3s' });
-    $(".toc-content").css({'width': 0});
-    $(".toc-aside-title span, .toc-aside-title i").css({'display': 'none'});
-    $(".main-content").css({'width': '75%', 'margin': '10px auto'});
-  };
-  function openToc() {
-    $(".main-content").css({'width': '65%', 'margin-right': '10px', 'margin-left': 'calc(35% - 350px)'});
-    $(".toc-aside").css({'width': '300px', 'padding': '0 10px', 'transition': 'width 0.3s'});
-    $(".toc-content").css({'width': '300px'});
-    $(".toc-aside-title span, .toc-aside-title i").css({'display': 'inline-block'});
-  }
-  function openBtnClickFn () {
-    let openOrCloseBtn = $('.toc-aside .toc-aside-title .toc-open-close');
-    let open = eval('' || 'true');
-    openOrCloseBtn.click(function() {
-      if (open) {
-        closeToc();
-        open = false;
-      } else {
-        openToc();
-        open = true;
-      }
-    });
-  };
-  openBtnClickFn();
-  initCloseTocWidth(true);
-
-  function initCloseTocWidth(init) {
-    if (window.innerWidth >= 992) {
-      let isClose = false;
-      isClose && closeToc(init)
-    }
-  }
-
-  document.addEventListener('pjax:complete', function () {
-    $(".toc-aside").css({'transition': 'no'});
-  })
-  document.addEventListener('pjax:complete', function () {
-    openBtnClickFn();
-  })
+    <section class="widget side_webinfo">
   
-</script>
-
-  <!-- 图片放大 Wrap images with fancybox support -->
-  <script src="/js/wrapImage.js"></script>
-</div>
-
-<!-- 文章详情页背景图 -->
-<div id="appBgSwiper" style="position: fixed;left: 0;top: 0;width: 100%;height: 100%;z-index: -2;"
-	:style="{'background-color': bgColor ? bgColor : 'transparent'}">
-	<transition-group tag="ul" :name="names">
-		<li v-for='(image,index) in img' :key='index' v-show="index === mark" class="bg-swiper-box">
-			<img :src="image" class="bg-swiper-img no-lazy">
-		</li>
-	</transition-group>
-</div>
-<script>
-	var vm = new Vue({
-		el: '#appBgSwiper',
-		data: {
-			names: '' || 'fade' || 'fade', // translate-fade fade
-			mark: 0,
-			img: [],
-			bgColor: '',
-			time: null
-		},
-		methods: {   //添加方法
-			change(i, m) {
-				if (i > m) {
-					// this.names = 'fade';
-				} else if (i < m) {
-					// this.names = 'fade';
-				} else {
-					return;
-				}
-				this.mark = i;
-			},
-			prev() {
-				// this.names = 'fade';
-				this.mark--;
-				if (this.mark === -1) {
-					this.mark = 3;
-					return
-				}
-			},
-			next() {
-				// this.names = 'fade';
-				this.mark++;
-				if (this.mark === this.img.length) {
-					this.mark = 0;
-					return
-				}
-			},
-			autoPlay() {
-				// this.names = 'fade';
-				this.mark++;
-				if (this.mark === this.img.length) {
-					this.mark = 0;
-					return
-				}
-			},
-			play() {
-				let bgImgDelay = '' || '180000'
-				let delay = parseInt(bgImgDelay) || 180000;
-				this.time = setInterval(this.autoPlay, delay);
-			},
-			enter() {
-				clearInterval(this.time);
-			},
-			leave() {
-				this.play();
-			}
-		},
-		created() {
-			this.play()
-		},
-		beforeDestroy() {
-			clearInterval(this.time);
-		},
-		mounted() {
-			let prop = '' || '';
-			let isImg = prop.includes('.bmp') || prop.includes('.jpg') || prop.includes('.png') || prop.includes('.tif') || prop.includes('.gif') || prop.includes('.pcx') || prop.includes('.tga') || prop.includes('.exif') || prop.includes('.fpx') || prop.includes('.psd') || prop.includes('.cdr') || prop.includes('.pcd') || prop.includes('.dxf') || prop.includes('.ufo') || prop.includes('.eps') || prop.includes('.ai') || prop.includes('.raw') || prop.includes('.WMF') || prop.includes('.webp') || prop.includes('.jpeg') || prop.includes('http://') || prop.includes('https://')
-			if (isImg) {
-				let img = prop.split(',');
-				let configRoot = '/'
-				let arrImg = [];
-				img.forEach(el => {
-					var Expression = /http(s)?:\/\/([\w-]+\.)+[\w-]+(\/[\w- .\/?%&=]*)?/;
-					var objExp = new RegExp(Expression);
-
-					if (objExp.test(el)) {
-						// http or https
-						arrImg.push(el);
-					} else {
-						// 非http or https开头
-						// 本地文件
-						let firstStr = el.charAt(0);
-						if (firstStr == '/') {
-							el = el.substr(1); // 删除第一个字符 '/',因为 configRoot最后一个字符为 /
-						}
-						el = configRoot + el;
-						arrImg.push(el);
-					}
-				})
-				this.img = arrImg;
-			} else {
-				this.bgColor = prop;
-			}
-		}
-	})
-</script>
-
-<style>
-	.bg-swiper-box {
-		position: absolute;
-		display: block;
-		width: 100%;
-		height: 100%;
-	}
-
-	.bg-swiper-img {
-		object-fit: cover;
-		width: 100%;
-		height: 100%;
-	}
-</style>
+  <header>
+    
+      <i style="color: " class="fas fa-chart-line fa-fw" aria-hidden="true"></i><span class='name'>站点信息</span>
+    
+  </header>
 
 
+  <div class='content'>
+    <div class="webinfo">
+      
+        <div class="webinfo-item">
+          <div>文章数目：</div>
+          <div>11 篇</div>
+        </div>
+      
+
+      
+        <div class="webinfo-item">
+          <div>已运行时间：</div>
+          <div id="webinfo-runtime-count" publish_date="03/24/2020 21:34:09"></div>
+        </div>
+        <script>
+          var BirthDay = new Date(new Date('2022/06/10'));
+          var today = new Date();
+          var timeold = (today.getTime() - BirthDay.getTime());
+          var daysold = Math.floor(timeold / (24 * 60 * 60 * 1000));
+          document.getElementById('webinfo-runtime-count').innerHTML = daysold + ' 天';
+        </script>
+      
 
 
-  <script>
-  function loadMermaid() {
-    if (document.getElementsByClassName('mermaid').length) {
-      if (window.mermaidJsLoad) mermaid.init()
-      else {
-        loadScript('https://unpkg.com/mermaid/dist/mermaid.min.js').then(() => {
-          window.mermaidJsLoad = true
-          mermaid.initialize({
-            theme: 'default',
-          })
-          if ('true') {
-            mermaid.init();
+      
+
+      
+        <div class="webinfo-item">
+          <div>本站访客数：</div>
+          
+          <div><span id="busuanzi_value_site_uv"><i class="fas fa-fan fa-spin fa-fw" aria-hidden="true"></i></span> 人</div>
+          
+        </div>
+      
+
+      
+        <div class="webinfo-item">
+          <div>本站总访问量：</div>
+          
+          <div><span id="busuanzi_value_site_pv"><i class="fas fa-fan fa-spin fa-fw" aria-hidden="true"></i></span> 次</div>
+          
+        </div>
+      
+
+      
+        <div class="webinfo-item">
+          <div>最后活动时间：</div>
+          
+            <div id="last-update" style="display: none;">Sun Aug 28 2022 00:58:18 GMT+0800 (中国标准时间)</div>
+            <div id="last-update-show">2022-08-28 日</div>
+          
+        </div>
+        
+        <script>
+          function timeago(dateTimeStamp) {
+              var minute = 1000 * 60; //把分，时，天，周，半个月，一个月用毫秒表示
+              var hour = minute * 60;
+              var day = hour * 24;
+              var week = day * 7;
+              var month = day * 30;
+              var now = new Date().getTime(); //获取当前时间毫秒
+              var diffValue = now - dateTimeStamp; //时间差
+              if (diffValue < 0) {
+                  return;
+              }
+              var minC = diffValue / minute; //计算时间差的分，时，天，周，月
+              var hourC = diffValue / hour;
+              var dayC = diffValue / day;
+              var weekC = diffValue / week;
+              var monthC = diffValue / month;
+              if (monthC >= 1 && monthC <= 3) {
+                  result = " " + parseInt(monthC) + " 月前"
+              } else if (weekC >= 1 && weekC <= 3) {
+                  result = " " + parseInt(weekC) + " 周前"
+              } else if (dayC >= 1 && dayC <= 6) {
+                  result = " " + parseInt(dayC) + " 天前"
+              } else if (hourC >= 1 && hourC <= 23) {
+                  result = " " + parseInt(hourC) + " 小时前"
+              } else if (minC >= 1 && minC <= 59) {
+                  result = " " + parseInt(minC) + " 分钟前"
+              } else if (diffValue >= 0 && diffValue <= minute) {
+                  result = "刚刚"
+              } else {
+                  var datetime = new Date();
+                  datetime.setTime(dateTimeStamp);
+                  var Nyear = datetime.getFullYear();
+                  var Nmonth = datetime.getMonth() + 1 < 10 ? "0" + (datetime.getMonth() + 1) : datetime.getMonth() + 1;
+                  var Ndate = datetime.getDate() < 10 ? "0" + datetime.getDate() : datetime.getDate();
+                  var Nhour = datetime.getHours() < 10 ? "0" + datetime.getHours() : datetime.getHours();
+                  var Nminute = datetime.getMinutes() < 10 ? "0" + datetime.getMinutes() : datetime.getMinutes();
+                  var Nsecond = datetime.getSeconds() < 10 ? "0" + datetime.getSeconds() : datetime.getSeconds();
+                  result = Nyear + "-" + Nmonth + "-" + Ndate
+              }
+              return result;
           }
-        })
-      }
-    }
-  };
-  document.addEventListener("DOMContentLoaded", function () {
-    loadMermaid();
-  })
+          var lastUpDate = document.getElementById('last-update').innerHTML;
+          try {
+            document.getElementById('last-update-show').innerHTML = timeago(new Date(lastUpDate));
+          } catch (error) {
+            document.getElementById('last-update-show').innerHTML = '2022-08-28 日';
+          }
+        </script>
+        
+      
+    </div>
+  </div>
+</section>
+    
+  </div>
+</aside>
 
-  document.addEventListener('pjax:complete', function () {
-    loadMermaid();
-  })
+</div>
+<!-- 花瓣和雪花飘落 -->
+<!-- 雪花和花瓣特效 -->
+
   
-</script>
+    <script src="/js/falling/sakura.js"></script>
+  
+
+
+
+<!-- 灯笼 -->
 
 
       </main>

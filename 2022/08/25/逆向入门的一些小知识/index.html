@@ -11,7 +11,7 @@
   <!-- Global site tag (gtag.js) - Google Analytics -->
 
 
-  <title>记一次POP链分析(练习) | wh1t3zer</title>
+  <title>浅谈逆向入门有关的知识 | wh1t3zer</title>
 
   <link rel="icon" type="image/x-icon, image/vnd.microsoft.icon" href="/favicon.ico">
   <link rel="stylesheet" href="https://at.alicdn.com/t/font_1911880_c1nvbyezg17.css">
@@ -518,21 +518,21 @@
 
 
 <div class="post-detail-header" id="thumbnail_canvas" style="background-repeat: no-repeat; background-size: cover; 
-  background-position: center center;position: relative;background-image:url('/medias/4.jpg')">
+  background-position: center center;position: relative;background-image:url('/medias/5.jpg')">
   <div class="post-detail-header-mask"></div>
   <canvas id="header_canvas"style="position:absolute;bottom:0;pointer-events:none;"></canvas>
   
   <div class="post-detail-header_info-box">
     <div class="title-box">
       <span class="title">
-        记一次POP链分析(练习)
+        浅谈逆向入门有关的知识
       </span>
     </div>
     
     
       
         <span class="post-detail-header_date">
-          <i class="fas fa-calendar"></i> Published in：2022-06-16 |
+          <i class="fas fa-calendar"></i> Published in：2022-08-25 |
         </span>
       
 
@@ -540,8 +540,8 @@
         <span class="post-detail-header_categories">
           <i class="iconfont iconbookmark1"></i> category：
           
-            <a href="/categories/CTF-%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/" class="post-detail-header_category">
-              CTF | 反序列化
+            <a href="/categories/%E9%BB%98%E8%AE%A4%E5%88%86%E7%B1%BB-CTF-reverse/" class="post-detail-header_category">
+              默认分类 | CTF | reverse
             </a>
           
         </span>
@@ -565,62 +565,26 @@
   <div class="main-content">
     <article class="post post-detail">
       <div class="post-content">
-        <h2 id="0x01前言"><a href="#0x01前言" class="headerlink" title="0x01前言"></a>0x01前言</h2><p>TP5反序列化入口都是在Windows类的析构方法，通过<code>file_exists()</code>函数触发<code>__toString</code> 魔术方法，然后以<code>__toString</code>为中间跳板寻找代码执行点，造成反序列化任意命令执行。有关TP5的分析可以看挖掘暗藏thinkphp中的反序列利用链这篇文章，感觉分析的思路比较好。</p>
-<p>TP6的不同之处就是没有了Windows类，也就无法利用其中的析构方法作为反序列化入口，需要重新挖掘其他入口点。</p>
-<h2 id="0x02补充知识"><a href="#0x02补充知识" class="headerlink" title="0x02补充知识"></a>0x02补充知识</h2><h3 id="反序列化过程中一些能自动执行的魔术方法"><a href="#反序列化过程中一些能自动执行的魔术方法" class="headerlink" title="反序列化过程中一些能自动执行的魔术方法"></a>反序列化过程中一些能自动执行的魔术方法</h3><p><code>__call()</code>	调用不可访问或不存在的方法时被调用</p>
-<p><code>__callStatic()</code>	调用不可访问或不存在的静态方法时被调用</p>
-<p><code>__clone()</code>	进行对象clone时被调用，用来调整对象的克隆行为</p>
-<p><code>__onstuct()</code>	构建对象的时被调用</p>
-<p><code>__debuginfo()</code>	当调用var_dump()打印对象时被调用（当你不想打印所有属性）适用于PHP5.6版本</p>
-<p><code>__destruct()</code>	明确销毁对象或脚本结束时被调用</p>
-<p><code>__get()</code>	读取不可访问或不存在属性时被调用</p>
-<p><code>__invoke()</code>	当以函数方式调用对象时被调用</p>
-<p><code>__isset()</code>	对不可访问或不存在的属性调用isset()或empty()时被调用</p>
-<p><code>__set()</code>	当给不可访问或不存在属性赋值时被调用</p>
-<p><code>__set_state()</code>	当调用var_export()导出类时,此静态方法被调用,返回值做为var_export的返回值</p>
-<p><code>__sleep()</code>	当使用serialize时被调用,当你不需要保存大对象的所有数据时很有用</p>
-<p><code>__toString()</code>	当一个类被转换成字符串时被调用</p>
-<p><code>__unset()</code>	对不可访问或不存在的属性进行unset时被调用</p>
-<p><code>__wakeup()</code>	当使用unserialize时被调用,可用于做些对象的初始化操作</p>
-<h3 id="常见的一些起点"><a href="#常见的一些起点" class="headerlink" title="常见的一些起点"></a>常见的一些起点</h3><p><code>__destruct()</code>一定会触发，在对象销毁时触发</p>
-<p><code>__construct()</code>一定会触发，在对象创建时触发</p>
-<p><code>__toString()</code>当一个类被转换成字符串时被调用</p>
-<h3 id="常见的一些中间跳板"><a href="#常见的一些中间跳板" class="headerlink" title="常见的一些中间跳板"></a>常见的一些中间跳板</h3><p><code>__toString()</code>当一个类被转换成字符串时被调用</p>
-<p><code>__get()</code> 读取不可访问或不存在的属性时被调用</p>
-<p><code>__set()</code>当给不可访问或不存在的属性赋值时被调用</p>
-<p><code>__isset()</code>对不可访问或不存在的属性调用<code>isset()</code>或<code>empty()</code>时被调用，如<code>$this-&gt;$func()</code></p>
-<h3 id="反序列化的常见终点"><a href="#反序列化的常见终点" class="headerlink" title="反序列化的常见终点"></a>反序列化的常见终点</h3><p><code>__call()</code>调用不可访问或不存在的方法时被调用</p>
-<p><code>call_user_fun</code>一般php代码执行都会选择这里</p>
-<p><code>call_user_fun_array</code>一般php代码执行都会选择这里</p>
-<h2 id="0x03分析"><a href="#0x03分析" class="headerlink" title="0x03分析"></a>0x03分析</h2><p>查看版本</p>
-<p><img src="/" class="lazyload placeholder" data-srcset="/" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="/upload/2022/06/1.png"></p>
-<p>是5.1.39LTS</p>
-<h3 id="寻找起始点"><a href="#寻找起始点" class="headerlink" title="寻找起始点"></a>寻找起始点</h3><p>TP5的POP链入口是thinkphp\library\think\process\pipes\Windows.php中的<code>__destruct()</code>函数，</p>
-<p><img src="/" class="lazyload placeholder" data-srcset="/" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="/upload/2022/06/2.png"></p>
-<p>看到有个<code>removeFiles()</code>函数，继续跟进，发现该函数的功能是当filename存在的时候，执行<code>unlink()</code>函数删除文件名，该变量是可控的。</p>
-<p><img src="/" class="lazyload placeholder" data-srcset="/" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="/upload/2022/06/3.png"></p>
-<p>跳转到<code>file_exists()</code>，可以触发<code>toString()</code>方法，$file可控</p>
-<h3 id="寻找中件跳板"><a href="#寻找中件跳板" class="headerlink" title="寻找中件跳板"></a>寻找中件跳板</h3><p>寻找一个<code>__toString()</code>作为跳板，发现有一个在thinkphp&#x2F;library&#x2F;think&#x2F;Collection.php里</p>
-<p><img src="/" class="lazyload placeholder" data-srcset="/" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="/upload/2022/06/4.png"></p>
-<p>查看跟进<code>toJson()</code>方法</p>
-<p><img src="/" class="lazyload placeholder" data-srcset="/" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="/upload/2022/06/5.png"></p>
-<p><code>toArray()</code>方法中寻找 $可控变量 -&gt; 方法（参数可控），可以触发某个类的<code>__call()</code>方法</p>
-<p>跟进到thinkphp&#x2F;library&#x2F;think&#x2F;model&#x2F;concern&#x2F;Conversion.php</p>
-<p>在 <code>toArray</code> 方法中找到一个符合条件的 <code>$relation-&gt;visible($name)</code></p>
-<h3 id="寻找执行点"><a href="#寻找执行点" class="headerlink" title="寻找执行点"></a>寻找执行点</h3><p>需要寻找一个类满足以下2个条件，全局搜索 <code>__call</code>，跟进 <code>thinkphp/library/think/Request.php</code></p>
-<blockquote>
-<p>该类中没有”visible”方法 </p>
-<p>实现了__call方法</p>
-</blockquote>
-<p><img src="/" class="lazyload placeholder" data-srcset="/" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="/upload/2022/06/6.png"></p>
+        <h1 id="逆向的解释"><a href="#逆向的解释" class="headerlink" title="逆向的解释"></a>逆向的解释</h1><p>逆向的本质就是将一个程序反编译成一段段代码，可能是伪代码，也可能是汇编代码。总的来说就是把一个完整的程序分成一小块一小块的代码段，从而对程序进行修改，完成所谓的“破解”。也能通过反编译某些恶意软件或者病毒，去分析它们的可疑、危险行为并进行拦截规则的编写。</p>
+<h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>我们从最开始的认识机器码开始，机器码是由0和1组成的。CPU只能看得懂机器码，随着计算机的发展，越来越多编程语言的崛起，出现了大量的高级语言，而它们的目的是为了程序员更好的编写看得懂的代码。通过编译器，编译成计算机使用的机器码。</p>
+<h2 id="认识触发器"><a href="#认识触发器" class="headerlink" title="认识触发器"></a>认识触发器</h2><p>触发器是边沿敏感的存储单元，数据存储的动作有某一信号的上升或者下降沿进行同步的。</p>
+<p>触发器是在时钟的沿进行数据的锁存的，而锁存器是用电平使能来锁存数据的。所以触发器的Q输出端在每一个时钟沿都会被更新，而锁存器只能在使能电平有效器件才会被更新。在FPGA设计中建议如果不是必须那么应该尽量使用触发器而不是锁存器。</p>
+<h2 id="认识寄存器"><a href="#认识寄存器" class="headerlink" title="认识寄存器"></a>认识寄存器</h2><p>什么是寄存器？寄存器的功能是存储二进制代码，它是由具有存储功能的触发器组合起来构成的。一个触发器可以存储1位二进制代码，故存放n位二进制代码的寄存器，需用n个触发器来构成。</p>
+<p>寄存器可分为通用寄存器、专用寄存器和段寄存器。</p>
+<h3 id="通用寄存器"><a href="#通用寄存器" class="headerlink" title="通用寄存器"></a>通用寄存器</h3><p>通用寄存器包括了数据寄存器，变址寄存器和指针寄存器。</p>
+<p>而数据寄存器分为累加寄存器（EAX），基址寄存器（EBX），计数寄存器（ECX），数据寄存器（EDX），它们为16位寄存器，负责存储16位数据或者地址，可也用做8位寄存器，当为8位寄存器时，它们分别为AH，AL，BH，BL，CH，CL，DH，DL</p>
+<p>变址寄存器为源地址寄存器（ESI），目的地址寄存器（EDI）</p>
+<p>指针寄存器为基址指针寄存器（EBP），堆栈指针寄存器（ESP）</p>
+<h3 id="专用寄存器"><a href="#专用寄存器" class="headerlink" title="专用寄存器"></a>专用寄存器</h3><p>专用寄存器有标志寄存器（FLAGS），和指令指针寄存器（IP）</p>
+<h3 id="段寄存器"><a href="#段寄存器" class="headerlink" title="段寄存器"></a>段寄存器</h3><p>代码段寄存器（ECS），堆栈段寄存器（ESS），数据段寄存器（EDS），附加段寄存器（EES）</p>
 
       </div>
       <div class="post-tags-categories">
         
         <div class="tags">
           
-            <a href="/tags/%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/" class="">
-              反序列化
+            <a href="/tags/ctf-reverse/" class="">
+              ctf | reverse
             </a>
           
         </div>
@@ -634,7 +598,7 @@
     </li>
     <li class="post-copyright-link">
     <strong>link:  </strong>
-    <a href="/2022/06/16/记一次POP链分析/" target="_blank" title="记一次POP链分析(练习)">https://wh1t3zer.github.io/2022/06/16/记一次POP链分析/</a>
+    <a href="/2022/08/25/逆向入门的一些小知识/" target="_blank" title="浅谈逆向入门有关的知识">https://wh1t3zer.github.io/2022/08/25/逆向入门的一些小知识/</a>
     </li>
     <li class="post-copyright-license">
       <strong>Copyright notice:   </strong>
@@ -652,39 +616,21 @@
 
 
 
-  
-  <div class="post-nav-prev post-nav-item">
-    <div class="post-nav-img" style="background-size: cover; 
-      background-position: center center;">
-      <img class="lazyload lazyload placeholder" src="/medias/5.jpg" class="lazyload placeholder" data-srcset="/medias/5.jpg" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="">
-    </div>
-    <a href="/2022/08/25/%E9%80%86%E5%90%91%E5%85%A5%E9%97%A8%E7%9A%84%E4%B8%80%E4%BA%9B%E5%B0%8F%E7%9F%A5%E8%AF%86/" class="post-nav-link">
-      <div class="title">
-        <i class="fas fa-angle-left"></i> Prev:
-        <div class="title-text">浅谈逆向入门有关的知识</div>
-      </div>
-      
-      <!-- <div class="content">
-        逆向的解释逆向的本质就是将一个程序反编译成一段段代码，可能是伪代码，也可能是汇编代码。总的来说就是把一个完整的程序分成一
-      </div> -->
-    </a>
-  </div>
-
 
 
   
   <div class="post-nav-next post-nav-item">
     <div class="post-nav-img" style="background-size: cover; 
       background-position: center center;">
-      <img class="lazyload lazyload placeholder" src="/medias/10.jpg" class="lazyload placeholder" data-srcset="/medias/10.jpg" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" src="" alt="">
+      <img class="lazyload lazyload placeholder" src="/medias/4.jpg" class="lazyload placeholder" data-srcset="/medias/4.jpg" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" src="" alt="">
     </div>
-    <a href="/2022/03/15/XSS%E9%9D%B6%E5%9C%BA%E5%AE%9E%E6%88%98%E4%BA%8C%EF%BC%8811-20%E5%85%B3%EF%BC%89-xss%E9%9D%B6%E5%9C%BA%E5%AE%9E%E6%88%98%E4%BA%8C11-20%E5%85%B3/" class="post-nav-link">
+    <a href="/2022/06/16/%E8%AE%B0%E4%B8%80%E6%AC%A1POP%E9%93%BE%E5%88%86%E6%9E%90/" class="post-nav-link">
       <div class="title">
         Next: <i class="fas fa-angle-right"></i>
-        <div class="title-text">XSS靶场实战二（11-20关）</div>
+        <div class="title-text">记一次POP链分析(练习)</div>
       </div>
       <!-- <div class="content">
-        0x11F12发现多了一个参数，也把这个参数加入到url。发现还是出现在t_sort参数，尝试使用上一关的payload
+        0x01前言TP5反序列化入口都是在Windows类的析构方法，通过file_exists()函数触发__toStrin
       </div> -->
     </a>
   </div>

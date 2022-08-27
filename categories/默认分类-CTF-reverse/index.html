@@ -11,7 +11,7 @@
   <!-- Global site tag (gtag.js) - Google Analytics -->
 
 
-  <title>记一次POP链分析(练习) | wh1t3zer</title>
+  <title>category: 默认分类 | CTF | reverse | wh1t3zer</title>
 
   <link rel="icon" type="image/x-icon, image/vnd.microsoft.icon" href="/favicon.ico">
   <link rel="stylesheet" href="https://at.alicdn.com/t/font_1911880_c1nvbyezg17.css">
@@ -505,536 +505,107 @@
 </header>
         <!-- 内容区域 -->
         
- <!-- prismjs 代码高亮 -->
- 
 
+<div class="bg-dark-floor" style="position: fixed;left: 0;top: 0;width: 100%;height: 100%;z-index: -2;"></div>
+<div class="bg-light-floor-categoryDetail" style="position: fixed;left: 0;top: 0;width: 100%;height: 100%;z-index: -3;"></div>
 
-<div class="bg-dark-floor" style="position: fixed;left: 0;top: 0;width: 100%;height: 100%;z-index: -1;"></div>
-
-
-  <!-- 文章详情页顶部图片和标题 -->
-
-
-
-
-<div class="post-detail-header" id="thumbnail_canvas" style="background-repeat: no-repeat; background-size: cover; 
-  background-position: center center;position: relative;background-image:url('/medias/4.jpg')">
-  <div class="post-detail-header-mask"></div>
-  <canvas id="header_canvas"style="position:absolute;bottom:0;pointer-events:none;"></canvas>
-  
-  <div class="post-detail-header_info-box">
-    <div class="title-box">
-      <span class="title">
-        记一次POP链分析(练习)
-      </span>
-    </div>
-    
-    
-      
-        <span class="post-detail-header_date">
-          <i class="fas fa-calendar"></i> Published in：2022-06-16 |
-        </span>
-      
-
-      
-        <span class="post-detail-header_categories">
-          <i class="iconfont iconbookmark1"></i> category：
-          
-            <a href="/categories/CTF-%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/" class="post-detail-header_category">
-              CTF | 反序列化
-            </a>
-          
-        </span>
-      
-
-      
-    
+<div class="category-header"  style="background-image:url('https://pic3.zhimg.com/80/v2-98dcd81cb0d1fee52a807c13cedb8338_1440w.jpg?source=1940ef5c')">
+  <div class="category-header-title">
+    category
   </div>
-  
-  
-    <script src="/js/bubble/bubble.js"></script>
-  
-</div>
-
-
-
-
-
-<div class="row justify-position" 
-  style="padding-top: 0px;">
-  <div class="main-content">
-    <article class="post post-detail">
-      <div class="post-content">
-        <h2 id="0x01前言"><a href="#0x01前言" class="headerlink" title="0x01前言"></a>0x01前言</h2><p>TP5反序列化入口都是在Windows类的析构方法，通过<code>file_exists()</code>函数触发<code>__toString</code> 魔术方法，然后以<code>__toString</code>为中间跳板寻找代码执行点，造成反序列化任意命令执行。有关TP5的分析可以看挖掘暗藏thinkphp中的反序列利用链这篇文章，感觉分析的思路比较好。</p>
-<p>TP6的不同之处就是没有了Windows类，也就无法利用其中的析构方法作为反序列化入口，需要重新挖掘其他入口点。</p>
-<h2 id="0x02补充知识"><a href="#0x02补充知识" class="headerlink" title="0x02补充知识"></a>0x02补充知识</h2><h3 id="反序列化过程中一些能自动执行的魔术方法"><a href="#反序列化过程中一些能自动执行的魔术方法" class="headerlink" title="反序列化过程中一些能自动执行的魔术方法"></a>反序列化过程中一些能自动执行的魔术方法</h3><p><code>__call()</code>	调用不可访问或不存在的方法时被调用</p>
-<p><code>__callStatic()</code>	调用不可访问或不存在的静态方法时被调用</p>
-<p><code>__clone()</code>	进行对象clone时被调用，用来调整对象的克隆行为</p>
-<p><code>__onstuct()</code>	构建对象的时被调用</p>
-<p><code>__debuginfo()</code>	当调用var_dump()打印对象时被调用（当你不想打印所有属性）适用于PHP5.6版本</p>
-<p><code>__destruct()</code>	明确销毁对象或脚本结束时被调用</p>
-<p><code>__get()</code>	读取不可访问或不存在属性时被调用</p>
-<p><code>__invoke()</code>	当以函数方式调用对象时被调用</p>
-<p><code>__isset()</code>	对不可访问或不存在的属性调用isset()或empty()时被调用</p>
-<p><code>__set()</code>	当给不可访问或不存在属性赋值时被调用</p>
-<p><code>__set_state()</code>	当调用var_export()导出类时,此静态方法被调用,返回值做为var_export的返回值</p>
-<p><code>__sleep()</code>	当使用serialize时被调用,当你不需要保存大对象的所有数据时很有用</p>
-<p><code>__toString()</code>	当一个类被转换成字符串时被调用</p>
-<p><code>__unset()</code>	对不可访问或不存在的属性进行unset时被调用</p>
-<p><code>__wakeup()</code>	当使用unserialize时被调用,可用于做些对象的初始化操作</p>
-<h3 id="常见的一些起点"><a href="#常见的一些起点" class="headerlink" title="常见的一些起点"></a>常见的一些起点</h3><p><code>__destruct()</code>一定会触发，在对象销毁时触发</p>
-<p><code>__construct()</code>一定会触发，在对象创建时触发</p>
-<p><code>__toString()</code>当一个类被转换成字符串时被调用</p>
-<h3 id="常见的一些中间跳板"><a href="#常见的一些中间跳板" class="headerlink" title="常见的一些中间跳板"></a>常见的一些中间跳板</h3><p><code>__toString()</code>当一个类被转换成字符串时被调用</p>
-<p><code>__get()</code> 读取不可访问或不存在的属性时被调用</p>
-<p><code>__set()</code>当给不可访问或不存在的属性赋值时被调用</p>
-<p><code>__isset()</code>对不可访问或不存在的属性调用<code>isset()</code>或<code>empty()</code>时被调用，如<code>$this-&gt;$func()</code></p>
-<h3 id="反序列化的常见终点"><a href="#反序列化的常见终点" class="headerlink" title="反序列化的常见终点"></a>反序列化的常见终点</h3><p><code>__call()</code>调用不可访问或不存在的方法时被调用</p>
-<p><code>call_user_fun</code>一般php代码执行都会选择这里</p>
-<p><code>call_user_fun_array</code>一般php代码执行都会选择这里</p>
-<h2 id="0x03分析"><a href="#0x03分析" class="headerlink" title="0x03分析"></a>0x03分析</h2><p>查看版本</p>
-<p><img src="/" class="lazyload placeholder" data-srcset="/" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="/upload/2022/06/1.png"></p>
-<p>是5.1.39LTS</p>
-<h3 id="寻找起始点"><a href="#寻找起始点" class="headerlink" title="寻找起始点"></a>寻找起始点</h3><p>TP5的POP链入口是thinkphp\library\think\process\pipes\Windows.php中的<code>__destruct()</code>函数，</p>
-<p><img src="/" class="lazyload placeholder" data-srcset="/" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="/upload/2022/06/2.png"></p>
-<p>看到有个<code>removeFiles()</code>函数，继续跟进，发现该函数的功能是当filename存在的时候，执行<code>unlink()</code>函数删除文件名，该变量是可控的。</p>
-<p><img src="/" class="lazyload placeholder" data-srcset="/" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="/upload/2022/06/3.png"></p>
-<p>跳转到<code>file_exists()</code>，可以触发<code>toString()</code>方法，$file可控</p>
-<h3 id="寻找中件跳板"><a href="#寻找中件跳板" class="headerlink" title="寻找中件跳板"></a>寻找中件跳板</h3><p>寻找一个<code>__toString()</code>作为跳板，发现有一个在thinkphp&#x2F;library&#x2F;think&#x2F;Collection.php里</p>
-<p><img src="/" class="lazyload placeholder" data-srcset="/" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="/upload/2022/06/4.png"></p>
-<p>查看跟进<code>toJson()</code>方法</p>
-<p><img src="/" class="lazyload placeholder" data-srcset="/" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="/upload/2022/06/5.png"></p>
-<p><code>toArray()</code>方法中寻找 $可控变量 -&gt; 方法（参数可控），可以触发某个类的<code>__call()</code>方法</p>
-<p>跟进到thinkphp&#x2F;library&#x2F;think&#x2F;model&#x2F;concern&#x2F;Conversion.php</p>
-<p>在 <code>toArray</code> 方法中找到一个符合条件的 <code>$relation-&gt;visible($name)</code></p>
-<h3 id="寻找执行点"><a href="#寻找执行点" class="headerlink" title="寻找执行点"></a>寻找执行点</h3><p>需要寻找一个类满足以下2个条件，全局搜索 <code>__call</code>，跟进 <code>thinkphp/library/think/Request.php</code></p>
-<blockquote>
-<p>该类中没有”visible”方法 </p>
-<p>实现了__call方法</p>
-</blockquote>
-<p><img src="/" class="lazyload placeholder" data-srcset="/" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="/upload/2022/06/6.png"></p>
-
-      </div>
-      <div class="post-tags-categories">
-        
-        <div class="tags">
-          
-            <a href="/tags/%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/" class="">
-              反序列化
-            </a>
-          
-        </div>
-        
-      </div>
-      
-        <div class="copyright">
-  <ul class="post-copyright">
-    <li class="post-copyright-author">
-    <strong>author:  </strong>wh1t3zer</a>
-    </li>
-    <li class="post-copyright-link">
-    <strong>link:  </strong>
-    <a href="/2022/06/16/记一次POP链分析/" target="_blank" title="记一次POP链分析(练习)">https://wh1t3zer.github.io/2022/06/16/记一次POP链分析/</a>
-    </li>
-    <li class="post-copyright-license">
-      <strong>Copyright notice:   </strong>
-      All articles on this website, unless otherwise stated, adopt <a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank" title="Attribution-NonCommercial-NoDerivatives 4.0 International (CC BY-NC-ND 4.0)">CC BY-NC-ND 4.0</a>
-      reprint policy. If reproduced, please indicate source!
-    </li>
-  </ul>
-<div>
-      
-    </article>
-    <!-- 上一篇文章和下一篇文章 -->
+  <div class="category-header-desc">
     
-      <!-- 文章详情页的上一页和下一页 -->
-<div class="post-nav">
-
-
-
-  
-  <div class="post-nav-prev post-nav-item">
-    <div class="post-nav-img" style="background-size: cover; 
-      background-position: center center;">
-      <img class="lazyload lazyload placeholder" src="/medias/5.jpg" class="lazyload placeholder" data-srcset="/medias/5.jpg" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="">
-    </div>
-    <a href="/2022/08/25/%E9%80%86%E5%90%91%E5%85%A5%E9%97%A8%E7%9A%84%E4%B8%80%E4%BA%9B%E5%B0%8F%E7%9F%A5%E8%AF%86/" class="post-nav-link">
-      <div class="title">
-        <i class="fas fa-angle-left"></i> Prev:
-        <div class="title-text">浅谈逆向入门有关的知识</div>
-      </div>
-      
-      <!-- <div class="content">
-        逆向的解释逆向的本质就是将一个程序反编译成一段段代码，可能是伪代码，也可能是汇编代码。总的来说就是把一个完整的程序分成一
-      </div> -->
-    </a>
-  </div>
-
-
-
-  
-  <div class="post-nav-next post-nav-item">
-    <div class="post-nav-img" style="background-size: cover; 
-      background-position: center center;">
-      <img class="lazyload lazyload placeholder" src="/medias/10.jpg" class="lazyload placeholder" data-srcset="/medias/10.jpg" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" src="" alt="">
-    </div>
-    <a href="/2022/03/15/XSS%E9%9D%B6%E5%9C%BA%E5%AE%9E%E6%88%98%E4%BA%8C%EF%BC%8811-20%E5%85%B3%EF%BC%89-xss%E9%9D%B6%E5%9C%BA%E5%AE%9E%E6%88%98%E4%BA%8C11-20%E5%85%B3/" class="post-nav-link">
-      <div class="title">
-        Next: <i class="fas fa-angle-right"></i>
-        <div class="title-text">XSS靶场实战二（11-20关）</div>
-      </div>
-      <!-- <div class="content">
-        0x11F12发现多了一个参数，也把这个参数加入到url。发现还是出现在t_sort参数，尝试使用上一关的payload
-      </div> -->
-    </a>
-  </div>
-
-</div>
-
-    
-    
-
-    <!-- 打赏 -->
-    
-      <div id="appDonate" class="post-donate">
-  <div id="donate_board" class="donate_bar center" ref="donate">
-    <a id="btn_donate" class="btn_donate" href="javascript:;" title="打赏" @click="showDialogDrawer()"></a>
-  </div>
-  <transition name="fade">
-    <div 
-      class="donate-box-mask"
-      v-cloak 
-      v-show="visible"
-      @click="cancelDialogDrawer()"
-    >
-    </div>
-  </transition>
-  <transition name="bounce">
-    <div class="donate-box" v-cloak v-show="visible">
-      <div class="donate-box_close">
-        <i class="fas fa-times" aria-hidden="true" @click="cancelDialogDrawer" pointer></i>
-      </div>
-      <div class="donate-box_title">
-        <h4>
-          你的赏识是我前进的动力
-        </h4>
-      </div>
-      <div class="donate-box_tab">
-        <div class="Alipay" pointer :class="{'active': tabActive === 'Alipay'}" @click="changeTabActive('Alipay')">
-          支付宝
-        </div>
-        <div class="WeChatpay" pointer :class="{'active': tabActive === 'WeChatpay'}" @click="changeTabActive('WeChatpay')">
-          微信
-        </div>
-      </div>
-      <div class="donate-box_img">
-        <div class="AlipayImg" v-show="tabActive === 'Alipay'">
-          <img src="/medias/1.jpg" class="lazyload placeholder" data-srcset="/medias/1.jpg" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="支付宝打赏" />
-        </div> 
-        <div class="WeChatpayImg" v-show="tabActive === 'WeChatpay'">
-          <img src="/medias/2.jpg" class="lazyload placeholder" data-srcset="/medias/2.jpg" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="微信打赏" />
-        </div>
-      </div>
-    </div>
-  </transition>
-</div>
-
-<script>
-  var body = document.body || document.documentElement || window;
-  var vm = new Vue({
-    el: '#appDonate',
-    data: {
-      visible: false,
-      tabActive: 'Alipay',
-      top: 0,
-    },
-    computed: {
-    },
-    mounted() {
-    },
-    methods: {
-      showDialogDrawer() {
-        this.visible = true;
-        // 防止页面滚动，只能让弹框滚动
-        // function getScroll() {
-        //   return {
-        //     left: window.pageXOffset || document.documentElement.scrollLeft || document.body.scrollLeft || 0,
-        //     top: window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0
-        //   };
-        // }
-        this.top = $(document).scrollTop() // or getScroll().top
-        // console.log('aa', $('.main-content'));
-        body.style.cssText = 'overflow: hidden;';
-      },
-      cancelDialogDrawer() {
-        this.visible = false;
-        body.removeAttribute('style');
-        $(document).scrollTop(this.top)
-      },
-      changeTabActive(name) {
-        this.tabActive = name;
-      }
-    },
-    created() {}
-  })
-</script>
-    
-
-    <!-- 分享 -->
-    
-      <!-- https://github.com/overtrue/share.js -->
-<!-- 文章详情页的分享 -->
-<div class="social-share" data-sites="twitter,facebook,google,qq,qzone,wechat,weibo,douban,linkedin" data-wechat-qrcode-helper="<p>微信扫一扫即可分享！</p>"></div>
-
-<script src="/js/shareJs/social-share.min.js"></script>
-</script>
-
-<style>
-  .social-share {
-    margin: 20px 0;
-  }
-</style>
-
-
-    
-    
-    <!-- 评论 -->
-    <!-- 评论 -->
-
-  <div id="myComment">
-    
-      <div id="gitment-container"></div>
-
-    
-  </div>
-
-<!-- comment script in themes\hexo-theme-bamboo\layout\_partial\scripts\index.ejs -->
-
-
-  </div>
-
-  <!-- 目录 -->
-  <!-- 文章详情页右侧目录 -->
-
-  <div class="toc-aside">
-    <div class="toc-main">
-      <div class="toc-aside-title">
-        <i class="fas fa-list-ul" aria-hidden="true"></i><span>catalog</span>
-        
-          <div class="toc-open-close">catalog</div>
-        
-      </div>
-      <div class="toc-content">
-        <div class="toc"></div>
-      </div>
-    </div>
-  </div>
-
-  <!-- 手机端目录按钮 -->
-  <div id="toc-mobile-btn">
-    <i class="fas fa-list-ul" aria-hidden="true"></i>
-  </div>
-
-
-<script>
-  function closeToc(init) {
-    $(".toc-aside").css({'width': 0, 'padding': 0, 'transition': init ?  'noe' : 'width 0.3s' });
-    $(".toc-content").css({'width': 0});
-    $(".toc-aside-title span, .toc-aside-title i").css({'display': 'none'});
-    $(".main-content").css({'width': '75%', 'margin': '10px auto'});
-  };
-  function openToc() {
-    $(".main-content").css({'width': '65%', 'margin-right': '10px', 'margin-left': 'calc(35% - 350px)'});
-    $(".toc-aside").css({'width': '300px', 'padding': '0 10px', 'transition': 'width 0.3s'});
-    $(".toc-content").css({'width': '300px'});
-    $(".toc-aside-title span, .toc-aside-title i").css({'display': 'inline-block'});
-  }
-  function openBtnClickFn () {
-    let openOrCloseBtn = $('.toc-aside .toc-aside-title .toc-open-close');
-    let open = eval('' || 'true');
-    openOrCloseBtn.click(function() {
-      if (open) {
-        closeToc();
-        open = false;
-      } else {
-        openToc();
-        open = true;
-      }
+      <span class="title" id="category-header-desc"></span>
+      <script>
+  function typedFn() {
+    const el = '#category-header-desc';
+    const type = 'categoryDetail';
+    let desc = '愿你如风，被人温柔以待'
+    var typed = new Typed(el, {
+      strings: [desc],
+      startDelay: 100,
+      typeSpeed: 100,
+      loop: true,
+      backSpeed: 50,
+      showCursor: true
     });
-  };
-  openBtnClickFn();
-  initCloseTocWidth(true);
-
-  function initCloseTocWidth(init) {
-    if (window.innerWidth >= 992) {
-      let isClose = false;
-      isClose && closeToc(init)
-    }
   }
-
-  document.addEventListener('pjax:complete', function () {
-    $(".toc-aside").css({'transition': 'no'});
-  })
-  document.addEventListener('pjax:complete', function () {
-    openBtnClickFn();
-  })
-  
+  typedFn();
 </script>
-
-  <!-- 图片放大 Wrap images with fancybox support -->
-  <script src="/js/wrapImage.js"></script>
+      
+  </div>
+  <div class="mask-box"></div>
 </div>
 
-<!-- 文章详情页背景图 -->
-<div id="appBgSwiper" style="position: fixed;left: 0;top: 0;width: 100%;height: 100%;z-index: -2;"
-	:style="{'background-color': bgColor ? bgColor : 'transparent'}">
-	<transition-group tag="ul" :name="names">
-		<li v-for='(image,index) in img' :key='index' v-show="index === mark" class="bg-swiper-box">
-			<img :src="image" class="bg-swiper-img no-lazy">
-		</li>
-	</transition-group>
-</div>
-<script>
-	var vm = new Vue({
-		el: '#appBgSwiper',
-		data: {
-			names: '' || 'fade' || 'fade', // translate-fade fade
-			mark: 0,
-			img: [],
-			bgColor: '',
-			time: null
-		},
-		methods: {   //添加方法
-			change(i, m) {
-				if (i > m) {
-					// this.names = 'fade';
-				} else if (i < m) {
-					// this.names = 'fade';
-				} else {
-					return;
-				}
-				this.mark = i;
-			},
-			prev() {
-				// this.names = 'fade';
-				this.mark--;
-				if (this.mark === -1) {
-					this.mark = 3;
-					return
-				}
-			},
-			next() {
-				// this.names = 'fade';
-				this.mark++;
-				if (this.mark === this.img.length) {
-					this.mark = 0;
-					return
-				}
-			},
-			autoPlay() {
-				// this.names = 'fade';
-				this.mark++;
-				if (this.mark === this.img.length) {
-					this.mark = 0;
-					return
-				}
-			},
-			play() {
-				let bgImgDelay = '' || '180000'
-				let delay = parseInt(bgImgDelay) || 180000;
-				this.time = setInterval(this.autoPlay, delay);
-			},
-			enter() {
-				clearInterval(this.time);
-			},
-			leave() {
-				this.play();
-			}
-		},
-		created() {
-			this.play()
-		},
-		beforeDestroy() {
-			clearInterval(this.time);
-		},
-		mounted() {
-			let prop = '' || '';
-			let isImg = prop.includes('.bmp') || prop.includes('.jpg') || prop.includes('.png') || prop.includes('.tif') || prop.includes('.gif') || prop.includes('.pcx') || prop.includes('.tga') || prop.includes('.exif') || prop.includes('.fpx') || prop.includes('.psd') || prop.includes('.cdr') || prop.includes('.pcd') || prop.includes('.dxf') || prop.includes('.ufo') || prop.includes('.eps') || prop.includes('.ai') || prop.includes('.raw') || prop.includes('.WMF') || prop.includes('.webp') || prop.includes('.jpeg') || prop.includes('http://') || prop.includes('https://')
-			if (isImg) {
-				let img = prop.split(',');
-				let configRoot = '/'
-				let arrImg = [];
-				img.forEach(el => {
-					var Expression = /http(s)?:\/\/([\w-]+\.)+[\w-]+(\/[\w- .\/?%&=]*)?/;
-					var objExp = new RegExp(Expression);
 
-					if (objExp.test(el)) {
-						// http or https
-						arrImg.push(el);
-					} else {
-						// 非http or https开头
-						// 本地文件
-						let firstStr = el.charAt(0);
-						if (firstStr == '/') {
-							el = el.substr(1); // 删除第一个字符 '/',因为 configRoot最后一个字符为 /
-						}
-						el = configRoot + el;
-						arrImg.push(el);
-					}
-				})
-				this.img = arrImg;
-			} else {
-				this.bgColor = prop;
-			}
-		}
-	})
-</script>
+<div class="category">
+  <div class="category-name">
+    <div class="name" style="background-color: #E8F8F5;">默认分类 | CTF | reverse category</div>
+  </div>
+  <!-- 每一篇文章卡片 -->
+  <!-- hash算法 -->
 
-<style>
-	.bg-swiper-box {
-		position: absolute;
-		display: block;
-		width: 100%;
-		height: 100%;
-	}
-
-	.bg-swiper-img {
-		object-fit: cover;
-		width: 100%;
-		height: 100%;
-	}
-</style>
-
-
-
-
-  <script>
-  function loadMermaid() {
-    if (document.getElementsByClassName('mermaid').length) {
-      if (window.mermaidJsLoad) mermaid.init()
-      else {
-        loadScript('https://unpkg.com/mermaid/dist/mermaid.min.js').then(() => {
-          window.mermaidJsLoad = true
-          mermaid.initialize({
-            theme: 'default',
-          })
-          if ('true') {
-            mermaid.init();
-          }
-        })
-      }
-    }
-  };
-  document.addEventListener("DOMContentLoaded", function () {
-    loadMermaid();
-  })
-
-  document.addEventListener('pjax:complete', function () {
-    loadMermaid();
-  })
+<section class="posts">
   
-</script>
+    
+    <article class="post reveal" style="flex-direction: row-reverse;   ">
+      <div class="post-main">
+        <div class="post-info">
+          <div class="post-time">
+            <i class="fas fa-clock" aria-hidden="true"></i>
+            <span class="post-time">2022-08-25</span>
+          </div>
+          <div class="post-title">
+            <a class="post-title-link" href="/2022/08/25/%E9%80%86%E5%90%91%E5%85%A5%E9%97%A8%E7%9A%84%E4%B8%80%E4%BA%9B%E5%B0%8F%E7%9F%A5%E8%AF%86/">浅谈逆向入门有关的知识</a>
+          </div>
+          <div class="post-meta">
+            <div class="post-tags">
+              <!-- 文章详情页的标签 -->
 
+    <i class="iconfont icontag"></i>
+    <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ctf-reverse/" rel="tag">ctf | reverse</a></li></ul>
+
+            </div>
+            <div class="post-categories">
+              <!-- 文章详情页的分类 -->
+
+<div class="article-category">
+  <i class="iconfont iconbookmark1"></i>
+  <a class="article-category-link" href="/categories/%E9%BB%98%E8%AE%A4%E5%88%86%E7%B1%BB-CTF-reverse/">默认分类 | CTF | reverse</a>
+</div>
+
+
+            </div>
+          </div>
+          <div class="post-img-mobile">
+            <a href="/2022/08/25/%E9%80%86%E5%90%91%E5%85%A5%E9%97%A8%E7%9A%84%E4%B8%80%E4%BA%9B%E5%B0%8F%E7%9F%A5%E8%AF%86/" style="background-size: cover; 
+              background-position: center center;">
+              <img class="lazyload lazyload placeholder" src="/medias/5.jpg" class="lazyload placeholder" data-srcset="/medias/5.jpg" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="">
+            </a>
+          </div>
+          <div class="post-content">
+            逆向的解释逆向的本质就是将一个程序反编译成一段段代码，可能是伪代码，也可能是汇编代码。总的来说就是把一个完整的程序分成一小块一小块的代码段，从而对程序进行修改，完成所谓的“破解”。也能通过反编译某些恶意软件或者病毒，去分析它们的可疑、危险行
+          </div>
+        </div>
+        <div class="post-more">
+          <a href="/2022/08/25/%E9%80%86%E5%90%91%E5%85%A5%E9%97%A8%E7%9A%84%E4%B8%80%E4%BA%9B%E5%B0%8F%E7%9F%A5%E8%AF%86/">
+            <i class="iconfont iconmore" pointer style="float: right;  " title="阅读更多"></i>
+          </a>
+        </div>
+      </div>
+      <div class="post-img">
+        <a href="/2022/08/25/%E9%80%86%E5%90%91%E5%85%A5%E9%97%A8%E7%9A%84%E4%B8%80%E4%BA%9B%E5%B0%8F%E7%9F%A5%E8%AF%86/" style="background-size: cover; 
+          background-position: center center;">
+          <img class="lazyload lazyload placeholder" src="/medias/5.jpg" class="lazyload placeholder" data-srcset="/medias/5.jpg" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="">
+        </a>
+      </div>
+    </article>
+  
+</section>
+</div>
+<div class="w-70">
+  
+</div>
 
       </main>
     </div>
