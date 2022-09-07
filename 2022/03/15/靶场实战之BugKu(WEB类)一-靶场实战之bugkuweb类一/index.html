@@ -11,7 +11,7 @@
   <!-- Global site tag (gtag.js) - Google Analytics -->
 
 
-  <title>wh1t3zer</title>
+  <title>靶场实战之BugKu（WEB） | wh1t3zer</title>
 
   <link rel="icon" type="image/x-icon, image/vnd.microsoft.icon" href="/favicon.ico">
   <link rel="stylesheet" href="https://at.alicdn.com/t/font_1911880_c1nvbyezg17.css">
@@ -518,24 +518,33 @@
 
 
 <div class="post-detail-header" id="thumbnail_canvas" style="background-repeat: no-repeat; background-size: cover; 
-  background-position: center center;position: relative;background-image:url('/medias/1.jpg')">
+  background-position: center center;position: relative;background-image:url('/medias/2.jpg')">
   <div class="post-detail-header-mask"></div>
   <canvas id="header_canvas"style="position:absolute;bottom:0;pointer-events:none;"></canvas>
   
   <div class="post-detail-header_info-box">
     <div class="title-box">
       <span class="title">
-        
+        靶场实战之BugKu（WEB）
       </span>
     </div>
     
     
       
         <span class="post-detail-header_date">
-          <i class="fas fa-calendar"></i> Published in：2022-09-07 |
+          <i class="fas fa-calendar"></i> Published in：2022-03-15 |
         </span>
       
 
+      
+        <span class="post-detail-header_categories">
+          <i class="iconfont iconbookmark1"></i> category：
+          
+            <a href="/categories/CTF-BugKu/" class="post-detail-header_category">
+              CTF | BugKu
+            </a>
+          
+        </span>
       
 
       
@@ -556,9 +565,7 @@
   <div class="main-content">
     <article class="post post-detail">
       <div class="post-content">
-        <hr>
-<h2 id="title-靶场实战之BugKu-WEB类-一"><a href="#title-靶场实战之BugKu-WEB类-一" class="headerlink" title="title: 靶场实战之BugKu(WEB类)一"></a>title: 靶场实战之BugKu(WEB类)一</h2><p>date: 2022-02-15 21:23:52.445<br>updated: 2022-04-04 20:11:47.841<br>url: &#x2F;archives&#x2F;靶场实战之bugkuweb类一<br>categories: CTF | BugKu<br>tags:	ctf | Bugku</p>
-<h1 id="0x01"><a href="#0x01" class="headerlink" title="0x01"></a>0x01</h1><p><img src="https://raw.githubusercontent.com/wh1t3zer/recordCTF/main/imgs/1644929930(1)-8fe8f7e288e543fea5b96f8f92f62760.png" class="lazyload placeholder" data-srcset="https://raw.githubusercontent.com/wh1t3zer/recordCTF/main/imgs/1644929930(1)-8fe8f7e288e543fea5b96f8f92f62760.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"></p>
+        <h1 id="0x01"><a href="#0x01" class="headerlink" title="0x01"></a>0x01</h1><p><img src="https://raw.githubusercontent.com/wh1t3zer/recordCTF/main/imgs/1644929930(1)-8fe8f7e288e543fea5b96f8f92f62760.png" class="lazyload placeholder" data-srcset="https://raw.githubusercontent.com/wh1t3zer/recordCTF/main/imgs/1644929930(1)-8fe8f7e288e543fea5b96f8f92f62760.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"></p>
 <p>本关是WEB关卡第一关<br>看到题目提示SSTI，是服务器模板注入 (SSTI ) 。<br>SSTIS是一种利用公共 Web 框架的服务器端模板作为攻击媒介的攻击方式，该攻击利用了嵌入模板的用户输入方式的弱点。SSTI 攻击可以用来找出 Web 应用程序的内容结构。<br><img src="https://raw.githubusercontent.com/wh1t3zer/recordCTF/main/imgs/1644929919-2ec63765fb93421fa69d5e7b90505c0f.jpg" class="lazyload placeholder" data-srcset="https://raw.githubusercontent.com/wh1t3zer/recordCTF/main/imgs/1644929919-2ec63765fb93421fa69d5e7b90505c0f.jpg" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"><br><img src="https://raw.githubusercontent.com/wh1t3zer/recordCTF/main/imgs/1644929919-24a7d23e48454f2fb5571a0efddabcff.png" class="lazyload placeholder" data-srcset="https://raw.githubusercontent.com/wh1t3zer/recordCTF/main/imgs/1644929919-24a7d23e48454f2fb5571a0efddabcff.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"><br>分析可通过控制变量输入获得消息，并且通过F12的注释提示得到flag可能在secret_key中，还看到了该模板是FLASK。通过搜索了解Flask是一个使用 Python 编写的轻量级 Web 应用框架。其 WSGI 工具箱采用 Werkzeug ，模板引擎则使用 Jinja2 。Flask使用 BSD 授权。<br>使用可以回显数据<br><img src="https://raw.githubusercontent.com/wh1t3zer/recordCTF/main/imgs/1644931287(1)-ab84ff416fe841ba84e526f8828ab5ef.png" class="lazyload placeholder" data-srcset="https://raw.githubusercontent.com/wh1t3zer/recordCTF/main/imgs/1644931287(1)-ab84ff416fe841ba84e526f8828ab5ef.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"><br>于是我们可以在变量中加入config!</p>
 <p><img src="https://raw.githubusercontent.com/wh1t3zer/recordCTF/main/imgs/1644931265(1)-b0ef8ebb7318416491c6d73a5fc084bb.png" class="lazyload placeholder" data-srcset="https://raw.githubusercontent.com/wh1t3zer/recordCTF/main/imgs/1644931265(1)-b0ef8ebb7318416491c6d73a5fc084bb.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"><br>图中secret_key中就是要得到的flag值<br><a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_37865996/article/details/102365374">模板注入攻击</a></p>
 <h1 id="0x02"><a href="#0x02" class="headerlink" title="0x02"></a>0x02</h1><p><img src="https://raw.githubusercontent.com/wh1t3zer/recordCTF/main/imgs/1644933864(1)-8b32ec2cd9274bd08c5dd57459650cb6.png" class="lazyload placeholder" data-srcset="https://raw.githubusercontent.com/wh1t3zer/recordCTF/main/imgs/1644933864(1)-8b32ec2cd9274bd08c5dd57459650cb6.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"><br>本关考的还是SSTI，老样子，打开目标网址<br><img src="https://raw.githubusercontent.com/wh1t3zer/recordCTF/main/imgs/1644933110(1)-eee066248f934b0f91ae7dbbc21b1807.png" class="lazyload placeholder" data-srcset="https://raw.githubusercontent.com/wh1t3zer/recordCTF/main/imgs/1644933110(1)-eee066248f934b0f91ae7dbbc21b1807.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"><br><img src="https://raw.githubusercontent.com/wh1t3zer/recordCTF/main/imgs/image-20220907150329126.png" class="lazyload placeholder" data-srcset="https://raw.githubusercontent.com/wh1t3zer/recordCTF/main/imgs/image-20220907150329126.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"><br>发现这次注释取消了，我们不知道模板引擎是哪个，尝试乱打从报错获取信息<br><img src="https://raw.githubusercontent.com/wh1t3zer/recordCTF/main/imgs/image-20220907150345691.png" class="lazyload placeholder" data-srcset="https://raw.githubusercontent.com/wh1t3zer/recordCTF/main/imgs/image-20220907150345691.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"><br>发现是junja2<br>有两种方法<br>第一种方法flag可能藏在根目录，直接尝试输入<br><code>&#123;&#123; config.**class**.**init**.**globals**['os'].popen('ls /').read() &#125;&#125;</code>可以看到所有目录<br>然后随机选取一个进行读取文件，运气好可能直接拿到flag<br><code>&#123;&#123; config.class.init.globals['os'].popen('cd xxx&& ls').read() &#125;&#125;</code><br>第二种方法掏出神器Kali，利用其tplmap进行探索构造payload<br><img src="https://raw.githubusercontent.com/wh1t3zer/recordCTF/main/imgs/1644933682(1)-0f79454d170a49528f5ac56b718d54ea.png" class="lazyload placeholder" data-srcset="https://raw.githubusercontent.com/wh1t3zer/recordCTF/main/imgs/1644933682(1)-0f79454d170a49528f5ac56b718d54ea.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"><br>探索到后再输入<br><img src="https://raw.githubusercontent.com/wh1t3zer/recordCTF/main/imgs/image-20220907150524755.png" class="lazyload placeholder" data-srcset="https://raw.githubusercontent.com/wh1t3zer/recordCTF/main/imgs/image-20220907150524755.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"><br><img src="https://raw.githubusercontent.com/wh1t3zer/recordCTF/main/imgs/image-20220907150544944.png" class="lazyload placeholder" data-srcset="https://raw.githubusercontent.com/wh1t3zer/recordCTF/main/imgs/image-20220907150544944.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"><br>成功获取文件目录，用cat 命令查看flag<br><img src="https://raw.githubusercontent.com/wh1t3zer/recordCTF/main/imgs/image-20220907150605734.png" class="lazyload placeholder" data-srcset="https://raw.githubusercontent.com/wh1t3zer/recordCTF/main/imgs/image-20220907150605734.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"></p>
@@ -586,6 +593,14 @@
       </div>
       <div class="post-tags-categories">
         
+        <div class="tags">
+          
+            <a href="/tags/ctf-BugKu/" class="">
+              ctf | BugKu
+            </a>
+          
+        </div>
+        
       </div>
       
         <div class="copyright">
@@ -595,7 +610,7 @@
     </li>
     <li class="post-copyright-link">
     <strong>link:  </strong>
-    <a href="/2022/09/07/靶场实战之BugKu(WEB类)一-靶场实战之bugkuweb类一/" target="_blank" title="">https://wh1t3zer.github.io/2022/09/07/靶场实战之BugKu(WEB类)一-靶场实战之bugkuweb类一/</a>
+    <a href="/2022/03/15/靶场实战之BugKu(WEB类)一-靶场实战之bugkuweb类一/" target="_blank" title="靶场实战之BugKu（WEB）">https://wh1t3zer.github.io/2022/03/15/靶场实战之BugKu(WEB类)一-靶场实战之bugkuweb类一/</a>
     </li>
     <li class="post-copyright-license">
       <strong>Copyright notice:   </strong>
@@ -613,23 +628,40 @@
 
 
 
+  
+  <div class="post-nav-prev post-nav-item">
+    <div class="post-nav-img" style="background-size: cover; 
+      background-position: center center;">
+      <img class="lazyload lazyload placeholder" src="/medias/10.jpg" class="lazyload placeholder" data-srcset="/medias/10.jpg" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="">
+    </div>
+    <a href="/2022/03/15/XSS%E9%9D%B6%E5%9C%BA%E5%AE%9E%E6%88%98%E4%BA%8C%EF%BC%8811-20%E5%85%B3%EF%BC%89-xss%E9%9D%B6%E5%9C%BA%E5%AE%9E%E6%88%98%E4%BA%8C11-20%E5%85%B3/" class="post-nav-link">
+      <div class="title">
+        <i class="fas fa-angle-left"></i> Prev:
+        <div class="title-text">XSS靶场实战二（11-20关）</div>
+      </div>
+      
+      <!-- <div class="content">
+        0x11F12发现多了一个参数，也把这个参数加入到url。发现还是出现在t_sort参数，尝试使用上一关的payload
+      </div> -->
+    </a>
+  </div>
+
 
 
   
   <div class="post-nav-next post-nav-item">
     <div class="post-nav-img" style="background-size: cover; 
       background-position: center center;">
-      <img class="lazyload lazyload placeholder" src="/medias/8.jpg" class="lazyload placeholder" data-srcset="/medias/8.jpg" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" src="" alt="">
+      <img class="lazyload lazyload placeholder" src="/medias/10.jpg" class="lazyload placeholder" data-srcset="/medias/10.jpg" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" src="" alt="">
     </div>
-    <a href="/2022/09/06/2022%E7%BE%8A%E5%9F%8E%E6%9D%AFWP/" class="post-nav-link">
+    <a href="/2022/01/13/XSS%E9%9D%B6%E5%9C%BA%E5%AE%9E%E6%88%98%E4%B8%80%EF%BC%881-10%E5%85%B3%EF%BC%89-xss%E9%9D%B6%E5%9C%BA%E5%AE%9E%E6%88%98%E4%B8%801-10%E5%85%B3/" class="post-nav-link">
       <div class="title">
         Next: <i class="fas fa-angle-right"></i>
-        <div class="title-text">2022羊城杯部分题目wp</div>
+        <div class="title-text">XSS靶场实战一（1-10关）</div>
       </div>
       <!-- <div class="content">
-        0x00Web1通过session.upload_progress进行命令执行
-上一个脚本
-12345678910111
+        记录一下学习和打XSS靶场的一些思路和经验当前靶场来源于GithubXSS-labs
+0x01看到url有参数可以尝试利
       </div> -->
     </a>
   </div>
