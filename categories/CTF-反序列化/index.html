@@ -11,7 +11,7 @@
   <!-- Global site tag (gtag.js) - Google Analytics -->
 
 
-  <title>category: CTF | 反序列化 | wh1t3zer</title>
+  <title>category: ctf | 反序列化 | wh1t3zer</title>
 
   <link rel="icon" type="image/x-icon, image/vnd.microsoft.icon" href="/favicon.ico">
   <link rel="stylesheet" href="https://at.alicdn.com/t/font_1911880_c1nvbyezg17.css">
@@ -540,7 +540,7 @@
 
 <div class="category">
   <div class="category-name">
-    <div class="name" style="background-color: #F5EEF8;">CTF | 反序列化 category</div>
+    <div class="name" style="background-color: #F9E79F;">ctf | 反序列化 category</div>
   </div>
   <!-- 每一篇文章卡片 -->
   <!-- hash算法 -->
@@ -553,17 +553,17 @@
         <div class="post-info">
           <div class="post-time">
             <i class="fas fa-clock" aria-hidden="true"></i>
-            <span class="post-time">2022-06-16</span>
+            <span class="post-time">2022-10-29</span>
           </div>
           <div class="post-title">
-            <a class="post-title-link" href="/2022/06/16/%E8%AE%B0%E4%B8%80%E6%AC%A1POP%E9%93%BE%E5%88%86%E6%9E%90/">记一次POP链分析(练习)</a>
+            <a class="post-title-link" href="/2022/10/29/PHP%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E9%9D%B6%E5%9C%BA/">PHP反序列化靶场</a>
           </div>
           <div class="post-meta">
             <div class="post-tags">
               <!-- 文章详情页的标签 -->
 
     <i class="iconfont icontag"></i>
-    <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/" rel="tag">反序列化</a></li></ul>
+    <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ctf-%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/" rel="tag">ctf | 反序列化</a></li></ul>
 
             </div>
             <div class="post-categories">
@@ -571,32 +571,36 @@
 
 <div class="article-category">
   <i class="iconfont iconbookmark1"></i>
-  <a class="article-category-link" href="/categories/CTF-%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/">CTF | 反序列化</a>
+  <a class="article-category-link" href="/categories/ctf-%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/">ctf | 反序列化</a>
 </div>
 
 
             </div>
           </div>
           <div class="post-img-mobile">
-            <a href="/2022/06/16/%E8%AE%B0%E4%B8%80%E6%AC%A1POP%E9%93%BE%E5%88%86%E6%9E%90/" style="background-size: cover; 
+            <a href="/2022/10/29/PHP%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E9%9D%B6%E5%9C%BA/" style="background-size: cover; 
               background-position: center center;">
-              <img class="lazyload lazyload placeholder" src="/medias/4.jpg" class="lazyload placeholder" data-srcset="/medias/4.jpg" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="">
+              <img class="lazyload lazyload placeholder" src="/medias/5.jpg" class="lazyload placeholder" data-srcset="/medias/5.jpg" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="">
             </a>
           </div>
           <div class="post-content">
-            0x01前言TP5反序列化入口都是在Windows类的析构方法，通过file_exists()函数触发__toString 魔术方法，然后以__toString为中间跳板寻找代码执行点，造成反序列化任意命令执行。有关TP5的分析可以看挖掘暗
+            题记回顾一下php反序列化的一些内容
+靶场地址https://github.com/fine-1/php-SER-libs
+前言php反序列化的魔术方法
+__construct()	在对象创建时调用
+__destruct()		在对象销毁时
           </div>
         </div>
         <div class="post-more">
-          <a href="/2022/06/16/%E8%AE%B0%E4%B8%80%E6%AC%A1POP%E9%93%BE%E5%88%86%E6%9E%90/">
+          <a href="/2022/10/29/PHP%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E9%9D%B6%E5%9C%BA/">
             <i class="iconfont iconmore" pointer style="float: right;  " title="阅读更多"></i>
           </a>
         </div>
       </div>
       <div class="post-img">
-        <a href="/2022/06/16/%E8%AE%B0%E4%B8%80%E6%AC%A1POP%E9%93%BE%E5%88%86%E6%9E%90/" style="background-size: cover; 
+        <a href="/2022/10/29/PHP%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E9%9D%B6%E5%9C%BA/" style="background-size: cover; 
           background-position: center center;">
-          <img class="lazyload lazyload placeholder" src="/medias/4.jpg" class="lazyload placeholder" data-srcset="/medias/4.jpg" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="">
+          <img class="lazyload lazyload placeholder" src="/medias/5.jpg" class="lazyload placeholder" data-srcset="/medias/5.jpg" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="">
         </a>
       </div>
     </article>
