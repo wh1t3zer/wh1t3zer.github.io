@@ -11,7 +11,7 @@
   <!-- Global site tag (gtag.js) - Google Analytics -->
 
 
-  <title>记一次高校内网渗透经历 | wh1t3zer</title>
+  <title>记一次高校内网资产渗透经历 | wh1t3zer</title>
 
   <link rel="icon" type="image/x-icon, image/vnd.microsoft.icon" href="/favicon.ico">
   <link rel="stylesheet" href="https://at.alicdn.com/t/font_1911880_c1nvbyezg17.css">
@@ -518,14 +518,14 @@
 
 
 <div class="post-detail-header" id="thumbnail_canvas" style="background-repeat: no-repeat; background-size: cover; 
-  background-position: center center;position: relative;background-image:url('/medias/9.jpg')">
+  background-position: center center;position: relative;background-image:url('/medias/6.jpg')">
   <div class="post-detail-header-mask"></div>
   <canvas id="header_canvas"style="position:absolute;bottom:0;pointer-events:none;"></canvas>
   
   <div class="post-detail-header_info-box">
     <div class="title-box">
       <span class="title">
-        记一次高校内网渗透经历
+        记一次高校内网资产渗透经历
       </span>
     </div>
     
@@ -565,8 +565,7 @@
   <div class="main-content">
     <article class="post post-detail">
       <div class="post-content">
-        <p>[TOC]</p>
-<h2 id="0x00题记"><a href="#0x00题记" class="headerlink" title="0x00题记"></a>0x00题记</h2><p>最近无聊打算去其他学校内网里面逛一逛，顺便测试一下其他学校的防护是否做到位。于是找了一个同学要到了他们学校的vpn，进去一探究竟。</p>
+        <h2 id="0x00题记"><a href="#0x00题记" class="headerlink" title="0x00题记"></a>0x00题记</h2><p>最近无聊打算去其他学校内网里面逛一逛，顺便测试一下其他学校的防护是否做到位。于是找了一个同学要到了他们学校的vpn，进去一探究竟。</p>
 <h2 id="0x01信息收集"><a href="#0x01信息收集" class="headerlink" title="0x01信息收集"></a>0x01信息收集</h2><p>许多的渗透中，信息收集可以说是最为关键的一个部分，一个系统能否顺利攻破取决于信息是否收集地足够多。</p>
 <h3 id="外部资产搜集"><a href="#外部资产搜集" class="headerlink" title="外部资产搜集"></a>外部资产搜集</h3><p>顺便看看暴露在公网的资产有哪些，用奇安信的鹰图平台查找学校域名<a target="_blank" rel="noopener" href="http://xxx.edu.cn/">http://xxx.edu.cn</a></p>
 <p><img src="https://raw.githubusercontent.com/wh1t3zer/recordCTF/main/imgs/image-20221014203027968.png" class="lazyload placeholder" data-srcset="https://raw.githubusercontent.com/wh1t3zer/recordCTF/main/imgs/image-20221014203027968.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"></p>
@@ -602,7 +601,7 @@
 <p>网站根目录下还有其他网站的文件，应该都是比较旧的甚至不用的网站了，所以不用的服务器还是要下线的，否则会泄露一些敏感的信息。</p>
 <p>通过扫描还发现了学校的堡垒机蜜罐，刚开始没发现踩下去第一步后才反应过来，看来反溯源的意识还有待提高。这个蜜罐的服务还是挺丰富的，带有漏洞的solr服务，弱密码WordPress，通达OA，Weblogic</p>
 <p>其他的资产有空再看一看有没有可以利用的地方，先去找点有价值的主机</p>
-<h2 id="0x02横向移动"><a href="#0x02横向移动" class="headerlink" title="0x02横向移动"></a>0x02横向移动</h2><p>通过信息收集，获得了一台DHCP服务器，一个包含多个旧站的服务器，都不是比较有价值，我们的目标是想办法找到并拿到域控主机。</p>
+<h2 id="0x02发现小域控"><a href="#0x02发现小域控" class="headerlink" title="0x02发现小域控"></a>0x02发现小域控</h2><p>通过信息收集，获得了一台DHCP服务器，一个包含多个旧站的服务器，都不是比较有价值，我们的目标是想办法找到并拿到域控主机。</p>
 <p>继续查看资产，发现一台开启了VM Vsphere，上网了解了一下，VMware vSphere 是业界领先且最可靠的虚拟化平台。所以这是一台校内某个小域的管理平台，而且发现这个服务还存在一个CVE漏洞</p>
 <p><img src="https://raw.githubusercontent.com/wh1t3zer/recordCTF/main/imgs/1666698191773.jpg" class="lazyload placeholder" data-srcset="https://raw.githubusercontent.com/wh1t3zer/recordCTF/main/imgs/1666698191773.jpg" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"></p>
 <p><img src="https://raw.githubusercontent.com/wh1t3zer/recordCTF/main/imgs/image-20221025194451699.png" class="lazyload placeholder" data-srcset="https://raw.githubusercontent.com/wh1t3zer/recordCTF/main/imgs/image-20221025194451699.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"></p>
@@ -636,7 +635,7 @@
     </li>
     <li class="post-copyright-link">
     <strong>link:  </strong>
-    <a href="/2022/10/14/记一下学校内网渗透经历/" target="_blank" title="记一次高校内网渗透经历">https://wh1t3zer.github.io/2022/10/14/记一下学校内网渗透经历/</a>
+    <a href="/2022/10/14/记一下学校内网渗透经历/" target="_blank" title="记一次高校内网资产渗透经历">https://wh1t3zer.github.io/2022/10/14/记一下学校内网渗透经历/</a>
     </li>
     <li class="post-copyright-license">
       <strong>Copyright notice:   </strong>
