@@ -11,7 +11,7 @@
   <!-- Global site tag (gtag.js) - Google Analytics -->
 
 
-  <title>Categories | wh1t3zer</title>
+  <title>JAVA反序列化利用 | wh1t3zer</title>
 
   <link rel="icon" type="image/x-icon, image/vnd.microsoft.icon" href="/favicon.ico">
   <link rel="stylesheet" href="https://at.alicdn.com/t/font_1911880_c1nvbyezg17.css">
@@ -505,123 +505,607 @@
 </header>
         <!-- 内容区域 -->
         
-<div class="bg-dark-floor" style="position: fixed;left: 0;top: 0;width: 100%;height: 100%;z-index: -2;"></div>
-<div class="bg-light-floor-categories" style="position: fixed;left: 0;top: 0;width: 100%;height: 100%;z-index: -3;"></div>
+ <!-- prismjs 代码高亮 -->
+ 
 
-<div class="categories-header" style="background-image:url('https://pic2.zhimg.com/80/v2-7c496c95897fb15768593cc5170c8b1a_1440w.jpg?source=1940ef5c')">
-    <div class="categories-header-title">
-        categories
+
+<div class="bg-dark-floor" style="position: fixed;left: 0;top: 0;width: 100%;height: 100%;z-index: -1;"></div>
+
+
+  <!-- 文章详情页顶部图片和标题 -->
+
+
+
+
+<div class="post-detail-header" id="thumbnail_canvas" style="background-repeat: no-repeat; background-size: cover; 
+  background-position: center center;position: relative;background-image:url('/medias/7.jpg')">
+  <div class="post-detail-header-mask"></div>
+  <canvas id="header_canvas"style="position:absolute;bottom:0;pointer-events:none;"></canvas>
+  
+  <div class="post-detail-header_info-box">
+    <div class="title-box">
+      <span class="title">
+        JAVA反序列化利用
+      </span>
     </div>
-    <div class="categories-header-desc">
     
-        <span class="title" id="categories-header-desc"></span>
-    <script>
-  function typedFn() {
-    const el = '#categories-header-desc';
-    const type = 'categories';
-    let desc = '愿你如风，被人温柔以待'
-    var typed = new Typed(el, {
-      strings: [desc],
-      startDelay: 100,
-      typeSpeed: 100,
-      loop: true,
-      backSpeed: 50,
-      showCursor: true
-    });
-  }
-  typedFn();
+    
+      
+        <span class="post-detail-header_date">
+          <i class="fas fa-calendar"></i> Published in：2023-01-01 |
+        </span>
+      
+
+      
+        <span class="post-detail-header_categories">
+          <i class="iconfont iconbookmark1"></i> category：
+          
+            <a href="/categories/java-serialize/" class="post-detail-header_category">
+              java | serialize
+            </a>
+          
+        </span>
+      
+
+      
+    
+  </div>
+  
+  
+    <script src="/js/bubble/bubble.js"></script>
+  
+</div>
+
+
+
+
+
+<div class="row justify-position" 
+  style="padding-top: 0px;">
+  <div class="main-content">
+    <article class="post post-detail">
+      <div class="post-content">
+        <h2 id="0x00前言"><a href="#0x00前言" class="headerlink" title="0x00前言"></a>0x00前言</h2><p>提起反序列化不是什么新鲜的名词了，无论是php还是java，最终的目的都是执行恶意代码达到RCE或权限控制的目的，总结下JAVA的反序列化的一些知识点，巩固一下。</p>
+<h2 id="0X01序列化与反序列化"><a href="#0X01序列化与反序列化" class="headerlink" title="0X01序列化与反序列化"></a>0X01序列化与反序列化</h2><p>序列化：将对象转换为字节流并存储到指定文件</p>
+<p>反序列化：读取文件并将字节流还原为对象</p>
+<p>ObjectOutputStream类  —-&gt; writeObject()  序列化(OOS)</p>
+<p>ObjectInputStream类  —-&gt; readObject()   反序列化(OIS)</p>
+<p><img src="https://raw.githubusercontent.com/wh1t3zer/recordCTF/main/imgs/serialize.png" class="lazyload placeholder" data-srcset="https://raw.githubusercontent.com/wh1t3zer/recordCTF/main/imgs/serialize.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"></p>
+<p>序列化实现：</p>
+<p><img src="https://raw.githubusercontent.com/wh1t3zer/recordCTF/main/imgs/image-20230114172047012.png" class="lazyload placeholder" data-srcset="https://raw.githubusercontent.com/wh1t3zer/recordCTF/main/imgs/image-20230114172047012.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"></p>
+<p>反序列化实现：</p>
+<p><img src="https://raw.githubusercontent.com/wh1t3zer/recordCTF/main/imgs/image-20230114172113312.png" class="lazyload placeholder" data-srcset="https://raw.githubusercontent.com/wh1t3zer/recordCTF/main/imgs/image-20230114172113312.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"></p>
+<h2 id="0x02序列化实现"><a href="#0x02序列化实现" class="headerlink" title="0x02序列化实现"></a>0x02序列化实现</h2><p>java类需要实现serialize接口或者实现Externalizable，否则执行的时候会抛出异常</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title class_">Serializable</span> &#123;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>子类继承父类时父类需要实现上述接口，若无实现则需要子类提供一个无参的构造函数并创建对象</p>
+<p>记住：序列化是序列化对象而不是序列化类</p>
+<p>并且静态变量不能被序列化，因为静态变量优先于对象存在，随着类的加载而加载，所以不会被序列化</p>
+<h3 id="条件"><a href="#条件" class="headerlink" title="条件"></a>条件</h3><p>共同条件 继承Serializable</p>
+<p>入口类 source（重写readObject  参数类型宽泛  最好jdk自带）</p>
+<p>调用链gadget chain</p>
+<p>执行类sink （rce ssrf写文件等等）</p>
+<h2 id="0x03反序列化的利用"><a href="#0x03反序列化的利用" class="headerlink" title="0x03反序列化的利用"></a>0x03反序列化的利用</h2><p>在java反序列化中，会调用执行readObject()方法中的代码，攻击者可以构造恶意代码序列化后发送给服务端，服务端进行反序列化并执行readlObject()方法</p>
+<p>利用点</p>
+<p>1、入口类的readObject直接调用危险方法</p>
+<p>2、入口类参数中包含可控类，该类有危险方法readObject时调用</p>
+<p>3、入口类参数中包含可控类，该类有调用其他有危险方法的类readObject时调用</p>
+<p>4、构造函数&#x2F;静态代码块等类加载时隐式执行</p>
+<p>验证是否存在反序列化可以使用常见的反序列化链</p>
+<p>URLDNS链：HashMap.readObject() -&gt; HashMap.putVal()-&gt;HashMap.hash()-&gt;URL.hashcode()-&gt;URLStreamHandler().hashCode().getHostAddress-&gt;URLStreamHandler().hashCode().getHostAddress.getByName()</p>
+<h2 id="0x04序列化数据的特征"><a href="#0x04序列化数据的特征" class="headerlink" title="0x04序列化数据的特征"></a>0x04序列化数据的特征</h2><p>一段数据以rO0AB开头，基本可以确定这串就是JAVA序列化base64加密的数据</p>
+<p>如果以ac ed开头，那么它就是这一段JAVA序列化的16进制</p>
+<h2 id="0x05JAVA反射"><a href="#0x05JAVA反射" class="headerlink" title="0x05JAVA反射"></a>0x05JAVA反射</h2><p>实现JAVA反序列化时不能忽略的一个点就是JAVA内置的的反射机制，它的作用就是让JAVA具有动态性</p>
+<h3 id="作用"><a href="#作用" class="headerlink" title="作用"></a>作用</h3><p>1、修饰已有动态属性</p>
+<p>2、动态生成对象</p>
+<p>3、动态调用方法</p>
+<p>4、操作内部类和私有方法</p>
+<p>操作反射的5中类</p>
+<ul>
+<li>java.lang.Class： 代表类</li>
+<li>java.lang.reflect.Constructor: 代表类的构造方法</li>
+<li>java.lang.reflect.Field: 代表类的属性</li>
+<li>java.lang.reflect.Method: 代表类的方法</li>
+<li>java.lang.reflect.Modifier：代表类、方法、属性的描述修饰符。</li>
+</ul>
+<p>AccessObject类中有一个setAccessible()方法，作用是使得非public属性或方法可见，而Constructor、Field、Method都继承这个类</p>
+<h3 id="Constructor"><a href="#Constructor" class="headerlink" title="Constructor"></a>Constructor</h3><table>
+<thead>
+<tr>
+<th>方法</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>getConstructors()</td>
+<td>获得类的所有public构造方法</td>
+</tr>
+<tr>
+<td>getDeclaredConstructors()</td>
+<td>获得类的所有构造方法</td>
+</tr>
+<tr>
+<td>getConstructor(Class[] parameterTypes)</td>
+<td>获得类的特定public构造方法</td>
+</tr>
+<tr>
+<td>getDeclaredConstructor(Class[] params)</td>
+<td>获取类的特定构造方法</td>
+</tr>
+</tbody></table>
+<h3 id="Field"><a href="#Field" class="headerlink" title="Field"></a>Field</h3><table>
+<thead>
+<tr>
+<th>方法</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>getFields()</td>
+<td>获得类的所有public属性</td>
+</tr>
+<tr>
+<td>getDeclaredFields()</td>
+<td>获得类的所有属性</td>
+</tr>
+<tr>
+<td>getField(String name)</td>
+<td>获得类的特定public属性</td>
+</tr>
+<tr>
+<td>getDeclaredField(String name)</td>
+<td>获取类的特定属性</td>
+</tr>
+</tbody></table>
+<h3 id="Method"><a href="#Method" class="headerlink" title="Method"></a>Method</h3><table>
+<thead>
+<tr>
+<th>方法</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>getMethods()</td>
+<td>获得类的所有public成员方法</td>
+</tr>
+<tr>
+<td>getDeclaredMethods()</td>
+<td>获得类的所有成员方法</td>
+</tr>
+<tr>
+<td>getMethod(String name, Class[] parameterTypes)</td>
+<td>获得类的特定public成员方法</td>
+</tr>
+<tr>
+<td>getDeclaredMethod(String name, Class[] parameterTypes)</td>
+<td>获取类的特定成员方法</td>
+</tr>
+</tbody></table>
+<h3 id="example"><a href="#example" class="headerlink" title="example"></a>example</h3><p>该学生类属性</p>
+<p><img src="https://raw.githubusercontent.com/wh1t3zer/recordCTF/main/imgs/image-20230115163317423.png" class="lazyload placeholder" data-srcset="https://raw.githubusercontent.com/wh1t3zer/recordCTF/main/imgs/image-20230115163317423.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"></p>
+<h4 id="获取对象的类"><a href="#获取对象的类" class="headerlink" title="获取对象的类"></a>获取对象的类</h4><p><img src="https://raw.githubusercontent.com/wh1t3zer/recordCTF/main/imgs/image-20230115162625934.png" class="lazyload placeholder" data-srcset="https://raw.githubusercontent.com/wh1t3zer/recordCTF/main/imgs/image-20230115162625934.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">Class</span> <span class="variable">clazz</span> <span class="operator">=</span> Class.forName(<span class="string">&quot;src.Student&quot;</span>);<span class="comment">//也可使用forName方法</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="获取对象构造方法"><a href="#获取对象构造方法" class="headerlink" title="获取对象构造方法"></a>获取对象构造方法</h4><p><img src="https://raw.githubusercontent.com/wh1t3zer/recordCTF/main/imgs/image-20230115163218941.png" class="lazyload placeholder" data-srcset="https://raw.githubusercontent.com/wh1t3zer/recordCTF/main/imgs/image-20230115163218941.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"></p>
+<p>其中传入的参数是获取student类中带有int类型和String类型参数的构造方法</p>
+<h4 id="获取对象的属性"><a href="#获取对象的属性" class="headerlink" title="获取对象的属性"></a>获取对象的属性</h4><p><img src="https://raw.githubusercontent.com/wh1t3zer/recordCTF/main/imgs/image-20230115163846077.png" class="lazyload placeholder" data-srcset="https://raw.githubusercontent.com/wh1t3zer/recordCTF/main/imgs/image-20230115163846077.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"></p>
+<h4 id="获取对象的方法"><a href="#获取对象的方法" class="headerlink" title="获取对象的方法"></a>获取对象的方法</h4><p><img src="https://raw.githubusercontent.com/wh1t3zer/recordCTF/main/imgs/image-20230115164332503.png" class="lazyload placeholder" data-srcset="https://raw.githubusercontent.com/wh1t3zer/recordCTF/main/imgs/image-20230115164332503.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"></p>
+<p>当在漏洞利用时通常需要修改对象属性达到攻击目的，贴一段代码</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="type">boolean</span> <span class="title function_">setField</span><span class="params">(Object object, String fieldName, Object fieldValue)</span> &#123;</span><br><span class="line">    <span class="type">Class</span> <span class="variable">clazz</span> <span class="operator">=</span> object.getClass();</span><br><span class="line">    <span class="type">Field</span> <span class="variable">field</span> <span class="operator">=</span> clazz.getDeclaredField(fieldName);</span><br><span class="line">    field.setAccessible(<span class="literal">true</span>);</span><br><span class="line">    <span class="keyword">return</span> field.set(object, fieldValue);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="0x06工具"><a href="#0x06工具" class="headerlink" title="0x06工具"></a>0x06工具</h2><p><a target="_blank" rel="noopener" href="https://github.com/frohoff/ysoserial">https://github.com/frohoff/ysoserial</a></p>
+<p>yeoserial库</p>
+<p>在渗透测试或者做CTF题目的时候需要注意看源代码的依赖名称和依赖版本从而选择正确的反序列化链</p>
+<h2 id="0x07总结"><a href="#0x07总结" class="headerlink" title="0x07总结"></a>0x07总结</h2><p>1、实现序列化时需要实现serialize或Externalizable接口否则报错</p>
+<p>2、子类继承父类若无实现接口则需要提供空白参数的构造方法</p>
+<p>3、静态常量和类的属性不能被序列化，序列化的只能是对象，静态则优先于对象，随着类加载而加载</p>
+<p>4、JAVA反序列化往往配合JAVA反射进行构造恶意代码的目的，一般不能遗漏setAccessible</p>
+<p>5、Ysoserial工具使用的时候需根据源代码的依赖名称和版本选择正确的链子</p>
+
+      </div>
+      <div class="post-tags-categories">
+        
+        <div class="tags">
+          
+            <a href="/tags/java/" class="">
+              java
+            </a>
+          
+        </div>
+        
+      </div>
+      
+        <div class="copyright">
+  <ul class="post-copyright">
+    <li class="post-copyright-author">
+    <strong>author:  </strong>wh1t3zer</a>
+    </li>
+    <li class="post-copyright-link">
+    <strong>link:  </strong>
+    <a href="/2023/01/01/JAVA反序列化利用/" target="_blank" title="JAVA反序列化利用">https://wh1t3zer.github.io/2023/01/01/JAVA反序列化利用/</a>
+    </li>
+    <li class="post-copyright-license">
+      <strong>Copyright notice:   </strong>
+      All articles on this website, unless otherwise stated, adopt <a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank" title="Attribution-NonCommercial-NoDerivatives 4.0 International (CC BY-NC-ND 4.0)">CC BY-NC-ND 4.0</a>
+      reprint policy. If reproduced, please indicate source!
+    </li>
+  </ul>
+<div>
+      
+    </article>
+    <!-- 上一篇文章和下一篇文章 -->
+    
+      <!-- 文章详情页的上一页和下一页 -->
+<div class="post-nav">
+
+
+
+
+
+  
+  <div class="post-nav-next post-nav-item">
+    <div class="post-nav-img" style="background-size: cover; 
+      background-position: center center;">
+      <img class="lazyload lazyload placeholder" src="/medias/9.jpg" class="lazyload placeholder" data-srcset="/medias/9.jpg" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" src="" alt="">
+    </div>
+    <a href="/2022/11/04/APPLE%E9%BB%91%E8%8B%B9%E6%9E%9C%E6%95%99%E7%A8%8B/" class="post-nav-link">
+      <div class="title">
+        Next: <i class="fas fa-angle-right"></i>
+        <div class="title-text">APPLE黑苹果教程</div>
+      </div>
+      <!-- <div class="content">
+        题记闲着无聊按网上方式一步步去给主机搞个黑苹果玩玩，理想比较美好，但是搞起来却没有想象这么顺利
+三件套1、opencor
+      </div> -->
+    </a>
+  </div>
+
+</div>
+
+    
+    
+
+    <!-- 打赏 -->
+    
+      <div id="appDonate" class="post-donate">
+  <div id="donate_board" class="donate_bar center" ref="donate">
+    <a id="btn_donate" class="btn_donate" href="javascript:;" title="打赏" @click="showDialogDrawer()"></a>
+  </div>
+  <transition name="fade">
+    <div 
+      class="donate-box-mask"
+      v-cloak 
+      v-show="visible"
+      @click="cancelDialogDrawer()"
+    >
+    </div>
+  </transition>
+  <transition name="bounce">
+    <div class="donate-box" v-cloak v-show="visible">
+      <div class="donate-box_close">
+        <i class="fas fa-times" aria-hidden="true" @click="cancelDialogDrawer" pointer></i>
+      </div>
+      <div class="donate-box_title">
+        <h4>
+          你的赏识是我前进的动力
+        </h4>
+      </div>
+      <div class="donate-box_tab">
+        <div class="Alipay" pointer :class="{'active': tabActive === 'Alipay'}" @click="changeTabActive('Alipay')">
+          支付宝
+        </div>
+        <div class="WeChatpay" pointer :class="{'active': tabActive === 'WeChatpay'}" @click="changeTabActive('WeChatpay')">
+          微信
+        </div>
+      </div>
+      <div class="donate-box_img">
+        <div class="AlipayImg" v-show="tabActive === 'Alipay'">
+          <img src="/medias/1.jpg" class="lazyload placeholder" data-srcset="/medias/1.jpg" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="支付宝打赏" />
+        </div> 
+        <div class="WeChatpayImg" v-show="tabActive === 'WeChatpay'">
+          <img src="/medias/2.jpg" class="lazyload placeholder" data-srcset="/medias/2.jpg" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="微信打赏" />
+        </div>
+      </div>
+    </div>
+  </transition>
+</div>
+
+<script>
+  var body = document.body || document.documentElement || window;
+  var vm = new Vue({
+    el: '#appDonate',
+    data: {
+      visible: false,
+      tabActive: 'Alipay',
+      top: 0,
+    },
+    computed: {
+    },
+    mounted() {
+    },
+    methods: {
+      showDialogDrawer() {
+        this.visible = true;
+        // 防止页面滚动，只能让弹框滚动
+        // function getScroll() {
+        //   return {
+        //     left: window.pageXOffset || document.documentElement.scrollLeft || document.body.scrollLeft || 0,
+        //     top: window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0
+        //   };
+        // }
+        this.top = $(document).scrollTop() // or getScroll().top
+        // console.log('aa', $('.main-content'));
+        body.style.cssText = 'overflow: hidden;';
+      },
+      cancelDialogDrawer() {
+        this.visible = false;
+        body.removeAttribute('style');
+        $(document).scrollTop(this.top)
+      },
+      changeTabActive(name) {
+        this.tabActive = name;
+      }
+    },
+    created() {}
+  })
 </script>
     
+
+    <!-- 分享 -->
+    
+      <!-- https://github.com/overtrue/share.js -->
+<!-- 文章详情页的分享 -->
+<div class="social-share" data-sites="twitter,facebook,google,qq,qzone,wechat,weibo,douban,linkedin" data-wechat-qrcode-helper="<p>微信扫一扫即可分享！</p>"></div>
+
+<script src="/js/shareJs/social-share.min.js"></script>
+</script>
+
+<style>
+  .social-share {
+    margin: 20px 0;
+  }
+</style>
+
+
+    
+    
+    <!-- 评论 -->
+    <!-- 评论 -->
+
+  <div id="myComment">
+    
+      <div id="gitment-container"></div>
+
+    
+  </div>
+
+<!-- comment script in themes\hexo-theme-bamboo\layout\_partial\scripts\index.ejs -->
+
+
+  </div>
+
+  <!-- 目录 -->
+  <!-- 文章详情页右侧目录 -->
+
+  <div class="toc-aside">
+    <div class="toc-main">
+      <div class="toc-aside-title">
+        <i class="fas fa-list-ul" aria-hidden="true"></i><span>catalog</span>
+        
+          <div class="toc-open-close">catalog</div>
+        
+      </div>
+      <div class="toc-content">
+        <div class="toc"></div>
+      </div>
     </div>
-    <div class="mask-box"></div>
+  </div>
+
+  <!-- 手机端目录按钮 -->
+  <div id="toc-mobile-btn">
+    <i class="fas fa-list-ul" aria-hidden="true"></i>
+  </div>
+
+
+<script>
+  function closeToc(init) {
+    $(".toc-aside").css({'width': 0, 'padding': 0, 'transition': init ?  'noe' : 'width 0.3s' });
+    $(".toc-content").css({'width': 0});
+    $(".toc-aside-title span, .toc-aside-title i").css({'display': 'none'});
+    $(".main-content").css({'width': '75%', 'margin': '10px auto'});
+  };
+  function openToc() {
+    $(".main-content").css({'width': '65%', 'margin-right': '10px', 'margin-left': 'calc(35% - 350px)'});
+    $(".toc-aside").css({'width': '300px', 'padding': '0 10px', 'transition': 'width 0.3s'});
+    $(".toc-content").css({'width': '300px'});
+    $(".toc-aside-title span, .toc-aside-title i").css({'display': 'inline-block'});
+  }
+  function openBtnClickFn () {
+    let openOrCloseBtn = $('.toc-aside .toc-aside-title .toc-open-close');
+    let open = eval('' || 'true');
+    openOrCloseBtn.click(function() {
+      if (open) {
+        closeToc();
+        open = false;
+      } else {
+        openToc();
+        open = true;
+      }
+    });
+  };
+  openBtnClickFn();
+  initCloseTocWidth(true);
+
+  function initCloseTocWidth(init) {
+    if (window.innerWidth >= 992) {
+      let isClose = false;
+      isClose && closeToc(init)
+    }
+  }
+
+  document.addEventListener('pjax:complete', function () {
+    $(".toc-aside").css({'transition': 'no'});
+  })
+  document.addEventListener('pjax:complete', function () {
+    openBtnClickFn();
+  })
+  
+</script>
+
+  <!-- 图片放大 Wrap images with fancybox support -->
+  <script src="/js/wrapImage.js"></script>
 </div>
 
-
-
-<div id="categories" class="container">
-    <div class="card">
-        <div class="card-content">
-            <div class="category-title center-align">
-                <i class="fas fa-tags"></i>&nbsp;&nbsp;Article Categories
-            </div>
-            <div class="category-chips">
-                
-                
-                <a href="/categories/java-%E6%9C%9F%E6%9C%AB/" title="java | 期末: 1">
-                    <span class="category-content"
-                        title="java | 期末" style="background-color: #F9E79F;">java | 期末
-                        <span class="category-length">1</span>
-                    </span>
-                </a>
-                
-                
-                <a href="/categories/ctf/" title="ctf: 1">
-                    <span class="category-content"
-                        title="ctf" style="background-color: #F9E79F;">ctf
-                        <span class="category-length">1</span>
-                    </span>
-                </a>
-                
-                
-                <a href="/categories/java-rce/" title="java | rce: 1">
-                    <span class="category-content"
-                        title="java | rce" style="background-color: #FEF9E7;">java | rce
-                        <span class="category-length">1</span>
-                    </span>
-                </a>
-                
-                
-                <a href="/categories/ctf-%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/" title="ctf | 反序列化: 1">
-                    <span class="category-content"
-                        title="ctf | 反序列化" style="background-color: #F9E79F;">ctf | 反序列化
-                        <span class="category-length">1</span>
-                    </span>
-                </a>
-                
-                
-                <a href="/categories/CTF-%E9%9D%B6%E5%9C%BA/" title="CTF | 靶场: 6">
-                    <span class="category-content"
-                        title="CTF | 靶场" style="background-color: #FEF9E7;">CTF | 靶场
-                        <span class="category-length">6</span>
-                    </span>
-                </a>
-                
-                
-                <a href="/categories/RCE/" title="RCE: 1">
-                    <span class="category-content"
-                        title="RCE" style="background-color: #F8C471;">RCE
-                        <span class="category-length">1</span>
-                    </span>
-                </a>
-                
-                
-                <a href="/categories/CTF-reverse/" title="CTF | reverse: 1">
-                    <span class="category-content"
-                        title="CTF | reverse" style="background-color: #E8F8F5;">CTF | reverse
-                        <span class="category-length">1</span>
-                    </span>
-                </a>
-                
-                
-                <a href="/categories/Java-%E6%9C%8D%E5%8A%A1%E5%99%A8%E7%AE%97%E6%B3%95/" title="Java | 服务器算法: 1">
-                    <span class="category-content"
-                        title="Java | 服务器算法" style="background-color: #E8F8F5;">Java | 服务器算法
-                        <span class="category-length">1</span>
-                    </span>
-                </a>
-                
-                
-                <a href="/categories/java-serialize/" title="java | serialize: 1">
-                    <span class="category-content"
-                        title="java | serialize" style="background-color: #82E0AA;">java | serialize
-                        <span class="category-length">1</span>
-                    </span>
-                </a>
-                
-            </div>
-        </div>
-    </div>
+<!-- 文章详情页背景图 -->
+<div id="appBgSwiper" style="position: fixed;left: 0;top: 0;width: 100%;height: 100%;z-index: -2;"
+	:style="{'background-color': bgColor ? bgColor : 'transparent'}">
+	<transition-group tag="ul" :name="names">
+		<li v-for='(image,index) in img' :key='index' v-show="index === mark" class="bg-swiper-box">
+			<img :src="image" class="bg-swiper-img no-lazy">
+		</li>
+	</transition-group>
 </div>
+<script>
+	var vm = new Vue({
+		el: '#appBgSwiper',
+		data: {
+			names: '' || 'fade' || 'fade', // translate-fade fade
+			mark: 0,
+			img: [],
+			bgColor: '',
+			time: null
+		},
+		methods: {   //添加方法
+			change(i, m) {
+				if (i > m) {
+					// this.names = 'fade';
+				} else if (i < m) {
+					// this.names = 'fade';
+				} else {
+					return;
+				}
+				this.mark = i;
+			},
+			prev() {
+				// this.names = 'fade';
+				this.mark--;
+				if (this.mark === -1) {
+					this.mark = 3;
+					return
+				}
+			},
+			next() {
+				// this.names = 'fade';
+				this.mark++;
+				if (this.mark === this.img.length) {
+					this.mark = 0;
+					return
+				}
+			},
+			autoPlay() {
+				// this.names = 'fade';
+				this.mark++;
+				if (this.mark === this.img.length) {
+					this.mark = 0;
+					return
+				}
+			},
+			play() {
+				let bgImgDelay = '' || '180000'
+				let delay = parseInt(bgImgDelay) || 180000;
+				this.time = setInterval(this.autoPlay, delay);
+			},
+			enter() {
+				clearInterval(this.time);
+			},
+			leave() {
+				this.play();
+			}
+		},
+		created() {
+			this.play()
+		},
+		beforeDestroy() {
+			clearInterval(this.time);
+		},
+		mounted() {
+			let prop = '' || '';
+			let isImg = prop.includes('.bmp') || prop.includes('.jpg') || prop.includes('.png') || prop.includes('.tif') || prop.includes('.gif') || prop.includes('.pcx') || prop.includes('.tga') || prop.includes('.exif') || prop.includes('.fpx') || prop.includes('.psd') || prop.includes('.cdr') || prop.includes('.pcd') || prop.includes('.dxf') || prop.includes('.ufo') || prop.includes('.eps') || prop.includes('.ai') || prop.includes('.raw') || prop.includes('.WMF') || prop.includes('.webp') || prop.includes('.jpeg') || prop.includes('http://') || prop.includes('https://')
+			if (isImg) {
+				let img = prop.split(',');
+				let configRoot = '/'
+				let arrImg = [];
+				img.forEach(el => {
+					var Expression = /http(s)?:\/\/([\w-]+\.)+[\w-]+(\/[\w- .\/?%&=]*)?/;
+					var objExp = new RegExp(Expression);
+
+					if (objExp.test(el)) {
+						// http or https
+						arrImg.push(el);
+					} else {
+						// 非http or https开头
+						// 本地文件
+						let firstStr = el.charAt(0);
+						if (firstStr == '/') {
+							el = el.substr(1); // 删除第一个字符 '/',因为 configRoot最后一个字符为 /
+						}
+						el = configRoot + el;
+						arrImg.push(el);
+					}
+				})
+				this.img = arrImg;
+			} else {
+				this.bgColor = prop;
+			}
+		}
+	})
+</script>
+
+<style>
+	.bg-swiper-box {
+		position: absolute;
+		display: block;
+		width: 100%;
+		height: 100%;
+	}
+
+	.bg-swiper-img {
+		object-fit: cover;
+		width: 100%;
+		height: 100%;
+	}
+</style>
+
+
+
+
+  <script>
+  function loadMermaid() {
+    if (document.getElementsByClassName('mermaid').length) {
+      if (window.mermaidJsLoad) mermaid.init()
+      else {
+        loadScript('https://unpkg.com/mermaid/dist/mermaid.min.js').then(() => {
+          window.mermaidJsLoad = true
+          mermaid.initialize({
+            theme: 'default',
+          })
+          if ('true') {
+            mermaid.init();
+          }
+        })
+      }
+    }
+  };
+  document.addEventListener("DOMContentLoaded", function () {
+    loadMermaid();
+  })
+
+  document.addEventListener('pjax:complete', function () {
+    loadMermaid();
+  })
+  
+</script>
+
 
       </main>
     </div>
