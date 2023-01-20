@@ -565,13 +565,14 @@
   <div class="main-content">
     <article class="post post-detail">
       <div class="post-content">
-        <h2 id="log4j2简介"><a href="#log4j2简介" class="headerlink" title="log4j2简介"></a>log4j2简介</h2><p>Apache Log4j2是一个优秀的java程序日志监控组件，提供了方便的日志记录。以前的java打印日志比较繁琐，常常使用system.err和system.out，这样一来会导致IO操作增加，输出的内容不能保存，无法定制日志格式等，于是有了log4j2日志组件。</p>
+        <h2 id="0x00简介"><a href="#0x00简介" class="headerlink" title="0x00简介"></a>0x00简介</h2><p>Apache Log4j2是一个优秀的java程序日志监控组件，提供了方便的日志记录。以前的java打印日志比较繁琐，常常使用system.err和system.out，这样一来会导致IO操作增加，输出的内容不能保存，无法定制日志格式等，于是有了log4j2日志组件。</p>
 <p>Log4j2与Log4j不是同一个东西，Log4j2借鉴了Slf4j和Logback，分为log4j-Api和log4j-core。log4j是CeKi Gulcu编写的，而log4j2是Apache独立推出的。</p>
-<h2 id="漏洞原理"><a href="#漏洞原理" class="headerlink" title="漏洞原理"></a>漏洞原理</h2><h3 id="攻击流程图"><a href="#攻击流程图" class="headerlink" title="攻击流程图"></a>攻击流程图</h3><p>攻击者通过JNDI服务，执行LDAP协议注入恶意代码实现远程代码执行，</p>
+<h2 id="0x01影响范围"><a href="#0x01影响范围" class="headerlink" title="0x01影响范围"></a>0x01影响范围</h2><p>影响范围：Apache Log4j 2.x&lt;&#x3D;2.14.1。已知受影响的应用及组件，如 spring-boot-strater-log4j2 &#x2F; Apache Solr &#x2F; Apache Flink &#x2F; Apache Druid等。漏洞编号为CNVD-2021-95919，CVE-2021-44228。</p>
+<h2 id="0x02漏洞原理"><a href="#0x02漏洞原理" class="headerlink" title="0x02漏洞原理"></a>0x02漏洞原理</h2><h3 id="攻击流程图"><a href="#攻击流程图" class="headerlink" title="攻击流程图"></a>攻击流程图</h3><p>攻击者通过JNDI服务，执行LDAP协议注入恶意代码实现远程代码执行，</p>
 <h3 id="JNDI注入"><a href="#JNDI注入" class="headerlink" title="JNDI注入"></a>JNDI注入</h3><h4 id="JNDI服务"><a href="#JNDI服务" class="headerlink" title="JNDI服务"></a>JNDI服务</h4><p>首选我们了解一下JNDI服务是什么。JNDI全称为访问命名和目录服务的API，提供统一的客户端API。管理者将JNDI API映射为特定的命名服务和目录系统，使得JAVA应用可以和这些命名服务和目录服务之间进行交互。</p>
 <p>JNDI类似JDBC构建在抽象层，现在已经成为了J2EE的标准之一。</p>
 <h3 id="LADP协议"><a href="#LADP协议" class="headerlink" title="LADP协议"></a>LADP协议</h3><p>再来介绍一下LADP协议，全称是轻量级目录访问协议。它约定了客户端和服务端之间的信息交互格式使用的端口号认证方式等其他内容。如强大的AD(Active Directory)就是LDAP在Windows的实现。</p>
-<h2 id="复现步骤"><a href="#复现步骤" class="headerlink" title="复现步骤"></a>复现步骤</h2><h3 id="0x00"><a href="#0x00" class="headerlink" title="0x00"></a>0x00</h3><h3 id="0x01"><a href="#0x01" class="headerlink" title="0x01"></a>0x01</h3><h2 id="解决方法"><a href="#解决方法" class="headerlink" title="解决方法"></a>解决方法</h2><p>1、禁用log4j的lookup功能</p>
+<h2 id="0x02复现步骤"><a href="#0x02复现步骤" class="headerlink" title="0x02复现步骤"></a>0x02复现步骤</h2><h3 id="0x00"><a href="#0x00" class="headerlink" title="0x00"></a>0x00</h3><h3 id="0x01"><a href="#0x01" class="headerlink" title="0x01"></a>0x01</h3><h2 id="0x03解决方法"><a href="#0x03解决方法" class="headerlink" title="0x03解决方法"></a>0x03解决方法</h2><p>1、禁用log4j的lookup功能</p>
 <p>2、禁用JNDI服务</p>
 <p>3、升级高版本jdk</p>
 <p>4、升级log4j版本</p>
