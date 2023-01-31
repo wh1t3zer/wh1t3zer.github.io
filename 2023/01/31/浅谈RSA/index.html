@@ -573,9 +573,14 @@
 <h2 id="0x02算法原理"><a href="#0x02算法原理" class="headerlink" title="0x02算法原理"></a>0x02算法原理</h2><p>RSA的算法涉及三个参数，n、e1、e2。其中，n是两个大素数p、q的积，n的<a target="_blank" rel="noopener" href="https://so.csdn.net/so/search?q=%E4%BA%8C%E8%BF%9B%E5%88%B6&spm=1001.2101.3001.7020">二进制</a>表示时所占用的位数，就是所谓的密钥长度。e1和e2是一对相关的值，e1可以任意取。</p>
 <h2 id="0x03过程推演"><a href="#0x03过程推演" class="headerlink" title="0x03过程推演"></a>0x03过程推演</h2><p>1、取较大素数p，q</p>
 <p>2、取一个n&#x3D;p*q</p>
-<p>3、随机取加密密钥e（也就是公钥），也必须和（p-1）和（q-1）<strong>互质</strong>，用<a target="_blank" rel="noopener" href="https://baike.baidu.com/item/%E6%AC%A7%E6%8B%89%E5%87%BD%E6%95%B0/1944850?fr=aladdin">欧拉函数</a>取得解密秘钥d（也就是私钥）<br>$$<br>d&#x3D;e^-1 mod (p-1)(q-1)<br>$$<br>4、设A为明文，B为密文<br>$$<br>A&#x3D;B^d mod n<br>$$</p>
-<p>$$<br>B&#x3D;A^e mod n<br>$$</p>
-<p>其标准公式为：<br>$$<br>c &#x3D; m^e mod n<br>$$<br>其中c为cipher密文，m为message明文，n为公开密钥，e是加密指数</p>
+<p>3、随机取加密密钥e（也就是公钥），也必须和（p-1）和（q-1）<strong>互质</strong>，用<a target="_blank" rel="noopener" href="https://baike.baidu.com/item/%E6%AC%A7%E6%8B%89%E5%87%BD%E6%95%B0/1944850?fr=aladdin">欧拉函数</a>取得解密秘钥d（也就是私钥）</p>
+<p>​			<strong>d&#x3D;e^-1 mod (p-1)(q-1)</strong></p>
+<p>4、设A为明文，B为密文</p>
+<p>​			<strong>A&#x3D;B^d mod n</strong></p>
+<p>​			<strong>B&#x3D;A^e mod n</strong></p>
+<p>其标准公式为：</p>
+<p>​			<strong>c &#x3D; m^e mod n</strong></p>
+<p>其中c为cipher密文，m为message明文，n为公开密钥，e是加密指数</p>
 <h3 id="e值"><a href="#e值" class="headerlink" title="e值"></a>e值</h3><p>最常用的三个e值：3, 17, 65537(2^16+1).</p>
 <h2 id="0x04Python代码实现"><a href="#0x04Python代码实现" class="headerlink" title="0x04Python代码实现"></a>0x04Python代码实现</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> gmpy2</span><br><span class="line"><span class="keyword">from</span> binascii <span class="keyword">import</span> a2b_hex, b2a_hex</span><br><span class="line"></span><br><span class="line"><span class="built_in">str</span>=<span class="string">b&#x27;this is a rsa&#x27;</span></span><br><span class="line">p = <span class="number">4903571</span>     <span class="comment">#素数</span></span><br><span class="line">q = <span class="number">4903579</span>     <span class="comment">#素数</span></span><br><span class="line">n = p*q         <span class="comment">#求积</span></span><br><span class="line"><span class="built_in">print</span>(n)</span><br><span class="line">e = <span class="number">65537</span>   <span class="comment">#随机取加密指数</span></span><br><span class="line"></span><br><span class="line">d = gmpy2.invert(e, (p - <span class="number">1</span>) * (q - <span class="number">1</span>))  <span class="comment">#获得密钥:d=e^-1 mod (p-1)*(q-1)</span></span><br><span class="line">c = <span class="built_in">pow</span>(<span class="built_in">int</span>(b2a_hex(<span class="built_in">str</span>), <span class="number">16</span>), e, n)   <span class="comment">#使用明文与公钥转换成密文c</span></span><br><span class="line"><span class="built_in">print</span>(c)</span><br><span class="line"></span><br><span class="line"><span class="comment">#n=24045047780609</span></span><br><span class="line"><span class="comment">#c=9698011943914</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
 
@@ -619,6 +624,24 @@
 <div class="post-nav">
 
 
+
+  
+  <div class="post-nav-prev post-nav-item">
+    <div class="post-nav-img" style="background-size: cover; 
+      background-position: center center;">
+      <img class="lazyload lazyload placeholder" src="/medias/1.jpg" class="lazyload placeholder" data-srcset="/medias/1.jpg" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="">
+    </div>
+    <a href="/2023/01/31/NodeJS%E5%8E%9F%E5%9E%8B%E9%93%BE%E6%B1%A1%E6%9F%93/" class="post-nav-link">
+      <div class="title">
+        <i class="fas fa-angle-left"></i> Prev:
+        <div class="title-text"></div>
+      </div>
+      
+      <!-- <div class="content">
+        
+      </div> -->
+    </a>
+  </div>
 
 
 
