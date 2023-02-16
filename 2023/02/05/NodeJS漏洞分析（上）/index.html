@@ -11,7 +11,7 @@
   <!-- Global site tag (gtag.js) - Google Analytics -->
 
 
-  <title>Tags | wh1t3zer</title>
+  <title>NodeJS常见漏洞总结（上） | wh1t3zer</title>
 
   <link rel="icon" type="image/x-icon, image/vnd.microsoft.icon" href="/favicon.ico">
   <link rel="stylesheet" href="https://at.alicdn.com/t/font_1911880_c1nvbyezg17.css">
@@ -505,138 +505,578 @@
 </header>
         <!-- 内容区域 -->
         
-<div class="bg-dark-floor" style="position: fixed;left: 0;top: 0;width: 100%;height: 100%;z-index: -2;"></div>
-<div class="bg-light-floor-tags" style="position: fixed;left: 0;top: 0;width: 100%;height: 100%;z-index: -3;"></div>
+ <!-- prismjs 代码高亮 -->
+ 
 
-<div class="tags-header" style="background-image:url('https://pic2.zhimg.com/80/v2-bf6c555e7c61a57ba4a1fd95a9a32975_1440w.jpg')">
-    <div class="tags-header-title">
-        tags
+
+<div class="bg-dark-floor" style="position: fixed;left: 0;top: 0;width: 100%;height: 100%;z-index: -1;"></div>
+
+
+  <!-- 文章详情页顶部图片和标题 -->
+
+
+
+
+<div class="post-detail-header" id="thumbnail_canvas" style="background-repeat: no-repeat; background-size: cover; 
+  background-position: center center;position: relative;background-image:url('/medias/6.jpg')">
+  <div class="post-detail-header-mask"></div>
+  <canvas id="header_canvas"style="position:absolute;bottom:0;pointer-events:none;"></canvas>
+  
+  <div class="post-detail-header_info-box">
+    <div class="title-box">
+      <span class="title">
+        NodeJS常见漏洞总结（上）
+      </span>
     </div>
-    <div class="tags-header-desc">
     
-        <span class="title" id="tags-header-desc"></span>
-        <script>
-  function typedFn() {
-    const el = '#tags-header-desc';
-    const type = 'tag';
-    let desc = '愿你如风，被人温柔以待'
-    var typed = new Typed(el, {
-      strings: [desc],
-      startDelay: 100,
-      typeSpeed: 100,
-      loop: true,
-      backSpeed: 50,
-      showCursor: true
-    });
-  }
-  typedFn();
+    
+      
+        <span class="post-detail-header_date">
+          <i class="fas fa-calendar"></i> Published in：2023-02-05 |
+        </span>
+      
+
+      
+        <span class="post-detail-header_categories">
+          <i class="iconfont iconbookmark1"></i> category：
+          
+            <a href="/categories/Node-js/" class="post-detail-header_category">
+              Node.js
+            </a>
+          
+        </span>
+      
+
+      
+    
+  </div>
+  
+  
+    <script src="/js/bubble/bubble.js"></script>
+  
+</div>
+
+
+
+
+
+<div class="row justify-position" 
+  style="padding-top: 0px;">
+  <div class="main-content">
+    <article class="post post-detail">
+      <div class="post-content">
+        <h2 id="0x00前言"><a href="#0x00前言" class="headerlink" title="0x00前言"></a>0x00前言</h2><p>目前Web安全经过日新月异的发展，许多新兴框架都替换掉了原来老旧的技术。而在CTF上，NodeJS安全的题目也出的越来越频繁，常见的一般为NodeJS原型链污染。预计未来NodeJS也会像JAVA，PHP等后端语言一样同样在安全问题上受到更多的重视。</p>
+<h3 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h3><p>Node.js发布于2009年5月，由Ryan Dahl开发，是一个基于<a target="_blank" rel="noopener" href="https://baike.baidu.com/item/Chrome/5633839?fromModule=lemma_inlink">Chrome</a> <a target="_blank" rel="noopener" href="https://baike.baidu.com/item/V8/6178125?fromModule=lemma_inlink">V8</a>引擎的<a target="_blank" rel="noopener" href="https://baike.baidu.com/item/JavaScript/321142?fromModule=lemma_inlink">JavaScript</a>运行环境，使用了一个<a target="_blank" rel="noopener" href="https://baike.baidu.com/item/%E4%BA%8B%E4%BB%B6%E9%A9%B1%E5%8A%A8/9597519?fromModule=lemma_inlink">事件驱动</a>、非阻塞式I&#x2F;O模型， 让JavaScript 运行在<a target="_blank" rel="noopener" href="https://baike.baidu.com/item/%E6%9C%8D%E5%8A%A1%E7%AB%AF/6492316?fromModule=lemma_inlink">服务端</a>的开发平台，它让JavaScript成为与<a target="_blank" rel="noopener" href="https://baike.baidu.com/item/PHP/9337?fromModule=lemma_inlink">PHP</a>、<a target="_blank" rel="noopener" href="https://baike.baidu.com/item/Python/407313?fromModule=lemma_inlink">Python</a>、<a target="_blank" rel="noopener" href="https://baike.baidu.com/item/Perl/851577?fromModule=lemma_inlink">Perl</a>、<a target="_blank" rel="noopener" href="https://baike.baidu.com/item/Ruby/11419?fromModule=lemma_inlink">Ruby</a>等服务端语言平起平坐的<a target="_blank" rel="noopener" href="https://baike.baidu.com/item/%E8%84%9A%E6%9C%AC%E8%AF%AD%E8%A8%80/1379708?fromModule=lemma_inlink">脚本语言</a>。</p>
+<h2 id="0x01启动服务"><a href="#0x01启动服务" class="headerlink" title="0x01启动服务"></a>0x01启动服务</h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> http = <span class="built_in">require</span>(<span class="string">&#x27;http&#x27;</span>);</span><br><span class="line">http.<span class="title function_">createServer</span>(<span class="keyword">function</span>(<span class="params">request,response</span>)&#123;</span><br><span class="line">    <span class="comment">//发送HTTP头部</span></span><br><span class="line">    <span class="comment">//内容类型：text/plain</span></span><br><span class="line">    response.<span class="title function_">writeHead</span>(<span class="number">200</span>,&#123;<span class="string">&#x27;content-type&#x27;</span>:<span class="string">&#x27;text/plain&#x27;</span>&#125;);</span><br><span class="line">    </span><br><span class="line">    <span class="comment">//发送响应数据</span></span><br><span class="line">    response.<span class="title function_">end</span>(<span class="string">&#x27;response hello world\n&#x27;</span>);</span><br><span class="line">&#125;).<span class="title function_">listen</span>(<span class="number">8888</span>);<span class="comment">//监听端口</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;Server running&#x27;</span>);</span><br></pre></td></tr></table></figure>
+
+<h2 id="0x02大小写转换攻击"><a href="#0x02大小写转换攻击" class="headerlink" title="0x02大小写转换攻击"></a>0x02大小写转换攻击</h2><p>toUpperCase()————小写转大写</p>
+<p>对于toUpperCase(): 字符<code>&quot;ı&quot;</code>、<code>&quot;ſ&quot;</code> 经过toUpperCase处理后结果为<code> &quot;I&quot;</code>、<code>&quot;S&quot;</code></p>
+<p>toLowerCase()————大写转小写</p>
+<p>对于toLowerCase(): 字符<code>&quot;K&quot;</code>经过toLowerCase处理后结果为<code>&quot;k&quot;</code>注：<code>(这个K不是大写字母K)</code></p>
+<h2 id="0x03弱类型比较漏洞"><a href="#0x03弱类型比较漏洞" class="headerlink" title="0x03弱类型比较漏洞"></a>0x03弱类型比较漏洞</h2><h3 id="数字与字符比较"><a href="#数字与字符比较" class="headerlink" title="数字与字符比较"></a>数字与字符比较</h3><p>数字与字符比较时，会将纯数字字符串强制转换为数字类型再比较。</p>
+<p>字符串与字符串比较时，会将字符串的首位字符转换为ASCII码进行比较</p>
+<p><strong>示例</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="number">1</span>==<span class="string">&#x27;1&#x27;</span>); <span class="comment">//true </span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="number">1</span>&gt;<span class="string">&#x27;2&#x27;</span>); <span class="comment">//false </span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;1&#x27;</span>&lt;<span class="string">&#x27;2&#x27;</span>); <span class="comment">//true </span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="number">111</span>&gt;<span class="string">&#x27;3&#x27;</span>); <span class="comment">//true </span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;111&#x27;</span>&gt;<span class="string">&#x27;3&#x27;</span>); <span class="comment">//false </span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;asd&#x27;</span>&gt;<span class="number">1</span>); <span class="comment">//false</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="数组间比较"><a href="#数组间比较" class="headerlink" title="数组间比较"></a>数组间比较</h3><p>空数组间比较永远返回<code>false</code>，数组间只比较各个数组的第一个元素值</p>
+<p>数组与非数值型字符串比较，永远小于非数值型字符串</p>
+<p>数组与数值型字符串比较，是取数组的第一位元素与数值型字符串进行比较</p>
+<p><strong>示例</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>([]==[]); <span class="comment">//false </span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>([]&gt;[]); <span class="comment">//false</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>([<span class="number">6</span>,<span class="number">2</span>]&gt;[<span class="number">5</span>]); <span class="comment">//true </span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>([<span class="number">100</span>,<span class="number">2</span>]&lt;<span class="string">&#x27;test&#x27;</span>); <span class="comment">//true </span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>([<span class="number">1</span>,<span class="number">2</span>]&lt;<span class="string">&#x27;2&#x27;</span>);  <span class="comment">//true </span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>([<span class="number">11</span>,<span class="number">16</span>]&lt;<span class="string">&quot;10&quot;</span>); <span class="comment">//false</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="特殊类型"><a href="#特殊类型" class="headerlink" title="特殊类型"></a>特殊类型</h3><p>null是<strong>等于</strong>undefined的，但是不是<strong>全等于</strong>undefined</p>
+<p>NaN<strong>不等于&#x2F;全等于</strong>自身</p>
+<p><strong>示例</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="literal">null</span> == <span class="literal">undefined</span>) <span class="comment">//true</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="literal">null</span> === <span class="literal">undefined</span>) <span class="comment">//false</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title class_">NaN</span> == <span class="title class_">NaN</span>) <span class="comment">//false</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title class_">NaN</span> === <span class="title class_">NaN</span>) <span class="comment">//false</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="0x04MD5绕过"><a href="#0x04MD5绕过" class="headerlink" title="0x04MD5绕过"></a>0x04MD5绕过</h2><p>MD5是根据原文加密的一串序列，NodeJS中当两者都为对象时，MD5的值也会相等</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">a &amp;&amp; b &amp;&amp; a.<span class="property">length</span>===b.<span class="property">length</span> &amp;&amp; a!==b &amp;&amp; <span class="title function_">md5</span>(a+flag)===<span class="title function_">md5</span>(b+flag)</span><br></pre></td></tr></table></figure>
+
+<p>代码解释：定义一个a和b对象，其中a和b为真且a的长度与b的长度相同，并且a不等于b，则它们md5的值都相等</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">a=&#123;<span class="string">&#x27;x&#x27;</span>:<span class="string">&#x27;1&#x27;</span>&#125;</span><br><span class="line">b=&#123;<span class="string">&#x27;x&#x27;</span>:<span class="string">&#x27;2&#x27;</span>&#125;</span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(a+<span class="string">&quot;test&quot;</span>)	<span class="comment">//[Object Object]test</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(b+<span class="string">&quot;test&quot;</span>)	<span class="comment">//[Object Object]test</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h2 id="0x05编码绕过"><a href="#0x05编码绕过" class="headerlink" title="0x05编码绕过"></a>0x05编码绕过</h2><p>与一般的语言相同，NodeJS也可以编码绕过</p>
+<p>常见编码</p>
+<p>base64编码</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">eval</span>(<span class="title class_">Buffer</span>.<span class="title function_">from</span>(<span class="string">&#x27;Y29uc29sZS5sb2coImhhaGFoYWhhIik7&#x27;</span>,<span class="string">&#x27;base64&#x27;</span>).<span class="title function_">toString</span>())</span><br></pre></td></tr></table></figure>
+
+<p>16进制编码</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;a&quot;</span>===<span class="string">&quot;\x61&quot;</span>); <span class="comment">// true</span></span><br></pre></td></tr></table></figure>
+
+<p>unicode编码</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;\u0061&quot;</span>===<span class="string">&quot;a&quot;</span>); <span class="comment">// true</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="0x06常见危险函数"><a href="#0x06常见危险函数" class="headerlink" title="0x06常见危险函数"></a>0x06常见危险函数</h2><h3 id="命令执行"><a href="#命令执行" class="headerlink" title="命令执行"></a>命令执行</h3><p>exec()</p>
+<p>该命令需要调用child_process模块</p>
+<p><strong>child_process</strong>是node的一个模块，负责子进程调用</p>
+<p>创建子进程的方式：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">异步方式：spawn、exec、execFile、fork</span><br><span class="line">同步方式：spawnSync、execSync、execFileSync</span><br><span class="line">经过上面的同步和异步思想的理解，创建子进程的同步异步方式应该不难理解。</span><br><span class="line">在异步创建进程时，spawn是基础，其他的fork、exec、execFile都是基于spawn来生成的。</span><br><span class="line">同步创建进程可以使用child_process.spawnSync()、child_process.execSync() 和 child_process.execFileSync() ，同步的方法会阻塞 Node.js 事件循环、暂停任何其他代码的执行，直到子进程退出。</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">require</span>(<span class="string">&#x27;child_process&#x27;</span>).<span class="title function_">exec</span>(<span class="string">&#x27;open /System/Applications/Calculator.app&#x27;</span>);	<span class="comment">//打开计算器</span></span><br></pre></td></tr></table></figure>
+
+<p>eval()</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="built_in">eval</span>(<span class="string">&quot;document.cookie&quot;</span>)); <span class="comment">//执行document.cookie</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="文件读写"><a href="#文件读写" class="headerlink" title="文件读写"></a>文件读写</h3><p><strong>读</strong></p>
+<p>readFile()————异步文件读</p>
+<p>readFileSync()————同步文件读</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">require</span>(<span class="string">&#x27;fs&#x27;</span>).<span class="title function_">readFile</span>(<span class="string">&#x27;文件路径&#x27;</span>,<span class="string">&#x27;utf-8&#x27;</span>,<span class="function">(<span class="params">err,data</span>)=&gt;</span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(err) <span class="keyword">throw</span> err;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(data);</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">require</span>(<span class="string">&#x27;fs&#x27;</span>).<span class="title function_">readFileSync</span>(<span class="string">&#x27;文件路径&#x27;</span>,<span class="string">&#x27;utf-8&#x27;</span>);</span><br></pre></td></tr></table></figure>
+
+<p><strong>写</strong></p>
+<p>writeFile()————异步文件写</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">require</span>(<span class="string">&#x27;fs&#x27;</span>).<span class="title function_">writeFile</span>(<span class="string">&#x27;文件路径&#x27;</span>,<span class="string">&#x27;文件内容&#x27;</span>,<span class="function">(<span class="params">err</span>)=&gt;</span>&#123;&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>writeFileSync()————同步文件写</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">require</span>(<span class="string">&#x27;fs&#x27;</span>).<span class="title function_">wirteFileSync</span>(<span class="string">&#x27;文件路径&#x27;</span>，<span class="string">&#x27;文件内容&#x27;</span>);</span><br></pre></td></tr></table></figure>
+
+<h2 id="0x07NodeJS拆分攻击"><a href="#0x07NodeJS拆分攻击" class="headerlink" title="0x07NodeJS拆分攻击"></a>0x07NodeJS拆分攻击</h2><p>属于HTTP走私攻击，因其主要原理利用了HTTP的回车换行注入（CRLF）</p>
+<p><strong>CRLF</strong></p>
+<p>回车换行注入\r\n(%0d%0a)</p>
+<p>引用一篇<a target="_blank" rel="noopener" href="https://www.jianshu.com/p/e6a9d7e9dbb2">简书文章</a></p>
+<p>正常数据包</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable constant_">HTTP</span>/<span class="number">1.1</span> <span class="number">200</span> <span class="variable constant_">OK</span></span><br><span class="line"></span><br><span class="line"><span class="title class_">Location</span>:<span class="attr">http</span>:<span class="comment">//www.sina.com</span></span><br><span class="line"></span><br><span class="line">但是如果改成：<span class="attr">http</span>:<span class="comment">//www.sina.com%0aSet-cookie:sessionid%3Dtest</span></span><br><span class="line"></span><br><span class="line">服务器返回：</span><br><span class="line"></span><br><span class="line"><span class="variable constant_">HTTP</span>/<span class="number">1.1</span> <span class="number">200</span> <span class="variable constant_">OK</span></span><br><span class="line"></span><br><span class="line"><span class="title class_">Location</span>:<span class="attr">http</span>:<span class="comment">//www.sina.com</span></span><br><span class="line"></span><br><span class="line"><span class="title class_">Set</span>-<span class="attr">cookie</span>:sessionid=test</span><br></pre></td></tr></table></figure>
+
+<p>是一种</p>
+<p>NodeJS中，默认的编码是latin1编码，该编码是单字节编码，不能解析高位编码unicode</p>
+<p>当请求路径有多字节编码的unicode字符，会被截断取最低字节，比如 \u0130 就会被截断为 \u30</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&gt; v = <span class="string">&quot;/caf\u&#123;E9&#125;\u&#123;01F436&#125;&quot;</span></span><br><span class="line"><span class="string">&#x27;/café🐶&#x27;</span></span><br><span class="line"></span><br><span class="line">&gt; <span class="title class_">Buffer</span>.<span class="title function_">from</span>(v,<span class="string">&#x27;latin1&#x27;</span>).<span class="title function_">toString</span>(<span class="string">&#x27;latin1&#x27;</span>)</span><br><span class="line"><span class="string">&#x27;/café=6&#x27;</span></span><br></pre></td></tr></table></figure>
+
+<p>该漏洞需要在Node环境小于8时产生，在Node的10版本里修复，当检测到非法unicode编码会报错</p>
+<p>配合CRLF</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">require</span>(<span class="string">&#x27;http&#x27;</span>).<span class="title function_">get</span>(<span class="string">&#x27;http://example.com/\r\n/test&#x27;</span>).<span class="property">_header</span></span><br><span class="line"><span class="string">&#x27;GET //test HTTP/1.1\r\nHost: example.com\r\nConnection: close\r\n\r\n&#x27;</span></span><br></pre></td></tr></table></figure>
+
+<p>其数据包变为</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">GET //test</span><br><span class="line">HTTP/1.1</span><br><span class="line">Host: example.com</span><br><span class="line">Connection: close</span><br></pre></td></tr></table></figure>
+
+<p>已经通过回车换行覆盖原数据包</p>
+<p>我在做CTF题的时候碰到一题是利用<strong>拆分攻击</strong>+<strong>SSRF</strong>再配合<strong>pug模板注入</strong>实现<strong>rce</strong>，题目来自GYCTF2020，感兴趣可以去看看</p>
+<p>还有一个为NodeJS原型链污染内容比较多，需要先理解原型链，下一章再分析这个漏洞</p>
+
+      </div>
+      <div class="post-tags-categories">
+        
+        <div class="tags">
+          
+            <a href="/tags/Node-js/" class="">
+              Node.js
+            </a>
+          
+        </div>
+        
+      </div>
+      
+        <div class="copyright">
+  <ul class="post-copyright">
+    <li class="post-copyright-author">
+    <strong>author:  </strong>wh1t3zer</a>
+    </li>
+    <li class="post-copyright-link">
+    <strong>link:  </strong>
+    <a href="/2023/02/05/NodeJS漏洞分析（上）/" target="_blank" title="NodeJS常见漏洞总结（上）">https://wh1t3zer.github.io/2023/02/05/NodeJS漏洞分析（上）/</a>
+    </li>
+    <li class="post-copyright-license">
+      <strong>Copyright notice:   </strong>
+      All articles on this website, unless otherwise stated, adopt <a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank" title="Attribution-NonCommercial-NoDerivatives 4.0 International (CC BY-NC-ND 4.0)">CC BY-NC-ND 4.0</a>
+      reprint policy. If reproduced, please indicate source!
+    </li>
+  </ul>
+<div>
+      
+    </article>
+    <!-- 上一篇文章和下一篇文章 -->
+    
+      <!-- 文章详情页的上一页和下一页 -->
+<div class="post-nav">
+
+
+
+  
+  <div class="post-nav-prev post-nav-item">
+    <div class="post-nav-img" style="background-size: cover; 
+      background-position: center center;">
+      <img class="lazyload lazyload placeholder" src="/medias/5.jpg" class="lazyload placeholder" data-srcset="/medias/5.jpg" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="">
+    </div>
+    <a href="/2023/02/06/NodeJS%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90%EF%BC%88%E4%B8%8B%EF%BC%89/" class="post-nav-link">
+      <div class="title">
+        <i class="fas fa-angle-left"></i> Prev:
+        <div class="title-text">NodeJS常见漏洞总结（下）</div>
+      </div>
+      
+      <!-- <div class="content">
+        0x00前言上一章分析了NodeJS比较常见的漏洞类型，这章主要分析一下NodeJS原型链及原型链污染和NodeJS沙箱
+      </div> -->
+    </a>
+  </div>
+
+
+
+  
+  <div class="post-nav-next post-nav-item">
+    <div class="post-nav-img" style="background-size: cover; 
+      background-position: center center;">
+      <img class="lazyload lazyload placeholder" src="/medias/4.jpg" class="lazyload placeholder" data-srcset="/medias/4.jpg" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" src="" alt="">
+    </div>
+    <a href="/2023/01/31/%E6%B5%85%E8%B0%88RSA/" class="post-nav-link">
+      <div class="title">
+        Next: <i class="fas fa-angle-right"></i>
+        <div class="title-text">浅谈RSA加密</div>
+      </div>
+      <!-- <div class="content">
+        0x00前言最近我翻阅了许多CTF的题目，发现密码学都有至少一道题与RSA有关，那RSA到底是什么？RSA为什么会受欢迎
+      </div> -->
+    </a>
+  </div>
+
+</div>
+
+    
+    
+
+    <!-- 打赏 -->
+    
+      <div id="appDonate" class="post-donate">
+  <div id="donate_board" class="donate_bar center" ref="donate">
+    <a id="btn_donate" class="btn_donate" href="javascript:;" title="打赏" @click="showDialogDrawer()"></a>
+  </div>
+  <transition name="fade">
+    <div 
+      class="donate-box-mask"
+      v-cloak 
+      v-show="visible"
+      @click="cancelDialogDrawer()"
+    >
+    </div>
+  </transition>
+  <transition name="bounce">
+    <div class="donate-box" v-cloak v-show="visible">
+      <div class="donate-box_close">
+        <i class="fas fa-times" aria-hidden="true" @click="cancelDialogDrawer" pointer></i>
+      </div>
+      <div class="donate-box_title">
+        <h4>
+          你的赏识是我前进的动力
+        </h4>
+      </div>
+      <div class="donate-box_tab">
+        <div class="Alipay" pointer :class="{'active': tabActive === 'Alipay'}" @click="changeTabActive('Alipay')">
+          支付宝
+        </div>
+        <div class="WeChatpay" pointer :class="{'active': tabActive === 'WeChatpay'}" @click="changeTabActive('WeChatpay')">
+          微信
+        </div>
+      </div>
+      <div class="donate-box_img">
+        <div class="AlipayImg" v-show="tabActive === 'Alipay'">
+          <img src="/medias/1.jpg" class="lazyload placeholder" data-srcset="/medias/1.jpg" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="支付宝打赏" />
+        </div> 
+        <div class="WeChatpayImg" v-show="tabActive === 'WeChatpay'">
+          <img src="/medias/2.jpg" class="lazyload placeholder" data-srcset="/medias/2.jpg" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="微信打赏" />
+        </div>
+      </div>
+    </div>
+  </transition>
+</div>
+
+<script>
+  var body = document.body || document.documentElement || window;
+  var vm = new Vue({
+    el: '#appDonate',
+    data: {
+      visible: false,
+      tabActive: 'Alipay',
+      top: 0,
+    },
+    computed: {
+    },
+    mounted() {
+    },
+    methods: {
+      showDialogDrawer() {
+        this.visible = true;
+        // 防止页面滚动，只能让弹框滚动
+        // function getScroll() {
+        //   return {
+        //     left: window.pageXOffset || document.documentElement.scrollLeft || document.body.scrollLeft || 0,
+        //     top: window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0
+        //   };
+        // }
+        this.top = $(document).scrollTop() // or getScroll().top
+        // console.log('aa', $('.main-content'));
+        body.style.cssText = 'overflow: hidden;';
+      },
+      cancelDialogDrawer() {
+        this.visible = false;
+        body.removeAttribute('style');
+        $(document).scrollTop(this.top)
+      },
+      changeTabActive(name) {
+        this.tabActive = name;
+      }
+    },
+    created() {}
+  })
 </script>
     
-    </div>
-    <div class="mask-box"></div>
-</div>
+
+    <!-- 分享 -->
+    
+      <!-- https://github.com/overtrue/share.js -->
+<!-- 文章详情页的分享 -->
+<div class="social-share" data-sites="twitter,facebook,google,qq,qzone,wechat,weibo,douban,linkedin" data-wechat-qrcode-helper="<p>微信扫一扫即可分享！</p>"></div>
+
+<script src="/js/shareJs/social-share.min.js"></script>
+</script>
+
+<style>
+  .social-share {
+    margin: 20px 0;
+  }
+</style>
 
 
-<div id="tags" class="container">
-    <div class="card">
-        <div class="card-content">
-            <div class="tag-title center-align">
-                <i class="fas fa-tags"></i>&nbsp;&nbsp;Article Tags
-            </div>
-            <div class="tag-chips">
-                
-                
-                <a href="/tags/java/" title="java: 3">
-                    <span class="tag-content"
-                        title="java" style="background-color: #A3E4D7;">java
-                        <span class="tag-length">3</span>
-                    </span>
-                </a>
-                
-                
-                <a href="/tags/ctf/" title="ctf: 1">
-                    <span class="tag-content"
-                        title="ctf" style="background-color: #F9E79F;">ctf
-                        <span class="tag-length">1</span>
-                    </span>
-                </a>
-                
-                
-                <a href="/tags/ctf-%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/" title="ctf | 反序列化: 1">
-                    <span class="tag-content"
-                        title="ctf | 反序列化" style="background-color: #F9E79F;">ctf | 反序列化
-                        <span class="tag-length">1</span>
-                    </span>
-                </a>
-                
-                
-                <a href="/tags/XSS/" title="XSS: 2">
-                    <span class="tag-content"
-                        title="XSS" style="background-color: #D7BDE2;">XSS
-                        <span class="tag-length">2</span>
-                    </span>
-                </a>
-                
-                
-                <a href="/tags/SQL%E6%B3%A8%E5%85%A5/" title="SQL注入: 1">
-                    <span class="tag-content"
-                        title="SQL注入" style="background-color: #FEF9E7;">SQL注入
-                        <span class="tag-length">1</span>
-                    </span>
-                </a>
-                
-                
-                <a href="/tags/%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0/" title="文件上传: 2">
-                    <span class="tag-content"
-                        title="文件上传" style="background-color: #D7BDE2;">文件上传
-                        <span class="tag-length">2</span>
-                    </span>
-                </a>
-                
-                
-                <a href="/tags/RCE/" title="RCE: 2">
-                    <span class="tag-content"
-                        title="RCE" style="background-color: #F8C471;">RCE
-                        <span class="tag-length">2</span>
-                    </span>
-                </a>
-                
-                
-                <a href="/tags/Re/" title="Re: 1">
-                    <span class="tag-content"
-                        title="Re" style="background-color: #FEF9E7;">Re
-                        <span class="tag-length">1</span>
-                    </span>
-                </a>
-                
-                
-                <a href="/tags/Java/" title="Java: 1">
-                    <span class="tag-content"
-                        title="Java" style="background-color: #FFF;">Java
-                        <span class="tag-length">1</span>
-                    </span>
-                </a>
-                
-                
-                <a href="/tags/CRYPTO/" title="CRYPTO: 1">
-                    <span class="tag-content"
-                        title="CRYPTO" style="background-color: #F5EEF8;">CRYPTO
-                        <span class="tag-length">1</span>
-                    </span>
-                </a>
-                
-                
-                <a href="/tags/Node-js/" title="Node.js: 2">
-                    <span class="tag-content"
-                        title="Node.js" style="background-color: #D5F5E3;">Node.js
-                        <span class="tag-length">2</span>
-                    </span>
-                </a>
-                
-            </div>
-        </div>
+    
+    
+    <!-- 评论 -->
+    <!-- 评论 -->
+
+  <div id="myComment">
+    
+      <div id="gitment-container"></div>
+
+    
+  </div>
+
+<!-- comment script in themes\hexo-theme-bamboo\layout\_partial\scripts\index.ejs -->
+
+
+  </div>
+
+  <!-- 目录 -->
+  <!-- 文章详情页右侧目录 -->
+
+  <div class="toc-aside">
+    <div class="toc-main">
+      <div class="toc-aside-title">
+        <i class="fas fa-list-ul" aria-hidden="true"></i><span>catalog</span>
+        
+          <div class="toc-open-close">catalog</div>
+        
+      </div>
+      <div class="toc-content">
+        <div class="toc"></div>
+      </div>
     </div>
+  </div>
+
+  <!-- 手机端目录按钮 -->
+  <div id="toc-mobile-btn">
+    <i class="fas fa-list-ul" aria-hidden="true"></i>
+  </div>
+
+
+<script>
+  function closeToc(init) {
+    $(".toc-aside").css({'width': 0, 'padding': 0, 'transition': init ?  'noe' : 'width 0.3s' });
+    $(".toc-content").css({'width': 0});
+    $(".toc-aside-title span, .toc-aside-title i").css({'display': 'none'});
+    $(".main-content").css({'width': '75%', 'margin': '10px auto'});
+  };
+  function openToc() {
+    $(".main-content").css({'width': '65%', 'margin-right': '10px', 'margin-left': 'calc(35% - 350px)'});
+    $(".toc-aside").css({'width': '300px', 'padding': '0 10px', 'transition': 'width 0.3s'});
+    $(".toc-content").css({'width': '300px'});
+    $(".toc-aside-title span, .toc-aside-title i").css({'display': 'inline-block'});
+  }
+  function openBtnClickFn () {
+    let openOrCloseBtn = $('.toc-aside .toc-aside-title .toc-open-close');
+    let open = eval('' || 'true');
+    openOrCloseBtn.click(function() {
+      if (open) {
+        closeToc();
+        open = false;
+      } else {
+        openToc();
+        open = true;
+      }
+    });
+  };
+  openBtnClickFn();
+  initCloseTocWidth(true);
+
+  function initCloseTocWidth(init) {
+    if (window.innerWidth >= 992) {
+      let isClose = false;
+      isClose && closeToc(init)
+    }
+  }
+
+  document.addEventListener('pjax:complete', function () {
+    $(".toc-aside").css({'transition': 'no'});
+  })
+  document.addEventListener('pjax:complete', function () {
+    openBtnClickFn();
+  })
+  
+</script>
+
+  <!-- 图片放大 Wrap images with fancybox support -->
+  <script src="/js/wrapImage.js"></script>
 </div>
+
+<!-- 文章详情页背景图 -->
+<div id="appBgSwiper" style="position: fixed;left: 0;top: 0;width: 100%;height: 100%;z-index: -2;"
+	:style="{'background-color': bgColor ? bgColor : 'transparent'}">
+	<transition-group tag="ul" :name="names">
+		<li v-for='(image,index) in img' :key='index' v-show="index === mark" class="bg-swiper-box">
+			<img :src="image" class="bg-swiper-img no-lazy">
+		</li>
+	</transition-group>
+</div>
+<script>
+	var vm = new Vue({
+		el: '#appBgSwiper',
+		data: {
+			names: '' || 'fade' || 'fade', // translate-fade fade
+			mark: 0,
+			img: [],
+			bgColor: '',
+			time: null
+		},
+		methods: {   //添加方法
+			change(i, m) {
+				if (i > m) {
+					// this.names = 'fade';
+				} else if (i < m) {
+					// this.names = 'fade';
+				} else {
+					return;
+				}
+				this.mark = i;
+			},
+			prev() {
+				// this.names = 'fade';
+				this.mark--;
+				if (this.mark === -1) {
+					this.mark = 3;
+					return
+				}
+			},
+			next() {
+				// this.names = 'fade';
+				this.mark++;
+				if (this.mark === this.img.length) {
+					this.mark = 0;
+					return
+				}
+			},
+			autoPlay() {
+				// this.names = 'fade';
+				this.mark++;
+				if (this.mark === this.img.length) {
+					this.mark = 0;
+					return
+				}
+			},
+			play() {
+				let bgImgDelay = '' || '180000'
+				let delay = parseInt(bgImgDelay) || 180000;
+				this.time = setInterval(this.autoPlay, delay);
+			},
+			enter() {
+				clearInterval(this.time);
+			},
+			leave() {
+				this.play();
+			}
+		},
+		created() {
+			this.play()
+		},
+		beforeDestroy() {
+			clearInterval(this.time);
+		},
+		mounted() {
+			let prop = '' || '';
+			let isImg = prop.includes('.bmp') || prop.includes('.jpg') || prop.includes('.png') || prop.includes('.tif') || prop.includes('.gif') || prop.includes('.pcx') || prop.includes('.tga') || prop.includes('.exif') || prop.includes('.fpx') || prop.includes('.psd') || prop.includes('.cdr') || prop.includes('.pcd') || prop.includes('.dxf') || prop.includes('.ufo') || prop.includes('.eps') || prop.includes('.ai') || prop.includes('.raw') || prop.includes('.WMF') || prop.includes('.webp') || prop.includes('.jpeg') || prop.includes('http://') || prop.includes('https://')
+			if (isImg) {
+				let img = prop.split(',');
+				let configRoot = '/'
+				let arrImg = [];
+				img.forEach(el => {
+					var Expression = /http(s)?:\/\/([\w-]+\.)+[\w-]+(\/[\w- .\/?%&=]*)?/;
+					var objExp = new RegExp(Expression);
+
+					if (objExp.test(el)) {
+						// http or https
+						arrImg.push(el);
+					} else {
+						// 非http or https开头
+						// 本地文件
+						let firstStr = el.charAt(0);
+						if (firstStr == '/') {
+							el = el.substr(1); // 删除第一个字符 '/',因为 configRoot最后一个字符为 /
+						}
+						el = configRoot + el;
+						arrImg.push(el);
+					}
+				})
+				this.img = arrImg;
+			} else {
+				this.bgColor = prop;
+			}
+		}
+	})
+</script>
+
+<style>
+	.bg-swiper-box {
+		position: absolute;
+		display: block;
+		width: 100%;
+		height: 100%;
+	}
+
+	.bg-swiper-img {
+		object-fit: cover;
+		width: 100%;
+		height: 100%;
+	}
+</style>
+
+
+
+
+  <script>
+  function loadMermaid() {
+    if (document.getElementsByClassName('mermaid').length) {
+      if (window.mermaidJsLoad) mermaid.init()
+      else {
+        loadScript('https://unpkg.com/mermaid/dist/mermaid.min.js').then(() => {
+          window.mermaidJsLoad = true
+          mermaid.initialize({
+            theme: 'default',
+          })
+          if ('true') {
+            mermaid.init();
+          }
+        })
+      }
+    }
+  };
+  document.addEventListener("DOMContentLoaded", function () {
+    loadMermaid();
+  })
+
+  document.addEventListener('pjax:complete', function () {
+    loadMermaid();
+  })
+  
+</script>
+
 
       </main>
     </div>

