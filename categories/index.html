@@ -495,6 +495,81 @@
       </ul>
       
       
+        <div id="appSearch">
+  <div class="search"  @click="showDialog()"><i class="fas fa-search" aria-hidden="true"></i></div>
+  <transition name="fade">
+    <div class="message-box_wrapper" style="display: none;" v-cloak v-show="dialogVisible" @click.self="cancelDialogVisible()">
+      <div class="message-box animated bounceInDown">
+        <h2>
+          <span>
+            <i class="fas fa-search" aria-hidden="true"></i>
+            <span class="title">Search</span>
+          </span>
+          <i class="fas fa-times close" pointer style="float:right;" aria-hidden="true" @click.self="cancelDialogVisible()"></i>
+        </h2>
+        <form class="site-search-form">
+          <input type="text"
+            placeholder="Please enter keywords"
+            id="local-search-input" 
+            @click="getSearchFile()"
+            class="st-search-input"
+            v-model="searchInput"
+          />
+        </form>
+        <div class="result-wrapper">
+          <div id="local-search-result" class="local-search-result-cls"></div>
+        </div>
+      </div>
+    </div>
+  </transition>
+</div>
+<script src="/js/local_search.js"></script>
+<script>
+  var body = document.body || document.documentElement || window;
+  var vm = new Vue({
+    el: '#appSearch',
+    data: {
+      dialogVisible: false,
+      searchInput: '',
+      top: 0,
+    },
+    computed: {
+    },
+    mounted() {
+      window.addEventListener('pjax:complete', () => {
+        this.cancelDialogVisible();
+      })
+    },
+    methods: {
+      showDialog() {
+        this.dialogVisible = true;
+        // 防止页面滚动，只能让弹框滚动
+        this.top = $(document).scrollTop()
+        body.style.cssText = 'overflow: hidden;';
+      },
+      getSearchFile() {
+        if (!this.searchInput) {
+          getSearchFile("/search.xml");
+        }
+      },
+      cancelDialogVisible() {
+        this.dialogVisible = false;
+        body.removeAttribute('style');
+        $(document).scrollTop(this.top)
+      },
+    },
+    created() {}
+  })
+</script>
+<!-- 解决刷新页面闪烁问题，可以在元素上添加display: none, 或者用vue.extend方法，详情：https://blog.csdn.net/qq_31393401/article/details/81017912 -->
+<!-- 下面是搜索基本写法 -->
+<!-- <script type="text/javascript" id="local.search.active">
+  var inputArea = document.querySelector("#local-search-input");
+  inputArea.onclick   = function(){ getSearchFile(); this.onclick = null }
+  inputArea.onkeydown = function(){ if(event.keyCode == 13) return false }
+</script> -->
+
+      
 
     </nav>
   </div>
@@ -603,10 +678,10 @@
                 </a>
                 
                 
-                <a href="/categories/java-rce/" title="java | rce: 1">
+                <a href="/categories/java-rce/" title="java | rce: 2">
                     <span class="category-content"
                         title="java | rce" style="background-color: #FEF9E7;">java | rce
-                        <span class="category-length">1</span>
+                        <span class="category-length">2</span>
                     </span>
                 </a>
                 
@@ -654,6 +729,14 @@
                 <a href="/categories/ctf-%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/" title="ctf | 反序列化: 1">
                     <span class="category-content"
                         title="ctf | 反序列化" style="background-color: #F9E79F;">ctf | 反序列化
+                        <span class="category-length">1</span>
+                    </span>
+                </a>
+                
+                
+                <a href="/categories/Pwn-Overflow/" title="Pwn| Overflow: 1">
+                    <span class="category-content"
+                        title="Pwn| Overflow" style="background-color: #F9E79F;">Pwn| Overflow
                         <span class="category-length">1</span>
                     </span>
                 </a>
