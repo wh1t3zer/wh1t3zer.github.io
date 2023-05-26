@@ -11,7 +11,7 @@
   <!-- Global site tag (gtag.js) - Google Analytics -->
 
 
-  <title>浅谈游戏服务器匹配算法机制 | wh1t3zer</title>
+  <title>浅谈游戏服务器匹配机制 | wh1t3zer</title>
 
   <link rel="icon" type="image/x-icon, image/vnd.microsoft.icon" href="/favicon.ico">
   <link rel="stylesheet" href="https://at.alicdn.com/t/font_1911880_c1nvbyezg17.css">
@@ -600,7 +600,7 @@
   <div class="post-detail-header_info-box">
     <div class="title-box">
       <span class="title">
-        浅谈游戏服务器匹配算法机制
+        浅谈游戏服务器匹配机制
       </span>
     </div>
     
@@ -640,7 +640,7 @@
   <div class="main-content">
     <article class="post post-detail">
       <div class="post-content">
-        <h2 id="0x00导言"><a href="#0x00导言" class="headerlink" title="0x00导言"></a>0x00导言</h2><p>如今在游戏市场，越来越多的游戏都加入了多人匹配系统，如data2,lol,守望先锋等竞技型游戏所有的战斗都是典型的多人联机对战的模式，如何保证对战的双方的平衡性，和公平性，就很重要。如lol等竞技性很强的游戏采用的都是ELO算法来实现的(也就是大家所熟悉隐藏分机制)，ELO不是本次主题重点讨论的范围。有兴趣的可以<a target="_blank" rel="noopener" href="https://blog.csdn.net/qq100440110/article/details/70240824?ops_request_misc=%257B%2522request%255Fid%2522%253A%2522162849236916780271556423%2522%252C%2522scm%2522%253A%252220140713.130102334.pc%255Fall.%2522%257D&request_id=162849236916780271556423&biz_id=0&utm_medium=distribute.pc_search_result.none-task-blog-2~all~first_rank_v2~hot_rank-4-70240824.first_rank_v2_pc_rank_v29&utm_term=ELO&spm=1018.2226.3001.4187">点击了解ELO算法</a></p>
+        <h2 id="0x00导言"><a href="#0x00导言" class="headerlink" title="0x00导言"></a>0x00导言</h2><p>如今在游戏市场，越来越多的游戏都加入了多人匹配系统，如data2,lol,守望先锋等竞技型游戏所有的战斗都是典型的多人联机对战的模式，如何保证对战的双方的平衡性，和公平性，就很重要。如lol等竞技性很强的游戏采用的都是ELO算法来实现的(也就是大家所熟悉隐藏分机制)，ELO不是本次主题重点讨论的范围。<a target="_blank" rel="noopener" href="https://blog.csdn.net/qq100440110/article/details/70240824?ops_request_misc=%257B%2522request%255Fid%2522%253A%2522162849236916780271556423%2522%252C%2522scm%2522%253A%252220140713.130102334.pc%255Fall.%2522%257D&request_id=162849236916780271556423&biz_id=0&utm_medium=distribute.pc_search_result.none-task-blog-2~all~first_rank_v2~hot_rank-4-70240824.first_rank_v2_pc_rank_v29&utm_term=ELO&spm=1018.2226.3001.4187">点击了解ELO算法</a></p>
 <h2 id="0x01匹配系统的目的"><a href="#0x01匹配系统的目的" class="headerlink" title="0x01匹配系统的目的"></a>0x01匹配系统的目的</h2><p>1.保护新手不被有经验的玩家虐，让高手局中难以出现甚至没有新手，影响双方的游戏体验。</p>
 <p>2.创造公平有竞技性游戏对局，使玩家的游戏乐趣最大化。</p>
 <p>3.无需等待太久就能找到对手进入游戏，尽管有时候需要等待比较长的时间。</p>
@@ -652,7 +652,7 @@
 <p>运行结果</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">当前正在匹配中的玩家:20111</span><br><span class="line">一共整合出:4219个匹配组</span><br><span class="line">共创建了:2064个战场</span><br><span class="line">耗时:507毫秒!</span><br><span class="line">当前正在匹配中的玩家:15383</span><br><span class="line">一共整合出:3216个匹配组</span><br><span class="line">共创建了:1648个战场</span><br><span class="line">耗时:751毫秒!</span><br></pre></td></tr></table></figure>
 
-<h2 id="0x03总结"><a href="#0x03总结" class="headerlink" title="0x03总结"></a>0x03总结</h2><h3 id="匹配系统是怎么完成的"><a href="#匹配系统是怎么完成的" class="headerlink" title="匹配系统是怎么完成的?"></a>匹配系统是怎么完成的?</h3><p>首先，系统将你放进一个合适的匹配池里——根据游戏模式的不同(如5V5，solo&#x2F;duo，匹配等等)</p>
+<h2 id="0x03总结"><a href="#0x03总结" class="headerlink" title="0x03总结"></a>0x03总结</h2><h3 id="匹配系统是怎么完成的"><a href="#匹配系统是怎么完成的" class="headerlink" title="匹配系统是怎么完成的?"></a>匹配系统是怎么完成的?</h3><p>首先，系统将你放进一个合适的匹配池里——根据游戏模式的不同(如5V5，排位，匹配等等)</p>
 <p>然后，系统会尝试将匹配池里的人分到更细的匹配池里——5人组队 VS 5人组队，低等级新手 vs 其它一些低等级新手，以此类推。</p>
 <p>当你在匹配池中，系统会开始尝试找到合适的配对，目标是撮合一个两方获胜机会都为50%的游戏。</p>
 <p>第1步：确定你的实力：</p>
@@ -662,7 +662,7 @@
 <p>新手会得到一些特殊的保护，通常新手仅仅会匹配到其它新手（在成熟的server里，这个比例达到了99%+。除非这个新手和一个高级玩家朋友预先组队）</p>
 <p>第3步：结果计算：</p>
 <p>可以采用elo算法去计算你和对手的下一次积分。</p>
-<h2 id="0x04附言"><a href="#0x04附言" class="headerlink" title="0x04附言"></a>0x04附言</h2><p>更多ELO细节详情，可以访问以下内容：</p>
+<h2 id="0x04资料"><a href="#0x04资料" class="headerlink" title="0x04资料"></a>0x04资料</h2><p>ELO详情</p>
 <p><a target="_blank" rel="noopener" href="https://www.zhihu.com/question/41011877">https://www.zhihu.com/question/41011877</a></p>
 <p>TrueSkill 介绍</p>
 <p><a target="_blank" rel="noopener" href="http://www.cnblogs.com/baiting/p/5591614.html">http://www.cnblogs.com/baiting/p/5591614.html</a></p>
@@ -687,7 +687,7 @@
     </li>
     <li class="post-copyright-link">
     <strong>link:  </strong>
-    <a href="/2021/08/09/浅谈游戏服务器匹配算法机制-浅谈游戏服务器匹配算法机制/" target="_blank" title="浅谈游戏服务器匹配算法机制">https://wh1t3zer.github.io/2021/08/09/浅谈游戏服务器匹配算法机制-浅谈游戏服务器匹配算法机制/</a>
+    <a href="/2021/08/09/浅谈游戏服务器匹配算法机制-浅谈游戏服务器匹配算法机制/" target="_blank" title="浅谈游戏服务器匹配机制">https://wh1t3zer.github.io/2021/08/09/浅谈游戏服务器匹配算法机制-浅谈游戏服务器匹配算法机制/</a>
     </li>
     <li class="post-copyright-license">
       <strong>Copyright notice:   </strong>
