@@ -677,8 +677,6 @@
 <p>6、常见的pwntool代码</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">##coding=utf8</span></span><br><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line"><span class="comment">## 构造与程序交互的对象</span></span><br><span class="line">sh = process(<span class="string">&#x27;./二进制文件&#x27;</span>)</span><br><span class="line">addr = 目的函数地址</span><br><span class="line"><span class="comment">## 构造payload</span></span><br><span class="line">payload = <span class="string">&#x27;a&#x27;</span> * 差值  + p32(addr)</span><br><span class="line"><span class="built_in">print</span> p32(success_addr)</span><br><span class="line"><span class="comment">## 向程序发送字符串</span></span><br><span class="line">sh.sendline(payload)</span><br><span class="line"><span class="comment">## 将代码交互转换为手工交互</span></span><br><span class="line">sh.interactive()</span><br></pre></td></tr></table></figure>
 
-
-
 <h2 id="0x04堆溢出"><a href="#0x04堆溢出" class="headerlink" title="0x04堆溢出"></a>0x04堆溢出</h2><h2 id="0x05区别"><a href="#0x05区别" class="headerlink" title="0x05区别"></a>0x05区别</h2><h2 id="0x06总结"><a href="#0x06总结" class="headerlink" title="0x06总结"></a>0x06总结</h2>
       </div>
       <div class="post-tags-categories">
