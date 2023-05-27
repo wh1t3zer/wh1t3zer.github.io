@@ -673,11 +673,26 @@
 <p>2、找危险函数</p>
 <p>3、寻找并确认执行目的函数的地址</p>
 <p>4、计算危险操作地址与危险函数的差值</p>
-<p>5、传数据到危险函数，其中格式为：差值*某个字符 +执行目的函数的地址</p>
+<p>5、传数据到危险函数，其中格式为：差值*某个字符 +执行目的函数的地址(填充长度)</p>
 <p>6、常见的pwntool代码</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">##coding=utf8</span></span><br><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line"><span class="comment">## 构造与程序交互的对象</span></span><br><span class="line">sh = process(<span class="string">&#x27;./二进制文件&#x27;</span>)</span><br><span class="line">addr = 目的函数地址</span><br><span class="line"><span class="comment">## 构造payload</span></span><br><span class="line">payload = <span class="string">&#x27;a&#x27;</span> * 差值  + p32(addr)</span><br><span class="line"><span class="built_in">print</span> p32(success_addr)</span><br><span class="line"><span class="comment">## 向程序发送字符串</span></span><br><span class="line">sh.sendline(payload)</span><br><span class="line"><span class="comment">## 将代码交互转换为手工交互</span></span><br><span class="line">sh.interactive()</span><br></pre></td></tr></table></figure>
 
-<h2 id="0x04堆溢出"><a href="#0x04堆溢出" class="headerlink" title="0x04堆溢出"></a>0x04堆溢出</h2><h2 id="0x05区别"><a href="#0x05区别" class="headerlink" title="0x05区别"></a>0x05区别</h2><h2 id="0x06总结"><a href="#0x06总结" class="headerlink" title="0x06总结"></a>0x06总结</h2>
+<h2 id="0x04堆溢出"><a href="#0x04堆溢出" class="headerlink" title="0x04堆溢出"></a>0x04堆溢出</h2><p>堆溢出是指程序向某个堆块中写入字节数超过堆块自身可使用的字节数</p>
+<p>造成堆溢出的函数常见的有gets()、scanf()、vscanf()、sprintf()、strcpy()、strcat()、bcopy()</p>
+<p>一般流程</p>
+<p>1、ida反汇编程序</p>
+<p>2、寻找分配函数</p>
+<p>堆会调用glibc函数malloc分配内存，其他情况下会调用calloc函数。两者函数的区别为calloc在分配内存后会自动清空。此外还可以选择realloc，该函数可以同时发挥malloc和free函数作用。</p>
+<p>3、找危险函数</p>
+<p>4、填充长度</p>
+<p>计算写入地址和覆盖地址之间的距离，python脚本写法可参考下栈溢出</p>
+<h2 id="0x05区别"><a href="#0x05区别" class="headerlink" title="0x05区别"></a>0x05区别</h2><p>栈溢出攻击的原理是将危险操作函数的地址覆盖到程序正常执行的地址，导致溢出后可执行危险操作函数里的功能。</p>
+<p>堆溢出不会返回地址可以直接执行控制流程，也就无法直接控制EIP。</p>
+<p>一般操作的方法就是覆盖物理相邻的下一个chunk内容，改变程序执行流</p>
+<p>或者是利用堆中的机制实现任意地址写入控制堆块中的内容，劫持程序流</p>
+<h2 id="0x06总结"><a href="#0x06总结" class="headerlink" title="0x06总结"></a>0x06总结</h2><p>栈溢出和堆溢出是目前pwn系列中最为常见的两种溢出攻击方法。</p>
+<p>栈溢出相比于堆溢出是较为容易，因为可以泄露一些敏感函数的地址可以让攻击者直接覆盖调用，而堆则无法返回地址，从而不能控制EIP，需要改写堆块中的内容或覆盖chunk内容才能进行溢出攻击。</p>
+
       </div>
       <div class="post-tags-categories">
         
