@@ -642,9 +642,19 @@
       <div class="post-content">
         <h2 id="0x00前言"><a href="#0x00前言" class="headerlink" title="0x00前言"></a>0x00前言</h2><p>Apache Shiro是一个强大且易用的Java安全框架,执行身份验证、授权、密码和会话管理。使用Shiro的易于理解的API,可以快速、轻松地获得任何应用程序,从最小的移动应用程序到最大的网络和企业应用程序。</p>
 <h2 id="0x01原理"><a href="#0x01原理" class="headerlink" title="0x01原理"></a>0x01原理</h2><p>shiro会在cookie中生成一个rememberMe字段，里面的值是输入的内容通过系列操作写入的。一般的流程为：从前端传入值，序列化后传到cookies，进行AES加密，之后通过java模块的base64加密。</p>
-<p>而反序列化漏洞的时候，进行base64解密，之后AES解密，之后反序列化，这里是漏洞的成因。</p>
+<p>而反序列化漏洞的时候，进行base64解密。之后AES解密，这个是shiro默认加密方式，其中AES的key存在密钥泄露，还有padding oracle攻击。之后反序列化，这里是漏洞的成因。</p>
+<p>利用版本shiro&lt;1.4.2，当shiro大于1.4.2版本的时候，编码改用了GCM方式，其余版本则使用的是CBC编码，密钥不再硬编码，可以使用padding oracle攻击</p>
 <h2 id="0x02漏洞复现"><a href="#0x02漏洞复现" class="headerlink" title="0x02漏洞复现"></a>0x02漏洞复现</h2><p>1、从vulhub下载漏洞环境</p>
-<p>2、判断是否是shiro，在登录框部分会有一个rememberMe勾选，勾选成功通过bp抓包，里面有一个set-cookies：rememberMe&#x3D;deleteMe，可以判断使用了shiro</p>
+<p>2、判断是否是shiro，在登录框部分会有一个rememberMe勾选，勾选成功通过bp抓包，里面有一个set-cookies：rememberMe&#x3D;deleteMe，可以判断使用了shiro框架。</p>
+<p>3、确认是否存在漏洞，使用URLDNS链。从dnslog上面复制网址到payload上，可以使用ysoserial工具构造链</p>
+<p>4、将payload进行aes加密编码</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">java -jar ysoserial URLDNS <span class="string">&#x27;http://xxx.dnslog.cn&#x27;</span>&gt;<span class="number">1.</span>txt</span><br></pre></td></tr></table></figure>
+
+<p>其中要删除JSESSIONID，当该字段存在就不会检测rememberMe字段</p>
+<p>5、查看dnslog，看到有请求，证明漏洞利用成功</p>
+<p>6、使用CC链进行远程代码执行</p>
+<h2 id="0x03修复"><a href="#0x03修复" class="headerlink" title="0x03修复"></a>0x03修复</h2><p>1、升到高版本</p>
+<p>2、限制rememberMe长度</p>
 
       </div>
       <div class="post-tags-categories">
