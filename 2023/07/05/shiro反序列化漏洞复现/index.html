@@ -644,6 +644,9 @@
 <h2 id="0x01原理"><a href="#0x01原理" class="headerlink" title="0x01原理"></a>0x01原理</h2><p>shiro会在cookie中生成一个rememberMe字段，里面的值是输入的内容通过系列操作写入的。一般的流程为：从前端传入值，序列化后传到cookies，进行AES加密，之后通过java模块的base64加密。</p>
 <p>而反序列化漏洞的时候，进行base64解密。之后AES解密，这个是shiro默认加密方式，其中AES的key存在密钥泄露，还有padding oracle攻击。之后反序列化，这里是漏洞的成因。</p>
 <p>利用版本shiro&lt;1.4.2，当shiro大于1.4.2版本的时候，编码改用了GCM方式，其余版本则使用的是CBC编码，密钥不再硬编码，可以使用padding oracle攻击</p>
+<p><strong>总结</strong></p>
+<p>加密：payload——&gt;序列化——&gt;AES——&gt;base64</p>
+<p>解密：base64——&gt;AES——&gt;反序列化</p>
 <h2 id="0x02漏洞复现"><a href="#0x02漏洞复现" class="headerlink" title="0x02漏洞复现"></a>0x02漏洞复现</h2><p>1、从vulhub下载漏洞环境</p>
 <p>2、判断是否是shiro，在登录框部分会有一个rememberMe勾选，勾选成功通过bp抓包，里面有一个set-cookies：rememberMe&#x3D;deleteMe，可以判断使用了shiro框架。</p>
 <p>3、确认是否存在漏洞，使用URLDNS链。从dnslog上面复制网址到payload上，可以使用ysoserial工具构造链</p>
@@ -694,21 +697,39 @@
 
 
 
+  
+  <div class="post-nav-prev post-nav-item">
+    <div class="post-nav-img" style="background-size: cover; 
+      background-position: center center;">
+      <img class="lazyload lazyload placeholder" src="/medias/1.jpg" class="lazyload placeholder" data-srcset="/medias/1.jpg" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="">
+    </div>
+    <a href="/2023/08/18/%E6%9C%8D%E5%8A%A1%E5%8F%8A%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F%E9%85%8D%E7%BD%AE(%E4%B8%BB%E6%9C%BA%E7%89%88)/" class="post-nav-link">
+      <div class="title">
+        <i class="fas fa-angle-left"></i> Prev:
+        <div class="title-text"></div>
+      </div>
+      
+      <!-- <div class="content">
+        
+      </div> -->
+    </a>
+  </div>
+
 
 
   
   <div class="post-nav-next post-nav-item">
     <div class="post-nav-img" style="background-size: cover; 
       background-position: center center;">
-      <img class="lazyload lazyload placeholder" src="/medias/5.jpg" class="lazyload placeholder" data-srcset="/medias/5.jpg" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" src="" alt="">
+      <img class="lazyload lazyload placeholder" src="/medias/6.jpg" class="lazyload placeholder" data-srcset="/medias/6.jpg" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" src="" alt="">
     </div>
-    <a href="/2023/05/30/%E5%BA%94%E6%80%A5%E5%93%8D%E5%BA%94/" class="post-nav-link">
+    <a href="/2023/07/05/struts2%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0/" class="post-nav-link">
       <div class="title">
         Next: <i class="fas fa-angle-right"></i>
-        <div class="title-text">应急响应流程</div>
+        <div class="title-text">struts2RCE漏洞复现</div>
       </div>
       <!-- <div class="content">
-        0x00前言根据自己做的笔记总结一下应急响应的大致流程，也是对学习阶段的一个总结，应急响应也是安全攻防里比较重要的一个环
+        0x00简介0x010x02
       </div> -->
     </a>
   </div>
