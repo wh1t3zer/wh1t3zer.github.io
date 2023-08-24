@@ -11,7 +11,7 @@
   <!-- Global site tag (gtag.js) - Google Analytics -->
 
 
-  <title>记一次高校内网资产渗透经历 | wh1t3zer</title>
+  <title>Tag: Windows | Linux | wh1t3zer</title>
 
   <link rel="icon" type="image/x-icon, image/vnd.microsoft.icon" href="/favicon.ico">
   <link rel="stylesheet" href="https://at.alicdn.com/t/font_1911880_c1nvbyezg17.css">
@@ -580,521 +580,109 @@
 </header>
         <!-- 内容区域 -->
         
- <!-- prismjs 代码高亮 -->
- 
 
+<div class="bg-dark-floor" style="position: fixed;left: 0;top: 0;width: 100%;height: 100%;z-index: -2;"></div>
+<div class="bg-light-floor-tagDetail" style="position: fixed;left: 0;top: 0;width: 100%;height: 100%;z-index: -3;"></div>
 
-<div class="bg-dark-floor" style="position: fixed;left: 0;top: 0;width: 100%;height: 100%;z-index: -1;"></div>
-
-
-  <!-- 文章详情页顶部图片和标题 -->
-
-
-
-
-<div class="post-detail-header" id="thumbnail_canvas" style="background-repeat: no-repeat; background-size: cover; 
-  background-position: center center;position: relative;background-image:url('/medias/6.jpg')">
-  <div class="post-detail-header-mask"></div>
-  <canvas id="header_canvas"style="position:absolute;bottom:0;pointer-events:none;"></canvas>
+<div class="tag-header" style="background-image: url('https://pic1.zhimg.com/80/v2-604a15cef201cf177943af2d915eb2e7_1440w.jpg?source=1940ef5c');">
+  <div class="tag-header-title">
+    tag
+  </div>
+  <div class="tag-header-desc">
   
-  <div class="post-detail-header_info-box">
-    <div class="title-box">
-      <span class="title">
-        记一次高校内网资产渗透经历
-      </span>
-    </div>
-    
-    
-      
-        <span class="post-detail-header_date">
-          <i class="fas fa-calendar"></i> Published in：2022-10-14 |
-        </span>
-      
-
-      
-
-      
-    
-  </div>
-  
-  
-    <script src="/js/bubble/bubble.js"></script>
-  
-</div>
-
-
-
-
-
-<div class="row justify-position" 
-  style="padding-top: 0px;">
-  <div class="main-content">
-    <article class="post post-detail">
-      <div class="post-content">
-        <h2 id="0x00题记"><a href="#0x00题记" class="headerlink" title="0x00题记"></a>0x00题记</h2><p>最近无聊打算去其他学校内网里面逛一逛，顺便测试一下其他学校的防护是否做到位。于是找了一个同学要到了他们学校的vpn，进去一探究竟。</p>
-<h2 id="0x01信息收集"><a href="#0x01信息收集" class="headerlink" title="0x01信息收集"></a>0x01信息收集</h2><p>许多的渗透中，信息收集可以说是最为关键的一个部分，一个系统能否顺利攻破取决于信息是否收集地足够多。</p>
-<h3 id="外部资产搜集"><a href="#外部资产搜集" class="headerlink" title="外部资产搜集"></a>外部资产搜集</h3><p>顺便看看暴露在公网的资产有哪些，用奇安信的鹰图平台查找学校域名<a target="_blank" rel="noopener" href="http://xxx.edu.cn/">http://xxx.edu.cn</a></p>
-<p><img src="https://raw.githubusercontent.com/wh1t3zer/recordCTF/main/imgs/image-20221014203027968.png" class="lazyload placeholder" data-srcset="https://raw.githubusercontent.com/wh1t3zer/recordCTF/main/imgs/image-20221014203027968.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"></p>
-<p>一共有83条记录，也就是有83条子域名，大部分是各种院系的二级域名</p>
-<p>门户系统</p>
-<p>查到一个</p>
-<p><a target="_blank" rel="noopener" href="http://urla.edu.cn/">http://urlA.edu.cn/</a></p>
-<p><img src="https://raw.githubusercontent.com/wh1t3zer/recordCTF/main/imgs/image-20221014153531951.png" class="lazyload placeholder" data-srcset="https://raw.githubusercontent.com/wh1t3zer/recordCTF/main/imgs/image-20221014153531951.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"></p>
-<p><img src="https://raw.githubusercontent.com/wh1t3zer/recordCTF/main/imgs/image-20221014153354324.png" class="lazyload placeholder" data-srcset="https://raw.githubusercontent.com/wh1t3zer/recordCTF/main/imgs/image-20221014153354324.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"></p>
-<p>发现了用户名和密码登录的规律，用户名在学校的官网的公示栏有，密码可以用bp爆破。</p>
-<p>1、添加一个验证码模块防止爆破</p>
-<p>2、不应该在登录框写上密码格式等敏感提示</p>
-<p>3、设置错误一定次数冻结IP</p>
-<p><img src="https://raw.githubusercontent.com/wh1t3zer/recordCTF/main/imgs/image-20221014155057176.png" class="lazyload placeholder" data-srcset="https://raw.githubusercontent.com/wh1t3zer/recordCTF/main/imgs/image-20221014155057176.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"></p>
-<h3 id="内网资产搜集"><a href="#内网资产搜集" class="headerlink" title="内网资产搜集"></a>内网资产搜集</h3><p>掏出神器fscan，对内网一通乱扫，这个学校内网ip是10.10开头的，还有其他的网段在10.53.x.x，命令运行fscan64.exe -h 10.10.0.0&#x2F;16</p>
-<p>发现有很多ssh服务器都是弱密码，甚至有些数据库密码(包括不限于mysql，mssql)是123456强塞进去，不得不说学校的安全措施做得还是有点堪忧。</p>
-<p>找到一个服务器，10.10.252.173，里面开启了Apache Spark服务，hadoop分布式服务，针对的目标是后者，访问下8088端口</p>
-<p><img src="https://raw.githubusercontent.com/wh1t3zer/recordCTF/main/imgs/image-20221014205528739.png" class="lazyload placeholder" data-srcset="https://raw.githubusercontent.com/wh1t3zer/recordCTF/main/imgs/image-20221014205528739.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"></p>
-<p>首先去网上找找有没有比较新的漏洞</p>
-<p><img src="https://raw.githubusercontent.com/wh1t3zer/recordCTF/main/imgs/image-20221014210142579.png" class="lazyload placeholder" data-srcset="https://raw.githubusercontent.com/wh1t3zer/recordCTF/main/imgs/image-20221014210142579.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"></p>
-<p>还是比较新的，去github上找下py脚本</p>
-<p><img src="https://raw.githubusercontent.com/wh1t3zer/recordCTF/main/imgs/image-20221014210221653.png" class="lazyload placeholder" data-srcset="https://raw.githubusercontent.com/wh1t3zer/recordCTF/main/imgs/image-20221014210221653.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"></p>
-<p>直接启动kali nc监听，由于隔着路由器，还得开启一个端口转发</p>
-<p><img src="https://raw.githubusercontent.com/wh1t3zer/recordCTF/main/imgs/WCGT%606QLJQ%7D098R4C02%5ZV.jpg" class="lazyload placeholder" data-srcset="https://raw.githubusercontent.com/wh1t3zer/recordCTF/main/imgs/WCGT%606QLJQ%7D098R4C02%5ZV.jpg" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"></p>
-<p><img src="https://raw.githubusercontent.com/wh1t3zer/recordCTF/main/imgs/image-20221014214846557.png" class="lazyload placeholder" data-srcset="https://raw.githubusercontent.com/wh1t3zer/recordCTF/main/imgs/image-20221014214846557.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"></p>
-<p>拿到shell，查查权限是root权限，去添加一个用户 useradd wh1t3zer 123456，连接ssh，是一台Dr热点的DHCP服务器</p>
-<p>接着去别的地方找找线索，找到一个保卫部的旧站 10.10.240.72</p>
-<p><img src="https://raw.githubusercontent.com/wh1t3zer/recordCTF/main/imgs/image-20221014213623561.png" class="lazyload placeholder" data-srcset="https://raw.githubusercontent.com/wh1t3zer/recordCTF/main/imgs/image-20221014213623561.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"></p>
-<p>给它一个报错提示，发现版本是TP5.0.8</p>
-<p><img src="https://raw.githubusercontent.com/wh1t3zer/recordCTF/main/imgs/bwb.png" class="lazyload placeholder" data-srcset="https://raw.githubusercontent.com/wh1t3zer/recordCTF/main/imgs/bwb.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"></p>
-<p>用蚁剑连接看看里面有什么</p>
-<p><img src="https://raw.githubusercontent.com/wh1t3zer/recordCTF/main/imgs/image-20221014214215002.png" class="lazyload placeholder" data-srcset="https://raw.githubusercontent.com/wh1t3zer/recordCTF/main/imgs/image-20221014214215002.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"></p>
-<p>网站根目录下还有其他网站的文件，应该都是比较旧的甚至不用的网站了，所以不用的服务器还是要下线的，否则会泄露一些敏感的信息。</p>
-<p>通过扫描还发现了学校的堡垒机蜜罐，刚开始没发现踩下去第一步后才反应过来，看来反溯源的意识还有待提高。这个蜜罐的服务还是挺丰富的，带有漏洞的solr服务，弱密码WordPress，通达OA，Weblogic</p>
-<p>其他的资产有空再看一看有没有可以利用的地方，先去找点有价值的主机</p>
-<h2 id="0x02发现小域控"><a href="#0x02发现小域控" class="headerlink" title="0x02发现小域控"></a>0x02发现小域控</h2><p>通过信息收集，获得了一台DHCP服务器，一个包含多个旧站的服务器，都不是比较有价值，我们的目标是想办法找到并拿到域控主机。</p>
-<p>继续查看资产，发现一台开启了VM Vsphere，上网了解了一下，VMware vSphere 是业界领先且最可靠的虚拟化平台。所以这是一台校内某个小域的管理平台，而且发现这个服务还存在一个CVE漏洞</p>
-<p><img src="https://raw.githubusercontent.com/wh1t3zer/recordCTF/main/imgs/1666698191773.jpg" class="lazyload placeholder" data-srcset="https://raw.githubusercontent.com/wh1t3zer/recordCTF/main/imgs/1666698191773.jpg" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"></p>
-<p><img src="https://raw.githubusercontent.com/wh1t3zer/recordCTF/main/imgs/image-20221025194451699.png" class="lazyload placeholder" data-srcset="https://raw.githubusercontent.com/wh1t3zer/recordCTF/main/imgs/image-20221025194451699.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"></p>
-<p>除此之外这台机器还有一个漏洞(CVE-2021-22005)，github有exp，利用一波，后面经测试，可以写入jsp木马，木马路径是<a target="_blank" rel="noopener" href="http://ip/idm/..;/pvjb1i.jsp">http://ip/idm/..;/pvjb1i.jsp</a></p>
-<p>经朋友指点，并查看了下<a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/vx1TmbdfLyQidkB2fvUR5A">相关文章</a>，后续利用可以通过python脚本伪造cookies，实现无密码访问。</p>
-<p>开始安装依赖的时候一直报错，后面查了下，有一个python的wheel文件得从网站下载</p>
-<p><a target="_blank" rel="noopener" href="https://www.lfd.uci.edu/~gohlke/pythonlibs/#python-ldap">https://www.lfd.uci.edu/~gohlke/pythonlibs/#python-ldap</a></p>
-<p>进去之后可以发现该域还有着不少的虚拟机服务，包括学校校园网Drcom，DHCP，还有一些其他服务就不多讨论了</p>
-<p><img src="https://raw.githubusercontent.com/wh1t3zer/recordCTF/main/imgs/image-20221025200025802.png" class="lazyload placeholder" data-srcset="https://raw.githubusercontent.com/wh1t3zer/recordCTF/main/imgs/image-20221025200025802.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"></p>
-<p>猜测可能每个地方都有一台开着Vcenter的小域控，等以后慢慢发掘出来</p>
-<h2 id="0x03总结"><a href="#0x03总结" class="headerlink" title="0x03总结"></a>0x03总结</h2><p>无论做什么类型的渗透测试，最前提的也是最重要的就是信息收集，当收集的信息越详细，获取到的有利信息也就越多，突破口也会变多。不过这个学校还有堡垒机蜜罐服务，在我认识中，很多学校都没有启动甚至购置这种服务。但是这个服务也是此地无银三百两，破绽实在是太明显了，从开启的服务中有如“内网测试服务器”，“堡垒机登录页面”….</p>
-<p>最后，总的来说，大多高校管理员都比较懒，不设置足够长度的密码，而保留许多弱密码，还有一些低版本的服务有许多漏洞不修复。内网也不是绝对安全的，当外网的防守不足以应对攻击（包括社工到学生vpn或通过Nday或0Day漏洞打进去后）内网就会有危险。</p>
-
-      </div>
-      <div class="post-tags-categories">
-        
-      </div>
-      
-        <div class="copyright">
-  <ul class="post-copyright">
-    <li class="post-copyright-author">
-    <strong>author:  </strong>wh1t3zer</a>
-    </li>
-    <li class="post-copyright-link">
-    <strong>link:  </strong>
-    <a href="/2022/10/14/记一下学校内网渗透经历/" target="_blank" title="记一次高校内网资产渗透经历">https://wh1t3zer.github.io/2022/10/14/记一下学校内网渗透经历/</a>
-    </li>
-    <li class="post-copyright-license">
-      <strong>Copyright notice:   </strong>
-      All articles on this website, unless otherwise stated, adopt <a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank" title="Attribution-NonCommercial-NoDerivatives 4.0 International (CC BY-NC-ND 4.0)">CC BY-NC-ND 4.0</a>
-      reprint policy. If reproduced, please indicate source!
-    </li>
-  </ul>
-<div>
-      
-    </article>
-    <!-- 上一篇文章和下一篇文章 -->
-    
-      <!-- 文章详情页的上一页和下一页 -->
-<div class="post-nav">
-
-
-
-  
-  <div class="post-nav-prev post-nav-item">
-    <div class="post-nav-img" style="background-size: cover; 
-      background-position: center center;">
-      <img class="lazyload lazyload placeholder" src="/medias/5.jpg" class="lazyload placeholder" data-srcset="/medias/5.jpg" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="">
-    </div>
-    <a href="/2022/10/29/PHP%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E9%9D%B6%E5%9C%BA/" class="post-nav-link">
-      <div class="title">
-        <i class="fas fa-angle-left"></i> Prev:
-        <div class="title-text">PHP反序列化靶场</div>
-      </div>
-      
-      <!-- <div class="content">
-        题记回顾一下php反序列化的一些内容
-靶场地址https://github.com/fine-1/php-SER-lib
-      </div> -->
-    </a>
-  </div>
-
-
-
-  
-  <div class="post-nav-next post-nav-item">
-    <div class="post-nav-img" style="background-size: cover; 
-      background-position: center center;">
-      <img class="lazyload lazyload placeholder" src="/medias/5.jpg" class="lazyload placeholder" data-srcset="/medias/5.jpg" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" src="" alt="">
-    </div>
-    <a href="/2022/08/25/%E9%80%86%E5%90%91%E5%85%A5%E9%97%A8%E7%9A%84%E4%B8%80%E4%BA%9B%E5%B0%8F%E7%9F%A5%E8%AF%86/" class="post-nav-link">
-      <div class="title">
-        Next: <i class="fas fa-angle-right"></i>
-        <div class="title-text">浅谈逆向入门有关的知识</div>
-      </div>
-      <!-- <div class="content">
-        0x00说明逆向的本质就是将一个程序反编译成一段段代码，可能是伪代码，也可能是汇编代码。总的来说就是把一个完整的程序分成
-      </div> -->
-    </a>
-  </div>
-
-</div>
-
-    
-    
-
-    <!-- 打赏 -->
-    
-      <div id="appDonate" class="post-donate">
-  <div id="donate_board" class="donate_bar center" ref="donate">
-    <a id="btn_donate" class="btn_donate" href="javascript:;" title="打赏" @click="showDialogDrawer()"></a>
-  </div>
-  <transition name="fade">
-    <div 
-      class="donate-box-mask"
-      v-cloak 
-      v-show="visible"
-      @click="cancelDialogDrawer()"
-    >
-    </div>
-  </transition>
-  <transition name="bounce">
-    <div class="donate-box" v-cloak v-show="visible">
-      <div class="donate-box_close">
-        <i class="fas fa-times" aria-hidden="true" @click="cancelDialogDrawer" pointer></i>
-      </div>
-      <div class="donate-box_title">
-        <h4>
-          你的赏识是我前进的动力
-        </h4>
-      </div>
-      <div class="donate-box_tab">
-        <div class="Alipay" pointer :class="{'active': tabActive === 'Alipay'}" @click="changeTabActive('Alipay')">
-          支付宝
-        </div>
-        <div class="WeChatpay" pointer :class="{'active': tabActive === 'WeChatpay'}" @click="changeTabActive('WeChatpay')">
-          微信
-        </div>
-      </div>
-      <div class="donate-box_img">
-        <div class="AlipayImg" v-show="tabActive === 'Alipay'">
-          <img src="/medias/1.jpg" class="lazyload placeholder" data-srcset="/medias/1.jpg" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="支付宝打赏" />
-        </div> 
-        <div class="WeChatpayImg" v-show="tabActive === 'WeChatpay'">
-          <img src="/medias/2.jpg" class="lazyload placeholder" data-srcset="/medias/2.jpg" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="微信打赏" />
-        </div>
-      </div>
-    </div>
-  </transition>
-</div>
-
-<script>
-  var body = document.body || document.documentElement || window;
-  var vm = new Vue({
-    el: '#appDonate',
-    data: {
-      visible: false,
-      tabActive: 'Alipay',
-      top: 0,
-    },
-    computed: {
-    },
-    mounted() {
-    },
-    methods: {
-      showDialogDrawer() {
-        this.visible = true;
-        // 防止页面滚动，只能让弹框滚动
-        // function getScroll() {
-        //   return {
-        //     left: window.pageXOffset || document.documentElement.scrollLeft || document.body.scrollLeft || 0,
-        //     top: window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0
-        //   };
-        // }
-        this.top = $(document).scrollTop() // or getScroll().top
-        // console.log('aa', $('.main-content'));
-        body.style.cssText = 'overflow: hidden;';
-      },
-      cancelDialogDrawer() {
-        this.visible = false;
-        body.removeAttribute('style');
-        $(document).scrollTop(this.top)
-      },
-      changeTabActive(name) {
-        this.tabActive = name;
-      }
-    },
-    created() {}
-  })
-</script>
-    
-
-    <!-- 分享 -->
-    
-      <!-- https://github.com/overtrue/share.js -->
-<!-- 文章详情页的分享 -->
-<div class="social-share" data-sites="twitter,facebook,google,qq,qzone,wechat,weibo,douban,linkedin" data-wechat-qrcode-helper="<p>微信扫一扫即可分享！</p>"></div>
-
-<script src="/js/shareJs/social-share.min.js"></script>
-</script>
-
-<style>
-  .social-share {
-    margin: 20px 0;
-  }
-</style>
-
-
-    
-    
-    <!-- 评论 -->
-    <!-- 评论 -->
-
-  <div id="myComment">
-    
-      <div id="gitment-container"></div>
-
-    
-  </div>
-
-<!-- comment script in themes\hexo-theme-bamboo\layout\_partial\scripts\index.ejs -->
-
-
-  </div>
-
-  <!-- 目录 -->
-  <!-- 文章详情页右侧目录 -->
-
-  <div class="toc-aside">
-    <div class="toc-main">
-      <div class="toc-aside-title">
-        <i class="fas fa-list-ul" aria-hidden="true"></i><span>catalog</span>
-        
-          <div class="toc-open-close">catalog</div>
-        
-      </div>
-      <div class="toc-content">
-        <div class="toc"></div>
-      </div>
-    </div>
-  </div>
-
-  <!-- 手机端目录按钮 -->
-  <div id="toc-mobile-btn">
-    <i class="fas fa-list-ul" aria-hidden="true"></i>
-  </div>
-
-
-<script>
-  function closeToc(init) {
-    $(".toc-aside").css({'width': 0, 'padding': 0, 'transition': init ?  'noe' : 'width 0.3s' });
-    $(".toc-content").css({'width': 0});
-    $(".toc-aside-title span, .toc-aside-title i").css({'display': 'none'});
-    $(".main-content").css({'width': '75%', 'margin': '10px auto'});
-  };
-  function openToc() {
-    $(".main-content").css({'width': '65%', 'margin-right': '10px', 'margin-left': 'calc(35% - 350px)'});
-    $(".toc-aside").css({'width': '300px', 'padding': '0 10px', 'transition': 'width 0.3s'});
-    $(".toc-content").css({'width': '300px'});
-    $(".toc-aside-title span, .toc-aside-title i").css({'display': 'inline-block'});
-  }
-  function openBtnClickFn () {
-    let openOrCloseBtn = $('.toc-aside .toc-aside-title .toc-open-close');
-    let open = eval('' || 'true');
-    openOrCloseBtn.click(function() {
-      if (open) {
-        closeToc();
-        open = false;
-      } else {
-        openToc();
-        open = true;
-      }
+    <span class="title" id="tag-header-desc"></span>
+    <script>
+  function typedFn() {
+    const el = '#tag-header-desc';
+    const type = 'tagDetail';
+    let desc = '愿你如风，被人温柔以待'
+    var typed = new Typed(el, {
+      strings: [desc],
+      startDelay: 100,
+      typeSpeed: 100,
+      loop: true,
+      backSpeed: 50,
+      showCursor: true
     });
-  };
-  openBtnClickFn();
-  initCloseTocWidth(true);
-
-  function initCloseTocWidth(init) {
-    if (window.innerWidth >= 992) {
-      let isClose = false;
-      isClose && closeToc(init)
-    }
   }
-
-  document.addEventListener('pjax:complete', function () {
-    $(".toc-aside").css({'transition': 'no'});
-  })
-  document.addEventListener('pjax:complete', function () {
-    openBtnClickFn();
-  })
-  
+  typedFn();
 </script>
-
-  <!-- 图片放大 Wrap images with fancybox support -->
-  <script src="/js/wrapImage.js"></script>
+    
+  </div>
+  <div class="mask-box"></div>
 </div>
 
-<!-- 文章详情页背景图 -->
-<div id="appBgSwiper" style="position: fixed;left: 0;top: 0;width: 100%;height: 100%;z-index: -2;"
-	:style="{'background-color': bgColor ? bgColor : 'transparent'}">
-	<transition-group tag="ul" :name="names">
-		<li v-for='(image,index) in img' :key='index' v-show="index === mark" class="bg-swiper-box">
-			<img :src="image" class="bg-swiper-img no-lazy">
-		</li>
-	</transition-group>
-</div>
-<script>
-	var vm = new Vue({
-		el: '#appBgSwiper',
-		data: {
-			names: '' || 'fade' || 'fade', // translate-fade fade
-			mark: 0,
-			img: [],
-			bgColor: '',
-			time: null
-		},
-		methods: {   //添加方法
-			change(i, m) {
-				if (i > m) {
-					// this.names = 'fade';
-				} else if (i < m) {
-					// this.names = 'fade';
-				} else {
-					return;
-				}
-				this.mark = i;
-			},
-			prev() {
-				// this.names = 'fade';
-				this.mark--;
-				if (this.mark === -1) {
-					this.mark = 3;
-					return
-				}
-			},
-			next() {
-				// this.names = 'fade';
-				this.mark++;
-				if (this.mark === this.img.length) {
-					this.mark = 0;
-					return
-				}
-			},
-			autoPlay() {
-				// this.names = 'fade';
-				this.mark++;
-				if (this.mark === this.img.length) {
-					this.mark = 0;
-					return
-				}
-			},
-			play() {
-				let bgImgDelay = '' || '180000'
-				let delay = parseInt(bgImgDelay) || 180000;
-				this.time = setInterval(this.autoPlay, delay);
-			},
-			enter() {
-				clearInterval(this.time);
-			},
-			leave() {
-				this.play();
-			}
-		},
-		created() {
-			this.play()
-		},
-		beforeDestroy() {
-			clearInterval(this.time);
-		},
-		mounted() {
-			let prop = '' || '';
-			let isImg = prop.includes('.bmp') || prop.includes('.jpg') || prop.includes('.png') || prop.includes('.tif') || prop.includes('.gif') || prop.includes('.pcx') || prop.includes('.tga') || prop.includes('.exif') || prop.includes('.fpx') || prop.includes('.psd') || prop.includes('.cdr') || prop.includes('.pcd') || prop.includes('.dxf') || prop.includes('.ufo') || prop.includes('.eps') || prop.includes('.ai') || prop.includes('.raw') || prop.includes('.WMF') || prop.includes('.webp') || prop.includes('.jpeg') || prop.includes('http://') || prop.includes('https://')
-			if (isImg) {
-				let img = prop.split(',');
-				let configRoot = '/'
-				let arrImg = [];
-				img.forEach(el => {
-					var Expression = /http(s)?:\/\/([\w-]+\.)+[\w-]+(\/[\w- .\/?%&=]*)?/;
-					var objExp = new RegExp(Expression);
-
-					if (objExp.test(el)) {
-						// http or https
-						arrImg.push(el);
-					} else {
-						// 非http or https开头
-						// 本地文件
-						let firstStr = el.charAt(0);
-						if (firstStr == '/') {
-							el = el.substr(1); // 删除第一个字符 '/',因为 configRoot最后一个字符为 /
-						}
-						el = configRoot + el;
-						arrImg.push(el);
-					}
-				})
-				this.img = arrImg;
-			} else {
-				this.bgColor = prop;
-			}
-		}
-	})
-</script>
-
-<style>
-	.bg-swiper-box {
-		position: absolute;
-		display: block;
-		width: 100%;
-		height: 100%;
-	}
-
-	.bg-swiper-img {
-		object-fit: cover;
-		width: 100%;
-		height: 100%;
-	}
-</style>
 
 
+<div class="tag">
+  <div class="tag-name">
+    <div class="name" style="background-color: #FFF;">Windows | Linux category</div>
+  </div>
+  <!-- 每一篇文章卡片 -->
+  <!-- hash算法 -->
 
-
-  <script>
-  function loadMermaid() {
-    if (document.getElementsByClassName('mermaid').length) {
-      if (window.mermaidJsLoad) mermaid.init()
-      else {
-        loadScript('https://unpkg.com/mermaid/dist/mermaid.min.js').then(() => {
-          window.mermaidJsLoad = true
-          mermaid.initialize({
-            theme: 'default',
-          })
-          if ('true') {
-            mermaid.init();
-          }
-        })
-      }
-    }
-  };
-  document.addEventListener("DOMContentLoaded", function () {
-    loadMermaid();
-  })
-
-  document.addEventListener('pjax:complete', function () {
-    loadMermaid();
-  })
+<section class="posts">
   
-</script>
+    
+    <article class="post reveal" style="flex-direction: row-reverse;   ">
+      <div class="post-main">
+        <div class="post-info">
+          <div class="post-time">
+            <i class="fas fa-clock" aria-hidden="true"></i>
+            <span class="post-time">2023-08-19</span>
+          </div>
+          <div class="post-title">
+            <a class="post-title-link" href="/2023/08/19/%E6%9C%8D%E5%8A%A1%E5%8F%8A%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F%E9%85%8D%E7%BD%AE(%E4%B8%BB%E6%9C%BA%E7%89%88)/">服务及环境变量配置(主机版)</a>
+          </div>
+          <div class="post-meta">
+            <div class="post-tags">
+              <!-- 文章详情页的标签 -->
 
+    <i class="iconfont icontag"></i>
+    <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Windows-Linux/" rel="tag">Windows | Linux</a></li></ul>
+
+            </div>
+            <div class="post-categories">
+              <!-- 文章详情页的分类 -->
+
+<div class="article-category">
+  <i class="iconfont iconbookmark1"></i>
+  <a class="article-category-link" href="/categories/Windows-Linux/">Windows | Linux</a>
+</div>
+
+
+            </div>
+          </div>
+          <div class="post-img-mobile">
+            <a href="/2023/08/19/%E6%9C%8D%E5%8A%A1%E5%8F%8A%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F%E9%85%8D%E7%BD%AE(%E4%B8%BB%E6%9C%BA%E7%89%88)/" style="background-size: cover; 
+              background-position: center center;">
+              <img class="lazyload lazyload placeholder" src="/medias/5.jpg" class="lazyload placeholder" data-srcset="/medias/5.jpg" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="">
+            </a>
+          </div>
+          <div class="post-content">
+            0x00前言昨天总结整理了Docker版本的环境配置，这次主要整合的是Windows和Linux系统下的服务环境配置，本文的Linux环境和Windows环境分别为Centos7和Windows11，有些环境安装过了就没重复安装了，图片部分
+          </div>
+        </div>
+        <div class="post-more">
+          <a href="/2023/08/19/%E6%9C%8D%E5%8A%A1%E5%8F%8A%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F%E9%85%8D%E7%BD%AE(%E4%B8%BB%E6%9C%BA%E7%89%88)/">
+            <i class="iconfont iconmore" pointer style="float: right;  " title="阅读更多"></i>
+          </a>
+        </div>
+      </div>
+      <div class="post-img">
+        <a href="/2023/08/19/%E6%9C%8D%E5%8A%A1%E5%8F%8A%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F%E9%85%8D%E7%BD%AE(%E4%B8%BB%E6%9C%BA%E7%89%88)/" style="background-size: cover; 
+          background-position: center center;">
+          <img class="lazyload lazyload placeholder" src="/medias/5.jpg" class="lazyload placeholder" data-srcset="/medias/5.jpg" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="">
+        </a>
+      </div>
+    </article>
+  
+</section>
+</div>
+
+<div class="w-70">
+  
+</div>
 
       </main>
     </div>

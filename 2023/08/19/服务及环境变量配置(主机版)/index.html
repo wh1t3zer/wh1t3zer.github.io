@@ -11,7 +11,7 @@
   <!-- Global site tag (gtag.js) - Google Analytics -->
 
 
-  <title>服务及环境变量配置(Docker版) | wh1t3zer</title>
+  <title>服务及环境变量配置(主机版) | wh1t3zer</title>
 
   <link rel="icon" type="image/x-icon, image/vnd.microsoft.icon" href="/favicon.ico">
   <link rel="stylesheet" href="https://at.alicdn.com/t/font_1911880_c1nvbyezg17.css">
@@ -593,21 +593,21 @@
 
 
 <div class="post-detail-header" id="thumbnail_canvas" style="background-repeat: no-repeat; background-size: cover; 
-  background-position: center center;position: relative;background-image:url('/medias/6.jpg')">
+  background-position: center center;position: relative;background-image:url('/medias/5.jpg')">
   <div class="post-detail-header-mask"></div>
   <canvas id="header_canvas"style="position:absolute;bottom:0;pointer-events:none;"></canvas>
   
   <div class="post-detail-header_info-box">
     <div class="title-box">
       <span class="title">
-        服务及环境变量配置(Docker版)
+        服务及环境变量配置(主机版)
       </span>
     </div>
     
     
       
         <span class="post-detail-header_date">
-          <i class="fas fa-calendar"></i> Published in：2023-08-18 |
+          <i class="fas fa-calendar"></i> Published in：2023-08-19 |
         </span>
       
 
@@ -615,8 +615,8 @@
         <span class="post-detail-header_categories">
           <i class="iconfont iconbookmark1"></i> category：
           
-            <a href="/categories/Docker/" class="post-detail-header_category">
-              Docker
+            <a href="/categories/Windows-Linux/" class="post-detail-header_category">
+              Windows | Linux
             </a>
           
         </span>
@@ -640,139 +640,198 @@
   <div class="main-content">
     <article class="post post-detail">
       <div class="post-content">
-        <h2 id="0x00前言"><a href="#0x00前言" class="headerlink" title="0x00前言"></a>0x00前言</h2><p>最近服务器在做迁移，有的服务需要重新安装，有些命令太久没使用也忘掉些许，每次迁移都得重新查百度，这样比较麻烦，所以还是花点时间把平时常见的服务安装的流程总结一下，本次总结的是Docker版本的服务安装过</p>
-<h2 id="0x01Docker安装及配置"><a href="#0x01Docker安装及配置" class="headerlink" title="0x01Docker安装及配置"></a>0x01Docker安装及配置</h2><h3 id="1、安装Docker"><a href="#1、安装Docker" class="headerlink" title="1、安装Docker"></a>1、安装Docker</h3><p>在Windows上可直接访问Dockerhub下载，一般不使用Windows环境</p>
-<p>在Linux上，以Centos7为例</p>
-<p>先更新下yum</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">yum -y update	<span class="comment">//这里要注意，在生产环境下慎重，用于学习可随意</span></span><br><span class="line"><span class="comment">//yum -y update：升级所有包同时也升级软件和系统内核；​ </span></span><br><span class="line"><span class="comment">//yum -y upgrade：只升级所有包，不升级软件和系统内核</span></span><br></pre></td></tr></table></figure>
+        <h2 id="0x00前言"><a href="#0x00前言" class="headerlink" title="0x00前言"></a>0x00前言</h2><p>昨天总结整理了Docker版本的环境配置，这次主要整合的是Windows和Linux系统下的服务环境配置，本文的Linux环境和Windows环境分别为Centos7和Windows11，有些环境安装过了就没重复安装了，图片部分摘自网络，以实际的界面为主</p>
+<h2 id="0x01Linux"><a href="#0x01Linux" class="headerlink" title="0x01Linux"></a>0x01Linux</h2><h4 id="1、配置国内源"><a href="#1、配置国内源" class="headerlink" title="1、配置国内源"></a>1、配置国内源</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">getenforce       ---查看yum源</span><br><span class="line"><span class="built_in">cd</span> /etc/yum.repos.d/</span><br><span class="line">yum -y install wget</span><br><span class="line">wget http://mirrors.aliyun.com/repo/Centos-7.repo</span><br><span class="line"><span class="built_in">mv</span> CentOS-Base.repo CentOs-Base.repo.bak  <span class="comment">#备份</span></span><br><span class="line"><span class="built_in">mv</span> Centos-7.repo CentOS-Base.repo</span><br><span class="line">yum clean all</span><br><span class="line">yum makecache</span><br><span class="line">yum update</span><br></pre></td></tr></table></figure>
 
-<p>移除曾经安装过的Docker版本</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum remove docker  docker-common docker-selinux docker-engine</span><br></pre></td></tr></table></figure>
+<h2 id="0x02Mysql"><a href="#0x02Mysql" class="headerlink" title="0x02Mysql"></a>0x02Mysql</h2><p>Mysql下载地址<a target="_blank" rel="noopener" href="https://dev.mysql.com/downloads/mysql/">https://dev.mysql.com/downloads/mysql/</a></p>
+<h3 id="Linux"><a href="#Linux" class="headerlink" title="Linux"></a><strong>Linux</strong></h3><h4 id="1、查看下本机目前是否有mysql的命令"><a href="#1、查看下本机目前是否有mysql的命令" class="headerlink" title="1、查看下本机目前是否有mysql的命令"></a>1、查看下本机目前是否有mysql的命令</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rpm -e mysql-libs-5.1.71-1.e16.x68_64 --nodeps</span><br></pre></td></tr></table></figure>
 
-<p>安装Docker所需依赖</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum install -y yum-utils device-mapper-persistent-data lvm2</span><br></pre></td></tr></table></figure>
+<h4 id="2、创建个mysql文件夹在-x2F-usr-x2F-local"><a href="#2、创建个mysql文件夹在-x2F-usr-x2F-local" class="headerlink" title="2、创建个mysql文件夹在&#x2F;usr&#x2F;local"></a>2、创建个mysql文件夹在&#x2F;usr&#x2F;local</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> /usr/local</span><br><span class="line"><span class="built_in">mkdir</span> mysql</span><br></pre></td></tr></table></figure>
 
-<p>查看可安装的Docker版本</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum list docker-ce --showduplicates | sort -r</span><br></pre></td></tr></table></figure>
+<h4 id="3、解压压缩包"><a href="#3、解压压缩包" class="headerlink" title="3、解压压缩包"></a>3、解压压缩包</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tar -xvf 安装包.tar</span><br></pre></td></tr></table></figure>
 
-<p>安装Docker所选版本</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum -y install docker-ce-<span class="number">18.03</span><span class="number">.1</span>.ce</span><br></pre></td></tr></table></figure>
+<h4 id="4、安装依赖"><a href="#4、安装依赖" class="headerlink" title="4、安装依赖"></a>4、安装依赖</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">yum -y install libaio.so.1 libgcc_s.so.1 libstdc++.so.6 libncurses.so.5 --<span class="built_in">setopt</span>=protected_multilib=<span class="literal">false</span>	</span><br><span class="line">yum -y update libstdc++-4.4.7-4.el6.x86_64</span><br></pre></td></tr></table></figure>
 
-<p>启动Docker设置开机自启</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">systemctl start docker</span><br><span class="line">systemctl enable docker</span><br></pre></td></tr></table></figure>
+<h4 id="5、安装-mysql-client"><a href="#5、安装-mysql-client" class="headerlink" title="5、安装 mysql-client"></a>5、安装 mysql-client</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rpm -ivh MySQL-client-5.6.22-1.el6.i686.rpm</span><br></pre></td></tr></table></figure>
 
-<h3 id="2、镜像源"><a href="#2、镜像源" class="headerlink" title="2、镜像源"></a>2、镜像源</h3><p>一般来说，docker的镜像源是国外的，使用国内网络下载镜像速度会比较慢，所以首先要更改下镜像源，这里有国内的比较常用的镜像源</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">网易：http:<span class="comment">//hub-mirror.c.163.com</span></span><br><span class="line">中科大镜像地址：http:<span class="comment">//mirrors.ustc.edu.cn/</span></span><br><span class="line">中科大github地址：https:<span class="comment">//github.com/ustclug/mirrorrequest</span></span><br><span class="line">Azure中国镜像地址：http:<span class="comment">//mirror.azure.cn/</span></span><br><span class="line">Azure中国github地址：https:<span class="comment">//github.com/Azure/container-service-for-azure-china</span></span><br><span class="line">DockerHub镜像仓库: https:<span class="comment">//hub.docker.com/ </span></span><br><span class="line">阿里云镜像仓库： https:<span class="comment">//cr.console.aliyun.com </span></span><br><span class="line">google镜像仓库： https:<span class="comment">//console.cloud.google.com/gcr/images/google-containers/GLOBAL （如果你本地可以翻墙的话是可以连上去的 ）</span></span><br><span class="line">coreos镜像仓库： https:<span class="comment">//quay.io/repository/ </span></span><br><span class="line">RedHat镜像仓库： https:<span class="comment">//access.redhat.com/containers</span></span><br></pre></td></tr></table></figure>
+<h4 id="6、启动Mysql服务"><a href="#6、启动Mysql服务" class="headerlink" title="6、启动Mysql服务"></a>6、启动Mysql服务</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">service mysql start</span><br><span class="line">service mysql stop</span><br><span class="line">service mysql status</span><br><span class="line">service mysql restart</span><br></pre></td></tr></table></figure>
 
-<p>修改镜像源</p>
-<p>vi &#x2F;etc&#x2F;docker&#x2F;daemon.json文件，若没有则创建该文件，添加以下内容：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="string">&quot;registry-mirrors&quot;</span>: [<span class="string">&quot;https://ckdhnbk9.mirror.aliyuncs.com&quot;</span>]	<span class="comment">//这里可修改自己的镜像源</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="Windows"><a href="#Windows" class="headerlink" title="Windows"></a><strong>Windows</strong></h3><h4 id="1、选择custom，点击next"><a href="#1、选择custom，点击next" class="headerlink" title="1、选择custom，点击next"></a>1、<strong>选择custom，点击next</strong></h4><p><img src="https://img-blog.csdnimg.cn/05f8e78aa0f04bce8f60b7f35e1f49cc.png" class="lazyload placeholder" data-srcset="https://img-blog.csdnimg.cn/05f8e78aa0f04bce8f60b7f35e1f49cc.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"></p>
+<h4 id="2、-选择MySQL-Servers-5-7-38-x64，然后按next"><a href="#2、-选择MySQL-Servers-5-7-38-x64，然后按next" class="headerlink" title="2、 选择MySQL Servers 5.7.38 -x64，然后按next"></a>2、 <strong>选择MySQL Servers 5.7.38 -x64，然后按next</strong></h4><p><img src="https://img-blog.csdnimg.cn/cfe1f722a16b45e581be4d769087f6dd.png" class="lazyload placeholder" data-srcset="https://img-blog.csdnimg.cn/cfe1f722a16b45e581be4d769087f6dd.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"></p>
+<h4 id="3、点击下方蓝色Advanced-Options，选择安装位置"><a href="#3、点击下方蓝色Advanced-Options，选择安装位置" class="headerlink" title="3、点击下方蓝色Advanced Options，选择安装位置"></a>3、<strong>点击下方蓝色Advanced Options，选择安装位置</strong></h4><p><img src="https://img-blog.csdnimg.cn/f7dac5fc43ac43d4ad1dd86613be0942.png" class="lazyload placeholder" data-srcset="https://img-blog.csdnimg.cn/f7dac5fc43ac43d4ad1dd86613be0942.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"></p>
+<p><img src="https://img-blog.csdnimg.cn/8a6232ae76b340a6a107dd7a99706011.png" class="lazyload placeholder" data-srcset="https://img-blog.csdnimg.cn/8a6232ae76b340a6a107dd7a99706011.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"></p>
+<h4 id="4、继续next"><a href="#4、继续next" class="headerlink" title="4、继续next"></a>4、<strong>继续next</strong></h4><p><img src="https://img-blog.csdnimg.cn/cc84c87508d54ea4aaa8135b4a8fe80b.png" class="lazyload placeholder" data-srcset="https://img-blog.csdnimg.cn/cc84c87508d54ea4aaa8135b4a8fe80b.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"></p>
+<h4 id="5、next"><a href="#5、next" class="headerlink" title="5、next"></a>5、<strong>next</strong><img src="https://img-blog.csdnimg.cn/e12cc314c80e4b13aa6b8f30e38b67cb.png" class="lazyload placeholder" data-srcset="https://img-blog.csdnimg.cn/e12cc314c80e4b13aa6b8f30e38b67cb.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"></h4><h4 id="6、不需要做修改，直接点击next"><a href="#6、不需要做修改，直接点击next" class="headerlink" title="6、不需要做修改，直接点击next"></a>6、<strong>不需要做修改，直接点击next</strong></h4><p><img src="https://img-blog.csdnimg.cn/a5de7095de5e4599950b533161f9959d.png" class="lazyload placeholder" data-srcset="https://img-blog.csdnimg.cn/a5de7095de5e4599950b533161f9959d.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"></p>
+<h4 id="7、设置密码，不需要太复杂（例如：root）"><a href="#7、设置密码，不需要太复杂（例如：root）" class="headerlink" title="7、设置密码，不需要太复杂（例如：root）"></a>7、<strong>设置密码，不需要太复杂（例如：root）</strong></h4><p><img src="https://img-blog.csdnimg.cn/22f7f00cc128478aa05d7ae125eaa877.png" class="lazyload placeholder" data-srcset="https://img-blog.csdnimg.cn/22f7f00cc128478aa05d7ae125eaa877.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"></p>
+<h4 id="8、点击next"><a href="#8、点击next" class="headerlink" title="8、点击next"></a>8、<strong>点击next</strong></h4><p><img src="https://img-blog.csdnimg.cn/79eb6fc0526043faab7ab8e97eed6fe7.png" class="lazyload placeholder" data-srcset="https://img-blog.csdnimg.cn/79eb6fc0526043faab7ab8e97eed6fe7.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"></p>
+<h4 id="9、点击execute，安装好后next"><a href="#9、点击execute，安装好后next" class="headerlink" title="9、点击execute，安装好后next"></a>9、<strong>点击execute，安装好后next</strong></h4><p><img src="https://img-blog.csdnimg.cn/dd0db4b7e810422a8addcaf7927c6288.png" class="lazyload placeholder" data-srcset="https://img-blog.csdnimg.cn/dd0db4b7e810422a8addcaf7927c6288.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"></p>
+<h4 id="10、点击next"><a href="#10、点击next" class="headerlink" title="10、点击next"></a>10、<strong>点击next</strong></h4><p><img src="https://img-blog.csdnimg.cn/77534cbb5c244980af0594d9b48a9223.png" class="lazyload placeholder" data-srcset="https://img-blog.csdnimg.cn/77534cbb5c244980af0594d9b48a9223.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"></p>
+<h4 id="11、点击finish，完成！"><a href="#11、点击finish，完成！" class="headerlink" title="11、点击finish，完成！"></a>11、<strong>点击finish，完成！</strong></h4><p><img src="https://img-blog.csdnimg.cn/c649324fb082416abd3e0e24e485a50d.png" class="lazyload placeholder" data-srcset="https://img-blog.csdnimg.cn/c649324fb082416abd3e0e24e485a50d.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"></p>
+<p>查看是否安装成功</p>
+<p>CMD打开mysql输入用户名和密码连接mysql -u root -p root，若出现下面这个页面就是mysql安装了</p>
+<p><img src="https://img-blog.csdnimg.cn/17f564367f4e438a8eb364ec2e097de8.png" class="lazyload placeholder" data-srcset="https://img-blog.csdnimg.cn/17f564367f4e438a8eb364ec2e097de8.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"></p>
+<h2 id="0x03Redis"><a href="#0x03Redis" class="headerlink" title="0x03Redis"></a>0x03Redis</h2><h3 id="Linux-1"><a href="#Linux-1" class="headerlink" title="Linux"></a>Linux</h3><p>Redis下载地址<a target="_blank" rel="noopener" href="https://redis.io/download/">https://redis.io/download/</a> </p>
+<h4 id="1、安装依赖"><a href="#1、安装依赖" class="headerlink" title="1、安装依赖"></a>1、安装依赖</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum install -y gcc tcl</span><br></pre></td></tr></table></figure>
 
-<h3 id="3、重启Docker"><a href="#3、重启Docker" class="headerlink" title="3、重启Docker"></a>3、重启Docker</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo systemctl daemon-reload</span><br><span class="line">sudo systemctl restart docker</span><br></pre></td></tr></table></figure>
+<h4 id="2、解压安装包"><a href="#2、解压安装包" class="headerlink" title="2、解压安装包"></a>2、解压安装包</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tar -xzf redis-6.2.6.tar.gz -C /usr/local/redis		<span class="comment">#-C是指定解压缩路径</span></span><br></pre></td></tr></table></figure>
 
-<h3 id="4、查看Docker服务状态"><a href="#4、查看Docker服务状态" class="headerlink" title="4、查看Docker服务状态"></a>4、查看Docker服务状态</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">systyemctl status docker</span><br></pre></td></tr></table></figure>
+<h4 id="3、进到安装包目录下文件夹，编译"><a href="#3、进到安装包目录下文件夹，编译" class="headerlink" title="3、进到安装包目录下文件夹，编译"></a>3、进到安装包目录下文件夹，编译</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> /usr/local/redis/redis-6.2.6</span><br><span class="line">make &amp;&amp; make install</span><br></pre></td></tr></table></figure>
 
-<h2 id="0x02Mysql"><a href="#0x02Mysql" class="headerlink" title="0x02Mysql"></a>0x02Mysql</h2><h3 id="1、拉取mysql镜像"><a href="#1、拉取mysql镜像" class="headerlink" title="1、拉取mysql镜像"></a>1、拉取mysql镜像</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker pull mysql</span><br></pre></td></tr></table></figure>
+<h4 id="4、一般来讲文件夹路径为-x2F-usr-x2F-local"><a href="#4、一般来讲文件夹路径为-x2F-usr-x2F-local" class="headerlink" title="4、一般来讲文件夹路径为&#x2F;usr&#x2F;local"></a>4、一般来讲文件夹路径为&#x2F;usr&#x2F;local</h4><p><img src="https://img-blog.csdnimg.cn/cb4099a3fc354bb8b2deaccf03ab305b.png" class="lazyload placeholder" data-srcset="https://img-blog.csdnimg.cn/cb4099a3fc354bb8b2deaccf03ab305b.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"></p>
+<p>安装完成后输入redis-server确认下是否正常启动</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">redis-server</span><br></pre></td></tr></table></figure>
 
-<p>或者查询可安装的Mysql版本</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker search mysql</span><br></pre></td></tr></table></figure>
+<p><img src="https://img-blog.csdnimg.cn/5b54362df3ec4975a250e6b1cac953d9.png" class="lazyload placeholder" data-srcset="https://img-blog.csdnimg.cn/5b54362df3ec4975a250e6b1cac953d9.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"></p>
+<p><strong>指定配置启动</strong></p>
+<p>需要修改redis.conf文件</p>
+<p>先备份源文件</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cp</span> redis.conf redis.conf.bck</span><br></pre></td></tr></table></figure>
 
-<h3 id="2、查看mysql镜像"><a href="#2、查看mysql镜像" class="headerlink" title="2、查看mysql镜像"></a>2、查看mysql镜像</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker images -a </span><br></pre></td></tr></table></figure>
+<p>#允许访问的地址，默认是127.0.0.1，会导致只能在本地访问。修改为0.0.0.0则可以在任意IP访问，生产环境不要设置为0.0.0.0<br>bind 0.0.0.0<br>#守护进程，修改为yes后即可后台运行<br>daemonize yes<br>#设置后访问Redis必须输入密码<br>requirepass 123456</p>
+<p>启动redis需带上修改好的配置文件路径，该文件在当前路径下可以直接启动</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> /usr/local/redis/redis-6.2.6</span><br><span class="line">redis-server redis.conf</span><br></pre></td></tr></table></figure>
 
-<h3 id="3、启动mysql容器"><a href="#3、启动mysql容器" class="headerlink" title="3、启动mysql容器"></a>3、启动mysql容器</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run -p <span class="number">3306</span>:<span class="number">3306</span> --name mysql --restart=always --network common-network -v /mydata/mysql/log:/<span class="keyword">var</span>/log/mysql -v /mydata/mysql/data:/<span class="keyword">var</span>/lib/mysql -v /mydata/mysql/conf:/etc/mysql -e MYSQL_ROOT_PASSWORD=<span class="number">123456</span> -d mysql:<span class="number">5.7</span></span><br></pre></td></tr></table></figure>
+<p>查看Redis运行状态</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ps -ef | grep redis</span><br></pre></td></tr></table></figure>
 
-<p>说明：</p>
-<p>-p 指定在容器内部的端口 以及对外暴露的端口</p>
-<p>–name 设置服务器名称</p>
-<p>–restart 是否运行跟随docker一起启动</p>
-<p>–network 容器之间内部通信网络</p>
-<p>-v 挂载命令 将容器中的配置挂载在外部来方便修改</p>
-<p>-d 指定版本</p>
-<p>-e 修改配置</p>
-<p>-e 指定root的密码</p>
-<h3 id="4、进入到mysql容器中"><a href="#4、进入到mysql容器中" class="headerlink" title="4、进入到mysql容器中"></a>4、进入到mysql容器中</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker exec -it mysql /bin/bash   <span class="comment">//mysql可以改成容器id</span></span><br></pre></td></tr></table></figure>
+<p>停止服务</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">kill</span> -9 PID	<span class="comment">#一般生产环境下不建议用这个方式，有其他优雅的下线方式</span></span><br></pre></td></tr></table></figure>
 
-<h3 id="5、修改mysql配置"><a href="#5、修改mysql配置" class="headerlink" title="5、修改mysql配置"></a>5、修改mysql配置</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cd /mydata/mysql/conf</span><br></pre></td></tr></table></figure>
+<p>配置Redis开机自启动</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">vim /etc/systemd/system/redis.service  <span class="comment">#创建一个系统服务的新文件</span></span><br><span class="line"></span><br><span class="line">//填写以下内容到文件里</span><br><span class="line">[Unit]</span><br><span class="line">Description=redis-server</span><br><span class="line">After=network.target</span><br><span class="line"></span><br><span class="line">[Service]</span><br><span class="line">Type=forking</span><br><span class="line">ExecStart=/usr/local/bin/redis-server /usr/local/redis/redis-6.2.6/redis.conf</span><br><span class="line">PrivateTmp=<span class="literal">true</span></span><br><span class="line"></span><br><span class="line">[Install]</span><br><span class="line">WantedBy=multi-user.target</span><br></pre></td></tr></table></figure>
 
-<h3 id="6、创建my-cnf文件"><a href="#6、创建my-cnf文件" class="headerlink" title="6、创建my.cnf文件"></a>6、创建my.cnf文件</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">[client]</span><br><span class="line"></span><br><span class="line">default-character-set=utf8</span><br><span class="line"></span><br><span class="line">[mysql]</span><br><span class="line"></span><br><span class="line">default-character-set=utf8</span><br><span class="line"></span><br><span class="line">[mysqld]</span><br><span class="line"></span><br><span class="line">init_connect=&#x27;SET collation_connection = utf8_unicode_ci&#x27;</span><br><span class="line"></span><br><span class="line">init_connect=&#x27;SET NAMES utf8&#x27;</span><br><span class="line"></span><br><span class="line">character-set-server=utf8</span><br><span class="line"></span><br><span class="line">collation-server=utf8_unicode_ci</span><br><span class="line"></span><br><span class="line">skip-character-set-client-handshake</span><br><span class="line"></span><br><span class="line">skip-name-resolve</span><br></pre></td></tr></table></figure>
+<p>重载系统服务</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">systemctl daemon-reload</span><br></pre></td></tr></table></figure>
 
-<h3 id="7-重启mysql服务-使其配置生效"><a href="#7-重启mysql服务-使其配置生效" class="headerlink" title="7.重启mysql服务 使其配置生效"></a>7.重启mysql服务 使其配置生效</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker restart mysql</span><br></pre></td></tr></table></figure>
+<p>其他</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#启动</span></span><br><span class="line">systemctl start redis</span><br><span class="line"><span class="comment">#停止</span></span><br><span class="line">systemctl stop redis</span><br><span class="line"><span class="comment">#重启</span></span><br><span class="line">systemctl restart redis</span><br><span class="line"><span class="comment">#查看状态</span></span><br><span class="line">systemctl status redis</span><br></pre></td></tr></table></figure>
 
-<h3 id="8、授权远程访问"><a href="#8、授权远程访问" class="headerlink" title="8、授权远程访问"></a>8、授权远程访问</h3><p><strong>进入mysql</strong></p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mysql -u root -p</span><br></pre></td></tr></table></figure>
+<h3 id="Windows-1"><a href="#Windows-1" class="headerlink" title="Windows"></a>Windows</h3><p>Windows下的环境在<a target="_blank" rel="noopener" href="https://github.com/MicrosoftArchive/redis/releases">https://github.com/MicrosoftArchive/redis/releases</a></p>
+<h4 id="1、运行MSI安装包"><a href="#1、运行MSI安装包" class="headerlink" title="1、运行MSI安装包"></a>1、运行MSI安装包</h4><p><img src="https://img-blog.csdnimg.cn/edbdf1cae2af4aa48586e043bb39f1e6.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBAc-mAkOaipuWwkeW5tA==,size_16,color_FFFFFF,t_70,g_se,x_16" class="lazyload placeholder" data-srcset="https://img-blog.csdnimg.cn/edbdf1cae2af4aa48586e043bb39f1e6.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBAc-mAkOaipuWwkeW5tA==,size_16,color_FFFFFF,t_70,g_se,x_16" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"></p>
+<h4 id="2、选择端口"><a href="#2、选择端口" class="headerlink" title="2、选择端口"></a>2、选择端口</h4><p><img src="https://img-blog.csdnimg.cn/729ac7faef3b46c8b9d003f84e44416f.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBAc-mAkOaipuWwkeW5tA==,size_16,color_FFFFFF,t_70,g_se,x_16" class="lazyload placeholder" data-srcset="https://img-blog.csdnimg.cn/729ac7faef3b46c8b9d003f84e44416f.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBAc-mAkOaipuWwkeW5tA==,size_16,color_FFFFFF,t_70,g_se,x_16" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"></p>
+<h4 id="3、选择最大缓存量"><a href="#3、选择最大缓存量" class="headerlink" title="3、选择最大缓存量"></a>3、选择最大缓存量</h4><p><img src="https://img-blog.csdnimg.cn/4e1c0af7d3d041848fc27651f8b72da9.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBAc-mAkOaipuWwkeW5tA==,size_16,color_FFFFFF,t_70,g_se,x_16" class="lazyload placeholder" data-srcset="https://img-blog.csdnimg.cn/4e1c0af7d3d041848fc27651f8b72da9.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBAc-mAkOaipuWwkeW5tA==,size_16,color_FFFFFF,t_70,g_se,x_16" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"></p>
+<h4 id="4、点击finish"><a href="#4、点击finish" class="headerlink" title="4、点击finish"></a>4、点击finish</h4><h4 id="5、install安装，完成后进入redis目录"><a href="#5、install安装，完成后进入redis目录" class="headerlink" title="5、install安装，完成后进入redis目录"></a>5、install安装，完成后进入redis目录</h4><p>redis.windows-service.conf，不是redis.windows.conf，后者是以非系统服务方式启动程序使用的配置文件</p>
+<p><img src="https://img-blog.csdnimg.cn/fd2fed0a7ae1422791e70d77c0eea9c1.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBAc-mAkOaipuWwkeW5tA==,size_20,color_FFFFFF,t_70,g_se,x_16" class="lazyload placeholder" data-srcset="https://img-blog.csdnimg.cn/fd2fed0a7ae1422791e70d77c0eea9c1.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBAc-mAkOaipuWwkeW5tA==,size_20,color_FFFFFF,t_70,g_se,x_16" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"></p>
+<h4 id="6、在配置文件中找到Requirepass字样"><a href="#6、在配置文件中找到Requirepass字样" class="headerlink" title="6、在配置文件中找到Requirepass字样"></a>6、在配置文件中找到Requirepass字样</h4><p>在其后面追加一行，输入requirepass 123456，这个是redis连接时候所需要的密码，也可以注释掉这一行，进入redis就不用密码，但是存在安全风险，之后重启服务</p>
+<p><img src="https://img-blog.csdnimg.cn/69007a14575f4383bd6696c7d75fb1a2.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBAc-mAkOaipuWwkeW5tA==,size_20,color_FFFFFF,t_70,g_se,x_16" class="lazyload placeholder" data-srcset="https://img-blog.csdnimg.cn/69007a14575f4383bd6696c7d75fb1a2.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBAc-mAkOaipuWwkeW5tA==,size_20,color_FFFFFF,t_70,g_se,x_16" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"></p>
+<p>进入计算机服务中(右键计算机–&gt;管理–&gt;服务和应用程序–&gt;服务)</p>
+<p><img src="https://img-blog.csdnimg.cn/61da219bc43546b3b85801a1e5815cd5.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBAc-mAkOaipuWwkeW5tA==,size_12,color_FFFFFF,t_70,g_se,x_16" class="lazyload placeholder" data-srcset="https://img-blog.csdnimg.cn/61da219bc43546b3b85801a1e5815cd5.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBAc-mAkOaipuWwkeW5tA==,size_12,color_FFFFFF,t_70,g_se,x_16" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"></p>
+<h4 id="7、最后测试下能否正常连接"><a href="#7、最后测试下能否正常连接" class="headerlink" title="7、最后测试下能否正常连接"></a>7、最后测试下能否正常连接</h4><p><img src="https://img-blog.csdnimg.cn/c8dc5a78b8ef4cfab15ce16e9f607d7c.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBAc-mAkOaipuWwkeW5tA==,size_20,color_FFFFFF,t_70,g_se,x_16" class="lazyload placeholder" data-srcset="https://img-blog.csdnimg.cn/c8dc5a78b8ef4cfab15ce16e9f607d7c.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBAc-mAkOaipuWwkeW5tA==,size_20,color_FFFFFF,t_70,g_se,x_16" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"></p>
+<h2 id="0x04Python"><a href="#0x04Python" class="headerlink" title="0x04Python"></a>0x04Python</h2><p>下载python的网址<a target="_blank" rel="noopener" href="https://www.python.org/downloads/">https://www.python.org/downloads/</a></p>
+<h3 id="Linux-2"><a href="#Linux-2" class="headerlink" title="Linux"></a>Linux</h3><p>Linux上默认安装了python2，这个流程是安装Python3.x流程</p>
+<h4 id="1、安装依赖-1"><a href="#1、安装依赖-1" class="headerlink" title="1、安装依赖"></a>1、安装依赖</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum install zlib-devel bzip2-devel openssl-devel ncurses-devel sqlite-devel readline-devel tk-devel gcc make</span><br></pre></td></tr></table></figure>
 
-<p><strong>进入mysql库中</strong></p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">use mysql;</span><br></pre></td></tr></table></figure>
+<h4 id="2、解压压缩包"><a href="#2、解压压缩包" class="headerlink" title="2、解压压缩包"></a>2、解压压缩包</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tar -zxvf 安装包.tar.gz</span><br></pre></td></tr></table></figure>
 
-<p><strong>查询库中的账号和允许连接的host</strong></p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">select user,host from user;</span><br></pre></td></tr></table></figure>
+<h4 id="3、进入到解压目录"><a href="#3、进入到解压目录" class="headerlink" title="3、进入到解压目录"></a>3、进入到解压目录</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./configure --prefix=/usr/local/python3 --with-openssl</span><br></pre></td></tr></table></figure>
 
-<p><strong>给root 用户授权所有的权限以及能访问的ip</strong></p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">grant all privileges on *.* to root@&quot;ip&quot; identified by &quot;root&quot;;</span><br></pre></td></tr></table></figure>
+<h4 id="4、Python配置"><a href="#4、Python配置" class="headerlink" title="4、Python配置"></a>4、Python配置</h4><p>因为Linux本来存在python2的缘故，进行配置的时候先把python2的配置先备份了</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">mv</span> /usr/bin/python /usr/bin/python_old</span><br></pre></td></tr></table></figure>
 
-<p><strong>刷新权限生效</strong></p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">flush privileges;</span><br></pre></td></tr></table></figure>
+<h4 id="5、创建软连接"><a href="#5、创建软连接" class="headerlink" title="5、创建软连接"></a>5、创建软连接</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">ln</span> -s /usr/local/python3/bin/python3 /usr/bin/python</span><br><span class="line"><span class="built_in">ln</span> -s /usr/local/python3/bin/pip3 /usr/bin/pip</span><br></pre></td></tr></table></figure>
 
-<h2 id="0x03Jdk"><a href="#0x03Jdk" class="headerlink" title="0x03Jdk"></a>0x03Jdk</h2><h3 id="1、查看可用jdk版本"><a href="#1、查看可用jdk版本" class="headerlink" title="1、查看可用jdk版本"></a>1、查看可用jdk版本</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker search jdk</span><br></pre></td></tr></table></figure>
+<h4 id="6、更改名称"><a href="#6、更改名称" class="headerlink" title="6、更改名称"></a>6、更改名称</h4><p>更改原来使用Python2作为编译器的脚本，打开&#x2F;usr&#x2F;bin&#x2F;yum和&#x2F;usr&#x2F;libexec&#x2F;urlgrabber-ext-down，在第一行，将其编译器改为python2</p>
+<h4 id="7、更新pip"><a href="#7、更新pip" class="headerlink" title="7、更新pip"></a>7、更新pip</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip install --upgrade pip	<span class="comment">#python3</span></span><br></pre></td></tr></table></figure>
 
-<h3 id="2、拉取jdk镜像"><a href="#2、拉取jdk镜像" class="headerlink" title="2、拉取jdk镜像"></a>2、拉取jdk镜像</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker pull jdk</span><br></pre></td></tr></table></figure>
+<h4 id="8、验证是否安装成功"><a href="#8、验证是否安装成功" class="headerlink" title="8、验证是否安装成功"></a>8、验证是否安装成功</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">python -v</span><br><span class="line">pip -v</span><br></pre></td></tr></table></figure>
 
-<h3 id="3、查看jdk镜像是否下载"><a href="#3、查看jdk镜像是否下载" class="headerlink" title="3、查看jdk镜像是否下载"></a>3、查看jdk镜像是否下载</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker images </span><br></pre></td></tr></table></figure>
+<h4 id="9、说明"><a href="#9、说明" class="headerlink" title="9、说明"></a>9、说明</h4><p>在Linux中可存在多个Python环境，为了避免混淆，一般为python2和python3，当用命令行使用python的时候会调用已安装的python3.x版本，python2的时候则会调用python2.x版本</p>
+<h3 id="Windows-2"><a href="#Windows-2" class="headerlink" title="Windows"></a>Windows</h3><h4 id="1、安装程序"><a href="#1、安装程序" class="headerlink" title="1、安装程序"></a>1、安装程序</h4><p><img src="https://img-blog.csdnimg.cn/20200217212831876.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2hhb3h1bjA2,size_16,color_FFFFFF,t_70" class="lazyload placeholder" data-srcset="https://img-blog.csdnimg.cn/20200217212831876.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2hhb3h1bjA2,size_16,color_FFFFFF,t_70" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"></p>
+<h4 id="2、选择自定义"><a href="#2、选择自定义" class="headerlink" title="2、选择自定义"></a>2、选择自定义</h4><p><img src="https://img-blog.csdnimg.cn/2020021721284769.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2hhb3h1bjA2,size_16,color_FFFFFF,t_70" class="lazyload placeholder" data-srcset="https://img-blog.csdnimg.cn/2020021721284769.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2hhb3h1bjA2,size_16,color_FFFFFF,t_70" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"></p>
+<h4 id="3、接着next，选择install安装"><a href="#3、接着next，选择install安装" class="headerlink" title="3、接着next，选择install安装"></a>3、接着next，选择install安装</h4><p><img src="https://img-blog.csdnimg.cn/20200217212859504.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2hhb3h1bjA2,size_16,color_FFFFFF,t_70" class="lazyload placeholder" data-srcset="https://img-blog.csdnimg.cn/20200217212859504.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2hhb3h1bjA2,size_16,color_FFFFFF,t_70" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"></p>
+<h4 id="4、环境变量"><a href="#4、环境变量" class="headerlink" title="4、环境变量"></a>4、环境变量</h4><p>右键打开我的电脑——&gt;属性——&gt;高级系统设置——&gt;环境变量</p>
+<p>在系统环境变量处，选择新建，第一项写PATH,第二项填写软件安装的位置，然后一直确定</p>
+<p>命令行输入CMD，查看python是否安装</p>
+<h4 id="5、说明"><a href="#5、说明" class="headerlink" title="5、说明"></a>5、说明</h4><p>如果想要python2和python3环境的，则先将安装过的python3.x进入到安装目录改成Python3.exe</p>
+<p>之后去python官网下载python2.x版本，按上述步骤安装完，并配置环境变量，可以把python2.x.exe修改为python2.exe，这样在CMD中可以直接输入python2使用环境，若不使用也可以，为了美观</p>
+<p>之后分别检测下是否安装成功</p>
+<h2 id="0x05Jdk"><a href="#0x05Jdk" class="headerlink" title="0x05Jdk"></a>0x05Jdk</h2><p>jdk的下载地址为<a target="_blank" rel="noopener" href="https://www.oracle.com/java/technologies/downloads/">https://www.oracle.com/java/technologies/downloads/</a></p>
+<h3 id="Linux-3"><a href="#Linux-3" class="headerlink" title="Linux"></a>Linux</h3><h4 id="1、检测jdk自带的安装包"><a href="#1、检测jdk自带的安装包" class="headerlink" title="1、检测jdk自带的安装包"></a>1、检测jdk自带的安装包</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rpm -qa | grep java</span><br></pre></td></tr></table></figure>
 
-<h3 id="4、启动java容器"><a href="#4、启动java容器" class="headerlink" title="4、启动java容器"></a>4、启动java容器</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run -d -it --name java java</span><br></pre></td></tr></table></figure>
+<h4 id="2、卸载旧的jdk"><a href="#2、卸载旧的jdk" class="headerlink" title="2、卸载旧的jdk"></a>2、卸载旧的jdk</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">yum -y remove tzdata-java.noarch</span><br><span class="line">rpm -e --nodeps <span class="comment">#这里输入要卸载的包#</span></span><br></pre></td></tr></table></figure>
 
-<p>说明：</p>
-<p>run：启动一个镜像容器</p>
-<p>-d：指定容器运行于后台</p>
-<p>-it：-i 和 -t 的缩写；</p>
-<ul>
-<li>-i：以交互模式运行容器，通常与 -t 同时使用</li>
-<li>-t：为容器重新分配一个伪输入终端，通常与 -i 同时使用</li>
-</ul>
-<p>–name：指定容器名字，后续可以通过名字进行容器管理</p>
-<h2 id="0x04Python3"><a href="#0x04Python3" class="headerlink" title="0x04Python3"></a>0x04Python3</h2><p>Linux默认安装了Python2，若需要Python3则另外单独安装</p>
-<h3 id="1、拉取python3镜像"><a href="#1、拉取python3镜像" class="headerlink" title="1、拉取python3镜像"></a>1、拉取python3镜像</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker pull python:<span class="number">3.7</span></span><br></pre></td></tr></table></figure>
+<h4 id="3、查看可安装的jdk版本"><a href="#3、查看可安装的jdk版本" class="headerlink" title="3、查看可安装的jdk版本"></a>3、查看可安装的jdk版本</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum search java|grep jdk</span><br></pre></td></tr></table></figure>
 
-<h3 id="2、挂载目录"><a href="#2、挂载目录" class="headerlink" title="2、挂载目录"></a>2、挂载目录</h3><p>其作用是可借容器环境运行宿主机的脚本</p>
-<p>-v &#x2F;opt&#x2F;python_home:&#x2F;home&#x2F;python_home</p>
-<p>就是将主机上的&#x2F;opt&#x2F;python_home目录挂载到容器内&#x2F;home&#x2F;python_home目录里</p>
-<h3 id="3、运行python容器"><a href="#3、运行python容器" class="headerlink" title="3、运行python容器"></a>3、运行python容器</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run -itd --name python37 -v /opt/python_home:/home/python_home python:<span class="number">3.7</span></span><br></pre></td></tr></table></figure>
+<h4 id="4、安装jdk1-8"><a href="#4、安装jdk1-8" class="headerlink" title="4、安装jdk1.8"></a>4、安装jdk1.8</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum install -y java-1.8.0-openjdk</span><br></pre></td></tr></table></figure>
 
-<h3 id="4、进入python容器"><a href="#4、进入python容器" class="headerlink" title="4、进入python容器"></a>4、进入python容器</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker exec -it python37 /bin/bash</span><br></pre></td></tr></table></figure>
+<h4 id="5、检查java版本"><a href="#5、检查java版本" class="headerlink" title="5、检查java版本"></a>5、检查java版本</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">java -version</span><br></pre></td></tr></table></figure>
 
-<h2 id="0x05Redis"><a href="#0x05Redis" class="headerlink" title="0x05Redis"></a>0x05Redis</h2><h3 id="1、拉取最新redis镜像"><a href="#1、拉取最新redis镜像" class="headerlink" title="1、拉取最新redis镜像"></a>1、拉取最新redis镜像</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker pull redis:latest</span><br></pre></td></tr></table></figure>
+<h4 id="6、查看环境变量"><a href="#6、查看环境变量" class="headerlink" title="6、查看环境变量"></a>6、查看环境变量</h4><p>一般使用命令安装都会自动填充环境变量</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vi /etc/profile</span><br></pre></td></tr></table></figure>
 
-<h3 id="2、准备redis-conf文件"><a href="#2、准备redis-conf文件" class="headerlink" title="2、准备redis.conf文件"></a>2、准备redis.conf文件</h3><p>可以到redis的官网下载压缩包，拿出里面的redis.conf文件</p>
-<p><a target="_blank" rel="noopener" href="http://www.redis.cn/">http://www.redis.cn/</a></p>
-<h3 id="3、配置文件"><a href="#3、配置文件" class="headerlink" title="3、配置文件"></a>3、配置文件</h3><p> <code>bind 127.0.0.1</code> 	注释掉这部分，使redis可以外部访问 </p>
-<p><code>daemonize no</code>		用守护线程的方式启动 </p>
-<p><code>requirepass 你的密码</code>		给redis设置密码 </p>
-<p><code>appendonly yes</code>		redis持久化　　默认是no </p>
-<p><code>tcp-keepalive 300</code> 		防止出现远程主机强迫关闭了一个现有的连接的错误 默认是300</p>
-<h3 id="4、选择从本地挂载到redis容器内的路径"><a href="#4、选择从本地挂载到redis容器内的路径" class="headerlink" title="4、选择从本地挂载到redis容器内的路径"></a>4、选择从本地挂载到redis容器内的路径</h3><p>在本地某个位置创建文件夹，把配置文件存放到文件夹里</p>
-<p>我这里选择&#x2F;usr&#x2F;local&#x2F;redis</p>
-<h3 id="5、启动容器"><a href="#5、启动容器" class="headerlink" title="5、启动容器"></a>5、启动容器</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run -itd -p <span class="number">6379</span>:<span class="number">6379</span> --name redis -v /usr/local/redis/redis.conf:/etc/redis/redis.conf -v /usr/local/redis/data:/data -d redis redis-server /etc/redis/redis.conf --appendonly yes</span><br></pre></td></tr></table></figure>
+<p>在末尾加上</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">JAVA_HOME=/usr/local/jdk/jdk1.8.0_221		<span class="comment">#安装jdk的路径</span></span><br><span class="line">CLASSPATH=<span class="variable">$JAVA_HOME</span>/lib/tools.jar</span><br><span class="line">PATH=<span class="variable">$JAVA_HOME</span>/bin:<span class="variable">$PATH</span></span><br><span class="line"><span class="built_in">export</span> JAVA_HOME CLASSPATH PATH</span><br></pre></td></tr></table></figure>
 
-<p> 说明：</p>
-<p>-p 6379:6379		把容器内的6379端口映射到<a target="_blank" rel="noopener" href="https://cloud.tencent.com/product/cdh?from_column=20065&from=20065">宿主机</a>6379端口 </p>
-<p>-v &#x2F;data&#x2F;redis&#x2F;redis.conf:&#x2F;etc&#x2F;redis&#x2F;redis.conf		把宿主机配置好的redis.conf放到容器内的这个位置中 </p>
-<p>-v &#x2F;data&#x2F;redis&#x2F;data:&#x2F;data		把redis持久化的数据在宿主机内显示，做<a target="_blank" rel="noopener" href="https://cloud.tencent.com/solution/backup?from_column=20065&from=20065">数据备份</a> </p>
-<p>redis-server &#x2F;etc&#x2F;redis&#x2F;redis.conf		这个是关键配置，让redis不是无配置启动，而是按照这个redis.conf的配置启动 </p>
-<p>–appendonly yes		redis启动后数据持久化</p>
-<h2 id="0x06Node"><a href="#0x06Node" class="headerlink" title="0x06Node"></a>0x06Node</h2><h3 id="1、拉取最新镜像"><a href="#1、拉取最新镜像" class="headerlink" title="1、拉取最新镜像"></a>1、拉取最新镜像</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker pull node</span><br></pre></td></tr></table></figure>
+<p>重启生效配置</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">source</span> /etc/profile</span><br></pre></td></tr></table></figure>
 
-<h3 id="2、运行容器"><a href="#2、运行容器" class="headerlink" title="2、运行容器"></a>2、运行容器</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run -it --name node node</span><br></pre></td></tr></table></figure>
+<h4 id="7、测试下环境"><a href="#7、测试下环境" class="headerlink" title="7、测试下环境"></a>7、测试下环境</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">java -version</span><br></pre></td></tr></table></figure>
 
-<h3 id="3、其他"><a href="#3、其他" class="headerlink" title="3、其他"></a>3、其他</h3><p>其中npm命令也会跟随镜像一起安装，命令行npm -version查询npm版本，若返回版本号则安装成功</p>
-<h2 id="0x07补充"><a href="#0x07补充" class="headerlink" title="0x07补充"></a>0x07补充</h2><p>以后有其余常见服务会持续记录到本文章，对学习服务的一个总结，还有一份Windows和Linux的主机版的有空再写一下</p>
+<h4 id="8、jps命令"><a href="#8、jps命令" class="headerlink" title="8、jps命令"></a>8、jps命令</h4><p>jps是java内置的可查询java进程PID的命令</p>
+<h3 id="Windows-3"><a href="#Windows-3" class="headerlink" title="Windows"></a>Windows</h3><h4 id="1、修改安装路径"><a href="#1、修改安装路径" class="headerlink" title="1、修改安装路径"></a>1、修改安装路径</h4><p><img src="https://img-blog.csdnimg.cn/96e69d29cf0f42928c560a48be76f68e.png" class="lazyload placeholder" data-srcset="https://img-blog.csdnimg.cn/96e69d29cf0f42928c560a48be76f68e.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"></p>
+<h4 id="2、一直下一步直到安装完成"><a href="#2、一直下一步直到安装完成" class="headerlink" title="2、一直下一步直到安装完成"></a>2、一直下一步直到安装完成</h4><p><img src="https://img-blog.csdnimg.cn/bf4495a3086b425794b13b174d0eaf15.png" class="lazyload placeholder" data-srcset="https://img-blog.csdnimg.cn/bf4495a3086b425794b13b174d0eaf15.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"></p>
+<h4 id="3、安装完成后测试下"><a href="#3、安装完成后测试下" class="headerlink" title="3、安装完成后测试下"></a>3、安装完成后测试下</h4><h4 id="4、环境变量-1"><a href="#4、环境变量-1" class="headerlink" title="4、环境变量"></a>4、环境变量</h4><p>右键我的电脑——&gt;属性——&gt;系统高级设置——&gt;环境变量——&gt;系统变量中添加以下字符串</p>
+<p>JAVA_HOME &#x3D; JAVA安装的路径<br>CLASSPATH &#x3D; .;%JAVA_HOME%\lib\dt.jar;%JAVA_HOME%\lib\tools.jar<br>Path  &#x3D; %JAVA_HOME%\bin;%JAVA_HOME%\jre\bin;</p>
+<h4 id="5、修改完后重新命令行测试"><a href="#5、修改完后重新命令行测试" class="headerlink" title="5、修改完后重新命令行测试"></a>5、修改完后重新命令行测试</h4><h4 id="6、环境变量不生效问题"><a href="#6、环境变量不生效问题" class="headerlink" title="6、环境变量不生效问题"></a>6、环境变量不生效问题</h4><p>一般正常安装的jdk不会出现问题，但如果先安装了高版本的jdk之后又安装了低版本的jdk，就会在环境变量改变时不会生效。是由于系统自动将java.exe、javaw.exe、javaws.exe三个可执行文件复制到了C:\Windows\System32目录，这个目录的优先级要高于环境变量中JAVA_HOME设置的优先级，所以需要删掉这三个exe再重新使用java -version检测，一般都可以解决问题</p>
+<h2 id="0x06Node"><a href="#0x06Node" class="headerlink" title="0x06Node"></a>0x06Node</h2><p>node下载地址为<a target="_blank" rel="noopener" href="https://nodejs.org/en/download/">https://nodejs.org/en/download/</a></p>
+<h3 id="Linux-4"><a href="#Linux-4" class="headerlink" title="Linux"></a>Linux</h3><h4 id="1、切换目录"><a href="#1、切换目录" class="headerlink" title="1、切换目录"></a>1、切换目录</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> /usr/local/</span><br></pre></td></tr></table></figure>
+
+<h4 id="2、下载node"><a href="#2、下载node" class="headerlink" title="2、下载node"></a>2、下载node</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wget https://nodejs.org/download/release/v14.1.0/node-v14.1.0-linux-x64.tar.gz</span><br></pre></td></tr></table></figure>
+
+<h4 id="3、解压压缩包-1"><a href="#3、解压压缩包-1" class="headerlink" title="3、解压压缩包"></a>3、解压压缩包</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tar -zxvf node-v14.6.0-linux-x64.tar.gz</span><br></pre></td></tr></table></figure>
+
+<h4 id="4、重命名node"><a href="#4、重命名node" class="headerlink" title="4、重命名node"></a>4、重命名node</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">mv</span> node-v14.6.0-linux-x64 nodejs</span><br></pre></td></tr></table></figure>
+
+<h4 id="5、创建软连接-1"><a href="#5、创建软连接-1" class="headerlink" title="5、创建软连接"></a>5、创建软连接</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">ln</span> -s /usr/local/nodejs/bin/node /usr/local/bin/node </span><br><span class="line"><span class="built_in">ln</span> -s /usr/local/nodejs/bin/npm /usr/local/bin/npm</span><br></pre></td></tr></table></figure>
+
+<h4 id="6、配置环境变量"><a href="#6、配置环境变量" class="headerlink" title="6、配置环境变量"></a>6、配置环境变量</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim /etc/profile</span><br></pre></td></tr></table></figure>
+
+<p>在最后一行加上</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">export</span> NODE_HOME=/usr/local/nodejs/		<span class="comment">#安装路径</span></span><br><span class="line"><span class="built_in">export</span> PATH=<span class="variable">$NODE_HOME</span>/bin:<span class="variable">$PATH</span></span><br><span class="line"><span class="built_in">source</span> /etc/profile		<span class="comment">#生效文件</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="7、设置全局模块环境"><a href="#7、设置全局模块环境" class="headerlink" title="7、设置全局模块环境"></a>7、设置全局模块环境</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">npm prefix -g <span class="comment">#查看nodejs模块目录</span></span><br><span class="line">vi /etc/profile</span><br><span class="line"><span class="built_in">export</span> NODE_PATH=/usr/local/nodejs/lib/node_module</span><br><span class="line"><span class="built_in">source</span> /etc/profile		<span class="comment">#生效文件</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="8、测试"><a href="#8、测试" class="headerlink" title="8、测试"></a>8、测试</h4><p>出现版本号说明安装成功</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">node -v</span><br><span class="line">npm -v</span><br></pre></td></tr></table></figure>
+
+<h3 id="Windows-4"><a href="#Windows-4" class="headerlink" title="Windows"></a>Windows</h3><h4 id="1、打开安装包，点next"><a href="#1、打开安装包，点next" class="headerlink" title="1、打开安装包，点next"></a>1、打开安装包，点next</h4><p><img src="https://img-blog.csdnimg.cn/img_convert/62d44f7a4dac7ee97542fcfc51cf0b0d.png" class="lazyload placeholder" data-srcset="https://img-blog.csdnimg.cn/img_convert/62d44f7a4dac7ee97542fcfc51cf0b0d.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"></p>
+<h4 id="2、接收条约"><a href="#2、接收条约" class="headerlink" title="2、接收条约"></a>2、接收条约</h4><p><img src="https://img-blog.csdnimg.cn/img_convert/99e932fe1ab8450c18b8119d1111b262.png" class="lazyload placeholder" data-srcset="https://img-blog.csdnimg.cn/img_convert/99e932fe1ab8450c18b8119d1111b262.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"></p>
+<h4 id="3、修改安装路径"><a href="#3、修改安装路径" class="headerlink" title="3、修改安装路径"></a>3、修改安装路径</h4><p><img src="https://img-blog.csdnimg.cn/img_convert/16e468cb4386e6b63f3d9aa407b70d92.png" class="lazyload placeholder" data-srcset="https://img-blog.csdnimg.cn/img_convert/16e468cb4386e6b63f3d9aa407b70d92.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"></p>
+<h4 id="4、一直next直到安装成功"><a href="#4、一直next直到安装成功" class="headerlink" title="4、一直next直到安装成功"></a>4、一直next直到安装成功</h4><p><img src="https://img-blog.csdnimg.cn/img_convert/a0d8e0f6a2c99119196c0a3146fc21d8.png" class="lazyload placeholder" data-srcset="https://img-blog.csdnimg.cn/img_convert/a0d8e0f6a2c99119196c0a3146fc21d8.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"></p>
+<p><img src="https://img-blog.csdnimg.cn/img_convert/ee489c76265e2586db650af007a62f45.png" class="lazyload placeholder" data-srcset="https://img-blog.csdnimg.cn/img_convert/ee489c76265e2586db650af007a62f45.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"></p>
+<h4 id="5、查看环境变量"><a href="#5、查看环境变量" class="headerlink" title="5、查看环境变量"></a>5、查看环境变量</h4><p>右键我的电脑——&gt;属性——&gt;系统高级设置——&gt;环境变量——&gt;系统变量——&gt;Path</p>
+<p>导入node的安装路径</p>
+<h4 id="6、测试"><a href="#6、测试" class="headerlink" title="6、测试"></a>6、测试</h4><p>若出现版本号说明安装成功</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">node -v</span><br><span class="line">npm -v</span><br></pre></td></tr></table></figure>
+
+<h4 id="7、全局安装包配置"><a href="#7、全局安装包配置" class="headerlink" title="7、全局安装包配置"></a>7、全局安装包配置</h4><p>通常环境下npm install -g 下载包会默认存放到<strong>C:\Users\Administrator\AppData\Roaming\npm\node_modules</strong>下，可以通过npm root -g查看路径</p>
+<p>在node安装目录下创建两个文件夹</p>
+<p>node_global、node_cache</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">npm config <span class="built_in">set</span> prefix <span class="string">&quot;安装路径\node_global&quot;</span></span><br><span class="line">npm config <span class="built_in">set</span> cache <span class="string">&quot;安装路径\node_cache&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>在系统变量中创建变量名<code>NODE_PATH</code>，路径为<code>安装路径\node_global\node_modules</code></p>
+<p>编辑用户变量，将将默认的 C 盘下 <code>APPData\Roaming\npm</code> 修改成 <code>安装路径\nodejs\node_global</code>，点击确定</p>
+<p><img src="https://img-blog.csdnimg.cn/img_convert/861a7e29e225991764120b1af0632cf2.png" class="lazyload placeholder" data-srcset="https://img-blog.csdnimg.cn/img_convert/861a7e29e225991764120b1af0632cf2.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"></p>
+<p>最后在<code>Path</code>里面添加<code>NODE_PATH</code></p>
+<p>全局安装一个express模块</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install express -g   // -g是全局安装的意思</span><br></pre></td></tr></table></figure>
+
+<p>国内源</p>
+<p>npm是国外源，下载某些依赖会比较慢，可以使用更换到国内源</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm config <span class="built_in">set</span> registry https://registry.npm.taobao.org</span><br></pre></td></tr></table></figure>
+
+<p>也可以使用cnpm代替npm</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install -g cnpm --registry=https://registry.npmmirror.com</span><br></pre></td></tr></table></figure>
+
+<h2 id="0x07总结"><a href="#0x07总结" class="headerlink" title="0x07总结"></a>0x07总结</h2><p>暂时总结这么多，以后遇到啥服务操作起来繁琐的就继续总结，end</p>
 
       </div>
       <div class="post-tags-categories">
         
         <div class="tags">
           
-            <a href="/tags/Docker/" class="">
-              Docker
+            <a href="/tags/Windows-Linux/" class="">
+              Windows | Linux
             </a>
           
         </div>
@@ -786,7 +845,7 @@
     </li>
     <li class="post-copyright-link">
     <strong>link:  </strong>
-    <a href="/2023/08/18/服务及环境变量配置(Docker版)/" target="_blank" title="服务及环境变量配置(Docker版)">https://wh1t3zer.github.io/2023/08/18/服务及环境变量配置(Docker版)/</a>
+    <a href="/2023/08/19/服务及环境变量配置(主机版)/" target="_blank" title="服务及环境变量配置(主机版)">https://wh1t3zer.github.io/2023/08/19/服务及环境变量配置(主机版)/</a>
     </li>
     <li class="post-copyright-license">
       <strong>Copyright notice:   </strong>
@@ -808,16 +867,16 @@
   <div class="post-nav-prev post-nav-item">
     <div class="post-nav-img" style="background-size: cover; 
       background-position: center center;">
-      <img class="lazyload lazyload placeholder" src="/medias/5.jpg" class="lazyload placeholder" data-srcset="/medias/5.jpg" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="">
+      <img class="lazyload lazyload placeholder" src="/medias/1.jpg" class="lazyload placeholder" data-srcset="/medias/1.jpg" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="">
     </div>
-    <a href="/2023/08/19/%E6%9C%8D%E5%8A%A1%E5%8F%8A%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F%E9%85%8D%E7%BD%AE(%E4%B8%BB%E6%9C%BA%E7%89%88)/" class="post-nav-link">
+    <a href="/2023/08/24/%E6%94%BB%E5%87%BB%E9%9D%A2%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F%E5%88%9D%E8%AE%BE/" class="post-nav-link">
       <div class="title">
         <i class="fas fa-angle-left"></i> Prev:
-        <div class="title-text">服务及环境变量配置(主机版)</div>
+        <div class="title-text"></div>
       </div>
       
       <!-- <div class="content">
-        0x00前言昨天总结整理了Docker版本的环境配置，这次主要整合的是Windows和Linux系统下的服务环境配置，本
+        
       </div> -->
     </a>
   </div>
@@ -828,15 +887,15 @@
   <div class="post-nav-next post-nav-item">
     <div class="post-nav-img" style="background-size: cover; 
       background-position: center center;">
-      <img class="lazyload lazyload placeholder" src="/medias/10.jpg" class="lazyload placeholder" data-srcset="/medias/10.jpg" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" src="" alt="">
+      <img class="lazyload lazyload placeholder" src="/medias/6.jpg" class="lazyload placeholder" data-srcset="/medias/6.jpg" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" src="" alt="">
     </div>
-    <a href="/2023/07/05/shiro%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0/" class="post-nav-link">
+    <a href="/2023/08/18/%E6%9C%8D%E5%8A%A1%E5%8F%8A%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F%E9%85%8D%E7%BD%AE(Docker%E7%89%88)/" class="post-nav-link">
       <div class="title">
         Next: <i class="fas fa-angle-right"></i>
-        <div class="title-text">shiro反序列化漏洞复现</div>
+        <div class="title-text">服务及环境变量配置(Docker版)</div>
       </div>
       <!-- <div class="content">
-        0x00前言Apache Shiro是一个强大且易用的Java安全框架,执行身份验证、授权、密码和会话管理。使用Shir
+        0x00前言最近服务器在做迁移，有的服务需要重新安装，有些命令太久没使用也忘掉些许，每次迁移都得重新查百度，这样比较麻烦
       </div> -->
     </a>
   </div>
