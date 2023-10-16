@@ -11,7 +11,7 @@
   <!-- Global site tag (gtag.js) - Google Analytics -->
 
 
-  <title>攻击面暴露系统设计 | wh1t3zer</title>
+  <title>攻击面管理系统设计 | wh1t3zer</title>
 
   <link rel="icon" type="image/x-icon, image/vnd.microsoft.icon" href="/favicon.ico">
   <link rel="stylesheet" href="https://at.alicdn.com/t/font_1911880_c1nvbyezg17.css">
@@ -593,14 +593,14 @@
 
 
 <div class="post-detail-header" id="thumbnail_canvas" style="background-repeat: no-repeat; background-size: cover; 
-  background-position: center center;position: relative;background-image:url('/medias/9.jpg')">
+  background-position: center center;position: relative;background-image:url('/medias/14.jpg')">
   <div class="post-detail-header-mask"></div>
   <canvas id="header_canvas"style="position:absolute;bottom:0;pointer-events:none;"></canvas>
   
   <div class="post-detail-header_info-box">
     <div class="title-box">
       <span class="title">
-        攻击面暴露系统设计
+        攻击面管理系统设计
       </span>
     </div>
     
@@ -615,8 +615,8 @@
         <span class="post-detail-header_categories">
           <i class="iconfont iconbookmark1"></i> category：
           
-            <a href="/categories/%E6%94%BB%E5%87%BB%E9%9D%A2-Python-%E5%BE%AE%E6%9C%8D%E5%8A%A1/" class="post-detail-header_category">
-              攻击面 | Python | 微服务
+            <a href="/categories/%E6%94%BB%E5%87%BB%E9%9D%A2-Go-%E5%BE%AE%E6%9C%8D%E5%8A%A1/" class="post-detail-header_category">
+              攻击面 | Go | 微服务
             </a>
           
         </span>
@@ -640,20 +640,234 @@
   <div class="main-content">
     <article class="post post-detail">
       <div class="post-content">
-        <h2 id="0x00前言"><a href="#0x00前言" class="headerlink" title="0x00前言"></a>0x00前言</h2><p>有一段时间没有学习安全渗透方面的内容了，最近一直在搞毕设，题目是攻击面暴露。</p>
-<p>0x01发展背景</p>
-<p>0x02</p>
-<p>0x03架构设计</p>
-<p>0x04技术栈</p>
-<p>0x05</p>
-
+        <p>[TOC]</p>
+<h2 id="0x00前言"><a href="#0x00前言" class="headerlink" title="0x00前言"></a>0x00前言</h2><p>在校最后一年，也到了做毕设的时间，趁有空的时间写记录一下设计，也是对这段时间一个学习软件工程和网络安全的回顾。做的系统是攻击面管理（ASM），设计的过程中经历了磕磕绊绊，还是勉强做了出来。</p>
+<h2 id="0x01发展背景"><a href="#0x01发展背景" class="headerlink" title="0x01发展背景"></a>0x01发展背景</h2><p>谈起攻击面暴露都不陌生，顾名思义就是将易受攻击的主机或系统所产生的漏洞暴露出来，给安全运维人员进行查看。随着底层架构的数字化转型深化，企业业务一定是跨网络、跨云以及跨IT、OT等各种各样设备的，这时再立一道门，已经很难完全覆盖要保护的数字化资产。站在攻击者视角发现系统脆弱性成为一种全新的思路，正所谓“不知攻焉知防”，先于攻击者发现风险才能最大化抵御风险。攻击面管理的价值之处在于它以攻击者视角验证网络安全防御机制、安全设备以及有效性，收敛攻击面，进而达到降低风险的目的。</p>
+<p>在2021年，Gartner首次清晰定义出“攻击面管理”概念，并将其涉及的EASM（外部攻击面管理）和CAASM（网络资产攻击面管理）两项能力，列为“安全运营的关键新兴技术”。Gartner指出到2026年，60%以上的企业安全威胁检测、调查与响应能力将通过风险暴露面管理来实现，目前这个比例不到5%。</p>
+<p>我国攻击面管理的热度不断提升，2022受疫情影响，相关项目的采购数量与上年基本持平，但项目的采购平均规模明显提升，专项项目的比重也从2021年的10.3%增长至2022年的12.7%，用户对攻击面管理的重视程度在不断提升。</p>
+<h2 id="0x02架构设计"><a href="#0x02架构设计" class="headerlink" title="0x02架构设计"></a>0x02架构设计</h2><p>该系统由于存在漏洞扫描、爆破的服务，还存在一些主机探测服务，采用的是微服务架构，整个系统高内聚低耦合，尽量保证每个服务相互独立，互相配合又不互相干扰。</p>
+<p>此处补图…</p>
+<h2 id="0x03功能设计"><a href="#0x03功能设计" class="headerlink" title="0x03功能设计"></a>0x03功能设计</h2><h3 id="3-1资产收集"><a href="#3-1资产收集" class="headerlink" title="3.1资产收集"></a>3.1资产收集</h3><table>
+<thead>
+<tr>
+<th>设备类型</th>
+<th>识别Dell、VMware等</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>操心系统</td>
+<td>识别Linux、Windows等</td>
+</tr>
+<tr>
+<td>IP信息</td>
+<td>运营商、GPS、区域位置信息等</td>
+</tr>
+<tr>
+<td>域名信息</td>
+<td>子域及关联域名、域名注册商、注册日期、DNS解析地址、域名解析器、域名状态等</td>
+</tr>
+<tr>
+<td>资产信息</td>
+<td>服务、端口、协议及其状态</td>
+</tr>
+</tbody></table>
+<h3 id="3-2WebScan"><a href="#3-2WebScan" class="headerlink" title="3.2WebScan"></a>3.2WebScan</h3><table>
+<thead>
+<tr>
+<th>登录页面</th>
+<th>支持爬取、爆破的方式收录登录页面(login、register)</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>上传页面</td>
+<td>支持爬取、爆破的方式收录上传页面(upload)</td>
+</tr>
+<tr>
+<td>子域名</td>
+<td>支持爬取、爆破的方式收录子域名</td>
+</tr>
+<tr>
+<td>主域链接</td>
+<td>支持爬取、爆破的方式收录主域链接</td>
+</tr>
+<tr>
+<td>资源链接</td>
+<td>支持爬取、爆破的方式收录资源链接(前端资源)</td>
+</tr>
+<tr>
+<td>Web服务器</td>
+<td>如: nginx、openresty、apache</td>
+</tr>
+<tr>
+<td>主域标题</td>
+<td>如: 502 Bad Gateway</td>
+</tr>
+<tr>
+<td>网页内容类型</td>
+<td>如: text&#x2F;html; charset&#x3D;utf-8</td>
+</tr>
+</tbody></table>
+<h3 id="3-3攻击暴露和利用"><a href="#3-3攻击暴露和利用" class="headerlink" title="3.3攻击暴露和利用"></a>3.3攻击暴露和利用</h3><table>
+<thead>
+<tr>
+<th>漏洞验证</th>
+<th>支持基于漏洞原理检测并验证漏洞</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>漏洞利用</td>
+<td>支持对已验证漏洞进行攻击利用</td>
+</tr>
+<tr>
+<td>服务代理</td>
+<td>支持对目标服务进行代理。下次仅需访问代理即可，无需直接访问目标</td>
+</tr>
+<tr>
+<td>后渗透</td>
+<td>对漏洞进行植入木马，建立c&#x2F;s通信</td>
+</tr>
+<tr>
+<td>Session会话</td>
+<td>支持对取得控制权的主机进行本地攻击</td>
+</tr>
+<tr>
+<td>插件扩展</td>
+<td>支持用户自定义Poc插件进行扩展(Web提交即可,无需重启服务)</td>
+</tr>
+</tbody></table>
+<h3 id="3-4用户字典爆破"><a href="#3-4用户字典爆破" class="headerlink" title="3.4用户字典爆破"></a>3.4用户字典爆破</h3><table>
+<thead>
+<tr>
+<th>资产服务</th>
+<th>支持ssh、ftp、vnc、mysql、redis、mongodb等开放的服务扫描爆破</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>用户字典</td>
+<td>支持用户自定义用户字典</td>
+</tr>
+<tr>
+<td>密码字典</td>
+<td>支持用户自定义密码字典</td>
+</tr>
+</tbody></table>
+<h3 id="3-5蜜罐识别"><a href="#3-5蜜罐识别" class="headerlink" title="3.5蜜罐识别"></a>3.5蜜罐识别</h3><table>
+<thead>
+<tr>
+<th>开源蜜罐</th>
+<th>支持Dionaea、conpot、Amun、Nependthes、Cowrie等蜜罐识别</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>蜜罐服务</td>
+<td>支持SSH、FTP、S7、IMAP、Telnet等十余种蜜罐服务识别</td>
+</tr>
+<tr>
+<td>插件扩展</td>
+<td>支持用户自定义脚本插件进行扩展(Web提交即可,无需重启服务)</td>
+</tr>
+</tbody></table>
+<h3 id="3-6系统管理"><a href="#3-6系统管理" class="headerlink" title="3.6系统管理"></a>3.6系统管理</h3><table>
+<thead>
+<tr>
+<th>攻击面展示</th>
+<th>支持任务扫描实时展示</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>攻击面展示</strong></td>
+<td>支持资产任务聚合展示</td>
+</tr>
+<tr>
+<td><strong>攻击面展示</strong></td>
+<td>支持首页大盘实时数据展示</td>
+</tr>
+<tr>
+<td><strong>任务配置</strong></td>
+<td>支持配置限定任务执行时间, 并立即生效支持配置任务并发数配置, 并立即生效支持配置任务失败重试次数, 并立即生效支持配置自定义探测端口列表, 并立即生效支持配置自定义域名字典, 并立即生效支持爬虫模式选择(网页渲染型、多线程爬虫), 并立即生效支持配置Web扫描的线程数、超时时间、失败重试次数、超时重试次数, 并立即生效支持cookie爬虫、事件触发型爬虫, 并立即生效支持配置后台登录用户密码, 并立即生效支持配置Web扫描的黑白名单(如后缀、路径), 并立即生效支持自定义选择Poc插件列表, 并立即生效支持自定义选择蜜罐识别插件列表, 并立即生效支持配置权限爆破的线程数, 并立即生效支持配置权限爆破的超时时间、失败重试、超时重试次数, 并立即生效支持配置权限爆破的服务字典、用户字典、密码字典等, 并立即生效</td>
+</tr>
+<tr>
+<td><strong>系统配置</strong></td>
+<td>支持目标配置、网络参数配置、攻击模式配置等</td>
+</tr>
+<tr>
+<td><strong>系统配置</strong></td>
+<td>支持系统数据备份和恢复</td>
+</tr>
+<tr>
+<td><strong>系统配置</strong></td>
+<td>支持定时备份与手动备份</td>
+</tr>
+<tr>
+<td><strong>漏洞管理</strong></td>
+<td>支持认证凭据配置</td>
+</tr>
+<tr>
+<td><strong>漏洞管理</strong></td>
+<td>支持历史漏洞检索及后渗透、会话操作</td>
+</tr>
+<tr>
+<td><strong>漏洞管理</strong></td>
+<td>支持查询在线木马(肉鸡)服务及通讯</td>
+</tr>
+<tr>
+<td><strong>漏洞管理</strong></td>
+<td>支持建立服务代理</td>
+</tr>
+<tr>
+<td><strong>漏洞管理</strong></td>
+<td>支持Poc插件的管理(CURD)</td>
+</tr>
+<tr>
+<td><strong>漏洞管理</strong></td>
+<td>支持蜜罐识别插件的管理(CURD)</td>
+</tr>
+</tbody></table>
+<h2 id="0x04数据库设计"><a href="#0x04数据库设计" class="headerlink" title="0x04数据库设计"></a><strong>0x04数据库设计</strong></h2><h3 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h3><p>对于这个系统，数据库类型采用的是关系型数据库而不是非关系型数据库，数据库选用的是mysql。我认为有几点：1、系统读写并不是高速地、大量地，所以无需使用极高读写性能的非关系型数据库。2、系统内部存在复杂的关系数据，比如蜜罐存在多个类型，一个网站可能对应多个漏洞，一台主机扫描出了多个服务。3、系统使用者可能为内部人员而不是开放所有人，所以没有太大访问量，无需添加更多的服务节点拓展性能。</p>
+<h3 id="表设计"><a href="#表设计" class="headerlink" title="表设计"></a><strong>表设计</strong></h3><h4 id="1、用户管理"><a href="#1、用户管理" class="headerlink" title="1、用户管理"></a>1、用户管理</h4><p>CREATE TABLE <code>Hawkeye_admin</code> (<br>  <code>id</code> bigint(20) NOT NULL COMMENT ‘自增id’,<br>  <code>user_name</code> varchar(255) NOT NULL DEFAULT ‘’ COMMENT ‘用户名’,<br>  <code>salt</code> varchar(50) NOT NULL DEFAULT ‘’ COMMENT ‘盐’,<br>  <code>password</code> varchar(255) NOT NULL DEFAULT ‘’ COMMENT ‘密码’,<br>  <code>create_at</code> datetime NOT NULL DEFAULT ‘1971-01-01 00:00:00’ COMMENT ‘新增时间’,<br>  <code>update_at</code> datetime NOT NULL DEFAULT ‘1971-01-01 00:00:00’ COMMENT ‘更新时间’,<br>  <code>is_delete</code> tinyint(4) NOT NULL DEFAULT ‘0’ COMMENT ‘是否删除’<br>) ENGINE&#x3D;InnoDB DEFAULT CHARSET&#x3D;utf8 COMMENT&#x3D;’管理员表’;</p>
+<h4 id="2、Poc插件"><a href="#2、Poc插件" class="headerlink" title="2、Poc插件"></a>2、Poc插件</h4><p>CREATE TABLE <code>poc_plugin</code> (<br>  <code>id</code> bigint(20) NOT NULL AUTO_INCREMENT COMMENT ‘自增id’,<br>  <code>vul_id</code> varchar(255) NOT NULL DEFAULT ‘’ COMMENT ‘ssvid’,<br>  <code>vul_name</code> varchar(255) NOT NULL DEFAULT ‘’ COMMENT ‘漏洞名’,<br>  <code>vul_type</code> varchar(255) NOT NULL DEFAULT ‘’ COMMENT ‘漏洞类型’,<br>  <code>vul_date</code> datetime NOT NULL DEFAULT ‘1971-01-01 00:00:00’ COMMENT ‘漏洞发布日期’,<br>  <code>version</code> varchar(255) NOT NULL DEFAULT ‘1.0’ COMMENT ‘插件版本’,<br>  <code>author</code> varchar(255) NOT NULL DEFAULT ‘’ COMMENT ‘编写者’,<br>  <code>app_powerLink</code> varchar(255) NOT NULL DEFAULT ‘’ COMMENT ‘产商链接’,<br>  <code>app_name</code> varchar(255) NOT NULL DEFAULT ‘’ COMMENT ‘应用名’,<br>  <code>app_version</code> varchar(255) NOT NULL DEFAULT ‘’ COMMENT ‘应用版本’,<br>  <code>desc</code> varchar(255) NOT NULL DEFAULT ‘’ COMMENT ‘漏洞描述’,<br>  <code>cnnvd</code> varchar(255) NOT NULL DEFAULT ‘’ COMMENT ‘cnnvd’,<br>  <code>cve_id</code> varchar(255) NOT NULL DEFAULT ‘’ COMMENT ‘cve_id’,<br>  <code>rank</code> tinyint(4) NOT NULL DEFAULT ‘5’ COMMENT ‘危险等级’,<br>  <code>default_ports</code> varchar(255) NOT NULL DEFAULT ‘’ COMMENT ‘默认端口’,<br>  <code>default_service</code> varchar(255) NOT NULL DEFAULT ‘’ COMMENT ‘默认服务’,<br>  <code>content</code> text COMMENT ‘脚本内容’,<br>  <code>create_at</code> datetime NOT NULL DEFAULT ‘1971-01-01 00:00:00’ COMMENT ‘新增时间’,<br>  <code>update_at</code> datetime NOT NULL DEFAULT ‘1971-01-01 00:00:00’ COMMENT ‘更新时间’,<br>  <code>is_delete</code> tinyint(4) NOT NULL DEFAULT ‘0’ COMMENT ‘是否删除’,<br>  primary key(id)<br>) ENGINE&#x3D;InnoDB DEFAULT CHARSET&#x3D;utf8 COMMENT&#x3D;’Poc插件表’;</p>
+<h4 id="3、蜜罐插件"><a href="#3、蜜罐插件" class="headerlink" title="3、蜜罐插件"></a>3、蜜罐插件</h4><p>CREATE TABLE <code>trap_plugin</code> (<br>  <code>id</code> bigint(20) NOT NULL AUTO_INCREMENT COMMENT ‘自增id’,<br>  <code>trap_id</code> varchar(255) NOT NULL DEFAULT ‘0000’ COMMENT ‘蜜罐ID’,<br>  <code>name</code> varchar(255) NOT NULL DEFAULT ‘’ COMMENT ‘插件名’,<br>  <code>author</code> varchar(255) NOT NULL DEFAULT ‘’ COMMENT ‘编写者’,<br>  <code>protocol</code> varchar(255) NOT NULL DEFAULT ‘TCP’ COMMENT ‘协议’,<br>  <code>app_name</code> varchar(255) NOT NULL DEFAULT ‘’ COMMENT ‘应用名’,<br>  <code>honeypot</code> varchar(255) NOT NULL DEFAULT ‘’ COMMENT ‘蜜罐名’,<br>  <code>desc</code> varchar(1024) NOT NULL DEFAULT ‘’ COMMENT ‘描述’,<br>  <code>content</code> text COMMENT ‘脚本内容’,<br>  <code>create_at</code> datetime NOT NULL DEFAULT ‘1971-01-01 00:00:00’ COMMENT ‘新增时间’,<br>  <code>update_at</code> datetime NOT NULL DEFAULT ‘1971-01-01 00:00:00’ COMMENT ‘更新时间’,<br>  <code>is_delete</code> tinyint(4) NOT NULL DEFAULT ‘0’ COMMENT ‘是否删除’,<br>  primary key(id)<br>) ENGINE&#x3D;InnoDB DEFAULT CHARSET&#x3D;utf8 COMMENT&#x3D;’trap插件表’;</p>
+<h4 id="4、Poc任务"><a href="#4、Poc任务" class="headerlink" title="4、Poc任务"></a>4、Poc任务</h4><p>CREATE TABLE <code>poc_task</code> (<br>  <code>id</code> bigint(20) NOT NULL AUTO_INCREMENT COMMENT ‘自增id’,<br>  <code>asset_id</code> bigint(20) NOT NULL DEFAULT ‘0’ COMMENT ‘资产id’,<br>  <code>portinfo_id</code> bigint(20) NOT NULL DEFAULT ‘0’ COMMENT ‘端口id’,<br>  <code>status</code> varchar(255) NOT NULL DEFAULT ‘New’ COMMENT ‘任务状态’,<br>  <code>target_list</code> varchar(255) NOT NULL DEFAULT ‘’ COMMENT ‘目标列表’,<br>  <code>task_name</code> varchar(255) NOT NULL DEFAULT ‘’ COMMENT ‘任务名’,<br>  <code>recursion</code> tinyint(4) NOT NULL DEFAULT ‘0’ COMMENT ‘周期’,<br>  <code>create_at</code> datetime NOT NULL DEFAULT ‘1971-01-01 00:00:00’ COMMENT ‘新增时间’,<br>  <code>update_at</code> datetime NOT NULL DEFAULT ‘1971-01-01 00:00:00’ COMMENT ‘更新时间’,<br>  <code>plugin_list</code> varchar(255) NOT NULL DEFAULT ‘’ COMMENT ‘插件列表’,<br>  <code>is_delete</code> tinyint(4) NOT NULL DEFAULT ‘0’ COMMENT ‘是否删除’,<br>  primary key(id)<br>) ENGINE&#x3D;InnoDB DEFAULT CHARSET&#x3D;utf8 COMMENT&#x3D;’Poc任务表’;</p>
+<h4 id="5、普通任务"><a href="#5、普通任务" class="headerlink" title="5、普通任务"></a>5、普通任务</h4><p>CREATE TABLE <code>Hawkeye_task</code> (<br>  <code>id</code> bigint(20) NOT NULL AUTO_INCREMENT COMMENT ‘自增id’,<br>  <code>rule_id</code> bigint(20) NOT NULL DEFAULT ‘0’ COMMENT ‘规则id’,<br>  <code>name</code> varchar(255) NOT NULL DEFAULT ‘’ COMMENT ‘任务名’,<br>  <code>target_list</code> varchar(255) NOT NULL DEFAULT ‘’ COMMENT ‘目标列表’,<br>  <code>web_scan</code> tinyint(4) NOT NULL DEFAULT ‘0’ COMMENT ‘web扫描’,<br>  <code>poc_scan</code> tinyint(4) NOT NULL DEFAULT ‘0’ COMMENT ‘漏洞渗透’,<br>  <code>auth_scan</code> tinyint(4) NOT NULL DEFAULT ‘0’ COMMENT ‘权限爆破’,<br>  <code>trap_scan</code> tinyint(4) NOT NULL DEFAULT ‘0’ COMMENT ‘蜜罐识别’,<br>  <code>recursion</code> tinyint(4) NOT NULL DEFAULT ‘0’ COMMENT ‘周期’,<br>  <code>progress</code> varchar(255) NOT NULL DEFAULT ‘’ COMMENT ‘进程’,<br>  <code>percent</code> tinyint(4) NOT NULL DEFAULT ‘0’ COMMENT ‘百分比’,<br>  <code>status</code> varchar(255) NOT NULL DEFAULT ‘New’ COMMENT ‘任务状态(New,Stop,Failed,Successfully)’,<br>  <code>create_at</code> datetime NOT NULL DEFAULT ‘1971-01-01 00:00:00’ COMMENT ‘新增时间’,<br>  <code>update_at</code> datetime NOT NULL DEFAULT ‘1971-01-01 00:00:00’ COMMENT ‘更新时间’,<br>  <code>is_delete</code> tinyint(4) NOT NULL DEFAULT ‘0’ COMMENT ‘是否删除’,<br>  primary key(id)<br>) ENGINE&#x3D;InnoDB DEFAULT CHARSET&#x3D;utf8 COMMENT&#x3D;’任务表’;</p>
+<h4 id="6、主机资产"><a href="#6、主机资产" class="headerlink" title="6、主机资产"></a>6、主机资产</h4><p>CREATE TABLE <code>Hawkeye_asset</code> (<br>  <code>id</code> bigint(20) NOT NULL AUTO_INCREMENT COMMENT ‘自增id’,<br>  <code>task_id</code> bigint(20) NOT NULL DEFAULT ‘0’ COMMENT ‘任务id’,<br>  <code>ip</code> varchar(255) NOT NULL DEFAULT ‘’ COMMENT ‘ip地址’,<br>  <code>gps</code> varchar(255) NOT NULL DEFAULT ‘’ COMMENT ‘GPS’,<br>  <code>area</code> varchar(255) NOT NULL DEFAULT ‘’ COMMENT ‘区域’,<br>  <code>isp</code> varchar(255) NOT NULL DEFAULT ‘’ COMMENT ‘运营商’,<br>  <code>os</code> varchar(255) NOT NULL DEFAULT ‘’ COMMENT ‘操作系统’,<br>  <code>vendor</code> varchar(255) NOT NULL DEFAULT ‘’ COMMENT ‘设备’,<br>  <code>create_at</code> datetime NOT NULL DEFAULT ‘1971-01-01 00:00:00’ COMMENT ‘新增时间’,<br>  <code>is_delete</code> tinyint(4) NOT NULL DEFAULT ‘0’ COMMENT ‘是否删除’,<br>  primary key(id)<br>) ENGINE&#x3D;InnoDB DEFAULT CHARSET&#x3D;utf8 COMMENT&#x3D;’资产表’;</p>
+<h4 id="7、域名"><a href="#7、域名" class="headerlink" title="7、域名"></a>7、域名</h4><p>CREATE TABLE <code>Hawkeye_domain</code> (<br>  <code>id</code> bigint(20) NOT NULL AUTO_INCREMENT COMMENT ‘自增id’,<br>  <code>asset_id</code> bigint(20) NOT NULL DEFAULT ‘0’ COMMENT ‘资产id’,<br>  <code>domain</code> varchar(255) NOT NULL DEFAULT ‘’ COMMENT ‘域名’,<br>  <code>subdomain_list</code> varchar(255) NOT NULL DEFAULT ‘’ COMMENT ‘子域列表’,<br>  <code>registrar</code> varchar(255) NOT NULL DEFAULT ‘’ COMMENT ‘注册商’,<br>  <code>register_date</code> varchar(255) NOT NULL DEFAULT ‘’ COMMENT ‘注册日期’,<br>  <code>name_server</code> varchar(255) NOT NULL DEFAULT ‘’ COMMENT ‘DNS解析地址’,<br>  <code>domain_server</code> varchar(255) NOT NULL DEFAULT ‘’ COMMENT ‘域名解析器’,<br>  <code>status</code> varchar(255) NOT NULL DEFAULT ‘’ COMMENT ‘状态’,<br>  primary key(id)<br>) ENGINE&#x3D;InnoDB DEFAULT CHARSET&#x3D;utf8 COMMENT&#x3D;’域名表’;</p>
+<h4 id="8、主机服务"><a href="#8、主机服务" class="headerlink" title="8、主机服务"></a>8、主机服务</h4><p>CREATE TABLE <code>Hawkeye_portinfo</code> (<br>  <code>id</code> bigint(20) NOT NULL AUTO_INCREMENT COMMENT ‘自增id’,<br>  <code>asset_id</code> bigint(20) NOT NULL DEFAULT ‘0’ COMMENT ‘资产id’,<br>  <code>port</code> varchar(255) NOT NULL DEFAULT ‘’ COMMENT ‘端口’,<br>  <code>name</code> varchar(255) NOT NULL DEFAULT ‘’ COMMENT ‘服务(ssh,mysql,http)’,<br>  <code>state</code> varchar(255) NOT NULL DEFAULT ‘’ COMMENT ‘状态’,<br>  <code>product</code> varchar(255) NOT NULL DEFAULT ‘’ COMMENT ‘应用(OpenSSH,nginx)’,<br>  <code>version</code> varchar(255) NOT NULL DEFAULT ‘’ COMMENT ‘版本(7.4,syn-ack)’,<br>  <code>extrainfo</code> varchar(255) NOT NULL DEFAULT ‘’ COMMENT ‘protocol 2.0,Servlet 2.5’,<br>  <code>conf</code> varchar(255) NOT NULL DEFAULT ‘’ COMMENT ‘10’,<br>  <code>cpe</code> varchar(255) NOT NULL DEFAULT ‘’ COMMENT ‘指纹cpe:&#x2F;a:openbsd:openssh:7.4,10’,<br>  primary key(id)<br>) ENGINE&#x3D;InnoDB DEFAULT CHARSET&#x3D;utf8 COMMENT&#x3D;’服务表’;</p>
+<h4 id="9、web信息"><a href="#9、web信息" class="headerlink" title="9、web信息"></a>9、web信息</h4><p>CREATE TABLE <code>Hawkeye_webinfo</code> (<br>  <code>id</code> bigint(20) NOT NULL AUTO_INCREMENT COMMENT ‘自增id’,<br>  <code>port_id</code> bigint(20) NOT NULL DEFAULT ‘0’ COMMENT ‘端口id’,<br>  <code>start_url</code> varchar(255) NOT NULL DEFAULT ‘’ COMMENT ‘起始URL’,<br>  <code>title</code> varchar(255) NOT NULL DEFAULT ‘’ COMMENT ‘站点标题’,<br>  <code>server</code> varchar(255) NOT NULL DEFAULT ‘’ COMMENT ‘Web服务器’,<br>  <code>content_type</code> varchar(255) NOT NULL DEFAULT ‘’ COMMENT ‘内容类型’,<br>  <code>login_list</code> varchar(1024) NOT NULL DEFAULT ‘’ COMMENT ‘登录页列表’,<br>  <code>upload_list</code> varchar(1024) NOT NULL DEFAULT ‘’ COMMENT ‘上传页面列表’,<br>  <code>sub_domain</code> varchar(1024) NOT NULL DEFAULT ‘’ COMMENT ‘子域名列表’,<br>  <code>route_list</code> text COMMENT ‘URL列表’,<br>  <code>resource_list</code> text COMMENT ‘资源列表’,<br>  primary key(id)<br>) ENGINE&#x3D;InnoDB DEFAULT CHARSET&#x3D;utf8 COMMENT&#x3D;’Web信息表’;</p>
+<h4 id="10、漏洞管理"><a href="#10、漏洞管理" class="headerlink" title="10、漏洞管理"></a>10、漏洞管理</h4><p>CREATE TABLE <code>Hawkeye_vulinfo</code> (<br>  <code>id</code> bigint(20) NOT NULL AUTO_INCREMENT COMMENT ‘自增id’,<br>  <code>asset_id</code> bigint(20) NOT NULL DEFAULT ‘0’ COMMENT ‘资产id’,<br>  <code>port_id</code> bigint(20) NOT NULL DEFAULT ‘0’ COMMENT ‘端口id’,<br>  <code>plugin_id</code> bigint(20) NOT NULL DEFAULT ‘0’ COMMENT ‘插件ID’,<br>  <code>verify_url</code> varchar(1024) NOT NULL DEFAULT ‘’ COMMENT ‘漏洞验证URL’,<br>  <code>verify_payload</code> text COMMENT ‘漏洞验证Payload’,<br>  <code>verify_result</code> varchar(1024) NOT NULL DEFAULT ‘’ COMMENT ‘漏洞验证Result’,<br>  <code>exploit_url</code> varchar(1024) NOT NULL DEFAULT ‘’ COMMENT ‘漏洞利用URL’,<br>  <code>exploit_payload</code> text COMMENT ‘漏洞利用Payload’,<br>  <code>exploit_result</code> varchar(1024) NOT NULL DEFAULT ‘’ COMMENT ‘漏洞利用Result’,<br>  <code>webshell_url</code> varchar(1024) NOT NULL DEFAULT ‘’ COMMENT ‘Webshell URL’,<br>  <code>webshell_payload</code> text COMMENT ‘Webshell Payload’,<br>  <code>webshell_result</code> varchar(1024) NOT NULL DEFAULT ‘’ COMMENT ‘Webshell Result’,<br>  <code>trojan_url</code> varchar(1024) NOT NULL DEFAULT ‘’ COMMENT ‘Trojan URL’,<br>  <code>trojan_payload</code> text COMMENT ‘Trojan Payload’,<br>  <code>trojan_result</code> varchar(1024) NOT NULL DEFAULT ‘’ COMMENT ‘Trojan Result’,<br>  <code>create_at</code> datetime NOT NULL DEFAULT ‘1971-01-01 00:00:00’ COMMENT ‘新增时间’,<br>  <code>is_delete</code> tinyint(4) NOT NULL DEFAULT ‘0’ COMMENT ‘是否删除’,<br>  primary key(id)<br>) ENGINE&#x3D;InnoDB DEFAULT CHARSET&#x3D;utf8 COMMENT&#x3D;’漏洞表’;</p>
+<h4 id="11、蜜罐识别"><a href="#11、蜜罐识别" class="headerlink" title="11、蜜罐识别"></a>11、蜜罐识别</h4><p>CREATE TABLE <code>Hawkeye_trap</code> (<br>  <code>id</code> bigint(20) NOT NULL AUTO_INCREMENT COMMENT ‘自增id’,<br>  <code>asset_id</code> bigint(20) NOT NULL DEFAULT ‘0’ COMMENT ‘资产id’,<br>  <code>port_id</code> bigint(20) NOT NULL DEFAULT ‘0’ COMMENT ‘端口id’,<br>  <code>plugin_id</code> bigint(20) NOT NULL DEFAULT ‘0’ COMMENT ‘插件id’,<br>  <code>verify</code> varchar(1024) NOT NULL DEFAULT ‘’ COMMENT ‘验证项’,<br>  <code>trap_id</code> varchar(255) NOT NULL DEFAULT ‘0000’ COMMENT ‘蜜罐ID’,<br>  <code>name</code> varchar(255) NOT NULL DEFAULT ‘’ COMMENT ‘插件名’,<br>  <code>protocol</code> varchar(255) NOT NULL DEFAULT ‘TCP’ COMMENT ‘协议’,<br>  <code>app_name</code> varchar(255) NOT NULL DEFAULT ‘’ COMMENT ‘应用名’,<br>  <code>honeypot</code> varchar(255) NOT NULL DEFAULT ‘’ COMMENT ‘蜜罐名’,<br>  <code>desc</code> varchar(1024) NOT NULL DEFAULT ‘’ COMMENT ‘描述’,<br>  <code>create_at</code> datetime NOT NULL DEFAULT ‘1971-01-01 00:00:00’ COMMENT ‘新增时间’,<br>  primary key(id)<br>) ENGINE&#x3D;InnoDB DEFAULT CHARSET&#x3D;utf8 COMMENT&#x3D;’蜜罐识别表’;</p>
+<h4 id="12、服务权限（用户是否正确，当前用户权限）"><a href="#12、服务权限（用户是否正确，当前用户权限）" class="headerlink" title="12、服务权限（用户是否正确，当前用户权限）"></a>12、服务权限（用户是否正确，当前用户权限）</h4><p>CREATE TABLE <code>Hawkeye_auth</code> (<br>  <code>id</code> bigint(20) NOT NULL AUTO_INCREMENT COMMENT ‘自增id’,<br>  <code>asset_id</code> bigint(20) NOT NULL DEFAULT ‘0’ COMMENT ‘资产id’,<br>  <code>port_id</code> bigint(20) NOT NULL DEFAULT ‘0’ COMMENT ‘端口id’,<br>  <code>target</code> varchar(255) NOT NULL DEFAULT ‘’ COMMENT ‘目标’,<br>  <code>service</code> varchar(255) NOT NULL DEFAULT ‘’ COMMENT ‘服务’,<br>  <code>username</code> varchar(255) NOT NULL DEFAULT ‘’ COMMENT ‘用户名’,<br>  <code>password</code> varchar(255) NOT NULL DEFAULT ‘’ COMMENT ‘密码’,<br>  <code>command</code> varchar(255) NOT NULL DEFAULT ‘’ COMMENT ‘验证命令’,<br>  primary key(id)<br>) ENGINE&#x3D;InnoDB DEFAULT CHARSET&#x3D;utf8 COMMENT&#x3D;’服务权限表’;</p>
+<h4 id="13、任务规则"><a href="#13、任务规则" class="headerlink" title="13、任务规则"></a>13、任务规则</h4><p>CREATE TABLE <code>task_rule</code> (<br>  <code>id</code> bigint(20) NOT NULL AUTO_INCREMENT COMMENT ‘自增id’,<br>  <code>trojan_cmd</code> varchar(255) NOT NULL DEFAULT ‘’ COMMENT ‘木马注入payload的命令’,<br>  <code>port_list</code> varchar(255) NOT NULL DEFAULT ‘’ COMMENT ‘端口列表’,<br>  <code>domain_dict</code> varchar(255) NOT NULL DEFAULT ‘’ COMMENT ‘域名字典’,<br>  <code>user_dict</code> varchar(255) NOT NULL DEFAULT ‘’ COMMENT ‘用户字典’,<br>  <code>passwd_dict</code> varchar(255) NOT NULL DEFAULT ‘’ COMMENT ‘密码字典’,<br>  <code>create_at</code> datetime NOT NULL DEFAULT ‘1971-01-01 00:00:00’ COMMENT ‘新增时间’,<br>  primary key(id)<br>) ENGINE&#x3D;InnoDB DEFAULT CHARSET&#x3D;utf8 COMMENT&#x3D;’任务规则表’;</p>
+<h2 id="0x05部署设计"><a href="#0x05部署设计" class="headerlink" title="0x05部署设计"></a><strong>0x05部署设计</strong></h2><p>部署总体为分布式部署，而部分的服务使用单机部署或集群部署，可通过文件配置选择其中一种方式</p>
+<p>分布式部署：把一个业务，拆分成多个业务，然后部署到不同的服务器上</p>
+<p>单机部署：所有的业务全部写在一个项目中，部署服务到一台服务器上</p>
+<p>集群部署：集群就是单机的“复制”，同一个业务，部署在多个服务器上(不同的服务器运行同样的代码，干同一件事。如果一台死机，另一台可以起作用，不影响整个程序的运行)</p>
+<p>单机部署</p>
+<p>一台服务器作为主节点运行Web服务</p>
+<p>一台服务器作为子节点运行漏洞扫描等需要调用rpc服务脚本</p>
+<p>一台服务器作为子节点运行Redis和mysql</p>
+<p>一台服务器作为consul服务</p>
+<p>此处补图。。。</p>
+<p>集群部署</p>
+<p>N台服务器作为子节点部署集群Redis</p>
+<p>N台服务器作为子节点部署集群Mysql，其中分为主从数据库</p>
+<p>N台服务器作为子节点部署集群consul服务</p>
+<p>N台服务器作为子节点运行漏洞扫描等需要调用rpc服务脚本</p>
+<p>一台服务器作为主节点Web服务</p>
+<p>此处补图。。。</p>
+<h2 id="0x06技术栈"><a href="#0x06技术栈" class="headerlink" title="0x06技术栈"></a><strong>0x06技术栈</strong></h2><p>总体采用Go-micro微服务架构</p>
+<p>前端基于Vue框架进行开发，UI风格参考element-ui</p>
+<p>后端Web端采用Go语言，基于Gin框架进行开发。系统所需脚本如漏洞扫描、服务探测等子节点运行所需脚本采用Python语言</p>
+<p>注册中心采用的是Consul，Consul可进行服务发现、配置中心、健康检查等</p>
+<p>使用RPC远程过程调用技术，采取的是google研发的gRPC框架。其中RPC调用的方式采取轮询模式的负载均衡，保证多个节点公平且合理地使用</p>
+<p>数据存储采用的是Mysql数据库，持久化数据库使用的是Redis</p>
+<h2 id="0x07总结"><a href="#0x07总结" class="headerlink" title="0x07总结"></a><strong>0x07总结</strong></h2>
       </div>
       <div class="post-tags-categories">
         
         <div class="tags">
           
-            <a href="/tags/%E6%94%BB%E5%87%BB%E9%9D%A2-Python-%E5%BE%AE%E6%9C%8D%E5%8A%A1/" class="">
-              攻击面 | Python | 微服务
+            <a href="/tags/%E6%94%BB%E5%87%BB%E9%9D%A2-Go-Micro/" class="">
+              攻击面 | Go| Micro
             </a>
           
         </div>
@@ -667,7 +881,7 @@
     </li>
     <li class="post-copyright-link">
     <strong>link:  </strong>
-    <a href="/2023/09/14/攻击面暴露设计/" target="_blank" title="攻击面暴露系统设计">https://wh1t3zer.github.io/2023/09/14/攻击面暴露设计/</a>
+    <a href="/2023/09/14/攻击面暴露设计/" target="_blank" title="攻击面管理系统设计">https://wh1t3zer.github.io/2023/09/14/攻击面暴露设计/</a>
     </li>
     <li class="post-copyright-license">
       <strong>Copyright notice:   </strong>
