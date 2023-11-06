@@ -309,15 +309,6 @@
                     </a>
                   </li>
                   
-                  <li>
-                    <a href="/homepage/index.html">
-                      
-                      <i class="fas fa-paper-plane" style="margin-top: -20px;"></i>
-                      
-                      <span>关于我</span>
-                    </a>
-                  </li>
-                  
                 </ul>
               
             </li>
@@ -478,15 +469,6 @@
                     </a>
                   </li>
                   
-                  <li>
-                    <a href="/homepage/index.html">
-                      
-                      <i class="fas fa-paper-plane" style="margin-top: -20px;"></i>
-                      
-                      <span>关于我</span>
-                    </a>
-                  </li>
-                  
                 </ul>
               
             </li>
@@ -593,7 +575,7 @@
 
 
 <div class="post-detail-header" id="thumbnail_canvas" style="background-repeat: no-repeat; background-size: cover; 
-  background-position: center center;position: relative;background-image:url('/medias/9.jpg')">
+  background-position: center center;position: relative;background-image:url('/medias/img9.jpg')">
   <div class="post-detail-header-mask"></div>
   <canvas id="header_canvas"style="position:absolute;bottom:0;pointer-events:none;"></canvas>
   
@@ -730,7 +712,7 @@
   <div class="post-nav-prev post-nav-item">
     <div class="post-nav-img" style="background-size: cover; 
       background-position: center center;">
-      <img class="lazyload lazyload placeholder" src="/medias/7.jpg" class="lazyload placeholder" data-srcset="/medias/7.jpg" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="">
+      <img class="lazyload lazyload placeholder" src="/medias/img7.jpg" class="lazyload placeholder" data-srcset="/medias/img7.jpg" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="">
     </div>
     <a href="/2023/01/01/JAVA%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E5%88%A9%E7%94%A8/" class="post-nav-link">
       <div class="title">
@@ -750,7 +732,7 @@
   <div class="post-nav-next post-nav-item">
     <div class="post-nav-img" style="background-size: cover; 
       background-position: center center;">
-      <img class="lazyload lazyload placeholder" src="/medias/5.jpg" class="lazyload placeholder" data-srcset="/medias/5.jpg" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" src="" alt="">
+      <img class="lazyload lazyload placeholder" src="/medias/img5.jpg" class="lazyload placeholder" data-srcset="/medias/img5.jpg" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" src="" alt="">
     </div>
     <a href="/2022/10/29/PHP%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E9%9D%B6%E5%9C%BA/" class="post-nav-link">
       <div class="title">
@@ -770,89 +752,6 @@
     
 
     <!-- 打赏 -->
-    
-      <div id="appDonate" class="post-donate">
-  <div id="donate_board" class="donate_bar center" ref="donate">
-    <a id="btn_donate" class="btn_donate" href="javascript:;" title="打赏" @click="showDialogDrawer()"></a>
-  </div>
-  <transition name="fade">
-    <div 
-      class="donate-box-mask"
-      v-cloak 
-      v-show="visible"
-      @click="cancelDialogDrawer()"
-    >
-    </div>
-  </transition>
-  <transition name="bounce">
-    <div class="donate-box" v-cloak v-show="visible">
-      <div class="donate-box_close">
-        <i class="fas fa-times" aria-hidden="true" @click="cancelDialogDrawer" pointer></i>
-      </div>
-      <div class="donate-box_title">
-        <h4>
-          你的赏识是我前进的动力
-        </h4>
-      </div>
-      <div class="donate-box_tab">
-        <div class="Alipay" pointer :class="{'active': tabActive === 'Alipay'}" @click="changeTabActive('Alipay')">
-          支付宝
-        </div>
-        <div class="WeChatpay" pointer :class="{'active': tabActive === 'WeChatpay'}" @click="changeTabActive('WeChatpay')">
-          微信
-        </div>
-      </div>
-      <div class="donate-box_img">
-        <div class="AlipayImg" v-show="tabActive === 'Alipay'">
-          <img src="/medias/1.jpg" class="lazyload placeholder" data-srcset="/medias/1.jpg" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="支付宝打赏" />
-        </div> 
-        <div class="WeChatpayImg" v-show="tabActive === 'WeChatpay'">
-          <img src="/medias/2.jpg" class="lazyload placeholder" data-srcset="/medias/2.jpg" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="微信打赏" />
-        </div>
-      </div>
-    </div>
-  </transition>
-</div>
-
-<script>
-  var body = document.body || document.documentElement || window;
-  var vm = new Vue({
-    el: '#appDonate',
-    data: {
-      visible: false,
-      tabActive: 'Alipay',
-      top: 0,
-    },
-    computed: {
-    },
-    mounted() {
-    },
-    methods: {
-      showDialogDrawer() {
-        this.visible = true;
-        // 防止页面滚动，只能让弹框滚动
-        // function getScroll() {
-        //   return {
-        //     left: window.pageXOffset || document.documentElement.scrollLeft || document.body.scrollLeft || 0,
-        //     top: window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0
-        //   };
-        // }
-        this.top = $(document).scrollTop() // or getScroll().top
-        // console.log('aa', $('.main-content'));
-        body.style.cssText = 'overflow: hidden;';
-      },
-      cancelDialogDrawer() {
-        this.visible = false;
-        body.removeAttribute('style');
-        $(document).scrollTop(this.top)
-      },
-      changeTabActive(name) {
-        this.tabActive = name;
-      }
-    },
-    created() {}
-  })
-</script>
     
 
     <!-- 分享 -->

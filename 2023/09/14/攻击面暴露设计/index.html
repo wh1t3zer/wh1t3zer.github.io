@@ -309,15 +309,6 @@
                     </a>
                   </li>
                   
-                  <li>
-                    <a href="/homepage/index.html">
-                      
-                      <i class="fas fa-paper-plane" style="margin-top: -20px;"></i>
-                      
-                      <span>关于我</span>
-                    </a>
-                  </li>
-                  
                 </ul>
               
             </li>
@@ -478,15 +469,6 @@
                     </a>
                   </li>
                   
-                  <li>
-                    <a href="/homepage/index.html">
-                      
-                      <i class="fas fa-paper-plane" style="margin-top: -20px;"></i>
-                      
-                      <span>关于我</span>
-                    </a>
-                  </li>
-                  
                 </ul>
               
             </li>
@@ -593,7 +575,7 @@
 
 
 <div class="post-detail-header" id="thumbnail_canvas" style="background-repeat: no-repeat; background-size: cover; 
-  background-position: center center;position: relative;background-image:url('/medias/14.jpg')">
+  background-position: center center;position: relative;background-image:url('/medias/img14.jpg')">
   <div class="post-detail-header-mask"></div>
   <canvas id="header_canvas"style="position:absolute;bottom:0;pointer-events:none;"></canvas>
   
@@ -858,9 +840,10 @@
 <p>前端基于Vue框架进行开发，UI风格参考element-ui</p>
 <p>后端Web端采用Go语言，基于Gin框架进行开发。系统所需脚本如漏洞扫描、服务探测等子节点运行所需脚本采用Python语言</p>
 <p>注册中心采用的是Consul，Consul可进行服务发现、配置中心、健康检查等</p>
-<p>使用RPC远程过程调用技术，采取的是google研发的gRPC框架。其中RPC调用的方式采取轮询模式的负载均衡，保证多个节点公平且合理地使用</p>
+<p>使用RPC远程过程调用技术，采取的是google研发的gRPC框架。其中RPC调用采取双R轮询模式的负载均衡，保证多个节点公平且合理地使用ß</p>
 <p>数据存储采用的是Mysql数据库，持久化数据库使用的是Redis</p>
-<h2 id="0x07总结"><a href="#0x07总结" class="headerlink" title="0x07总结"></a><strong>0x07总结</strong></h2>
+<h2 id="0x07总结"><a href="#0x07总结" class="headerlink" title="0x07总结"></a><strong>0x07总结</strong></h2><p>系统使用的技术栈对于目前来说还是比较新颖，微服务架构将会是未来项目开发中常见的架构。对于一些资源消耗高，主机利用率高的项目来说，微服务架构是相较于单体架构来说利用率最高。尽管如此，也不能每个项目都要使用微服务的架构，万物皆有利弊，当主机消耗资源未能达到一定数量的时候，性能会下降，因为每台主机资源都是独立的，交互起来没有单体架构交互流畅。并且在预算不充足的情况下，多台主机会消耗大量资金，若考虑到成本花费，当营收不及成本时也是非常吃亏。</p>
+
       </div>
       <div class="post-tags-categories">
         
@@ -899,13 +882,33 @@
 
 
 
+  
+  <div class="post-nav-prev post-nav-item">
+    <div class="post-nav-img" style="background-size: cover; 
+      background-position: center center;">
+      <img class="lazyload lazyload placeholder" src="/medias/img10.jpg" class="lazyload placeholder" data-srcset="/medias/img10.jpg" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="">
+    </div>
+    <a href="/2023/10/22/SQL%E6%B3%A8%E5%85%A5%E6%80%BB%E7%BB%93/" class="post-nav-link">
+      <div class="title">
+        <i class="fas fa-angle-left"></i> Prev:
+        <div class="title-text">SQL注入总结</div>
+      </div>
+      
+      <!-- <div class="content">
+        0x00前言mysql.innodb_schema_stat
+sys.x$statement_analysis
+sys.
+      </div> -->
+    </a>
+  </div>
+
 
 
   
   <div class="post-nav-next post-nav-item">
     <div class="post-nav-img" style="background-size: cover; 
       background-position: center center;">
-      <img class="lazyload lazyload placeholder" src="/medias/5.jpg" class="lazyload placeholder" data-srcset="/medias/5.jpg" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" src="" alt="">
+      <img class="lazyload lazyload placeholder" src="/medias/img5.jpg" class="lazyload placeholder" data-srcset="/medias/img5.jpg" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" src="" alt="">
     </div>
     <a href="/2023/08/19/%E6%9C%8D%E5%8A%A1%E5%8F%8A%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F%E9%85%8D%E7%BD%AE(%E4%B8%BB%E6%9C%BA%E7%89%88)/" class="post-nav-link">
       <div class="title">
@@ -924,89 +927,6 @@
     
 
     <!-- 打赏 -->
-    
-      <div id="appDonate" class="post-donate">
-  <div id="donate_board" class="donate_bar center" ref="donate">
-    <a id="btn_donate" class="btn_donate" href="javascript:;" title="打赏" @click="showDialogDrawer()"></a>
-  </div>
-  <transition name="fade">
-    <div 
-      class="donate-box-mask"
-      v-cloak 
-      v-show="visible"
-      @click="cancelDialogDrawer()"
-    >
-    </div>
-  </transition>
-  <transition name="bounce">
-    <div class="donate-box" v-cloak v-show="visible">
-      <div class="donate-box_close">
-        <i class="fas fa-times" aria-hidden="true" @click="cancelDialogDrawer" pointer></i>
-      </div>
-      <div class="donate-box_title">
-        <h4>
-          你的赏识是我前进的动力
-        </h4>
-      </div>
-      <div class="donate-box_tab">
-        <div class="Alipay" pointer :class="{'active': tabActive === 'Alipay'}" @click="changeTabActive('Alipay')">
-          支付宝
-        </div>
-        <div class="WeChatpay" pointer :class="{'active': tabActive === 'WeChatpay'}" @click="changeTabActive('WeChatpay')">
-          微信
-        </div>
-      </div>
-      <div class="donate-box_img">
-        <div class="AlipayImg" v-show="tabActive === 'Alipay'">
-          <img src="/medias/1.jpg" class="lazyload placeholder" data-srcset="/medias/1.jpg" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="支付宝打赏" />
-        </div> 
-        <div class="WeChatpayImg" v-show="tabActive === 'WeChatpay'">
-          <img src="/medias/2.jpg" class="lazyload placeholder" data-srcset="/medias/2.jpg" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="微信打赏" />
-        </div>
-      </div>
-    </div>
-  </transition>
-</div>
-
-<script>
-  var body = document.body || document.documentElement || window;
-  var vm = new Vue({
-    el: '#appDonate',
-    data: {
-      visible: false,
-      tabActive: 'Alipay',
-      top: 0,
-    },
-    computed: {
-    },
-    mounted() {
-    },
-    methods: {
-      showDialogDrawer() {
-        this.visible = true;
-        // 防止页面滚动，只能让弹框滚动
-        // function getScroll() {
-        //   return {
-        //     left: window.pageXOffset || document.documentElement.scrollLeft || document.body.scrollLeft || 0,
-        //     top: window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0
-        //   };
-        // }
-        this.top = $(document).scrollTop() // or getScroll().top
-        // console.log('aa', $('.main-content'));
-        body.style.cssText = 'overflow: hidden;';
-      },
-      cancelDialogDrawer() {
-        this.visible = false;
-        body.removeAttribute('style');
-        $(document).scrollTop(this.top)
-      },
-      changeTabActive(name) {
-        this.tabActive = name;
-      }
-    },
-    created() {}
-  })
-</script>
     
 
     <!-- 分享 -->
