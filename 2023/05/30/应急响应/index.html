@@ -630,10 +630,10 @@
 <p>(1)询问管理员</p>
 <p>(2)使用CMD访问服务器IP端口检查，-p 端口</p>
 <p>未开放端口</p>
-<p><img src="https://raw.githubusercontent.com/wh1t3zer/recordCTF/main/imgs/202305311354545.png" class="lazyload placeholder" data-srcset="https://raw.githubusercontent.com/wh1t3zer/recordCTF/main/imgs/202305311354545.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/wh1t3zer/recordCTF/imgs/202305311354545.png" class="lazyload placeholder" data-srcset="https://cdn.jsdelivr.net/gh/wh1t3zer/recordCTF/imgs/202305311354545.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"></p>
 <p>2、检查服务器是否存在可疑账号或新增账号</p>
 <p>cmd窗口输入<strong>lusrmgr.msc</strong>命令，该命令用于查看是否有新增账号，若在管理员组内发现新增，立即禁用或删除</p>
-<p><img src="https://raw.githubusercontent.com/wh1t3zer/recordCTF/main/imgs/202305311354147.png" class="lazyload placeholder" data-srcset="https://raw.githubusercontent.com/wh1t3zer/recordCTF/main/imgs/202305311354147.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/wh1t3zer/recordCTF/imgs/202305311354147.png" class="lazyload placeholder" data-srcset="https://cdn.jsdelivr.net/gh/wh1t3zer/recordCTF/imgs/202305311354147.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"></p>
 <p>3、查看服务器是否存在隐藏账号、克隆账号</p>
 <p>(1)打开注册表查看管理员对应键值</p>
 <p>(2)使用D盾_web查杀工具，可以对克隆账号检测</p>
@@ -641,7 +641,7 @@
 <p>一般账号的后面是没有$符号的，隐藏账号通常会在最后会由一个$</p>
 <p>4、结合日志，查看管理员登录时间和用户是否存在异常</p>
 <p>(1)Win+R或CMD窗口运行<strong>eventvwr.msc</strong>，打开事件查看器</p>
-<p><img src="https://raw.githubusercontent.com/wh1t3zer/recordCTF/main/imgs/202305311356693.png" class="lazyload placeholder" data-srcset="https://raw.githubusercontent.com/wh1t3zer/recordCTF/main/imgs/202305311356693.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/wh1t3zer/recordCTF/imgs/202305311356693.png" class="lazyload placeholder" data-srcset="https://cdn.jsdelivr.net/gh/wh1t3zer/recordCTF/imgs/202305311356693.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"></p>
 <p>(2)使用Log Parser工具导出Windows安全日志</p>
 <h4 id="二、检查异常的端口和进程"><a href="#二、检查异常的端口和进程" class="headerlink" title="二、检查异常的端口和进程"></a>二、检查异常的端口和进程</h4><p>1、检查端口是否存在外连IP，可疑链接</p>
 <p>(1)CMD窗口运行<strong>netstat -ano</strong>命令查看当前网络连接</p>
@@ -752,7 +752,7 @@
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">1、查询特权用户特权用户(uid 为0)</span><br><span class="line">[root@localhost ~]# awk -F: &#x27;$3==0&#123;print $1&#125;&#x27; /etc/passwd</span><br><span class="line">2、查询可以远程登录的帐号信息</span><br><span class="line">[root@localhost ~]# awk &#x27;/\$1|\$6/&#123;print $1&#125;&#x27; /etc/shadow</span><br><span class="line">3、除root帐号外，其他帐号是否存在sudo权限。如非管理需要，普通帐号应删除sudo权限</span><br><span class="line">[root@localhost ~]# more /etc/sudoers | grep -v &quot;^#\|^$&quot; | grep &quot;ALL=(ALL)&quot;</span><br><span class="line">4、禁用或删除多余及可疑的帐号</span><br><span class="line">    usermod -L user    禁用帐号，帐号无法登录，/etc/shadow第二栏为!开头</span><br><span class="line">    userdel user       删除user用户</span><br><span class="line">    userdel -r user    将删除user用户，并且将/home目录下的user目录一并删除</span><br></pre></td></tr></table></figure>
 
 <h4 id="二、历史命令"><a href="#二、历史命令" class="headerlink" title="二、历史命令"></a>二、历史命令</h4><p>1、**.bash_history**文件记录了账号执行过系统命令</p>
-<p><img src="https://raw.githubusercontent.com/wh1t3zer/recordCTF/main/imgs/202305311355634.png" class="lazyload placeholder" data-srcset="https://raw.githubusercontent.com/wh1t3zer/recordCTF/main/imgs/202305311355634.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/wh1t3zer/recordCTF/imgs/202305311355634.png" class="lazyload placeholder" data-srcset="https://cdn.jsdelivr.net/gh/wh1t3zer/recordCTF/imgs/202305311355634.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"></p>
 <p>2、&#x2F;home存放普通账号的历史命令，&#x2F;root存放的是root用户历史命令</p>
 <p>为历史命令增加登录的IP地址，执行命令时间等信息</p>
 <p>(1)保存一万条命令</p>
@@ -771,14 +771,14 @@
 <p>不会清除保存在文件中的记录，手动删除**.bash_profile**<br> 入侵排查</p>
 <p>cat .bash_history &gt;&gt; history.txt</p>
 <h4 id="三、检查异常端口"><a href="#三、检查异常端口" class="headerlink" title="三、检查异常端口"></a>三、检查异常端口</h4><p><strong>netstat -antlp|more</strong></p>
-<p><img src="https://raw.githubusercontent.com/wh1t3zer/recordCTF/main/imgs/202305311355410.png" class="lazyload placeholder" data-srcset="https://raw.githubusercontent.com/wh1t3zer/recordCTF/main/imgs/202305311355410.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/wh1t3zer/recordCTF/imgs/202305311355410.png" class="lazyload placeholder" data-srcset="https://cdn.jsdelivr.net/gh/wh1t3zer/recordCTF/imgs/202305311355410.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"></p>
 <p>查看下pid所对应的进程文件路径</p>
 <p><strong>ls -l &#x2F;proc&#x2F;$PID&#x2F;exe</strong></p>
-<p><img src="https://raw.githubusercontent.com/wh1t3zer/recordCTF/main/imgs/202305311356279.png" class="lazyload placeholder" data-srcset="https://raw.githubusercontent.com/wh1t3zer/recordCTF/main/imgs/202305311356279.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/wh1t3zer/recordCTF/imgs/202305311356279.png" class="lazyload placeholder" data-srcset="https://cdn.jsdelivr.net/gh/wh1t3zer/recordCTF/imgs/202305311356279.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"></p>
 <h4 id="四、检查异常进程"><a href="#四、检查异常进程" class="headerlink" title="四、检查异常进程"></a>四、检查异常进程</h4><p>使用ps命令分析进程</p>
 <p><strong>ps aux | grep  pid</strong></p>
 <p><em>aux</em>可以看进程占用的cpu、mem、虚拟内存</p>
-<p><img src="https://raw.githubusercontent.com/wh1t3zer/recordCTF/main/imgs/202305311355636.png" class="lazyload placeholder" data-srcset="https://raw.githubusercontent.com/wh1t3zer/recordCTF/main/imgs/202305311355636.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/wh1t3zer/recordCTF/imgs/202305311355636.png" class="lazyload placeholder" data-srcset="https://cdn.jsdelivr.net/gh/wh1t3zer/recordCTF/imgs/202305311355636.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"></p>
 <h4 id="五、检查开机启动项"><a href="#五、检查开机启动项" class="headerlink" title="五、检查开机启动项"></a>五、检查开机启动项</h4><table>
 <thead>
 <tr>
@@ -818,7 +818,7 @@
 <p>默认为3级别</p>
 <p>查看当前级别命令</p>
 <p><strong>runlevel</strong></p>
-<p><img src="https://raw.githubusercontent.com/wh1t3zer/recordCTF/main/imgs/202305311355861.png" class="lazyload placeholder" data-srcset="https://raw.githubusercontent.com/wh1t3zer/recordCTF/main/imgs/202305311355861.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/wh1t3zer/recordCTF/imgs/202305311355861.png" class="lazyload placeholder" data-srcset="https://cdn.jsdelivr.net/gh/wh1t3zer/recordCTF/imgs/202305311355861.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"></p>
 <p>开机启动配置文件</p>
 <p>&#x2F;etc&#x2F;rc.local</p>
 <p>&#x2F;etc&#x2F;rc.d&#x2F;rc[0~6].d</p>
@@ -827,7 +827,7 @@
 <p>启动项</p>
 <p><strong>more &#x2F;etc&#x2F;rc.local &#x2F;etc&#x2F;rc.d&#x2F;rc[0~6].d</strong> </p>
 <p><strong>ls -l &#x2F;etc&#x2F;rc.d&#x2F;rc3.d&#x2F;</strong></p>
-<p><img src="https://raw.githubusercontent.com/wh1t3zer/recordCTF/main/imgs/202305311355646.png" class="lazyload placeholder" data-srcset="https://raw.githubusercontent.com/wh1t3zer/recordCTF/main/imgs/202305311355646.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/wh1t3zer/recordCTF/imgs/202305311355646.png" class="lazyload placeholder" data-srcset="https://cdn.jsdelivr.net/gh/wh1t3zer/recordCTF/imgs/202305311355646.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"></p>
 <h4 id="六、检查定时任务"><a href="#六、检查定时任务" class="headerlink" title="六、检查定时任务"></a>六、检查定时任务</h4><p>1、利用crontab创建计划任务</p>
 <p>crontab -l 列出某个用户cron服务的详细内容</p>
 <p>默认写的crontab文件会存在 <strong>&#x2F;var&#x2F;spool&#x2F;cron&#x2F;用户名</strong></p>

@@ -637,7 +637,7 @@
 <p>2、链栈，链栈的底层实现是链表形式</p>
 <p>栈是从高地址到低地址，栈顶指针（SP）指向栈顶，栈顶地址最低，栈底地址最高。这里用一幅图来简单表示进栈和出栈的过程。</p>
 <h3 id="栈区"><a href="#栈区" class="headerlink" title="栈区"></a>栈区</h3><p><strong>栈区</strong>中一般存储的是局部变量，函数定义的参数值。</p>
-<p><img src="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fwww.pianshen.com%2Fimages%2F84%2Fa58981a81fa14fe67d3948c58c80201c.JPEG&refer=http%3A%2F%2Fwww.pianshen.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1659959934&t=a04fa4a8cdca711e296ffbed1b3af598" class="lazyload placeholder" data-srcset="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fwww.pianshen.com%2Fimages%2F84%2Fa58981a81fa14fe67d3948c58c80201c.JPEG&refer=http%3A%2F%2Fwww.pianshen.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1659959934&t=a04fa4a8cdca711e296ffbed1b3af598" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/wh1t3zer/recordCTF/imgs/202311242258190.png" class="lazyload placeholder" data-srcset="https://cdn.jsdelivr.net/gh/wh1t3zer/recordCTF/imgs/202311242258190.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"></p>
 <h3 id="堆"><a href="#堆" class="headerlink" title="堆"></a>堆</h3><p>堆是一种经过排序的树形数据结构，每一个节点都有一个值，通常所说堆的数据结构是二叉树，堆的存取是随意的。所以堆在数据结构中通常可以被看做是一棵树的数组对象。而且堆需要满足一下两个性质：<br>（1）堆中某个节点的值总是不大于或不小于其父节点的值；<br>（2）堆总是一棵完全二叉树。</p>
 <h3 id="堆区"><a href="#堆区" class="headerlink" title="堆区"></a>堆区</h3><p>堆区一般由程序员创建和释放，若没有主动释放堆区内存，程序结束后操作系统会释放内存</p>
 <p>在C语言中分配内存使用<strong>malloc</strong>函数，使用<strong>free</strong>释放内存，在C++或java使用的是<strong>new</strong>关键字，分配的方式类似于链表结构</p>

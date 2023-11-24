@@ -616,49 +616,49 @@
         <h2 id="0x00题记"><a href="#0x00题记" class="headerlink" title="0x00题记"></a>0x00题记</h2><p>最近无聊打算去其他学校内网里面逛一逛，顺便测试一下其他学校的防护是否做到位。于是找了一个同学要到了他们学校的vpn，进去一探究竟。</p>
 <h2 id="0x01信息收集"><a href="#0x01信息收集" class="headerlink" title="0x01信息收集"></a>0x01信息收集</h2><p>许多的渗透中，信息收集可以说是最为关键的一个部分，一个系统能否顺利攻破取决于信息是否收集地足够多。</p>
 <h3 id="外部资产搜集"><a href="#外部资产搜集" class="headerlink" title="外部资产搜集"></a>外部资产搜集</h3><p>顺便看看暴露在公网的资产有哪些，用奇安信的鹰图平台查找学校域名<a target="_blank" rel="noopener" href="http://xxx.edu.cn/">http://xxx.edu.cn</a></p>
-<p><img src="https://raw.githubusercontent.com/wh1t3zer/recordCTF/main/imgs/image-20221014203027968.png" class="lazyload placeholder" data-srcset="https://raw.githubusercontent.com/wh1t3zer/recordCTF/main/imgs/image-20221014203027968.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/wh1t3zer/recordCTF/imgs/image-20221014203027968.png" class="lazyload placeholder" data-srcset="https://cdn.jsdelivr.net/gh/wh1t3zer/recordCTF/imgs/image-20221014203027968.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"></p>
 <p>一共有83条记录，也就是有83条子域名，大部分是各种院系的二级域名</p>
 <p>门户系统</p>
 <p>查到一个</p>
 <p><a target="_blank" rel="noopener" href="http://urla.edu.cn/">http://urlA.edu.cn/</a></p>
-<p><img src="https://raw.githubusercontent.com/wh1t3zer/recordCTF/main/imgs/image-20221014153531951.png" class="lazyload placeholder" data-srcset="https://raw.githubusercontent.com/wh1t3zer/recordCTF/main/imgs/image-20221014153531951.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"></p>
-<p><img src="https://raw.githubusercontent.com/wh1t3zer/recordCTF/main/imgs/image-20221014153354324.png" class="lazyload placeholder" data-srcset="https://raw.githubusercontent.com/wh1t3zer/recordCTF/main/imgs/image-20221014153354324.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/wh1t3zer/recordCTF/imgs/image-20221014153531951.png" class="lazyload placeholder" data-srcset="https://cdn.jsdelivr.net/gh/wh1t3zer/recordCTF/imgs/image-20221014153531951.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/wh1t3zer/recordCTF/imgs/image-20221014153354324.png" class="lazyload placeholder" data-srcset="https://cdn.jsdelivr.net/gh/wh1t3zer/recordCTF/imgs/image-20221014153354324.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"></p>
 <p>发现了用户名和密码登录的规律，用户名在学校的官网的公示栏有，密码可以用bp爆破。</p>
 <p>1、添加一个验证码模块防止爆破</p>
 <p>2、不应该在登录框写上密码格式等敏感提示</p>
 <p>3、设置错误一定次数冻结IP</p>
-<p><img src="https://raw.githubusercontent.com/wh1t3zer/recordCTF/main/imgs/image-20221014155057176.png" class="lazyload placeholder" data-srcset="https://raw.githubusercontent.com/wh1t3zer/recordCTF/main/imgs/image-20221014155057176.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/wh1t3zer/recordCTF/imgs/image-20221014155057176.png" class="lazyload placeholder" data-srcset="https://cdn.jsdelivr.net/gh/wh1t3zer/recordCTF/imgs/image-20221014155057176.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"></p>
 <h3 id="内网资产搜集"><a href="#内网资产搜集" class="headerlink" title="内网资产搜集"></a>内网资产搜集</h3><p>掏出神器fscan，对内网一通乱扫，这个学校内网ip是10.10开头的，还有其他的网段在10.53.x.x，命令运行fscan64.exe -h 10.10.0.0&#x2F;16</p>
 <p>发现有很多ssh服务器都是弱密码，甚至有些数据库密码(包括不限于mysql，mssql)是123456强塞进去，不得不说学校的安全措施做得还是有点堪忧。</p>
 <p>找到一个服务器，10.10.252.173，里面开启了Apache Spark服务，hadoop分布式服务，针对的目标是后者，访问下8088端口</p>
-<p><img src="https://raw.githubusercontent.com/wh1t3zer/recordCTF/main/imgs/image-20221014205528739.png" class="lazyload placeholder" data-srcset="https://raw.githubusercontent.com/wh1t3zer/recordCTF/main/imgs/image-20221014205528739.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/wh1t3zer/recordCTF/imgs/image-20221014205528739.png" class="lazyload placeholder" data-srcset="https://cdn.jsdelivr.net/gh/wh1t3zer/recordCTF/imgs/image-20221014205528739.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"></p>
 <p>首先去网上找找有没有比较新的漏洞</p>
-<p><img src="https://raw.githubusercontent.com/wh1t3zer/recordCTF/main/imgs/image-20221014210142579.png" class="lazyload placeholder" data-srcset="https://raw.githubusercontent.com/wh1t3zer/recordCTF/main/imgs/image-20221014210142579.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/wh1t3zer/recordCTF/imgs/image-20221014210142579.png" class="lazyload placeholder" data-srcset="https://cdn.jsdelivr.net/gh/wh1t3zer/recordCTF/imgs/image-20221014210142579.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"></p>
 <p>还是比较新的，去github上找下py脚本</p>
-<p><img src="https://raw.githubusercontent.com/wh1t3zer/recordCTF/main/imgs/image-20221014210221653.png" class="lazyload placeholder" data-srcset="https://raw.githubusercontent.com/wh1t3zer/recordCTF/main/imgs/image-20221014210221653.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/wh1t3zer/recordCTF/imgs/image-20221014210221653.png" class="lazyload placeholder" data-srcset="https://cdn.jsdelivr.net/gh/wh1t3zer/recordCTF/imgs/image-20221014210221653.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"></p>
 <p>直接启动kali nc监听，由于隔着路由器，还得开启一个端口转发</p>
-<p><img src="https://raw.githubusercontent.com/wh1t3zer/recordCTF/main/imgs/WCGT%606QLJQ%7D098R4C02%5ZV.jpg" class="lazyload placeholder" data-srcset="https://raw.githubusercontent.com/wh1t3zer/recordCTF/main/imgs/WCGT%606QLJQ%7D098R4C02%5ZV.jpg" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"></p>
-<p><img src="https://raw.githubusercontent.com/wh1t3zer/recordCTF/main/imgs/image-20221014214846557.png" class="lazyload placeholder" data-srcset="https://raw.githubusercontent.com/wh1t3zer/recordCTF/main/imgs/image-20221014214846557.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/wh1t3zer/recordCTF/imgs/WCGT%606QLJQ%7D098R4C02%5ZV.jpg" class="lazyload placeholder" data-srcset="https://cdn.jsdelivr.net/gh/wh1t3zer/recordCTF/imgs/WCGT%606QLJQ%7D098R4C02%5ZV.jpg" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/wh1t3zer/recordCTF/imgs/image-20221014214846557.png" class="lazyload placeholder" data-srcset="https://cdn.jsdelivr.net/gh/wh1t3zer/recordCTF/imgs/image-20221014214846557.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"></p>
 <p>拿到shell，查查权限是root权限，去添加一个用户 useradd wh1t3zer 123456，连接ssh，是一台Dr热点的DHCP服务器</p>
 <p>接着去别的地方找找线索，找到一个保卫部的旧站 10.10.240.72</p>
-<p><img src="https://raw.githubusercontent.com/wh1t3zer/recordCTF/main/imgs/image-20221014213623561.png" class="lazyload placeholder" data-srcset="https://raw.githubusercontent.com/wh1t3zer/recordCTF/main/imgs/image-20221014213623561.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/wh1t3zer/recordCTF/imgs/image-20221014213623561.png" class="lazyload placeholder" data-srcset="https://cdn.jsdelivr.net/gh/wh1t3zer/recordCTF/imgs/image-20221014213623561.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"></p>
 <p>给它一个报错提示，发现版本是TP5.0.8</p>
-<p><img src="https://raw.githubusercontent.com/wh1t3zer/recordCTF/main/imgs/bwb.png" class="lazyload placeholder" data-srcset="https://raw.githubusercontent.com/wh1t3zer/recordCTF/main/imgs/bwb.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/wh1t3zer/recordCTF/imgs/bwb.png" class="lazyload placeholder" data-srcset="https://cdn.jsdelivr.net/gh/wh1t3zer/recordCTF/imgs/bwb.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"></p>
 <p>用蚁剑连接看看里面有什么</p>
-<p><img src="https://raw.githubusercontent.com/wh1t3zer/recordCTF/main/imgs/image-20221014214215002.png" class="lazyload placeholder" data-srcset="https://raw.githubusercontent.com/wh1t3zer/recordCTF/main/imgs/image-20221014214215002.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/wh1t3zer/recordCTF/imgs/image-20221014214215002.png" class="lazyload placeholder" data-srcset="https://cdn.jsdelivr.net/gh/wh1t3zer/recordCTF/imgs/image-20221014214215002.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"></p>
 <p>网站根目录下还有其他网站的文件，应该都是比较旧的甚至不用的网站了，所以不用的服务器还是要下线的，否则会泄露一些敏感的信息。</p>
 <p>通过扫描还发现了学校的堡垒机蜜罐，刚开始没发现踩下去第一步后才反应过来，看来反溯源的意识还有待提高。这个蜜罐的服务还是挺丰富的，带有漏洞的solr服务，弱密码WordPress，通达OA，Weblogic</p>
 <p>其他的资产有空再看一看有没有可以利用的地方，先去找点有价值的主机</p>
 <h2 id="0x02发现小域控"><a href="#0x02发现小域控" class="headerlink" title="0x02发现小域控"></a>0x02发现小域控</h2><p>通过信息收集，获得了一台DHCP服务器，一个包含多个旧站的服务器，都不是比较有价值，我们的目标是想办法找到并拿到域控主机。</p>
 <p>继续查看资产，发现一台开启了VM Vsphere，上网了解了一下，VMware vSphere 是业界领先且最可靠的虚拟化平台。所以这是一台校内某个小域的管理平台，而且发现这个服务还存在一个CVE漏洞</p>
-<p><img src="https://raw.githubusercontent.com/wh1t3zer/recordCTF/main/imgs/1666698191773.jpg" class="lazyload placeholder" data-srcset="https://raw.githubusercontent.com/wh1t3zer/recordCTF/main/imgs/1666698191773.jpg" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"></p>
-<p><img src="https://raw.githubusercontent.com/wh1t3zer/recordCTF/main/imgs/image-20221025194451699.png" class="lazyload placeholder" data-srcset="https://raw.githubusercontent.com/wh1t3zer/recordCTF/main/imgs/image-20221025194451699.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/wh1t3zer/recordCTF/imgs/1666698191773.jpg" class="lazyload placeholder" data-srcset="https://cdn.jsdelivr.net/gh/wh1t3zer/recordCTF/imgs/1666698191773.jpg" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/wh1t3zer/recordCTF/imgs/image-20221025194451699.png" class="lazyload placeholder" data-srcset="https://cdn.jsdelivr.net/gh/wh1t3zer/recordCTF/imgs/image-20221025194451699.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"></p>
 <p>除此之外这台机器还有一个漏洞(CVE-2021-22005)，github有exp，利用一波，后面经测试，可以写入jsp木马，木马路径是<a target="_blank" rel="noopener" href="http://ip/idm/..;/pvjb1i.jsp">http://ip/idm/..;/pvjb1i.jsp</a></p>
 <p>经朋友指点，并查看了下<a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/vx1TmbdfLyQidkB2fvUR5A">相关文章</a>，后续利用可以通过python脚本伪造cookies，实现无密码访问。</p>
 <p>开始安装依赖的时候一直报错，后面查了下，有一个python的wheel文件得从网站下载</p>
 <p><a target="_blank" rel="noopener" href="https://www.lfd.uci.edu/~gohlke/pythonlibs/#python-ldap">https://www.lfd.uci.edu/~gohlke/pythonlibs/#python-ldap</a></p>
 <p>进去之后可以发现该域还有着不少的虚拟机服务，包括学校校园网Drcom，DHCP，还有一些其他服务就不多讨论了</p>
-<p><img src="https://raw.githubusercontent.com/wh1t3zer/recordCTF/main/imgs/image-20221025200025802.png" class="lazyload placeholder" data-srcset="https://raw.githubusercontent.com/wh1t3zer/recordCTF/main/imgs/image-20221025200025802.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/wh1t3zer/recordCTF/imgs/image-20221025200025802.png" class="lazyload placeholder" data-srcset="https://cdn.jsdelivr.net/gh/wh1t3zer/recordCTF/imgs/image-20221025200025802.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"></p>
 <p>猜测可能每个地方都有一台开着Vcenter的小域控，等以后慢慢发掘出来</p>
 <h2 id="0x03总结"><a href="#0x03总结" class="headerlink" title="0x03总结"></a>0x03总结</h2><p>无论做什么类型的渗透测试，最前提的也是最重要的就是信息收集，当收集的信息越详细，获取到的有利信息也就越多，突破口也会变多。不过这个学校还有堡垒机蜜罐服务，在我认识中，很多学校都没有启动甚至购置这种服务。但是这个服务也是此地无银三百两，破绽实在是太明显了，从开启的服务中有如“内网测试服务器”，“堡垒机登录页面”….</p>
 <p>最后，总的来说，大多高校管理员都比较懒，不设置足够长度的密码，而保留许多弱密码，还有一些低版本的服务有许多漏洞不修复。内网也不是绝对安全的，当外网的防守不足以应对攻击（包括社工到学生vpn或通过Nday或0Day漏洞打进去后）内网就会有危险。</p>

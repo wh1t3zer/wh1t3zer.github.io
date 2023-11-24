@@ -766,7 +766,7 @@
 <p>HTTP请求头之间的参数用一组<code>\r\n</code>分割即可</p>
 <p>HTTP请求头与POSTDATA之间要用两个<code>\r\n</code>分割.</p>
 <p>本地使用nc启动监听，向目标发送payload</p>
-<p><img src="https://raw.githubusercontent.com/wh1t3zer/recordCTF/main/imgs/image-20221030180528787.png" class="lazyload placeholder" data-srcset="https://raw.githubusercontent.com/wh1t3zer/recordCTF/main/imgs/image-20221030180528787.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/wh1t3zer/recordCTF/imgs/image-20221030180528787.png" class="lazyload placeholder" data-srcset="https://cdn.jsdelivr.net/gh/wh1t3zer/recordCTF/imgs/image-20221030180528787.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"></p>
 <p>UA里面有admin，而且Content-Type也从XML修改为x-www-form-urlencoded，之后flag.txt就被写入到服务器的文件夹里</p>
 <h2 id="Level-11-phar"><a href="#Level-11-phar" class="headerlink" title="Level-11(phar)"></a>Level-11(phar)</h2><p>PHAR（PHP归档）文件是一种打包格式，通过将许多PHP代码文件和其他资源（例如图像，样式表等）捆绑到一个归档文件中来实现应用程序和库的分发<br>phar文件本质上是一种压缩文件，会以序列化的形式存储用户自定义的meta-data。当受影响的文件操作函数调用phar文件时，会自动反序列化meta-data内的内容。</p>
 <p><strong>Phar需要 PHP &gt;&#x3D; 5.2</strong><br><strong>在php.ini中将phar.readonly设为Off（注意去掉前面的分号）</strong></p>
