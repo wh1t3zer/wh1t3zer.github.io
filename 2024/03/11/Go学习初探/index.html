@@ -11,7 +11,7 @@
   <!-- Global site tag (gtag.js) - Google Analytics -->
 
 
-  <title>archives | wh1t3zer</title>
+  <title>Go学习初探 | wh1t3zer</title>
 
   <link rel="icon" type="image/x-icon, image/vnd.microsoft.icon" href="/favicon.ico">
   <link rel="stylesheet" href="https://at.alicdn.com/t/font_1911880_c1nvbyezg17.css">
@@ -561,281 +561,536 @@
   
 </header>
         <!-- 内容区域 -->
-        <div class="bg-dark-floor" style="position: fixed;left: 0;top: 0;width: 100%;height: 100%;z-index: -2;"></div>
-<div class="bg-light-floor-archive" style="position: fixed;left: 0;top: 0;width: 100%;height: 100%;z-index: -3;"></div>
-<div class="archive-header" style="background-image:url('https://pic1.zhimg.com/80/v2-1414b3a4b205e19060db18a20d08723a_1440w.jpg?source=1940ef5c')">
-  <div class="archive-header-title">
-    archive
-  </div>
-  <div class="archive-header-desc">
+        
+ <!-- prismjs 代码高亮 -->
+ 
+
+
+<div class="bg-dark-floor" style="position: fixed;left: 0;top: 0;width: 100%;height: 100%;z-index: -1;"></div>
+
+
+  <!-- 文章详情页顶部图片和标题 -->
+
+
+
+
+<div class="post-detail-header" id="thumbnail_canvas" style="background-repeat: no-repeat; background-size: cover; 
+  background-position: center center;position: relative;background-image:url('/medias/img6.jpg')">
+  <div class="post-detail-header-mask"></div>
+  <canvas id="header_canvas"style="position:absolute;bottom:0;pointer-events:none;"></canvas>
   
-  <span class="title" id="archive-header-desc"></span>
+  <div class="post-detail-header_info-box">
+    <div class="title-box">
+      <span class="title">
+        Go学习初探
+      </span>
+    </div>
+    
+    
+      
+        <span class="post-detail-header_date">
+          <i class="fas fa-calendar"></i> Published in：2024-03-11 |
+        </span>
+      
+
+      
+        <span class="post-detail-header_categories">
+          <i class="iconfont iconbookmark1"></i> category：
+          
+            <a href="/categories/Go/" class="post-detail-header_category">
+              Go
+            </a>
+          
+        </span>
+      
+
+      
+    
+  </div>
+  
+  
+    <script src="/js/bubble/bubble.js"></script>
+  
+</div>
+
+
+
+
+
+<div class="row justify-position" 
+  style="padding-top: 0px;">
+  <div class="main-content">
+    <article class="post post-detail">
+      <div class="post-content">
+        <h2 id="0x00前言"><a href="#0x00前言" class="headerlink" title="0x00前言"></a>0x00前言</h2><p>近期也是对区块链愈发关注，从金融方面开始过渡到了技术方面，随着发现的深入，了解到了区块链比较主流的开发语言是Go语言（以太坊网络基于Go语言编写），本身也对Go语言有点兴趣，所以借此文章记录下学习Go的过程中的知识点。</p>
+<h2 id="0x01简介"><a href="#0x01简介" class="headerlink" title="0x01简介"></a>0x01简介</h2><p>Go语言全称是Golang，是由谷歌开发的，刚好用PHP做完一个项目，借此机会对比下。两者同样是可以做Web等后台应用</p>
+<h3 id="GO-VS-PHP"><a href="#GO-VS-PHP" class="headerlink" title="GO VS PHP"></a>GO VS PHP</h3><p>PHP是一种动态类型语言，也就是在声明变量的时候无需带上属性，如$data，就是直接定义了一个data变量</p>
+<p>Go是一种静态类型语言，与JAVA相似，声明变量的时候需要带上变量属性，也就是如var data string</p>
+<p>Go的并发性能很好，强于PHP几倍，常用于构建微服务、网络IO密集型服务，能同时处理多任务，且有丰富的库</p>
+<p>PHP还是主要用于Web服务，性能较差，扩展性相对较弱</p>
+<p>Go以安全为著称，其包括内存安全、类型安全、并发安全、错误处理等等</p>
+<p>PHP存在许多安全问题，比如内存占用，错误不明显等</p>
+<p>Go可以编译运行成二进制可执行文件，且Go程序生成的二进制可执行文件常常拥有以下优点：</p>
+<ul>
+<li>内存消耗少</li>
+<li>执行速度快</li>
+<li>启动快</li>
+<li>跨平台，一次编译多平台使用</li>
+</ul>
+<p>PHP不能生成二进制文件，但是可以热重载，也就是修改代码后刷新页面即可，不用重新编译运行</p>
+<p>…</p>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>Go具有以下特点：</p>
+<ul>
+<li>内置并发编程支持：<ul>
+<li>使用协程（goroutine）做为基本的计算单元。轻松地创建协程</li>
+<li>使用通道（channel）来实现协程间的同步和通信</li>
+</ul>
+</li>
+<li>内置了映射（map）和切片（slice）类型</li>
+<li>支持多态（polymorphism）</li>
+<li>使用接口（interface）来实现裝盒（value boxing）和反射（reflection）</li>
+<li>支持指针</li>
+<li>支持函数闭包（closure）</li>
+<li>支持方法</li>
+<li>支持延迟函数调用（defer）</li>
+<li>支持类型内嵌（type embedding）</li>
+<li>支持类型推断（type deduction or type inference）</li>
+<li>内存安全</li>
+<li>自动垃圾回收</li>
+<li>良好的代码跨平台性</li>
+<li>自定义泛型（从Go 1.18开始）</li>
+</ul>
+<p>尽管Go语言有很多特点优势，但缺点也有：</p>
+<ul>
+<li>不支持泛型</li>
+<li>内存安全。</li>
+<li>自动垃圾回收。</li>
+<li>良好的代码跨平台性。</li>
+<li>自定义泛型（从Go 1.18开始）。</li>
+</ul>
+<h2 id="0x02正文"><a href="#0x02正文" class="headerlink" title="0x02正文"></a>0x02正文</h2><p>开始学习ing…</p>
+<h3 id="一、组成结构"><a href="#一、组成结构" class="headerlink" title="一、组成结构"></a>一、组成结构</h3><p>一个Go基本文件由6个内容组成，包声明、引入包、注释、函数、变量、表达式&#x2F;语句</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main			<span class="comment">//包声明</span></span><br><span class="line"><span class="keyword">import</span> &#123;					<span class="comment">//引入包</span></span><br><span class="line">	<span class="string">&quot;fmt&quot;</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">/*注释*/</span>					<span class="comment">//注释		多行注释/**/,单行注释//</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span>&#123;		<span class="comment">//函数</span></span><br><span class="line">  <span class="keyword">var</span> a <span class="type">int</span>     <span class="comment">//变量</span></span><br><span class="line">  fmt.Println(<span class="string">&quot;hello&quot;</span>)		<span class="comment">//表达式/语句</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>1.每个Go程序都有一个声明main包的页面</p>
+<p>2.一个页面中有init()和main()，会优先运行init()</p>
+<h3 id="二、数据类型"><a href="#二、数据类型" class="headerlink" title="二、数据类型"></a>二、数据类型</h3><h4 id="1-布尔类型"><a href="#1-布尔类型" class="headerlink" title="1.布尔类型"></a>1.布尔类型</h4><p>bool</p>
+<h4 id="2-数字类型"><a href="#2-数字类型" class="headerlink" title="2.数字类型"></a>2.数字类型</h4><p>uint8&#x2F;int8</p>
+<p>uint16&#x2F;int16</p>
+<p>uint32&#x2F;int32</p>
+<p>uint64&#x2F;int64</p>
+<p>byte	类似于uint8</p>
+<p>rune	类似于uint32</p>
+<p>uint	32或64</p>
+<p>int	 与uint一样大小</p>
+<p>uintptr	用于存放指针</p>
+<h4 id="3-字符串类型"><a href="#3-字符串类型" class="headerlink" title="3.字符串类型"></a>3.字符串类型</h4><p>float32</p>
+<p>float64</p>
+<p>complex64</p>
+<p>complex128</p>
+<h4 id="4-派生类型"><a href="#4-派生类型" class="headerlink" title="4.派生类型"></a>4.派生类型</h4><p>指针类型</p>
+<p>数组类型</p>
+<p>结构化类型</p>
+<p>Channel类型</p>
+<p>函数类型</p>
+<p>切片类型</p>
+<p>接口类型</p>
+<p>Map类型</p>
+<h3 id="三、变量"><a href="#三、变量" class="headerlink" title="三、变量"></a>三、变量</h3><p>一般声明变量用var</p>
+<p>如var data string &#x3D; “test”</p>
+<p>当用var声明变量未赋值时，默认为0值</p>
+<p>如var data string，字符串的0值为空，数值类型0值为0（其中浮点数类型的0值为0.0），布尔类型为false</p>
+<p>以下变量类型0值为nil</p>
+<p>*int(指针类型)、[]int(数组类型)、map[string] int(键为字符串，值为整形)、chan int(通道类型)、func(string) int(函数类型)、error(接口类型)</p>
+<p>其中在声明变量中也可以用 <strong>:&#x3D;</strong> 表达，即data :&#x3D; “test”</p>
+<p>那var和 :&#x3D; 有什么不同，<strong>var</strong>初始化可以没有赋值，而 <strong>:&#x3D;</strong> 没有赋值就会报错；并且如果用var声明过变量，再用 :&#x3D; 也会编译报错</p>
+<p><strong>即 var data string &#x3D; “test”	&#x3D;&gt; data :&#x3D; “test”</strong></p>
+<p>可以使用&amp;取变量的地址，</p>
+<p>声明多变量</p>
+<p>var data1 , data2 string &#x3D; “test”,”abc”</p>
+<p><strong>此外声明变量赋值还不够，必须在程序中使用到变量，否则也会报错，除非是全局变量</strong></p>
+<p>tips：Go语言有一个空白标识符，使用它可以避免创建无效的变量，即：</p>
+<p>_, err :&#x3D; “1”,”2”	只会返回err变量值为2，1默认被丢弃</p>
+<h3 id="四、常量"><a href="#四、常量" class="headerlink" title="四、常量"></a>四、常量</h3><p>const关键字</p>
+<p>const data string &#x3D;”test”，多个常量声明可参考上面的变量声明法</p>
+<h4 id="特殊常量"><a href="#特殊常量" class="headerlink" title="特殊常量"></a>特殊常量</h4><p>iota是一个特殊常量</p>
+<p>iota在const每声明一次变量都会计数一次，类似给const的索引值，每当有一个新的const声明时，iota会置为0，一般可以用作枚举值，当const的值被赋值后，在下一个const被赋值之前，变量的值跟随首个变量值，iota作为独立值仍继续计数</p>
+<p>用法</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> <span class="string">&quot;fmt&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">    <span class="keyword">const</span> (</span><br><span class="line">            a = <span class="literal">iota</span>   <span class="comment">//0</span></span><br><span class="line">            b          <span class="comment">//1</span></span><br><span class="line">            c          <span class="comment">//2</span></span><br><span class="line">            d = <span class="string">&quot;ha&quot;</span>   <span class="comment">//独立值，iota += 1</span></span><br><span class="line">            e          <span class="comment">//&quot;ha&quot;   iota += 1</span></span><br><span class="line">            f = <span class="number">100</span>    <span class="comment">//iota +=1</span></span><br><span class="line">            g          <span class="comment">//100  iota +=1</span></span><br><span class="line">            h = <span class="literal">iota</span>   <span class="comment">//7,恢复计数</span></span><br><span class="line">            i          <span class="comment">//8</span></span><br><span class="line">    )</span><br><span class="line">    fmt.Println(a,b,c,d,e,f,g,h,i)</span><br><span class="line">  <span class="comment">//   0 1 2 ha ha 100 100 7 8</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="五、运算符"><a href="#五、运算符" class="headerlink" title="五、运算符"></a>五、运算符</h3><p>基本运算符跟其他语言相似</p>
+<p>运算符优先级</p>
+<table>
+<thead>
+<tr>
+<th>5</th>
+<th>* &#x2F; % &lt;&lt; &gt;&gt; &amp; &amp;^</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>4</td>
+<td>+ - | ^</td>
+</tr>
+<tr>
+<td>3</td>
+<td>&#x3D;&#x3D; !&#x3D; &lt; &lt;&#x3D; &gt; &gt;&#x3D;</td>
+</tr>
+<tr>
+<td>2</td>
+<td>&amp;&amp;</td>
+</tr>
+<tr>
+<td>1</td>
+<td>||</td>
+</tr>
+</tbody></table>
+<h3 id="六、条件语句"><a href="#六、条件语句" class="headerlink" title="六、条件语句"></a>六、条件语句</h3><p>Go没有三目运算符，不支持 ？ ： 判断</p>
+<p>Go的if 条件中不用加括号</p>
+<h4 id="select语句（并发编程）"><a href="#select语句（并发编程）" class="headerlink" title="select语句（并发编程）"></a>select语句（并发编程）</h4><p>除了有if else switch语句，还多了个select语句</p>
+<p>select 是 Go 中的一个控制结构，类似于 switch 语句</p>
+<p>select 语句只能用于通道操作，每个 case 必须是一个通道操作，要么是发送要么是接收</p>
+<p>select 语句会监听所有指定的通道上的操作，一旦其中一个通道准备好就会执行相应的代码块</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> &#123;</span><br><span class="line"><span class="keyword">case</span> &lt;-ch1:</span><br><span class="line">    <span class="comment">// 从 ch1 接收数据</span></span><br><span class="line"><span class="keyword">case</span> data := &lt;-ch2:</span><br><span class="line">    <span class="comment">// 从 ch2 接收数据，并将数据赋值给 data</span></span><br><span class="line"><span class="keyword">case</span> ch3 &lt;- data:</span><br><span class="line">    <span class="comment">// 将数据发送到 ch3</span></span><br><span class="line"><span class="keyword">default</span>:</span><br><span class="line">    <span class="comment">// 如果没有任何通道操作可用，则执行 default 分支</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>如果没有default分支，select会进入阻塞，直到至少有一个通道操作可用</p>
+<ol>
+<li>处理多个通道的并发操作，可以避免因某个通道阻塞而导致整个程序的阻塞。</li>
+<li>实现超时机制，可以通过<strong>select</strong>和<strong>time.After</strong>结合使用，在一定时间内等待某个操作的完成，超时后执行其他操作。</li>
+<li>实现非阻塞的通道操作，可以通过<strong>select</strong>在通道操作之前加上<strong>default</strong>分支，如果通道操作不能立即进行，就可以执行<strong>default</strong>分支中的逻辑。</li>
+</ol>
+<h3 id="七、循环语句"><a href="#七、循环语句" class="headerlink" title="七、循环语句"></a>七、循环语句</h3><p>goto、continue、break，同其他语言</p>
+<h3 id="八、函数"><a href="#八、函数" class="headerlink" title="八、函数"></a>八、函数</h3><p>常用格式</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">function_name</span><span class="params">( [parameter list] )</span></span> [return_types] &#123;</span><br><span class="line">   函数体</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>如</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">test</span> <span class="params">(num1 , num2 <span class="type">int</span>)</span></span> <span class="type">int</span>&#123;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//	两个int参数，返回int类型</span></span><br></pre></td></tr></table></figure>
+
+<p>或者</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">test</span><span class="params">()</span></span> (<span class="type">int</span>, <span class="type">int</span>) &#123;</span><br><span class="line">	a := <span class="number">1</span></span><br><span class="line">	b := <span class="number">2</span></span><br><span class="line">	<span class="keyword">return</span> a, b</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//返回多少个参数，返回的类型也多少个，一一对应</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="九、变量作用域"><a href="#九、变量作用域" class="headerlink" title="九、变量作用域"></a>九、变量作用域</h3><p>同名的全局变量和在函数中的局部变量，当调用该函数的时候，优先考虑的是局部变量</p>
+<h3 id="十、数组"><a href="#十、数组" class="headerlink" title="十、数组"></a>十、数组</h3>
+      </div>
+      <div class="post-tags-categories">
+        
+        <div class="tags">
+          
+            <a href="/tags/Go/" class="">
+              Go
+            </a>
+          
+        </div>
+        
+      </div>
+      
+        <div class="copyright">
+  <ul class="post-copyright">
+    <li class="post-copyright-author">
+    <strong>author:  </strong>wh1t3zer</a>
+    </li>
+    <li class="post-copyright-link">
+    <strong>link:  </strong>
+    <a href="/2024/03/11/Go学习初探/" target="_blank" title="Go学习初探">https://wh1t3zer.github.io/2024/03/11/Go学习初探/</a>
+    </li>
+    <li class="post-copyright-license">
+      <strong>Copyright notice:   </strong>
+      All articles on this website, unless otherwise stated, adopt <a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank" title="Attribution-NonCommercial-NoDerivatives 4.0 International (CC BY-NC-ND 4.0)">CC BY-NC-ND 4.0</a>
+      reprint policy. If reproduced, please indicate source!
+    </li>
+  </ul>
+<div>
+      
+    </article>
+    <!-- 上一篇文章和下一篇文章 -->
+    
+      <!-- 文章详情页的上一页和下一页 -->
+<div class="post-nav">
+
+
+
+
+
+  
+  <div class="post-nav-next post-nav-item">
+    <div class="post-nav-img" style="background-size: cover; 
+      background-position: center center;">
+      <img class="lazyload lazyload placeholder" src="/medias/img4.jpg" class="lazyload placeholder" data-srcset="/medias/img4.jpg" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" src="" alt="">
+    </div>
+    <a href="/2024/02/18/%E8%82%A1%E6%9D%83%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1/" class="post-nav-link">
+      <div class="title">
+        Next: <i class="fas fa-angle-right"></i>
+        <div class="title-text">股权架构设计</div>
+      </div>
+      <!-- <div class="content">
+        前言业余时间学习企业管理方面的内容，接触到了股权架构的设计，趁有时间也做一个记录，也是对股权的结构做一个初步的学习。
+一
+      </div> -->
+    </a>
+  </div>
+
+</div>
+
+    
+    
+
+    <!-- 打赏 -->
+    
+
+    <!-- 分享 -->
+    
+      <!-- https://github.com/overtrue/share.js -->
+<!-- 文章详情页的分享 -->
+<div class="social-share" data-sites="twitter,facebook,google,qq,qzone,wechat,weibo,douban,linkedin" data-wechat-qrcode-helper="<p>微信扫一扫即可分享！</p>"></div>
+
+<script src="/js/shareJs/social-share.min.js"></script>
+</script>
+
+<style>
+  .social-share {
+    margin: 20px 0;
+  }
+</style>
+
+
+    
+    
+    <!-- 评论 -->
+    <!-- 评论 -->
+
+  <div id="myComment">
+    
+      <div id="gitment-container"></div>
+
+    
+  </div>
+
+<!-- comment script in themes\hexo-theme-bamboo\layout\_partial\scripts\index.ejs -->
+
+
+  </div>
+
+  <!-- 目录 -->
+  <!-- 文章详情页右侧目录 -->
+
+  <div class="toc-aside">
+    <div class="toc-main">
+      <div class="toc-aside-title">
+        <i class="fas fa-list-ul" aria-hidden="true"></i><span>catalog</span>
+        
+          <div class="toc-open-close">catalog</div>
+        
+      </div>
+      <div class="toc-content">
+        <div class="toc"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 手机端目录按钮 -->
+  <div id="toc-mobile-btn">
+    <i class="fas fa-list-ul" aria-hidden="true"></i>
+  </div>
+
+
+<script>
+  function closeToc(init) {
+    $(".toc-aside").css({'width': 0, 'padding': 0, 'transition': init ?  'noe' : 'width 0.3s' });
+    $(".toc-content").css({'width': 0});
+    $(".toc-aside-title span, .toc-aside-title i").css({'display': 'none'});
+    $(".main-content").css({'width': '75%', 'margin': '10px auto'});
+  };
+  function openToc() {
+    $(".main-content").css({'width': '65%', 'margin-right': '10px', 'margin-left': 'calc(35% - 350px)'});
+    $(".toc-aside").css({'width': '300px', 'padding': '0 10px', 'transition': 'width 0.3s'});
+    $(".toc-content").css({'width': '300px'});
+    $(".toc-aside-title span, .toc-aside-title i").css({'display': 'inline-block'});
+  }
+  function openBtnClickFn () {
+    let openOrCloseBtn = $('.toc-aside .toc-aside-title .toc-open-close');
+    let open = eval('' || 'true');
+    openOrCloseBtn.click(function() {
+      if (open) {
+        closeToc();
+        open = false;
+      } else {
+        openToc();
+        open = true;
+      }
+    });
+  };
+  openBtnClickFn();
+  initCloseTocWidth(true);
+
+  function initCloseTocWidth(init) {
+    if (window.innerWidth >= 992) {
+      let isClose = false;
+      isClose && closeToc(init)
+    }
+  }
+
+  document.addEventListener('pjax:complete', function () {
+    $(".toc-aside").css({'transition': 'no'});
+  })
+  document.addEventListener('pjax:complete', function () {
+    openBtnClickFn();
+  })
+  
+</script>
+
+  <!-- 图片放大 Wrap images with fancybox support -->
+  <script src="/js/wrapImage.js"></script>
+</div>
+
+<!-- 文章详情页背景图 -->
+<div id="appBgSwiper" style="position: fixed;left: 0;top: 0;width: 100%;height: 100%;z-index: -2;"
+	:style="{'background-color': bgColor ? bgColor : 'transparent'}">
+	<transition-group tag="ul" :name="names">
+		<li v-for='(image,index) in img' :key='index' v-show="index === mark" class="bg-swiper-box">
+			<img :src="image" class="bg-swiper-img no-lazy">
+		</li>
+	</transition-group>
+</div>
+<script>
+	var vm = new Vue({
+		el: '#appBgSwiper',
+		data: {
+			names: '' || 'fade' || 'fade', // translate-fade fade
+			mark: 0,
+			img: [],
+			bgColor: '',
+			time: null
+		},
+		methods: {   //添加方法
+			change(i, m) {
+				if (i > m) {
+					// this.names = 'fade';
+				} else if (i < m) {
+					// this.names = 'fade';
+				} else {
+					return;
+				}
+				this.mark = i;
+			},
+			prev() {
+				// this.names = 'fade';
+				this.mark--;
+				if (this.mark === -1) {
+					this.mark = 3;
+					return
+				}
+			},
+			next() {
+				// this.names = 'fade';
+				this.mark++;
+				if (this.mark === this.img.length) {
+					this.mark = 0;
+					return
+				}
+			},
+			autoPlay() {
+				// this.names = 'fade';
+				this.mark++;
+				if (this.mark === this.img.length) {
+					this.mark = 0;
+					return
+				}
+			},
+			play() {
+				let bgImgDelay = '' || '180000'
+				let delay = parseInt(bgImgDelay) || 180000;
+				this.time = setInterval(this.autoPlay, delay);
+			},
+			enter() {
+				clearInterval(this.time);
+			},
+			leave() {
+				this.play();
+			}
+		},
+		created() {
+			this.play()
+		},
+		beforeDestroy() {
+			clearInterval(this.time);
+		},
+		mounted() {
+			let prop = '' || '';
+			let isImg = prop.includes('.bmp') || prop.includes('.jpg') || prop.includes('.png') || prop.includes('.tif') || prop.includes('.gif') || prop.includes('.pcx') || prop.includes('.tga') || prop.includes('.exif') || prop.includes('.fpx') || prop.includes('.psd') || prop.includes('.cdr') || prop.includes('.pcd') || prop.includes('.dxf') || prop.includes('.ufo') || prop.includes('.eps') || prop.includes('.ai') || prop.includes('.raw') || prop.includes('.WMF') || prop.includes('.webp') || prop.includes('.jpeg') || prop.includes('http://') || prop.includes('https://')
+			if (isImg) {
+				let img = prop.split(',');
+				let configRoot = '/'
+				let arrImg = [];
+				img.forEach(el => {
+					var Expression = /http(s)?:\/\/([\w-]+\.)+[\w-]+(\/[\w- .\/?%&=]*)?/;
+					var objExp = new RegExp(Expression);
+
+					if (objExp.test(el)) {
+						// http or https
+						arrImg.push(el);
+					} else {
+						// 非http or https开头
+						// 本地文件
+						let firstStr = el.charAt(0);
+						if (firstStr == '/') {
+							el = el.substr(1); // 删除第一个字符 '/',因为 configRoot最后一个字符为 /
+						}
+						el = configRoot + el;
+						arrImg.push(el);
+					}
+				})
+				this.img = arrImg;
+			} else {
+				this.bgColor = prop;
+			}
+		}
+	})
+</script>
+
+<style>
+	.bg-swiper-box {
+		position: absolute;
+		display: block;
+		width: 100%;
+		height: 100%;
+	}
+
+	.bg-swiper-img {
+		object-fit: cover;
+		width: 100%;
+		height: 100%;
+	}
+</style>
+
+
+
+
   <script>
-  function typedFn() {
-    const el = '#archive-header-desc';
-    const type = 'archive';
-    let desc = '愿你如风，被人温柔以待'
-    var typed = new Typed(el, {
-      strings: [desc],
-      startDelay: 100,
-      typeSpeed: 100,
-      loop: true,
-      backSpeed: 50,
-      showCursor: true
-    });
-  }
-  typedFn();
-</script>
+  function loadMermaid() {
+    if (document.getElementsByClassName('mermaid').length) {
+      if (window.mermaidJsLoad) mermaid.init()
+      else {
+        loadScript('https://unpkg.com/mermaid/dist/mermaid.min.js').then(() => {
+          window.mermaidJsLoad = true
+          mermaid.initialize({
+            theme: 'default',
+          })
+          if ('true') {
+            mermaid.init();
+          }
+        })
+      }
+    }
+  };
+  document.addEventListener("DOMContentLoaded", function () {
+    loadMermaid();
+  })
+
+  document.addEventListener('pjax:complete', function () {
+    loadMermaid();
+  })
   
-  </div>
-  <div class="mask-box"></div>
-</div>
-
-<div class="archive-video">
-  <video class="full-video" autoplay loop muted>
-      <source style="width: 100%;height: 100vh;" src="/">
-  </video>
-  <div class="video-header-title">
-    archive
-  </div>
-  <div class="video-header-desc">
-  
-      <span class="title" id="archive-video-header-desc"></span>
-      <script>
-  function typedFn() {
-    const el = '#archive-video-header-desc';
-    const type = 'archive';
-    let desc = '愿你如风，被人温柔以待'
-    var typed = new Typed(el, {
-      strings: [desc],
-      startDelay: 100,
-      typeSpeed: 100,
-      loop: true,
-      backSpeed: 50,
-      showCursor: true
-    });
-  }
-  typedFn();
 </script>
-      
-  </div>
-  <div class="mask-box"></div>
-</div>
 
-<!-- hash算法 -->
-
-
-<div class="archive-main">
-  <section class="archive">
-    <div class="archive-content">
-      <ul class="post-archive">
-        
-        
-          
-            
-            <div class="year" data-aos="zoom-in-up">
-                <div class="bullet"></div>
-                <a href="/archives/2024">2024</a>
-            </div>
-          
-          <li class="post-item" data-aos="fade-left">
-            
-            <div class="post-img-box">
-              <a href="/2024/03/11/Go%E5%AD%A6%E4%B9%A0%E5%88%9D%E6%8E%A2/" class="post-img " style="background-size: cover; 
-                background-position: center center;">
-                <img class="lazyload lazyload placeholder" src="/medias/img6.jpg" class="lazyload placeholder" data-srcset="/medias/img6.jpg" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="">
-              </a>
-            </div>
-            <div class="post-date-title">
-              <div>
-                <span class="post-date">03-11</span>
-              </div>
-              <a class="post-title" href="/2024/03/11/Go%E5%AD%A6%E4%B9%A0%E5%88%9D%E6%8E%A2/">Go学习初探</a>
-            </div>
-          </li>
-        
-          
-          <li class="post-item" data-aos="fade-left">
-            
-            <div class="post-img-box">
-              <a href="/2024/02/18/%E8%82%A1%E6%9D%83%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1/" class="post-img " style="background-size: cover; 
-                background-position: center center;">
-                <img class="lazyload lazyload placeholder" src="/medias/img4.jpg" class="lazyload placeholder" data-srcset="/medias/img4.jpg" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="">
-              </a>
-            </div>
-            <div class="post-date-title">
-              <div>
-                <span class="post-date">02-18</span>
-              </div>
-              <a class="post-title" href="/2024/02/18/%E8%82%A1%E6%9D%83%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1/">股权架构设计</a>
-            </div>
-          </li>
-        
-          
-            
-            <div class="year" data-aos="zoom-in-up">
-                <div class="bullet"></div>
-                <a href="/archives/2023">2023</a>
-            </div>
-          
-          <li class="post-item" data-aos="fade-left">
-            
-            <div class="post-img-box">
-              <a href="/2023/12/02/webshell%E5%B7%A5%E5%85%B7%E6%B5%81%E9%87%8F%E7%89%B9%E5%BE%81%E5%88%9D%E6%8E%A2/" class="post-img " style="background-size: cover; 
-                background-position: center center;">
-                <img class="lazyload lazyload placeholder" src="/medias/img2.jpg" class="lazyload placeholder" data-srcset="/medias/img2.jpg" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="">
-              </a>
-            </div>
-            <div class="post-date-title">
-              <div>
-                <span class="post-date">12-02</span>
-              </div>
-              <a class="post-title" href="/2023/12/02/webshell%E5%B7%A5%E5%85%B7%E6%B5%81%E9%87%8F%E7%89%B9%E5%BE%81%E5%88%9D%E6%8E%A2/">webshell工具流量特征初探</a>
-            </div>
-          </li>
-        
-          
-          <li class="post-item" data-aos="fade-left">
-            
-            <div class="post-img-box">
-              <a href="/2023/10/22/SQL%E6%B3%A8%E5%85%A5%E6%80%BB%E7%BB%93/" class="post-img " style="background-size: cover; 
-                background-position: center center;">
-                <img class="lazyload lazyload placeholder" src="/medias/img10.jpg" class="lazyload placeholder" data-srcset="/medias/img10.jpg" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="">
-              </a>
-            </div>
-            <div class="post-date-title">
-              <div>
-                <span class="post-date">10-22</span>
-              </div>
-              <a class="post-title" href="/2023/10/22/SQL%E6%B3%A8%E5%85%A5%E6%80%BB%E7%BB%93/">SQL注入总结</a>
-            </div>
-          </li>
-        
-          
-          <li class="post-item" data-aos="fade-left">
-            
-            <div class="post-img-box">
-              <a href="/2023/09/14/%E6%94%BB%E5%87%BB%E9%9D%A2%E6%9A%B4%E9%9C%B2%E8%AE%BE%E8%AE%A1/" class="post-img " style="background-size: cover; 
-                background-position: center center;">
-                <img class="lazyload lazyload placeholder" src="/medias/img19.jpg" class="lazyload placeholder" data-srcset="/medias/img19.jpg" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="">
-              </a>
-            </div>
-            <div class="post-date-title">
-              <div>
-                <span class="post-date">09-14</span>
-              </div>
-              <a class="post-title" href="/2023/09/14/%E6%94%BB%E5%87%BB%E9%9D%A2%E6%9A%B4%E9%9C%B2%E8%AE%BE%E8%AE%A1/">攻击面管理系统设计</a>
-            </div>
-          </li>
-        
-          
-          <li class="post-item" data-aos="fade-left">
-            
-            <div class="post-img-box">
-              <a href="/2023/08/19/%E6%9C%8D%E5%8A%A1%E5%8F%8A%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F%E9%85%8D%E7%BD%AE(%E4%B8%BB%E6%9C%BA%E7%89%88)/" class="post-img " style="background-size: cover; 
-                background-position: center center;">
-                <img class="lazyload lazyload placeholder" src="/medias/img15.jpg" class="lazyload placeholder" data-srcset="/medias/img15.jpg" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="">
-              </a>
-            </div>
-            <div class="post-date-title">
-              <div>
-                <span class="post-date">08-19</span>
-              </div>
-              <a class="post-title" href="/2023/08/19/%E6%9C%8D%E5%8A%A1%E5%8F%8A%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F%E9%85%8D%E7%BD%AE(%E4%B8%BB%E6%9C%BA%E7%89%88)/">服务及环境变量配置(主机版)</a>
-            </div>
-          </li>
-        
-          
-          <li class="post-item" data-aos="fade-left">
-            
-            <div class="post-img-box">
-              <a href="/2023/08/18/%E6%9C%8D%E5%8A%A1%E5%8F%8A%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F%E9%85%8D%E7%BD%AE(Docker%E7%89%88)/" class="post-img " style="background-size: cover; 
-                background-position: center center;">
-                <img class="lazyload lazyload placeholder" src="/medias/img6.jpg" class="lazyload placeholder" data-srcset="/medias/img6.jpg" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="">
-              </a>
-            </div>
-            <div class="post-date-title">
-              <div>
-                <span class="post-date">08-18</span>
-              </div>
-              <a class="post-title" href="/2023/08/18/%E6%9C%8D%E5%8A%A1%E5%8F%8A%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F%E9%85%8D%E7%BD%AE(Docker%E7%89%88)/">服务及环境变量配置(Docker版)</a>
-            </div>
-          </li>
-        
-          
-          <li class="post-item" data-aos="fade-left">
-            
-            <div class="post-img-box">
-              <a href="/2023/07/05/shiro%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0/" class="post-img " style="background-size: cover; 
-                background-position: center center;">
-                <img class="lazyload lazyload placeholder" src="/medias/img5.jpg" class="lazyload placeholder" data-srcset="/medias/img5.jpg" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="">
-              </a>
-            </div>
-            <div class="post-date-title">
-              <div>
-                <span class="post-date">07-05</span>
-              </div>
-              <a class="post-title" href="/2023/07/05/shiro%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0/">shiro反序列化漏洞复现</a>
-            </div>
-          </li>
-        
-          
-          <li class="post-item" data-aos="fade-left">
-            
-            <div class="post-img-box">
-              <a href="/2023/07/05/struts2%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0/" class="post-img " style="background-size: cover; 
-                background-position: center center;">
-                <img class="lazyload lazyload placeholder" src="/medias/img16.jpg" class="lazyload placeholder" data-srcset="/medias/img16.jpg" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="">
-              </a>
-            </div>
-            <div class="post-date-title">
-              <div>
-                <span class="post-date">07-05</span>
-              </div>
-              <a class="post-title" href="/2023/07/05/struts2%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0/">struts2RCE漏洞复现</a>
-            </div>
-          </li>
-        
-          
-          <li class="post-item" data-aos="fade-left">
-            
-            <div class="post-img-box">
-              <a href="/2023/05/30/%E5%BA%94%E6%80%A5%E5%93%8D%E5%BA%94/" class="post-img " style="background-size: cover; 
-                background-position: center center;">
-                <img class="lazyload lazyload placeholder" src="/medias/img15.jpg" class="lazyload placeholder" data-srcset="/medias/img15.jpg" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="">
-              </a>
-            </div>
-            <div class="post-date-title">
-              <div>
-                <span class="post-date">05-30</span>
-              </div>
-              <a class="post-title" href="/2023/05/30/%E5%BA%94%E6%80%A5%E5%93%8D%E5%BA%94/">应急响应流程</a>
-            </div>
-          </li>
-        
-      </ul>
-    </div>
-  </section>
-  <div class="w-70">
-    
-  <!-- <nav class="page-nav">
-    <span class="page-number current">1</span><a class="page-number" href="/archives/page/2/">2</a><a class="page-number" href="/archives/page/3/">3</a><a class="page-number" href="/archives/page/4/">4</a><a class="extend next" rel="next" href="/archives/page/2/">Next</a>
-  </nav> -->
-  <div class="page-nav">
-    
-    <div class="page-info">
-        <div class="page-info-text">1 / 4</div>
-    </div>
-    
-      <a href="/archives/page/2/"
-         class="page-nav-next">
-          <span class="mr-5">Next</span><i class="fas fa-angle-right"></i>
-      </a>
-      
-  </div>
-
-  </div>
-</div>
 
       </main>
     </div>

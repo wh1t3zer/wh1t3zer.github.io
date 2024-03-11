@@ -11,7 +11,7 @@
   <!-- Global site tag (gtag.js) - Google Analytics -->
 
 
-  <title>archives | wh1t3zer</title>
+  <title>股权架构设计 | wh1t3zer</title>
 
   <link rel="icon" type="image/x-icon, image/vnd.microsoft.icon" href="/favicon.ico">
   <link rel="stylesheet" href="https://at.alicdn.com/t/font_1911880_c1nvbyezg17.css">
@@ -561,281 +561,450 @@
   
 </header>
         <!-- 内容区域 -->
-        <div class="bg-dark-floor" style="position: fixed;left: 0;top: 0;width: 100%;height: 100%;z-index: -2;"></div>
-<div class="bg-light-floor-archive" style="position: fixed;left: 0;top: 0;width: 100%;height: 100%;z-index: -3;"></div>
-<div class="archive-header" style="background-image:url('https://pic1.zhimg.com/80/v2-1414b3a4b205e19060db18a20d08723a_1440w.jpg?source=1940ef5c')">
-  <div class="archive-header-title">
-    archive
-  </div>
-  <div class="archive-header-desc">
+        
+ <!-- prismjs 代码高亮 -->
+ 
+
+
+<div class="bg-dark-floor" style="position: fixed;left: 0;top: 0;width: 100%;height: 100%;z-index: -1;"></div>
+
+
+  <!-- 文章详情页顶部图片和标题 -->
+
+
+
+
+<div class="post-detail-header" id="thumbnail_canvas" style="background-repeat: no-repeat; background-size: cover; 
+  background-position: center center;position: relative;background-image:url('/medias/img4.jpg')">
+  <div class="post-detail-header-mask"></div>
+  <canvas id="header_canvas"style="position:absolute;bottom:0;pointer-events:none;"></canvas>
   
-  <span class="title" id="archive-header-desc"></span>
+  <div class="post-detail-header_info-box">
+    <div class="title-box">
+      <span class="title">
+        股权架构设计
+      </span>
+    </div>
+    
+    
+      
+        <span class="post-detail-header_date">
+          <i class="fas fa-calendar"></i> Published in：2024-02-18 |
+        </span>
+      
+
+      
+        <span class="post-detail-header_categories">
+          <i class="iconfont iconbookmark1"></i> category：
+          
+            <a href="/categories/%E8%82%A1%E6%9D%83/" class="post-detail-header_category">
+              股权
+            </a>
+          
+        </span>
+      
+
+      
+    
+  </div>
+  
+  
+    <script src="/js/bubble/bubble.js"></script>
+  
+</div>
+
+
+
+
+
+<div class="row justify-position" 
+  style="padding-top: 0px;">
+  <div class="main-content">
+    <article class="post post-detail">
+      <div class="post-content">
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>业余时间学习企业管理方面的内容，接触到了股权架构的设计，趁有时间也做一个记录，也是对股权的结构做一个初步的学习。</p>
+<p>一般来说股权设计是每个开公司的老板不可不学的内容，无论是IPO或普通公司经营，好的股权设计可以有效规避个人与企业的风险，让个人和公司收益可以最大化。历史上由于股权架构设计有问题而导致创始人控制权丧失、公司运营崩盘的现象比比皆是，关系到未来公司的命运。这里引用某乎上的一个案件</p>
+<blockquote>
+<p>1998年底，吴长江联合同学杜刚、胡永宏创立雷士照明，吴长江拥有雷士照明45%的股权，杜刚和胡永宏股权共55%，如果杜刚与胡永宏合力，那么就拥有对雷士照明的重大事项决定权。雷士照明创立初期搭建的股权架构为吴长江第一次失去控制权埋下了伏笔。</p>
+<p>果不其然，2005年，杜刚、胡永宏两位股东与吴长江对公司经营发展理念、盈利如何分配等问题产生分歧，于是开会把吴长江的董事长职位罢免了，吴长江全部股份被迫让出，携8000万出走，失去控制权。</p>
+</blockquote>
+<h2 id="设计股权"><a href="#设计股权" class="headerlink" title="设计股权"></a>设计股权</h2><p>那么要如何设计较为稳定，且控制人不容易失去对公司的控制权方案？以下是我从一些资料中了解学习到的主体股权架构</p>
+<h3 id="1、有限合伙架构"><a href="#1、有限合伙架构" class="headerlink" title="1、有限合伙架构"></a>1、有限合伙架构</h3><p>股东不是直接对核心公司进行持股，而是使用合伙企业的形式间接持有</p>
+<p>分析之前先了解几个常用术语，<strong>GP</strong>和<strong>LP</strong>，<strong>GP</strong>就是普通合伙人身份，<strong>LP</strong>就是员工股份和其他投资人身份</p>
+<p><strong>LP</strong>是没有话语权的，也就是决策权，但享受未来投资收益权</p>
+<p><strong>GP</strong>是出资很少，可以通过合伙协议拥有完全话语权</p>
+<p>创始人一般为家族企业，控股公司可以作为对外投资的主体对其他包括核心公司的控股，常以有限责任公司为主</p>
+<p><img src="https://p8.itc.cn/images01/20230306/846c3493a5ff44078ac0a736c058b0f7.jpeg" class="lazyload placeholder" data-srcset="https://p8.itc.cn/images01/20230306/846c3493a5ff44078ac0a736c058b0f7.jpeg" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"></p>
+<p>这里引用一个最为经典的例子，阿里巴巴的蚂蚁金服股权结构</p>
+<p><img src="https://picx.zhimg.com/70/v2-ff466be4aea969560871585346d5ebf7_1440w.image?source=172ae18b&biz_tag=Post" class="lazyload placeholder" data-srcset="https://picx.zhimg.com/70/v2-ff466be4aea969560871585346d5ebf7_1440w.image?source=172ae18b&biz_tag=Post" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"></p>
+<p>可以看到，马云对杭州云铂公司控股百分百，也就是完全的话语权，之后云铂公司又以GP的身份持股君洁和君济，也就是说对这两个公司有完全话语权，其他的员工作为LP持股公司，享受未来投资收益权。然后又以同样的形式对君瀚和君澳持股，最后控制了蚂蚁金服。</p>
+<p><img src="https://p9.itc.cn/images01/20230306/f43b7fce954545f4be5442096d2eb434.jpeg" class="lazyload placeholder" data-srcset="https://p9.itc.cn/images01/20230306/f43b7fce954545f4be5442096d2eb434.jpeg" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"></p>
+<p>其中，云铂公司的作用：</p>
+<p>1、作为防火墙隔离，根据《合伙企业法》的规定，普通合伙人要对合伙企业债务承担无限连带责任，马云中间设置了云铂有限公司，则两合伙企业的债务责任则由云铂公司承担，云铂公司就像一道防火墙，隔离了马云对两合伙企业的连带责任。个人理解：也就是说假如合伙的公司注册资本1000万，云铂公司10万如果合伙公司经营不善破产，没有云铂公司，马云需要承担2000万的债务，而有了云铂公司作为中间体，则只需要承担云铂公司注册资本的10万债务，大大降低风险，相对于注册资本较大的公司也可以说是隔离了风险。</p>
+<p>2、灵活，因为根据合伙协议，使用了GP的身份则不能再使用LP身份，马云如果没有云铂公司，则就使用掉了GP，就不能用LP，而云铂公司作为一个主体是GP，但马云又没有利用两者其中一个身份，这下就可以使用LP去获得投资收益权，云铂公司拥有话语权，间接来说马云两者身份都拥有。更换GP只需要在云铂公司更换股东</p>
+<h4 id="使用情况"><a href="#使用情况" class="headerlink" title="使用情况"></a>使用情况</h4><p>1、钱权分离度极高的创始人股东。比如互联网企业，属于资金密集型企业，VC&#x2F;PE会在发展过程中起到非常重要的作用。随着资本不断加入，创始人股东及其团队的持股比例会慢慢地被稀释得很低。为了控制权的需要，就会采取有限合伙企业的架构。</p>
+<p>2、有短期套现图的财务投资人。</p>
+<p>3、员工股权分红，设置股权激励机制，提高企业运转效率。</p>
+<h3 id="2、自然人直接架构"><a href="#2、自然人直接架构" class="headerlink" title="2、自然人直接架构"></a>2、自然人直接架构</h3><p>自然人股东直接持有核心公司股权</p>
+<p><img src="https://p4.itc.cn/images01/20230306/a6c3a176f0ea4205af7dcff63586d475.jpeg" class="lazyload placeholder" data-srcset="https://p4.itc.cn/images01/20230306/a6c3a176f0ea4205af7dcff63586d475.jpeg" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"></p>
+<p>缺点：</p>
+<p>1、不利于控制权集中</p>
+<p>2、缺少股权杠杆空间</p>
+<p>3、税负较高，获得分红再投资时还需缴纳个人所得税，包括转增成本</p>
+<h4 id="使用情况-1"><a href="#使用情况-1" class="headerlink" title="使用情况"></a>使用情况</h4><p>1、创业期的创始人股东。创业期不稳定因素较多，股权结构不宜设计得过于复杂，以便于后期进行调整</p>
+<h3 id="3、控股公司架构"><a href="#3、控股公司架构" class="headerlink" title="3、控股公司架构"></a>3、控股公司架构</h3><p>标准公司架构图</p>
+<p><img src="https://p2.itc.cn/images01/20230306/21eb544f670e445ab299a9045131f79b.jpeg" class="lazyload placeholder" data-srcset="https://p2.itc.cn/images01/20230306/21eb544f670e445ab299a9045131f79b.jpeg" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"></p>
+<p>不同板块对税务征收不同，IPO的时候不受到证监会的额欢迎</p>
+<p><strong>1、优点：</strong></p>
+<p>我们前面章节总结过金字塔架构的优点，具体包括：股权杠杆，以小搏大；集中股权，提升控制力；有纳税筹划效应；便于债权融资；有助于人事安排；控股公司单独上市，方便上市后的资本动作等。其实控股公司就是一种“金字塔”型的股权结构，搭建持股平台作为业务板块管理公司，为未来资本动作提供更大的空间。</p>
+<p><strong>2、缺点：</strong></p>
+<p>股东最终退出时税负太高。控股公司是通自然人——持股公司——核心公司的架构，存在持股公司需要缴纳企业所得税和个人所得税两道税负，所以并不适合未来有明确套现意图的财务投资人。</p>
+<p>缺乏灵活性。不适合作为员工持股平台，需要更加灵活的退出机制的员工持股平台，有限合伙公司更适合。</p>
+<p><strong>3、控股公司架构的适用情形</strong></p>
+<p>（1）规划长期持股的实业家；</p>
+<p>（2）有多个业务版块的多元化企业集团；</p>
+<p>（3）作为大股东的家族持股平台；</p>
+<p>（4）已进入成熟期，但没有上市规划，打算家族传承的实业家。</p>
+<h3 id="4、混合股权架构"><a href="#4、混合股权架构" class="headerlink" title="4、混合股权架构"></a>4、混合股权架构</h3><p><img src="https://p8.itc.cn/images01/20230306/efbb4ff1ab104b8aba6a2bdb0dc37752.png" class="lazyload placeholder" data-srcset="https://p8.itc.cn/images01/20230306/efbb4ff1ab104b8aba6a2bdb0dc37752.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"></p>
+<h3 id="5、海外股权架构"><a href="#5、海外股权架构" class="headerlink" title="5、海外股权架构"></a>5、海外股权架构</h3><h3 id="6、契约股权架构"><a href="#6、契约股权架构" class="headerlink" title="6、契约股权架构"></a>6、契约股权架构</h3>
+      </div>
+      <div class="post-tags-categories">
+        
+        <div class="tags">
+          
+            <a href="/tags/%E8%82%A1%E6%9D%83/" class="">
+              股权
+            </a>
+          
+        </div>
+        
+      </div>
+      
+        <div class="copyright">
+  <ul class="post-copyright">
+    <li class="post-copyright-author">
+    <strong>author:  </strong>wh1t3zer</a>
+    </li>
+    <li class="post-copyright-link">
+    <strong>link:  </strong>
+    <a href="/2024/02/18/股权架构设计/" target="_blank" title="股权架构设计">https://wh1t3zer.github.io/2024/02/18/股权架构设计/</a>
+    </li>
+    <li class="post-copyright-license">
+      <strong>Copyright notice:   </strong>
+      All articles on this website, unless otherwise stated, adopt <a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank" title="Attribution-NonCommercial-NoDerivatives 4.0 International (CC BY-NC-ND 4.0)">CC BY-NC-ND 4.0</a>
+      reprint policy. If reproduced, please indicate source!
+    </li>
+  </ul>
+<div>
+      
+    </article>
+    <!-- 上一篇文章和下一篇文章 -->
+    
+      <!-- 文章详情页的上一页和下一页 -->
+<div class="post-nav">
+
+
+
+  
+  <div class="post-nav-prev post-nav-item">
+    <div class="post-nav-img" style="background-size: cover; 
+      background-position: center center;">
+      <img class="lazyload lazyload placeholder" src="/medias/img6.jpg" class="lazyload placeholder" data-srcset="/medias/img6.jpg" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="">
+    </div>
+    <a href="/2024/03/11/Go%E5%AD%A6%E4%B9%A0%E5%88%9D%E6%8E%A2/" class="post-nav-link">
+      <div class="title">
+        <i class="fas fa-angle-left"></i> Prev:
+        <div class="title-text">Go学习初探</div>
+      </div>
+      
+      <!-- <div class="content">
+        0x00前言近期也是对区块链愈发关注，从金融方面开始过渡到了技术方面，随着发现的深入，了解到了区块链比较主流的开发语言是
+      </div> -->
+    </a>
+  </div>
+
+
+
+  
+  <div class="post-nav-next post-nav-item">
+    <div class="post-nav-img" style="background-size: cover; 
+      background-position: center center;">
+      <img class="lazyload lazyload placeholder" src="/medias/img2.jpg" class="lazyload placeholder" data-srcset="/medias/img2.jpg" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" src="" alt="">
+    </div>
+    <a href="/2023/12/02/webshell%E5%B7%A5%E5%85%B7%E6%B5%81%E9%87%8F%E7%89%B9%E5%BE%81%E5%88%9D%E6%8E%A2/" class="post-nav-link">
+      <div class="title">
+        Next: <i class="fas fa-angle-right"></i>
+        <div class="title-text">webshell工具流量特征初探</div>
+      </div>
+      <!-- <div class="content">
+        0x00前言学习过程复习到了webshell攻防部分，没怎么深入了解过这一块，跟着网上一些博客去学习下各webshell
+      </div> -->
+    </a>
+  </div>
+
+</div>
+
+    
+    
+
+    <!-- 打赏 -->
+    
+
+    <!-- 分享 -->
+    
+      <!-- https://github.com/overtrue/share.js -->
+<!-- 文章详情页的分享 -->
+<div class="social-share" data-sites="twitter,facebook,google,qq,qzone,wechat,weibo,douban,linkedin" data-wechat-qrcode-helper="<p>微信扫一扫即可分享！</p>"></div>
+
+<script src="/js/shareJs/social-share.min.js"></script>
+</script>
+
+<style>
+  .social-share {
+    margin: 20px 0;
+  }
+</style>
+
+
+    
+    
+    <!-- 评论 -->
+    <!-- 评论 -->
+
+  <div id="myComment">
+    
+      <div id="gitment-container"></div>
+
+    
+  </div>
+
+<!-- comment script in themes\hexo-theme-bamboo\layout\_partial\scripts\index.ejs -->
+
+
+  </div>
+
+  <!-- 目录 -->
+  <!-- 文章详情页右侧目录 -->
+
+  <div class="toc-aside">
+    <div class="toc-main">
+      <div class="toc-aside-title">
+        <i class="fas fa-list-ul" aria-hidden="true"></i><span>catalog</span>
+        
+          <div class="toc-open-close">catalog</div>
+        
+      </div>
+      <div class="toc-content">
+        <div class="toc"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 手机端目录按钮 -->
+  <div id="toc-mobile-btn">
+    <i class="fas fa-list-ul" aria-hidden="true"></i>
+  </div>
+
+
+<script>
+  function closeToc(init) {
+    $(".toc-aside").css({'width': 0, 'padding': 0, 'transition': init ?  'noe' : 'width 0.3s' });
+    $(".toc-content").css({'width': 0});
+    $(".toc-aside-title span, .toc-aside-title i").css({'display': 'none'});
+    $(".main-content").css({'width': '75%', 'margin': '10px auto'});
+  };
+  function openToc() {
+    $(".main-content").css({'width': '65%', 'margin-right': '10px', 'margin-left': 'calc(35% - 350px)'});
+    $(".toc-aside").css({'width': '300px', 'padding': '0 10px', 'transition': 'width 0.3s'});
+    $(".toc-content").css({'width': '300px'});
+    $(".toc-aside-title span, .toc-aside-title i").css({'display': 'inline-block'});
+  }
+  function openBtnClickFn () {
+    let openOrCloseBtn = $('.toc-aside .toc-aside-title .toc-open-close');
+    let open = eval('' || 'true');
+    openOrCloseBtn.click(function() {
+      if (open) {
+        closeToc();
+        open = false;
+      } else {
+        openToc();
+        open = true;
+      }
+    });
+  };
+  openBtnClickFn();
+  initCloseTocWidth(true);
+
+  function initCloseTocWidth(init) {
+    if (window.innerWidth >= 992) {
+      let isClose = false;
+      isClose && closeToc(init)
+    }
+  }
+
+  document.addEventListener('pjax:complete', function () {
+    $(".toc-aside").css({'transition': 'no'});
+  })
+  document.addEventListener('pjax:complete', function () {
+    openBtnClickFn();
+  })
+  
+</script>
+
+  <!-- 图片放大 Wrap images with fancybox support -->
+  <script src="/js/wrapImage.js"></script>
+</div>
+
+<!-- 文章详情页背景图 -->
+<div id="appBgSwiper" style="position: fixed;left: 0;top: 0;width: 100%;height: 100%;z-index: -2;"
+	:style="{'background-color': bgColor ? bgColor : 'transparent'}">
+	<transition-group tag="ul" :name="names">
+		<li v-for='(image,index) in img' :key='index' v-show="index === mark" class="bg-swiper-box">
+			<img :src="image" class="bg-swiper-img no-lazy">
+		</li>
+	</transition-group>
+</div>
+<script>
+	var vm = new Vue({
+		el: '#appBgSwiper',
+		data: {
+			names: '' || 'fade' || 'fade', // translate-fade fade
+			mark: 0,
+			img: [],
+			bgColor: '',
+			time: null
+		},
+		methods: {   //添加方法
+			change(i, m) {
+				if (i > m) {
+					// this.names = 'fade';
+				} else if (i < m) {
+					// this.names = 'fade';
+				} else {
+					return;
+				}
+				this.mark = i;
+			},
+			prev() {
+				// this.names = 'fade';
+				this.mark--;
+				if (this.mark === -1) {
+					this.mark = 3;
+					return
+				}
+			},
+			next() {
+				// this.names = 'fade';
+				this.mark++;
+				if (this.mark === this.img.length) {
+					this.mark = 0;
+					return
+				}
+			},
+			autoPlay() {
+				// this.names = 'fade';
+				this.mark++;
+				if (this.mark === this.img.length) {
+					this.mark = 0;
+					return
+				}
+			},
+			play() {
+				let bgImgDelay = '' || '180000'
+				let delay = parseInt(bgImgDelay) || 180000;
+				this.time = setInterval(this.autoPlay, delay);
+			},
+			enter() {
+				clearInterval(this.time);
+			},
+			leave() {
+				this.play();
+			}
+		},
+		created() {
+			this.play()
+		},
+		beforeDestroy() {
+			clearInterval(this.time);
+		},
+		mounted() {
+			let prop = '' || '';
+			let isImg = prop.includes('.bmp') || prop.includes('.jpg') || prop.includes('.png') || prop.includes('.tif') || prop.includes('.gif') || prop.includes('.pcx') || prop.includes('.tga') || prop.includes('.exif') || prop.includes('.fpx') || prop.includes('.psd') || prop.includes('.cdr') || prop.includes('.pcd') || prop.includes('.dxf') || prop.includes('.ufo') || prop.includes('.eps') || prop.includes('.ai') || prop.includes('.raw') || prop.includes('.WMF') || prop.includes('.webp') || prop.includes('.jpeg') || prop.includes('http://') || prop.includes('https://')
+			if (isImg) {
+				let img = prop.split(',');
+				let configRoot = '/'
+				let arrImg = [];
+				img.forEach(el => {
+					var Expression = /http(s)?:\/\/([\w-]+\.)+[\w-]+(\/[\w- .\/?%&=]*)?/;
+					var objExp = new RegExp(Expression);
+
+					if (objExp.test(el)) {
+						// http or https
+						arrImg.push(el);
+					} else {
+						// 非http or https开头
+						// 本地文件
+						let firstStr = el.charAt(0);
+						if (firstStr == '/') {
+							el = el.substr(1); // 删除第一个字符 '/',因为 configRoot最后一个字符为 /
+						}
+						el = configRoot + el;
+						arrImg.push(el);
+					}
+				})
+				this.img = arrImg;
+			} else {
+				this.bgColor = prop;
+			}
+		}
+	})
+</script>
+
+<style>
+	.bg-swiper-box {
+		position: absolute;
+		display: block;
+		width: 100%;
+		height: 100%;
+	}
+
+	.bg-swiper-img {
+		object-fit: cover;
+		width: 100%;
+		height: 100%;
+	}
+</style>
+
+
+
+
   <script>
-  function typedFn() {
-    const el = '#archive-header-desc';
-    const type = 'archive';
-    let desc = '愿你如风，被人温柔以待'
-    var typed = new Typed(el, {
-      strings: [desc],
-      startDelay: 100,
-      typeSpeed: 100,
-      loop: true,
-      backSpeed: 50,
-      showCursor: true
-    });
-  }
-  typedFn();
-</script>
+  function loadMermaid() {
+    if (document.getElementsByClassName('mermaid').length) {
+      if (window.mermaidJsLoad) mermaid.init()
+      else {
+        loadScript('https://unpkg.com/mermaid/dist/mermaid.min.js').then(() => {
+          window.mermaidJsLoad = true
+          mermaid.initialize({
+            theme: 'default',
+          })
+          if ('true') {
+            mermaid.init();
+          }
+        })
+      }
+    }
+  };
+  document.addEventListener("DOMContentLoaded", function () {
+    loadMermaid();
+  })
+
+  document.addEventListener('pjax:complete', function () {
+    loadMermaid();
+  })
   
-  </div>
-  <div class="mask-box"></div>
-</div>
-
-<div class="archive-video">
-  <video class="full-video" autoplay loop muted>
-      <source style="width: 100%;height: 100vh;" src="/">
-  </video>
-  <div class="video-header-title">
-    archive
-  </div>
-  <div class="video-header-desc">
-  
-      <span class="title" id="archive-video-header-desc"></span>
-      <script>
-  function typedFn() {
-    const el = '#archive-video-header-desc';
-    const type = 'archive';
-    let desc = '愿你如风，被人温柔以待'
-    var typed = new Typed(el, {
-      strings: [desc],
-      startDelay: 100,
-      typeSpeed: 100,
-      loop: true,
-      backSpeed: 50,
-      showCursor: true
-    });
-  }
-  typedFn();
 </script>
-      
-  </div>
-  <div class="mask-box"></div>
-</div>
 
-<!-- hash算法 -->
-
-
-<div class="archive-main">
-  <section class="archive">
-    <div class="archive-content">
-      <ul class="post-archive">
-        
-        
-          
-            
-            <div class="year" data-aos="zoom-in-up">
-                <div class="bullet"></div>
-                <a href="/archives/2024">2024</a>
-            </div>
-          
-          <li class="post-item" data-aos="fade-left">
-            
-            <div class="post-img-box">
-              <a href="/2024/03/11/Go%E5%AD%A6%E4%B9%A0%E5%88%9D%E6%8E%A2/" class="post-img " style="background-size: cover; 
-                background-position: center center;">
-                <img class="lazyload lazyload placeholder" src="/medias/img6.jpg" class="lazyload placeholder" data-srcset="/medias/img6.jpg" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="">
-              </a>
-            </div>
-            <div class="post-date-title">
-              <div>
-                <span class="post-date">03-11</span>
-              </div>
-              <a class="post-title" href="/2024/03/11/Go%E5%AD%A6%E4%B9%A0%E5%88%9D%E6%8E%A2/">Go学习初探</a>
-            </div>
-          </li>
-        
-          
-          <li class="post-item" data-aos="fade-left">
-            
-            <div class="post-img-box">
-              <a href="/2024/02/18/%E8%82%A1%E6%9D%83%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1/" class="post-img " style="background-size: cover; 
-                background-position: center center;">
-                <img class="lazyload lazyload placeholder" src="/medias/img4.jpg" class="lazyload placeholder" data-srcset="/medias/img4.jpg" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="">
-              </a>
-            </div>
-            <div class="post-date-title">
-              <div>
-                <span class="post-date">02-18</span>
-              </div>
-              <a class="post-title" href="/2024/02/18/%E8%82%A1%E6%9D%83%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1/">股权架构设计</a>
-            </div>
-          </li>
-        
-          
-            
-            <div class="year" data-aos="zoom-in-up">
-                <div class="bullet"></div>
-                <a href="/archives/2023">2023</a>
-            </div>
-          
-          <li class="post-item" data-aos="fade-left">
-            
-            <div class="post-img-box">
-              <a href="/2023/12/02/webshell%E5%B7%A5%E5%85%B7%E6%B5%81%E9%87%8F%E7%89%B9%E5%BE%81%E5%88%9D%E6%8E%A2/" class="post-img " style="background-size: cover; 
-                background-position: center center;">
-                <img class="lazyload lazyload placeholder" src="/medias/img2.jpg" class="lazyload placeholder" data-srcset="/medias/img2.jpg" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="">
-              </a>
-            </div>
-            <div class="post-date-title">
-              <div>
-                <span class="post-date">12-02</span>
-              </div>
-              <a class="post-title" href="/2023/12/02/webshell%E5%B7%A5%E5%85%B7%E6%B5%81%E9%87%8F%E7%89%B9%E5%BE%81%E5%88%9D%E6%8E%A2/">webshell工具流量特征初探</a>
-            </div>
-          </li>
-        
-          
-          <li class="post-item" data-aos="fade-left">
-            
-            <div class="post-img-box">
-              <a href="/2023/10/22/SQL%E6%B3%A8%E5%85%A5%E6%80%BB%E7%BB%93/" class="post-img " style="background-size: cover; 
-                background-position: center center;">
-                <img class="lazyload lazyload placeholder" src="/medias/img10.jpg" class="lazyload placeholder" data-srcset="/medias/img10.jpg" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="">
-              </a>
-            </div>
-            <div class="post-date-title">
-              <div>
-                <span class="post-date">10-22</span>
-              </div>
-              <a class="post-title" href="/2023/10/22/SQL%E6%B3%A8%E5%85%A5%E6%80%BB%E7%BB%93/">SQL注入总结</a>
-            </div>
-          </li>
-        
-          
-          <li class="post-item" data-aos="fade-left">
-            
-            <div class="post-img-box">
-              <a href="/2023/09/14/%E6%94%BB%E5%87%BB%E9%9D%A2%E6%9A%B4%E9%9C%B2%E8%AE%BE%E8%AE%A1/" class="post-img " style="background-size: cover; 
-                background-position: center center;">
-                <img class="lazyload lazyload placeholder" src="/medias/img19.jpg" class="lazyload placeholder" data-srcset="/medias/img19.jpg" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="">
-              </a>
-            </div>
-            <div class="post-date-title">
-              <div>
-                <span class="post-date">09-14</span>
-              </div>
-              <a class="post-title" href="/2023/09/14/%E6%94%BB%E5%87%BB%E9%9D%A2%E6%9A%B4%E9%9C%B2%E8%AE%BE%E8%AE%A1/">攻击面管理系统设计</a>
-            </div>
-          </li>
-        
-          
-          <li class="post-item" data-aos="fade-left">
-            
-            <div class="post-img-box">
-              <a href="/2023/08/19/%E6%9C%8D%E5%8A%A1%E5%8F%8A%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F%E9%85%8D%E7%BD%AE(%E4%B8%BB%E6%9C%BA%E7%89%88)/" class="post-img " style="background-size: cover; 
-                background-position: center center;">
-                <img class="lazyload lazyload placeholder" src="/medias/img15.jpg" class="lazyload placeholder" data-srcset="/medias/img15.jpg" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="">
-              </a>
-            </div>
-            <div class="post-date-title">
-              <div>
-                <span class="post-date">08-19</span>
-              </div>
-              <a class="post-title" href="/2023/08/19/%E6%9C%8D%E5%8A%A1%E5%8F%8A%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F%E9%85%8D%E7%BD%AE(%E4%B8%BB%E6%9C%BA%E7%89%88)/">服务及环境变量配置(主机版)</a>
-            </div>
-          </li>
-        
-          
-          <li class="post-item" data-aos="fade-left">
-            
-            <div class="post-img-box">
-              <a href="/2023/08/18/%E6%9C%8D%E5%8A%A1%E5%8F%8A%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F%E9%85%8D%E7%BD%AE(Docker%E7%89%88)/" class="post-img " style="background-size: cover; 
-                background-position: center center;">
-                <img class="lazyload lazyload placeholder" src="/medias/img6.jpg" class="lazyload placeholder" data-srcset="/medias/img6.jpg" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="">
-              </a>
-            </div>
-            <div class="post-date-title">
-              <div>
-                <span class="post-date">08-18</span>
-              </div>
-              <a class="post-title" href="/2023/08/18/%E6%9C%8D%E5%8A%A1%E5%8F%8A%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F%E9%85%8D%E7%BD%AE(Docker%E7%89%88)/">服务及环境变量配置(Docker版)</a>
-            </div>
-          </li>
-        
-          
-          <li class="post-item" data-aos="fade-left">
-            
-            <div class="post-img-box">
-              <a href="/2023/07/05/shiro%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0/" class="post-img " style="background-size: cover; 
-                background-position: center center;">
-                <img class="lazyload lazyload placeholder" src="/medias/img5.jpg" class="lazyload placeholder" data-srcset="/medias/img5.jpg" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="">
-              </a>
-            </div>
-            <div class="post-date-title">
-              <div>
-                <span class="post-date">07-05</span>
-              </div>
-              <a class="post-title" href="/2023/07/05/shiro%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0/">shiro反序列化漏洞复现</a>
-            </div>
-          </li>
-        
-          
-          <li class="post-item" data-aos="fade-left">
-            
-            <div class="post-img-box">
-              <a href="/2023/07/05/struts2%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0/" class="post-img " style="background-size: cover; 
-                background-position: center center;">
-                <img class="lazyload lazyload placeholder" src="/medias/img16.jpg" class="lazyload placeholder" data-srcset="/medias/img16.jpg" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="">
-              </a>
-            </div>
-            <div class="post-date-title">
-              <div>
-                <span class="post-date">07-05</span>
-              </div>
-              <a class="post-title" href="/2023/07/05/struts2%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0/">struts2RCE漏洞复现</a>
-            </div>
-          </li>
-        
-          
-          <li class="post-item" data-aos="fade-left">
-            
-            <div class="post-img-box">
-              <a href="/2023/05/30/%E5%BA%94%E6%80%A5%E5%93%8D%E5%BA%94/" class="post-img " style="background-size: cover; 
-                background-position: center center;">
-                <img class="lazyload lazyload placeholder" src="/medias/img15.jpg" class="lazyload placeholder" data-srcset="/medias/img15.jpg" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="">
-              </a>
-            </div>
-            <div class="post-date-title">
-              <div>
-                <span class="post-date">05-30</span>
-              </div>
-              <a class="post-title" href="/2023/05/30/%E5%BA%94%E6%80%A5%E5%93%8D%E5%BA%94/">应急响应流程</a>
-            </div>
-          </li>
-        
-      </ul>
-    </div>
-  </section>
-  <div class="w-70">
-    
-  <!-- <nav class="page-nav">
-    <span class="page-number current">1</span><a class="page-number" href="/archives/page/2/">2</a><a class="page-number" href="/archives/page/3/">3</a><a class="page-number" href="/archives/page/4/">4</a><a class="extend next" rel="next" href="/archives/page/2/">Next</a>
-  </nav> -->
-  <div class="page-nav">
-    
-    <div class="page-info">
-        <div class="page-info-text">1 / 4</div>
-    </div>
-    
-      <a href="/archives/page/2/"
-         class="page-nav-next">
-          <span class="mr-5">Next</span><i class="fas fa-angle-right"></i>
-      </a>
-      
-  </div>
-
-  </div>
-</div>
 
       </main>
     </div>
