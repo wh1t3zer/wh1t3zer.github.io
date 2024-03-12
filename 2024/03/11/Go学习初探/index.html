@@ -622,9 +622,9 @@
   <div class="main-content">
     <article class="post post-detail">
       <div class="post-content">
-        <h2 id="0x00前言"><a href="#0x00前言" class="headerlink" title="0x00前言"></a>0x00前言</h2><p>近期也是对区块链愈发关注，从金融方面开始过渡到了技术方面，随着发现的深入，了解到了区块链比较主流的开发语言是Go语言（以太坊网络基于Go语言编写），本身也对Go语言有点兴趣，所以借此文章记录下学习Go的过程中的知识点。</p>
+        <h2 id="0x00前言"><a href="#0x00前言" class="headerlink" title="0x00前言"></a>0x00前言</h2><p>近期也是对区块链愈发关注，从金融方面开始过渡到了技术方面，随着发现的深入，了解到了区块链比较主流的开发语言是Go语言（以太坊网络就是基于Go语言编写），本身也对Go语言有点兴趣，所以借此文章记录下学习Go的过程中的知识点。</p>
 <h2 id="0x01简介"><a href="#0x01简介" class="headerlink" title="0x01简介"></a>0x01简介</h2><p>Go语言全称是Golang，是由谷歌开发的，刚好用PHP做完一个项目，借此机会对比下。两者同样是可以做Web等后台应用</p>
-<h3 id="GO-VS-PHP"><a href="#GO-VS-PHP" class="headerlink" title="GO VS PHP"></a>GO VS PHP</h3><p>PHP是一种动态类型语言，也就是在声明变量的时候无需带上属性，如$data，就是直接定义了一个data变量</p>
+<h3 id="GO-VS-PHP"><a href="#GO-VS-PHP" class="headerlink" title="GO VS PHP"></a>GO VS PHP</h3><p>PHP是一种动态类型语言，也就是在声明变量的时候无需带上属性，如$data，就是直接定义了一个data变量，在赋值的时候就识别变量类型</p>
 <p>Go是一种静态类型语言，与JAVA相似，声明变量的时候需要带上变量属性，也就是如var data string</p>
 <p>Go的并发性能很好，强于PHP几倍，常用于构建微服务、网络IO密集型服务，能同时处理多任务，且有丰富的库</p>
 <p>PHP还是主要用于Web服务，性能较差，扩展性相对较弱</p>
@@ -662,18 +662,17 @@
 </ul>
 <p>尽管Go语言有很多特点优势，但缺点也有：</p>
 <ul>
-<li>不支持泛型</li>
-<li>内存安全。</li>
-<li>自动垃圾回收。</li>
-<li>良好的代码跨平台性。</li>
-<li>自定义泛型（从Go 1.18开始）。</li>
+<li>Go语言的历史较为短暂</li>
+<li>1.18版本之前不支持泛型</li>
+<li>错误处理基于返回值，需在所要调试的函数中加入显式返回，即err变量</li>
 </ul>
 <h2 id="0x02正文"><a href="#0x02正文" class="headerlink" title="0x02正文"></a>0x02正文</h2><p>开始学习ing…</p>
 <h3 id="一、组成结构"><a href="#一、组成结构" class="headerlink" title="一、组成结构"></a>一、组成结构</h3><p>一个Go基本文件由6个内容组成，包声明、引入包、注释、函数、变量、表达式&#x2F;语句</p>
 <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main			<span class="comment">//包声明</span></span><br><span class="line"><span class="keyword">import</span> &#123;					<span class="comment">//引入包</span></span><br><span class="line">	<span class="string">&quot;fmt&quot;</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">/*注释*/</span>					<span class="comment">//注释		多行注释/**/,单行注释//</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span>&#123;		<span class="comment">//函数</span></span><br><span class="line">  <span class="keyword">var</span> a <span class="type">int</span>     <span class="comment">//变量</span></span><br><span class="line">  fmt.Println(<span class="string">&quot;hello&quot;</span>)		<span class="comment">//表达式/语句</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 
 <p>1.每个Go程序都有一个声明main包的页面</p>
-<p>2.一个页面中有init()和main()，会优先运行init()</p>
+<p>2.一个页面中有<strong>init()<strong>和main()，会优先运行</strong>init()</strong></p>
+<p>3.函数、方法、循环、条件语句等的大括号必须与相应的声明或语句放在同一行，不能单独一行</p>
 <h3 id="二、数据类型"><a href="#二、数据类型" class="headerlink" title="二、数据类型"></a>二、数据类型</h3><h4 id="1-布尔类型"><a href="#1-布尔类型" class="headerlink" title="1.布尔类型"></a>1.布尔类型</h4><p>bool</p>
 <h4 id="2-数字类型"><a href="#2-数字类型" class="headerlink" title="2.数字类型"></a>2.数字类型</h4><p>uint8&#x2F;int8</p>
 <p>uint16&#x2F;int16</p>
@@ -686,16 +685,16 @@
 <p>uintptr	用于存放指针</p>
 <h4 id="3-字符串类型"><a href="#3-字符串类型" class="headerlink" title="3.字符串类型"></a>3.字符串类型</h4><p>float32</p>
 <p>float64</p>
-<p>complex64</p>
+<p>complex64	复数类型</p>
 <p>complex128</p>
-<h4 id="4-派生类型"><a href="#4-派生类型" class="headerlink" title="4.派生类型"></a>4.派生类型</h4><p>指针类型</p>
-<p>数组类型</p>
-<p>结构化类型</p>
-<p>Channel类型</p>
-<p>函数类型</p>
-<p>切片类型</p>
-<p>接口类型</p>
-<p>Map类型</p>
+<h4 id="4-派生类型"><a href="#4-派生类型" class="headerlink" title="4.派生类型"></a>4.派生类型</h4><p>指针类型	*a int</p>
+<p>数组类型	[]a int</p>
+<p>结构化类型	type a struct{}</p>
+<p>Channel类型	chan string</p>
+<p>函数类型	func a() int {}</p>
+<p>切片类型	[]int{}</p>
+<p>接口类型	type a interface{}</p>
+<p>Map类型	map[string] int{}</p>
 <h3 id="三、变量"><a href="#三、变量" class="headerlink" title="三、变量"></a>三、变量</h3><p>一般声明变量用var</p>
 <p>如var data string &#x3D; “test”</p>
 <p>当用var声明变量未赋值时，默认为0值</p>
@@ -703,11 +702,11 @@
 <p>以下变量类型0值为nil</p>
 <p>*int(指针类型)、[]int(数组类型)、map[string] int(键为字符串，值为整形)、chan int(通道类型)、func(string) int(函数类型)、error(接口类型)</p>
 <p>其中在声明变量中也可以用 <strong>:&#x3D;</strong> 表达，即data :&#x3D; “test”</p>
-<p>那var和 :&#x3D; 有什么不同，<strong>var</strong>初始化可以没有赋值，而 <strong>:&#x3D;</strong> 没有赋值就会报错；并且如果用var声明过变量，再用 :&#x3D; 也会编译报错</p>
+<p>那var和 :&#x3D; 有什么不同，<strong>var</strong>初始化可以没有赋值，而 <strong>:&#x3D;</strong> 没有赋值就会报错；并且如果用var声明过变量，再用 :&#x3D; 也会编译报错，总之，var和 :&#x3D; 不能同时存在</p>
 <p><strong>即 var data string &#x3D; “test”	&#x3D;&gt; data :&#x3D; “test”</strong></p>
 <p>可以使用&amp;取变量的地址，</p>
 <p>声明多变量</p>
-<p>var data1 , data2 string &#x3D; “test”,”abc”</p>
+<p>var data1 , data2 string &#x3D; “test”,”abc”，声明变量的类型必须统一，如果不同需要换行单独一行声明变量</p>
 <p><strong>此外声明变量赋值还不够，必须在程序中使用到变量，否则也会报错，除非是全局变量</strong></p>
 <p>tips：Go语言有一个空白标识符，使用它可以避免创建无效的变量，即：</p>
 <p>_, err :&#x3D; “1”,”2”	只会返回err变量值为2，1默认被丢弃</p>
@@ -769,7 +768,93 @@
 <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">test</span><span class="params">()</span></span> (<span class="type">int</span>, <span class="type">int</span>) &#123;</span><br><span class="line">	a := <span class="number">1</span></span><br><span class="line">	b := <span class="number">2</span></span><br><span class="line">	<span class="keyword">return</span> a, b</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//返回多少个参数，返回的类型也多少个，一一对应</span></span><br></pre></td></tr></table></figure>
 
 <h3 id="九、变量作用域"><a href="#九、变量作用域" class="headerlink" title="九、变量作用域"></a>九、变量作用域</h3><p>同名的全局变量和在函数中的局部变量，当调用该函数的时候，优先考虑的是局部变量</p>
-<h3 id="十、数组"><a href="#十、数组" class="headerlink" title="十、数组"></a>十、数组</h3>
+<h3 id="十、数组"><a href="#十、数组" class="headerlink" title="十、数组"></a>十、数组</h3><p>声明数组</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> array [size] <span class="keyword">type</span> =&gt; <span class="keyword">var</span> test [<span class="number">10</span>]<span class="type">int</span> =&gt; test := [<span class="number">10</span>]<span class="type">int</span></span><br></pre></td></tr></table></figure>
+
+<p>可以表示为var test &#x3D; [5] int{1,2,3,4,5} &#x3D;&gt; test :&#x3D; [5]int{1,2,3,4,5}</p>
+<p>声明数组未赋值，则自动初始化，默认所有值为0</p>
+<p>长度不确定时可以用…代替</p>
+<p>var test  &#x3D; […] int{1,2,3}</p>
+<h4 id="二维数组"><a href="#二维数组" class="headerlink" title="二维数组"></a>二维数组</h4><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> test [<span class="number">3</span>][<span class="number">3</span>] <span class="type">int</span> =&gt; test := [<span class="number">3</span>][<span class="number">3</span>]<span class="type">int</span>&#123;&#123;<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>&#125;,&#123;<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>&#125;,&#123;<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>&#125;&#125;</span><br><span class="line"><span class="comment">//定义了一个三行三列的数组</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="十一、指针"><a href="#十一、指针" class="headerlink" title="十一、指针"></a>十一、指针</h3><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> a <span class="type">int</span> = <span class="number">20</span></span><br><span class="line"><span class="keyword">var</span> b *<span class="type">int</span></span><br></pre></td></tr></table></figure>
+
+<p>&amp;取地址符，*取指针地址所存的的值</p>
+<p>空指针</p>
+<p>nil</p>
+<h3 id="十二、结构体"><a href="#十二、结构体" class="headerlink" title="十二、结构体"></a>十二、结构体</h3><p>学过C语言都了解结构体，其使用方法也差不多类似</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> test <span class="keyword">struct</span>&#123;</span><br><span class="line"></span><br><span class="line">	attr1 <span class="type">string</span></span><br><span class="line"></span><br><span class="line">	attr2 <span class="type">int</span></span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>可以使用key：value形式创建，也可以常规直接添加数据创建新的数据类型</p>
+<p>test{“aaa”, 1} &#x3D;&gt; test{attr1:”aaa”, attr2:123}，没有填写的字段默认为空或者0值，取决于数据类型</p>
+<p>还可以单独赋值，并且读取结构体对象属性也是对象+ . 比如</p>
+<p>test.attr1 &#x3D; “aaa”</p>
+<p>test.attr2 &#x3D; 123</p>
+<p>结构体能代入函数作为参数，在传到函数中如果不是指针对象，则为值传递，无法改变原有结构体的属性，除非是以指针对象的形式作为参数也就是*object，则为引用传递，直接修改原有地址的值</p>
+<p>结构体指针</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> testptr *test</span><br><span class="line">testptr = &amp;test1</span><br></pre></td></tr></table></figure>
+
+<p>用结构体指针访问变量也是用”.”</p>
+<p>结构体属性大小写问题</p>
+<ul>
+<li>首字母大写相当于 public。</li>
+<li>首字母小写相当于 private。</li>
+</ul>
+<p>实际上就是在本包内可用，对外private不可用</p>
+<p>当要将结构体对象转换为 JSON 时，对象中的属性首字母必须是大写，才能正常转换为 JSON。</p>
+<h3 id="十三、切片"><a href="#十三、切片" class="headerlink" title="十三、切片"></a>十三、切片</h3><p>切片与之前的数组有点相似，但又不完全相似</p>
+<p>数组长度是不可改变的，而切片属于动态数组，可以动态改变长度，切片无需声明长度，用make则需要</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> slice1 []<span class="keyword">type</span></span><br><span class="line"><span class="comment">// 使用make创建切片</span></span><br><span class="line"><span class="keyword">var</span> slice1 []<span class="keyword">type</span> = <span class="built_in">make</span>([]<span class="keyword">type</span>, <span class="built_in">len</span>) =&gt; slice := <span class="built_in">make</span>([]<span class="keyword">type</span>, <span class="built_in">len</span>, capacity)<span class="comment">//len是长度,capacity是容量</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> slice1 []<span class="type">int</span> = <span class="built_in">make</span>([]<span class="type">int</span>,<span class="number">3</span>) =&gt; slice1 := <span class="built_in">make</span>([]<span class="type">int</span>,<span class="number">3</span>)</span><br></pre></td></tr></table></figure>
+
+<p>容量和长度的概念</p>
+<p>容量是这个切片最大能存放多少个元素，长度是当前切片存放元素的个数，初始化时长度不能大于容量，否则编译报错。</p>
+<p>如果长度大于容量，则会扩展，Go会创建更大的底层数组</p>
+<p>切片初始化</p>
+<p>slice1 :&#x3D; [] int{1,2,3}</p>
+<p>未初始化的切片默认为nil，长度为0</p>
+<p>假设有个arr数组</p>
+<p>slice1 :&#x3D; arr[:]，也就是把数组所有值初始化到切片slice1上</p>
+<p>slice1 :&#x3D; arr[startindex:]，把arr数组从开头到结束索引值-1的元素创建为切片</p>
+<p>slice1 :&#x3D; arr[:endindex]，一直到最后一个元素创建切片</p>
+<p>**len()**方法可以提供给切片索引</p>
+<p>**cap()**方法可以检测切片最大容量</p>
+<p>若动态追加切片容量其实也就是要创建一个更大的切片，把原有元素copy过来</p>
+<p>slice &#x3D; append(slice,1,2,3)	向slice追加1,2,3，三个元素</p>
+<p>也可以是用**copy()**方法</p>
+<p>copy(新切片，原有切片)</p>
+<h3 id="十四、范围"><a href="#十四、范围" class="headerlink" title="十四、范围"></a>十四、范围</h3><p>**range()**，与python比较类似</p>
+<p>也是通过迭代遍历元素和对象，Go是返回迭代数组(array)、切片(slice)、通道(channel)或集合(map)</p>
+<p>以key：value形式</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> key, value := <span class="keyword">range</span> oldMap &#123;</span><br><span class="line">    newMap[key] = value</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>用空白标识符代替key或value可以不返回特定变量</p>
+<h3 id="十五、Map集合"><a href="#十五、Map集合" class="headerlink" title="十五、Map集合"></a>十五、Map集合</h3><p>Map是无序的键值对集合</p>
+<p>返回时顺序是随机的，若不存在值则返回零值。可以通过key：value形式索引元素</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">maptest := <span class="built_in">make</span>(<span class="keyword">map</span>[<span class="type">string</span>]<span class="type">int</span>, initialCapacity)	<span class="comment">// initialCapacity用于指定容量</span></span><br></pre></td></tr></table></figure>
+
+<p>跟切片一样，Map集合可以动态扩容</p>
+<p>删除键值对用**delete()**方法，修改元素可以maptest[‘name’] &#x3D; “hahaha”</p>
+<h3 id="十六、接口"><a href="#十六、接口" class="headerlink" title="十六、接口"></a>十六、接口</h3><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> test <span class="keyword">interface</span>&#123;&#125;</span><br></pre></td></tr></table></figure>
+
+<p>隐式实现，如果一个类型实现了一个接口定义的所有方法，那么它就自动地实现了该接口。因此，我们可以通过将接口作为参数来实现对不同类型的调用，从而实现多态。</p>
+<h3 id="十七、错误处理"><a href="#十七、错误处理" class="headerlink" title="十七、错误处理"></a>十七、错误处理</h3><p>**error()**是一个接口类型</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> <span class="type">error</span> <span class="keyword">interface</span> &#123;</span><br><span class="line">    Error() <span class="type">string</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>其次还有<strong>panic()<strong>和</strong>revocer()</strong></p>
+<p>panic用于主动抛出错误，revocer用于捕获panic抛出的错误</p>
+<p>类似tyr catch</p>
+<p>1、如果没有revocer，panic在系统遇到错误会中止执行，只有recover捕捉到了才会正常</p>
+<p>2、panic在发生错误后不会往后执行，会逆序执行defer，就类似于finally</p>
+<p>3、利用revocer捕捉的panic时，defer需要在panic之前声明</p>
+<h3 id="十八、并发"><a href="#十八、并发" class="headerlink" title="十八、并发"></a>十八、并发</h3><h4 id="goroutine"><a href="#goroutine" class="headerlink" title="goroutine"></a>goroutine</h4><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">go</span> f(x, y, z) <span class="comment">//go 函数名( 参数列表 )</span></span><br></pre></td></tr></table></figure>
+
+<p>允许使用 go 语句开启一个新的运行期线程， 即 goroutine，以一个不同的、新创建的 goroutine 来执行一个函数。 同一个程序中的所有 goroutine 共享同一个地址空间。</p>
+<h4 id="通道-channel"><a href="#通道-channel" class="headerlink" title="通道(channel)"></a>通道(channel)</h4><p>ch &lt;- v	 把v发送到ch通道</p>
+<p>v :&#x3D; &lt;-ch   从ch通道接收数据</p>
+<p>通道声明</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ch := <span class="built_in">make</span>(<span class="keyword">chan</span> <span class="type">int</span>)</span><br></pre></td></tr></table></figure>
+
+
       </div>
       <div class="post-tags-categories">
         
