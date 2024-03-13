@@ -671,7 +671,7 @@
 <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main			<span class="comment">//包声明</span></span><br><span class="line"><span class="keyword">import</span> &#123;					<span class="comment">//引入包</span></span><br><span class="line">	<span class="string">&quot;fmt&quot;</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">/*注释*/</span>					<span class="comment">//注释		多行注释/**/,单行注释//</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span>&#123;		<span class="comment">//函数</span></span><br><span class="line">  <span class="keyword">var</span> a <span class="type">int</span>     <span class="comment">//变量</span></span><br><span class="line">  fmt.Println(<span class="string">&quot;hello&quot;</span>)		<span class="comment">//表达式/语句</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 
 <p>1.每个Go程序都有一个声明main包的页面</p>
-<p>2.一个页面中有<strong>init()<strong>和main()，会优先运行</strong>init()</strong></p>
+<p>2.一个页面中有<strong>init()<strong>和main()，会优先运行</strong>init()<strong>，每个包可含有多个</strong>init()<strong>，init方法不能被其他函数调用，而是在</strong>main()之</strong>前就生效</p>
 <p>3.函数、方法、循环、条件语句等的大括号必须与相应的声明或语句放在同一行，不能单独一行</p>
 <h3 id="二、数据类型"><a href="#二、数据类型" class="headerlink" title="二、数据类型"></a>二、数据类型</h3><h4 id="1-布尔类型"><a href="#1-布尔类型" class="headerlink" title="1.布尔类型"></a>1.布尔类型</h4><p>bool</p>
 <h4 id="2-数字类型"><a href="#2-数字类型" class="headerlink" title="2.数字类型"></a>2.数字类型</h4><p>uint8&#x2F;int8</p>
@@ -702,7 +702,7 @@
 <p>以下变量类型0值为nil</p>
 <p>*int(指针类型)、[]int(数组类型)、map[string] int(键为字符串，值为整形)、chan int(通道类型)、func(string) int(函数类型)、error(接口类型)</p>
 <p>其中在声明变量中也可以用 <strong>:&#x3D;</strong> 表达，即data :&#x3D; “test”</p>
-<p>那var和 :&#x3D; 有什么不同，<strong>var</strong>初始化可以没有赋值，而 <strong>:&#x3D;</strong> 没有赋值就会报错；并且如果用var声明过变量，再用 :&#x3D; 也会编译报错，总之，var和 :&#x3D; 不能同时存在</p>
+<p>那var和 :&#x3D; 有什么不同，<strong>var</strong>初始化可以没有赋值，而 <strong>:&#x3D;</strong> 没有赋值就会报错；并且如果用var声明过变量，再用 :&#x3D; 也会编译报错，总之，var和 :&#x3D; 不能同时存在，:&#x3D; 是简短声明</p>
 <p><strong>即 var data string &#x3D; “test”	&#x3D;&gt; data :&#x3D; “test”</strong></p>
 <p>可以使用&amp;取变量的地址，</p>
 <p>声明多变量</p>
@@ -767,6 +767,20 @@
 <p>或者</p>
 <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">test</span><span class="params">()</span></span> (<span class="type">int</span>, <span class="type">int</span>) &#123;</span><br><span class="line">	a := <span class="number">1</span></span><br><span class="line">	b := <span class="number">2</span></span><br><span class="line">	<span class="keyword">return</span> a, b</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//返回多少个参数，返回的类型也多少个，一一对应</span></span><br></pre></td></tr></table></figure>
 
+<p>常用内置函数</p>
+<p><strong>append</strong>		用于追加数组、slice中，返回的修改数组、slice</p>
+<p><strong>close</strong>			主要关闭channel</p>
+<p><strong>delete</strong>		  从map中删除key对应的value</p>
+<p><strong>panic</strong>		   停止常规goroutine</p>
+<p><strong>revocer</strong>		允许程序定义goroutine的panic操作</p>
+<p><strong>imag</strong>			返回complex实部</p>
+<p><strong>real</strong>			  返回complex虚部</p>
+<p><strong>make</strong>		   用来分配内存，返回Type本身（用于slice、map、channe）</p>
+<p><strong>new</strong>			同样分配内存，返回指向Type的指针，主要是分配值类型用于（int、struct）</p>
+<p><strong>cap</strong>			 返回某个类型最大容量（用于slice、map）</p>
+<p><strong>copy</strong>		   用于复制和连接slice，返回复制的数目</p>
+<p><strong>len</strong>			  求长度（slice、map、array、string、channel）</p>
+<p><strong>print</strong>，<strong>println</strong>		打印</p>
 <h3 id="九、变量作用域"><a href="#九、变量作用域" class="headerlink" title="九、变量作用域"></a>九、变量作用域</h3><p>同名的全局变量和在函数中的局部变量，当调用该函数的时候，优先考虑的是局部变量</p>
 <h3 id="十、数组"><a href="#十、数组" class="headerlink" title="十、数组"></a>十、数组</h3><p>声明数组</p>
 <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> array [size] <span class="keyword">type</span> =&gt; <span class="keyword">var</span> test [<span class="number">10</span>]<span class="type">int</span> =&gt; test := [<span class="number">10</span>]<span class="type">int</span></span><br></pre></td></tr></table></figure>
@@ -836,7 +850,15 @@
 <p>删除键值对用**delete()**方法，修改元素可以maptest[‘name’] &#x3D; “hahaha”</p>
 <h3 id="十六、接口"><a href="#十六、接口" class="headerlink" title="十六、接口"></a>十六、接口</h3><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> test <span class="keyword">interface</span>&#123;&#125;</span><br></pre></td></tr></table></figure>
 
-<p>隐式实现，如果一个类型实现了一个接口定义的所有方法，那么它就自动地实现了该接口。因此，我们可以通过将接口作为参数来实现对不同类型的调用，从而实现多态。</p>
+<p>隐式实现，<strong>如果一个类型实现了一个接口定义的所有方法，那么它就自动地实现了该接口</strong>。因此，我们可以通过将接口作为参数来实现对不同类型的调用，从而实现多态。</p>
+<p>通俗易懂的例子</p>
+<p>先用PHP举例</p>
+<p>PHP有一个类是Class A{}，在里面定义了一个方法叫test()，如果在本文件中使用的话就是$this-&gt;test()，在其他模块引用的时候一般是$a &#x3D; new A()，引用方法则是$a-&gt;test()</p>
+<p>而在Go中则是定义结构体类比成一个类，创建一个带有结构体类型变量的方法，通过接口引用，可以实现类似PHP引用方法</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> Dog <span class="keyword">struct</span>&#123;&#125;				<span class="comment">// 类比成PHP的 Class object()&#123;&#125;</span></span><br><span class="line"><span class="keyword">type</span> Test <span class="keyword">interface</span>&#123;		<span class="comment">// 抽象到面向对象的桥梁</span></span><br><span class="line">  move()</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(dog Dog)</span></span> move() &#123;			<span class="comment">// object.function()</span></span><br><span class="line">  fmt.Println(<span class="string">&quot;move dog&quot;</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line"><span class="keyword">var</span> test Test</span><br><span class="line"><span class="keyword">var</span> dog Dog = Dog&#123;&#125;</span><br><span class="line">test = dog</span><br><span class="line">test.move()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
 <h3 id="十七、错误处理"><a href="#十七、错误处理" class="headerlink" title="十七、错误处理"></a>十七、错误处理</h3><p>**error()**是一个接口类型</p>
 <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> <span class="type">error</span> <span class="keyword">interface</span> &#123;</span><br><span class="line">    Error() <span class="type">string</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
@@ -846,9 +868,17 @@
 <p>1、如果没有revocer，panic在系统遇到错误会中止执行，只有recover捕捉到了才会正常</p>
 <p>2、panic在发生错误后不会往后执行，会逆序执行defer，就类似于finally</p>
 <p>3、利用revocer捕捉的panic时，defer需要在panic之前声明</p>
-<h3 id="十八、并发"><a href="#十八、并发" class="headerlink" title="十八、并发"></a>十八、并发</h3><h4 id="goroutine"><a href="#goroutine" class="headerlink" title="goroutine"></a>goroutine</h4><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">go</span> f(x, y, z) <span class="comment">//go 函数名( 参数列表 )</span></span><br></pre></td></tr></table></figure>
+<h3 id="十八、并发"><a href="#十八、并发" class="headerlink" title="十八、并发"></a>十八、并发</h3><p>进程是程序在操作系统中的一次执行过程，系统进行资源分配和调度的一个独立单位</p>
+<p>线程是进程的一个执行实体，是CPU调度和分配的基本单位，它是比进程更小的能独立运行的基本单位</p>
+<p>一个进程可以创建和撤销多个线程，同一个进程中的多个线程之间可以并发执行</p>
+<h4 id="并发与并行"><a href="#并发与并行" class="headerlink" title="并发与并行"></a>并发与并行</h4><p>多线程程序在同一核CPU上运行，就是并发，并发主要由切换时间片实现同时运行</p>
+<p>多线程程序在多个核CPU上运行，就是并行，并行主要利用多核实现多线程运行</p>
+<h4 id="协程和线程"><a href="#协程和线程" class="headerlink" title="协程和线程"></a>协程和线程</h4><p>协程：独立的栈空间，共享堆空间，调度由用户控制，本质上有点类似用户级线程</p>
+<p>线程：一个线程上可以跑多个协程，协程是轻量级线程</p>
+<h4 id="goroutine"><a href="#goroutine" class="headerlink" title="goroutine"></a>goroutine</h4><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">go</span> f(x, y, z) <span class="comment">//go 函数名( 参数列表 )</span></span><br></pre></td></tr></table></figure>
 
 <p>允许使用 go 语句开启一个新的运行期线程， 即 goroutine，以一个不同的、新创建的 goroutine 来执行一个函数。 同一个程序中的所有 goroutine 共享同一个地址空间。</p>
+<p>goroutine期望是通过通信来共享内存，而不是共享内存来通信</p>
 <h4 id="通道-channel"><a href="#通道-channel" class="headerlink" title="通道(channel)"></a>通道(channel)</h4><p>ch &lt;- v	 把v发送到ch通道</p>
 <p>v :&#x3D; &lt;-ch   从ch通道接收数据</p>
 <p>通道声明</p>
