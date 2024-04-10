@@ -11,7 +11,7 @@
   <!-- Global site tag (gtag.js) - Google Analytics -->
 
 
-  <title>archives | wh1t3zer</title>
+  <title>solidity入门教程 | wh1t3zer</title>
 
   <link rel="icon" type="image/x-icon, image/vnd.microsoft.icon" href="/favicon.ico">
   <link rel="stylesheet" href="https://at.alicdn.com/t/font_1911880_c1nvbyezg17.css">
@@ -561,280 +561,495 @@
   
 </header>
         <!-- 内容区域 -->
-        <div class="bg-dark-floor" style="position: fixed;left: 0;top: 0;width: 100%;height: 100%;z-index: -2;"></div>
-<div class="bg-light-floor-archive" style="position: fixed;left: 0;top: 0;width: 100%;height: 100%;z-index: -3;"></div>
-<div class="archive-header" style="background-image:url('https://pic1.zhimg.com/80/v2-1414b3a4b205e19060db18a20d08723a_1440w.jpg?source=1940ef5c')">
-  <div class="archive-header-title">
-    archive
-  </div>
-  <div class="archive-header-desc">
+        
+ <!-- prismjs 代码高亮 -->
+ 
+
+
+<div class="bg-dark-floor" style="position: fixed;left: 0;top: 0;width: 100%;height: 100%;z-index: -1;"></div>
+
+
+  <!-- 文章详情页顶部图片和标题 -->
+
+
+
+
+<div class="post-detail-header" id="thumbnail_canvas" style="background-repeat: no-repeat; background-size: cover; 
+  background-position: center center;position: relative;background-image:url('/medias/img9.jpg')">
+  <div class="post-detail-header-mask"></div>
+  <canvas id="header_canvas"style="position:absolute;bottom:0;pointer-events:none;"></canvas>
   
-  <span class="title" id="archive-header-desc"></span>
+  <div class="post-detail-header_info-box">
+    <div class="title-box">
+      <span class="title">
+        solidity入门教程
+      </span>
+    </div>
+    
+    
+      
+        <span class="post-detail-header_date">
+          <i class="fas fa-calendar"></i> Published in：2024-04-09 |
+        </span>
+      
+
+      
+        <span class="post-detail-header_categories">
+          <i class="iconfont iconbookmark1"></i> category：
+          
+            <a href="/categories/%E5%8C%BA%E5%9D%97%E9%93%BE-solidity/" class="post-detail-header_category">
+              区块链 | solidity
+            </a>
+          
+        </span>
+      
+
+      
+    
+  </div>
+  
+  
+    <script src="/js/bubble/bubble.js"></script>
+  
+</div>
+
+
+
+
+
+<div class="row justify-position" 
+  style="padding-top: 0px;">
+  <div class="main-content">
+    <article class="post post-detail">
+      <div class="post-content">
+        <h2 id="0x00前言"><a href="#0x00前言" class="headerlink" title="0x00前言"></a>0x00前言</h2><p>solidity是一门运行在以太坊虚拟机(EVM)上的编程语言，用来构建智能合约，社区生态在这几年发展中变得非常丰富，许多重要的项目都是solidity，目前也是成为了区块链最流行的编程语言。其实基于区块链的语言不止solidity，不同公链会有不同的编程语言，比如apt网络和sui网络，用的是move编程语言，详细的可以看<a target="_blank" rel="noopener" href="https://move-book.com/cn/">move</a>还有最近比较火热的solana链，用的是<a target="_blank" rel="noopener" href="https://www.rust-lang.org/">rust</a>。每个语言都有各自的优势，不展开细讲。</p>
+<p>顺便介绍一下用来编写solidity的平台，主流的是以太坊推荐使用的<a target="_blank" rel="noopener" href="https://remix.ethereum.org/">remix</a>，是一款集成IDE</p>
+<h2 id="0x01经典hello-world"><a href="#0x01经典hello-world" class="headerlink" title="0x01经典hello world"></a>0x01经典hello world</h2><p>万物离不开hello world，用solidity实现下</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">// SPDX-License-Identifier: MIT</span><br><span class="line">pragma solidity ^0.8.7;</span><br><span class="line"></span><br><span class="line">contract helloworld&#123;</span><br><span class="line">  string public hello = &quot;hello world&quot;;</span><br><span class="line">  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>解释下上面这段代码</p>
+<p>&#x2F;&#x2F; SPDX-License-Identifier: MIT  这个是一段注释，在solidity8后不加注释会警告</p>
+<p>pragma是声明solodity的版本，其中^代表的是在此版本以上均可使用，但是注意不能超过0.8，也就是0.8.7到0.9.0以下都可以</p>
+<p>solidity以分号**;**为结尾</p>
+<p>contract是合约的关键词，用于声明一个合约对象，可以当做一个class类</p>
+<p>在类中定义了一个hello的变量，一般格式为 [type] [public&#x2F;private&#x2F;external&#x2F;internal]  [name] &#x3D; [value];</p>
+<p>这里讲一下**[public&#x2F;private&#x2F;external&#x2F;internal]**分别是什么意思</p>
+<p><strong>public</strong>：所有合约文件都能访问到这个变量</p>
+<p><strong>private</strong>：只能从本合约内部访问，继承的合约也不能用</p>
+<p><strong>external</strong>：只能从合约外部访问，可以用this.function() 调用，function是函数名</p>
+<p><strong>internal</strong>：继承合约可以用，只能从合约内部访问</p>
+<p>这里在函数部分还会再讲一次，因为在solidity中函数被归为数值类型，与普通变量定义的形式一样。</p>
+<h2 id="0x02数值类型"><a href="#0x02数值类型" class="headerlink" title="0x02数值类型"></a>0x02数值类型</h2><h3 id="1、布尔型（bool）"><a href="#1、布尔型（bool）" class="headerlink" title="1、布尔型（bool）"></a>1、布尔型（bool）</h3><p>! 逻辑非</p>
+<p>&amp;&amp; 逻辑与</p>
+<p>||  逻辑或</p>
+<p>&#x3D;&#x3D; 等于</p>
+<p>!&#x3D;  不等于</p>
+<h3 id="2、整型"><a href="#2、整型" class="headerlink" title="2、整型"></a>2、整型</h3><p>用的最多也是最常见的</p>
+<p>int    整数，有符号，负数</p>
+<p>uint  正整数，无符号</p>
+<p>uint256 256位正整数</p>
+<h3 id="3、地址类型"><a href="#3、地址类型" class="headerlink" title="3、地址类型"></a>3、地址类型</h3><p>地址类型是用来存储20位的以太坊地址大小</p>
+<p>有个修饰符得讲一讲，payable</p>
+<p>在地址类型中使用payable()，则此地址会比普通地址多两个成员，一个是transfer，一个是send</p>
+<p>send执行失败不会影响当前合约的执行，但是会返回false值。balance和transfer()可以用来查询eth的余额，transfer()内含安全转账（也就是内置了执行失败的一个处理）</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">address public _address = xxx; // 20位的以太坊地址</span><br><span class="line"> address payable public _address1 = payable(_address);</span><br><span class="line"> uint256 public balance =  _address1.balance;</span><br><span class="line"> </span><br><span class="line">//这里对原有地址_address用了payable()修饰，让_address1有了transfer和send方法，还有一个balance成员</span><br></pre></td></tr></table></figure>
+
+<h3 id="4、定长的字节数组"><a href="#4、定长的字节数组" class="headerlink" title="4、定长的字节数组"></a>4、定长的字节数组</h3><p>solidity的字节类型相对于传统语言也是byte类型，还多了个bytes</p>
+<p>byte、bytes8、bytes32</p>
+<p>分为定长，还有一种是不定长</p>
+<p>稍微指出一下，这里的<strong>定长</strong>属于<strong>数值类型</strong>，而<strong>不定长</strong>是<strong>引用类型</strong>，两者类型的区别在于定长类型可以存放一些数据，消耗的gas比较少，因为不定长数组在每次动态添加元素的时候是重新分配内存，如果不懂gas，可移步到我之前的文章web3.0入门</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">uint256[5] fixedArray; // 定长数组，长度为5</span><br><span class="line">address[3] addresses; // 定长数组，长度为3，存储地址类型数据</span><br><span class="line">bytes32[10] hashes; // 定长数组，长度为10，存储32字节的数据哈希值</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">int256[] dynamicArray; // 不定长数组</span><br><span class="line">address[] addresses; // 不定长数组，存储地址类型数据</span><br><span class="line">bytes32[] hashes; // 不定长数组，存储32字节的数据哈希值</span><br><span class="line"></span><br><span class="line">dynamicArray.push(10); // 向不定长数组添加一个新的元素，值为10</span><br><span class="line">uint256 value = dynamicArray[2]; // 访问数组中索引为2的元素，获取其值</span><br></pre></td></tr></table></figure>
+
+<p>两者区别在于是否在[]定义了长度</p>
+<h3 id="5、枚举enum"><a href="#5、枚举enum" class="headerlink" title="5、枚举enum"></a>5、枚举enum</h3><p>比较冷门的一个类型</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">enum listset &#123;buy,sell,confrim&#125;</span><br><span class="line">listset set1 = listset.buy;</span><br><span class="line">//一般用来枚举用户身份比较多</span><br></pre></td></tr></table></figure>
+
+<h2 id="0x03函数类型"><a href="#0x03函数类型" class="headerlink" title="0x03函数类型"></a>0x03函数类型</h2><p>在solidity中，函数的表达式为</p>
+<p>function [name] (params type) {public|private|internal|external} [pure|view|payable] [return value type]</p>
+<p>分析下这条表达式写了什么</p>
+<p>首先定义了一个函数，之后接着函数名，函数中可以携带参数和参数的类型(params type)，之后有一个关键字，用来修饰这个函数的可见性，在0x01部分已经讲过这个可见性的作用，同样适用于函数。</p>
+<p>这里特别说一下pure、view、payable</p>
+<p>pure翻译过来是纯净</p>
+<p>view翻译过来就是视图</p>
+<p>payable刚才说明了是一个修饰可以用来支付的关键字</p>
+<p>可以抽象来比喻下pure和view</p>
+<p><img src="https://cdn.jsdelivr.net/gh/wh1t3zer/recordCTF/blockchain/202404092324704.png" class="lazyload placeholder" data-srcset="https://cdn.jsdelivr.net/gh/wh1t3zer/recordCTF/blockchain/202404092324704.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">function add(uint256 b) public pure returns (uint256 a)&#123;</span><br><span class="line">	a = b + 1;// 可以</span><br><span class="line">	b = b + 1;//不可以</span><br><span class="line">&#125;		</span><br><span class="line"></span><br><span class="line">function add(uint256 b) public view returns (uint256 a)&#123;</span><br><span class="line">	a = b + 1;  //警告</span><br><span class="line">&#125;		</span><br><span class="line"></span><br><span class="line">function add(uint256 b) public returns (uint256 a)&#123;</span><br><span class="line">	a = b + 1;  //警告</span><br><span class="line">&#125;		</span><br></pre></td></tr></table></figure>
+
+<p><strong>pure</strong>也就是<strong>纯纯牛马</strong>的意思，不能更改也不能读取合约状态变量</p>
+<p>除非是上述写法，用一个a返回一个b+1；而不能用a &#x3D; a+1；</p>
+<p><strong>view</strong>就是<strong>旁观者</strong>，不能修改合约状态变量，而能读取合约状态变量</p>
+<p>可以看到上述编译器出现了波浪线，也就是提示要严格遵守pure和view的规则，如果不加以修饰，则做什么都可以，修改或者读取合约状态变量</p>
+<p><strong>这三者有什么区别？</strong></p>
+<p>是solidity特有的修饰符，用来节省gas费和控制这个函数的权限而设计的，当使用pure和view修饰的时候，调用的函数是不消耗gas的，因为不会写到链上，而不加则默认会写到链上。</p>
+<h2 id="0x04函数的输出"><a href="#0x04函数的输出" class="headerlink" title="0x04函数的输出"></a>0x04函数的输出</h2><p>在solidity中有两个关键字，一个是return，一个是returns</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">function test() public pure returns (uint256 a)&#123;</span><br><span class="line">    return a;</span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>
+
+<p>returns是用来定义函数返回值，也就是在函数名后定义，而return也是定义返回的值，只不过是在函数体内使用。这种方法称为<strong>命名式返回</strong>，具体可以这样写</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">function name() public pure returns(uint256 number,bool _bool, uint256[4] memory _array)&#123;</span><br><span class="line">   number = 1;</span><br><span class="line">   _bool = true;</span><br><span class="line">   _array = [uint256(2),2,1,1];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">function name() public pure returns(uint256 number,bool _bool, uint256[4] memory _array)&#123;</span><br><span class="line">   return(1,true,[uint256(2),2,1,1]);</span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>
+
+<p>两种方法都是获得相同的结果</p>
+<p>这里的memory在下个章节讲到，用于数据的存储位置</p>
+<p>还有一种是解构式赋值，也就是可以有选择性的返回对应的变量，如果不需要变量则留空</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">function test1() public pure returns(uint256 number, bool _bool, uint256[4] memory _array&#123;</span><br><span class="line">    number = 1;</span><br><span class="line">    _bool = true;</span><br><span class="line">    _array = [uint256(2),1,3,4];</span><br><span class="line">  &#125;</span><br><span class="line">  </span><br><span class="line">function test() public  pure&#123;</span><br><span class="line">    uint256 number;</span><br><span class="line">    bool _bool;</span><br><span class="line">    uint[4] memory _array;</span><br><span class="line">    (number,_bool,_array) = test1();</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="0x05变量存储作用域"><a href="#0x05变量存储作用域" class="headerlink" title="0x05变量存储作用域"></a>0x05变量存储作用域</h2><p>solidity有三种存储的位置</p>
+<p><strong>storage</strong>、<strong>memory</strong>、<strong>calldata</strong>，这三种用来区分不同的gas成本，其中storage会存储到链上，消耗的gas最多，memory和calldata是临时存在内存中，消耗的gas相对较少</p>
+<p>其中memory和calldata的不同为calldata变量是不能修改的，比如这段代码</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">function calldata1(uint[] calldata _x) public pure returns(uint[] calldata)&#123;</span><br><span class="line">    _x[0] = 0;</span><br><span class="line">    return(_x);</span><br><span class="line">  &#125;</span><br><span class="line">//TypeError: Calldata arrays are read-only.</span><br></pre></td></tr></table></figure>
+
+<p>可以看到直接报类型错误了，不能修改，只能读，注释掉_x[0]就能通过编译</p>
+<p>storage定义时，实际上创建了一个新的引用，什么意思，就是改变新的变量会影响原来的变量</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">uint[] x = [1,2,3,4,5];</span><br><span class="line">  function store111() public &#123;</span><br><span class="line">    uint[] storage test = x;</span><br><span class="line">    test[0] = 100;</span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>
+
+
+      </div>
+      <div class="post-tags-categories">
+        
+        <div class="tags">
+          
+            <a href="/tags/%E5%8C%BA%E5%9D%97%E9%93%BE-solidity/" class="">
+              区块链 | solidity
+            </a>
+          
+        </div>
+        
+      </div>
+      
+        <div class="copyright">
+  <ul class="post-copyright">
+    <li class="post-copyright-author">
+    <strong>author:  </strong>wh1t3zer</a>
+    </li>
+    <li class="post-copyright-link">
+    <strong>link:  </strong>
+    <a href="/2024/04/09/solidity入门/" target="_blank" title="solidity入门教程">https://wh1t3zer.github.io/2024/04/09/solidity入门/</a>
+    </li>
+    <li class="post-copyright-license">
+      <strong>Copyright notice:   </strong>
+      All articles on this website, unless otherwise stated, adopt <a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank" title="Attribution-NonCommercial-NoDerivatives 4.0 International (CC BY-NC-ND 4.0)">CC BY-NC-ND 4.0</a>
+      reprint policy. If reproduced, please indicate source!
+    </li>
+  </ul>
+<div>
+      
+    </article>
+    <!-- 上一篇文章和下一篇文章 -->
+    
+      <!-- 文章详情页的上一页和下一页 -->
+<div class="post-nav">
+
+
+
+  
+  <div class="post-nav-prev post-nav-item">
+    <div class="post-nav-img" style="background-size: cover; 
+      background-position: center center;">
+      <img class="lazyload lazyload placeholder" src="/medias/img3.jpg" class="lazyload placeholder" data-srcset="/medias/img3.jpg" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="">
+    </div>
+    <a href="/2024/04/10/%E5%B8%B8%E8%A7%81%E5%8C%BA%E5%9D%97%E9%93%BE%E7%AE%97%E6%B3%95/" class="post-nav-link">
+      <div class="title">
+        <i class="fas fa-angle-left"></i> Prev:
+        <div class="title-text">常见区块链算法</div>
+      </div>
+      
+      <!-- <div class="content">
+        0x00前言0x01算法盘点1、Pbft
+2、Raft
+3、Pow
+4、Pos
+5、dPow
+0x02Powpow在区块
+      </div> -->
+    </a>
+  </div>
+
+
+
+  
+  <div class="post-nav-next post-nav-item">
+    <div class="post-nav-img" style="background-size: cover; 
+      background-position: center center;">
+      <img class="lazyload lazyload placeholder" src="/medias/img6.jpg" class="lazyload placeholder" data-srcset="/medias/img6.jpg" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" src="" alt="">
+    </div>
+    <a href="/2024/03/11/Go%E5%AD%A6%E4%B9%A0%E5%88%9D%E6%8E%A2/" class="post-nav-link">
+      <div class="title">
+        Next: <i class="fas fa-angle-right"></i>
+        <div class="title-text">Go学习初探</div>
+      </div>
+      <!-- <div class="content">
+        0x00前言近期也是对区块链愈发关注，从金融方面开始过渡到了技术方面，随着发现的深入，了解到了区块链比较主流的开发语言是
+      </div> -->
+    </a>
+  </div>
+
+</div>
+
+    
+    
+
+    <!-- 打赏 -->
+    
+
+    <!-- 分享 -->
+    
+      <!-- https://github.com/overtrue/share.js -->
+<!-- 文章详情页的分享 -->
+<div class="social-share" data-sites="twitter,facebook,google,qq,qzone,wechat,weibo,douban,linkedin" data-wechat-qrcode-helper="<p>微信扫一扫即可分享！</p>"></div>
+
+<script src="/js/shareJs/social-share.min.js"></script>
+</script>
+
+<style>
+  .social-share {
+    margin: 20px 0;
+  }
+</style>
+
+
+    
+    
+    <!-- 评论 -->
+    <!-- 评论 -->
+
+  <div id="myComment">
+    
+      <div id="gitment-container"></div>
+
+    
+  </div>
+
+<!-- comment script in themes\hexo-theme-bamboo\layout\_partial\scripts\index.ejs -->
+
+
+  </div>
+
+  <!-- 目录 -->
+  <!-- 文章详情页右侧目录 -->
+
+  <div class="toc-aside">
+    <div class="toc-main">
+      <div class="toc-aside-title">
+        <i class="fas fa-list-ul" aria-hidden="true"></i><span>catalog</span>
+        
+          <div class="toc-open-close">catalog</div>
+        
+      </div>
+      <div class="toc-content">
+        <div class="toc"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 手机端目录按钮 -->
+  <div id="toc-mobile-btn">
+    <i class="fas fa-list-ul" aria-hidden="true"></i>
+  </div>
+
+
+<script>
+  function closeToc(init) {
+    $(".toc-aside").css({'width': 0, 'padding': 0, 'transition': init ?  'noe' : 'width 0.3s' });
+    $(".toc-content").css({'width': 0});
+    $(".toc-aside-title span, .toc-aside-title i").css({'display': 'none'});
+    $(".main-content").css({'width': '75%', 'margin': '10px auto'});
+  };
+  function openToc() {
+    $(".main-content").css({'width': '65%', 'margin-right': '10px', 'margin-left': 'calc(35% - 350px)'});
+    $(".toc-aside").css({'width': '300px', 'padding': '0 10px', 'transition': 'width 0.3s'});
+    $(".toc-content").css({'width': '300px'});
+    $(".toc-aside-title span, .toc-aside-title i").css({'display': 'inline-block'});
+  }
+  function openBtnClickFn () {
+    let openOrCloseBtn = $('.toc-aside .toc-aside-title .toc-open-close');
+    let open = eval('' || 'true');
+    openOrCloseBtn.click(function() {
+      if (open) {
+        closeToc();
+        open = false;
+      } else {
+        openToc();
+        open = true;
+      }
+    });
+  };
+  openBtnClickFn();
+  initCloseTocWidth(true);
+
+  function initCloseTocWidth(init) {
+    if (window.innerWidth >= 992) {
+      let isClose = false;
+      isClose && closeToc(init)
+    }
+  }
+
+  document.addEventListener('pjax:complete', function () {
+    $(".toc-aside").css({'transition': 'no'});
+  })
+  document.addEventListener('pjax:complete', function () {
+    openBtnClickFn();
+  })
+  
+</script>
+
+  <!-- 图片放大 Wrap images with fancybox support -->
+  <script src="/js/wrapImage.js"></script>
+</div>
+
+<!-- 文章详情页背景图 -->
+<div id="appBgSwiper" style="position: fixed;left: 0;top: 0;width: 100%;height: 100%;z-index: -2;"
+	:style="{'background-color': bgColor ? bgColor : 'transparent'}">
+	<transition-group tag="ul" :name="names">
+		<li v-for='(image,index) in img' :key='index' v-show="index === mark" class="bg-swiper-box">
+			<img :src="image" class="bg-swiper-img no-lazy">
+		</li>
+	</transition-group>
+</div>
+<script>
+	var vm = new Vue({
+		el: '#appBgSwiper',
+		data: {
+			names: '' || 'fade' || 'fade', // translate-fade fade
+			mark: 0,
+			img: [],
+			bgColor: '',
+			time: null
+		},
+		methods: {   //添加方法
+			change(i, m) {
+				if (i > m) {
+					// this.names = 'fade';
+				} else if (i < m) {
+					// this.names = 'fade';
+				} else {
+					return;
+				}
+				this.mark = i;
+			},
+			prev() {
+				// this.names = 'fade';
+				this.mark--;
+				if (this.mark === -1) {
+					this.mark = 3;
+					return
+				}
+			},
+			next() {
+				// this.names = 'fade';
+				this.mark++;
+				if (this.mark === this.img.length) {
+					this.mark = 0;
+					return
+				}
+			},
+			autoPlay() {
+				// this.names = 'fade';
+				this.mark++;
+				if (this.mark === this.img.length) {
+					this.mark = 0;
+					return
+				}
+			},
+			play() {
+				let bgImgDelay = '' || '180000'
+				let delay = parseInt(bgImgDelay) || 180000;
+				this.time = setInterval(this.autoPlay, delay);
+			},
+			enter() {
+				clearInterval(this.time);
+			},
+			leave() {
+				this.play();
+			}
+		},
+		created() {
+			this.play()
+		},
+		beforeDestroy() {
+			clearInterval(this.time);
+		},
+		mounted() {
+			let prop = '' || '';
+			let isImg = prop.includes('.bmp') || prop.includes('.jpg') || prop.includes('.png') || prop.includes('.tif') || prop.includes('.gif') || prop.includes('.pcx') || prop.includes('.tga') || prop.includes('.exif') || prop.includes('.fpx') || prop.includes('.psd') || prop.includes('.cdr') || prop.includes('.pcd') || prop.includes('.dxf') || prop.includes('.ufo') || prop.includes('.eps') || prop.includes('.ai') || prop.includes('.raw') || prop.includes('.WMF') || prop.includes('.webp') || prop.includes('.jpeg') || prop.includes('http://') || prop.includes('https://')
+			if (isImg) {
+				let img = prop.split(',');
+				let configRoot = '/'
+				let arrImg = [];
+				img.forEach(el => {
+					var Expression = /http(s)?:\/\/([\w-]+\.)+[\w-]+(\/[\w- .\/?%&=]*)?/;
+					var objExp = new RegExp(Expression);
+
+					if (objExp.test(el)) {
+						// http or https
+						arrImg.push(el);
+					} else {
+						// 非http or https开头
+						// 本地文件
+						let firstStr = el.charAt(0);
+						if (firstStr == '/') {
+							el = el.substr(1); // 删除第一个字符 '/',因为 configRoot最后一个字符为 /
+						}
+						el = configRoot + el;
+						arrImg.push(el);
+					}
+				})
+				this.img = arrImg;
+			} else {
+				this.bgColor = prop;
+			}
+		}
+	})
+</script>
+
+<style>
+	.bg-swiper-box {
+		position: absolute;
+		display: block;
+		width: 100%;
+		height: 100%;
+	}
+
+	.bg-swiper-img {
+		object-fit: cover;
+		width: 100%;
+		height: 100%;
+	}
+</style>
+
+
+
+
   <script>
-  function typedFn() {
-    const el = '#archive-header-desc';
-    const type = 'archive';
-    let desc = '愿你如风，被人温柔以待'
-    var typed = new Typed(el, {
-      strings: [desc],
-      startDelay: 100,
-      typeSpeed: 100,
-      loop: true,
-      backSpeed: 50,
-      showCursor: true
-    });
-  }
-  typedFn();
-</script>
+  function loadMermaid() {
+    if (document.getElementsByClassName('mermaid').length) {
+      if (window.mermaidJsLoad) mermaid.init()
+      else {
+        loadScript('https://unpkg.com/mermaid/dist/mermaid.min.js').then(() => {
+          window.mermaidJsLoad = true
+          mermaid.initialize({
+            theme: 'default',
+          })
+          if ('true') {
+            mermaid.init();
+          }
+        })
+      }
+    }
+  };
+  document.addEventListener("DOMContentLoaded", function () {
+    loadMermaid();
+  })
+
+  document.addEventListener('pjax:complete', function () {
+    loadMermaid();
+  })
   
-  </div>
-  <div class="mask-box"></div>
-</div>
-
-<div class="archive-video">
-  <video class="full-video" autoplay loop muted>
-      <source style="width: 100%;height: 100vh;" src="/">
-  </video>
-  <div class="video-header-title">
-    archive
-  </div>
-  <div class="video-header-desc">
-  
-      <span class="title" id="archive-video-header-desc"></span>
-      <script>
-  function typedFn() {
-    const el = '#archive-video-header-desc';
-    const type = 'archive';
-    let desc = '愿你如风，被人温柔以待'
-    var typed = new Typed(el, {
-      strings: [desc],
-      startDelay: 100,
-      typeSpeed: 100,
-      loop: true,
-      backSpeed: 50,
-      showCursor: true
-    });
-  }
-  typedFn();
 </script>
-      
-  </div>
-  <div class="mask-box"></div>
-</div>
 
-<!-- hash算法 -->
-
-
-<div class="archive-main">
-  <section class="archive">
-    <div class="archive-content">
-      <ul class="post-archive">
-        
-        
-          
-            
-            <div class="year" data-aos="zoom-in-up">
-                <div class="bullet"></div>
-                <a href="/archives/2023">2023</a>
-            </div>
-          
-          <li class="post-item" data-aos="fade-left">
-            
-            <div class="post-img-box">
-              <a href="/2023/07/05/struts2%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0/" class="post-img " style="background-size: cover; 
-                background-position: center center;">
-                <img class="lazyload lazyload placeholder" src="/medias/img16.jpg" class="lazyload placeholder" data-srcset="/medias/img16.jpg" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="">
-              </a>
-            </div>
-            <div class="post-date-title">
-              <div>
-                <span class="post-date">07-05</span>
-              </div>
-              <a class="post-title" href="/2023/07/05/struts2%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0/">struts2RCE漏洞复现</a>
-            </div>
-          </li>
-        
-          
-          <li class="post-item" data-aos="fade-left">
-            
-            <div class="post-img-box">
-              <a href="/2023/05/30/%E5%BA%94%E6%80%A5%E5%93%8D%E5%BA%94/" class="post-img " style="background-size: cover; 
-                background-position: center center;">
-                <img class="lazyload lazyload placeholder" src="/medias/img15.jpg" class="lazyload placeholder" data-srcset="/medias/img15.jpg" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="">
-              </a>
-            </div>
-            <div class="post-date-title">
-              <div>
-                <span class="post-date">05-30</span>
-              </div>
-              <a class="post-title" href="/2023/05/30/%E5%BA%94%E6%80%A5%E5%93%8D%E5%BA%94/">应急响应流程</a>
-            </div>
-          </li>
-        
-          
-          <li class="post-item" data-aos="fade-left">
-            
-            <div class="post-img-box">
-              <a href="/2023/02/27/%E6%B5%85%E8%AF%B4Web3/" class="post-img " style="background-size: cover; 
-                background-position: center center;">
-                <img class="lazyload lazyload placeholder" src="/medias/img15.jpg" class="lazyload placeholder" data-srcset="/medias/img15.jpg" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="">
-              </a>
-            </div>
-            <div class="post-date-title">
-              <div>
-                <span class="post-date">02-27</span>
-              </div>
-              <a class="post-title" href="/2023/02/27/%E6%B5%85%E8%AF%B4Web3/">浅说Web3</a>
-            </div>
-          </li>
-        
-          
-          <li class="post-item" data-aos="fade-left">
-            
-            <div class="post-img-box">
-              <a href="/2023/02/23/Windows%E7%97%85%E6%AF%92%E5%85%8D%E6%9D%80/" class="post-img " style="background-size: cover; 
-                background-position: center center;">
-                <img class="lazyload lazyload placeholder" src="/medias/img20.jpg" class="lazyload placeholder" data-srcset="/medias/img20.jpg" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="">
-              </a>
-            </div>
-            <div class="post-date-title">
-              <div>
-                <span class="post-date">02-23</span>
-              </div>
-              <a class="post-title" href="/2023/02/23/Windows%E7%97%85%E6%AF%92%E5%85%8D%E6%9D%80/">浅析病毒免杀</a>
-            </div>
-          </li>
-        
-          
-          <li class="post-item" data-aos="fade-left">
-            
-            <div class="post-img-box">
-              <a href="/2023/02/23/%E6%9F%90%E5%A4%9A%E5%A4%9A%E7%9A%84%E6%81%B6%E6%84%8F%E6%89%8B%E6%AE%B5%E5%88%86%E6%9E%90/" class="post-img " style="background-size: cover; 
-                background-position: center center;">
-                <img class="lazyload lazyload placeholder" src="/medias/img15.jpg" class="lazyload placeholder" data-srcset="/medias/img15.jpg" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="">
-              </a>
-            </div>
-            <div class="post-date-title">
-              <div>
-                <span class="post-date">02-23</span>
-              </div>
-              <a class="post-title" href="/2023/02/23/%E6%9F%90%E5%A4%9A%E5%A4%9A%E7%9A%84%E6%81%B6%E6%84%8F%E6%89%8B%E6%AE%B5%E5%88%86%E6%9E%90/">某国产APP的恶意手段分析</a>
-            </div>
-          </li>
-        
-          
-          <li class="post-item" data-aos="fade-left">
-            
-            <div class="post-img-box">
-              <a href="/2023/02/23/pwn%E5%85%A5%E9%97%A8(%E6%BA%A2%E5%87%BA%E7%AF%87)/" class="post-img " style="background-size: cover; 
-                background-position: center center;">
-                <img class="lazyload lazyload placeholder" src="/medias/img17.jpg" class="lazyload placeholder" data-srcset="/medias/img17.jpg" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="">
-              </a>
-            </div>
-            <div class="post-date-title">
-              <div>
-                <span class="post-date">02-23</span>
-              </div>
-              <a class="post-title" href="/2023/02/23/pwn%E5%85%A5%E9%97%A8(%E6%BA%A2%E5%87%BA%E7%AF%87)/">Pwn入门(溢出篇)</a>
-            </div>
-          </li>
-        
-          
-          <li class="post-item" data-aos="fade-left">
-            
-            <div class="post-img-box">
-              <a href="/2023/02/07/Docker%E5%91%BD%E4%BB%A4%E6%80%BB%E7%BB%93/" class="post-img " style="background-size: cover; 
-                background-position: center center;">
-                <img class="lazyload lazyload placeholder" src="/medias/img18.jpg" class="lazyload placeholder" data-srcset="/medias/img18.jpg" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="">
-              </a>
-            </div>
-            <div class="post-date-title">
-              <div>
-                <span class="post-date">02-07</span>
-              </div>
-              <a class="post-title" href="/2023/02/07/Docker%E5%91%BD%E4%BB%A4%E6%80%BB%E7%BB%93/">Docker基础命令</a>
-            </div>
-          </li>
-        
-          
-          <li class="post-item" data-aos="fade-left">
-            
-            <div class="post-img-box">
-              <a href="/2023/02/06/NodeJS%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90%EF%BC%88%E4%B8%8B%EF%BC%89/" class="post-img " style="background-size: cover; 
-                background-position: center center;">
-                <img class="lazyload lazyload placeholder" src="/medias/img10.jpg" class="lazyload placeholder" data-srcset="/medias/img10.jpg" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="">
-              </a>
-            </div>
-            <div class="post-date-title">
-              <div>
-                <span class="post-date">02-06</span>
-              </div>
-              <a class="post-title" href="/2023/02/06/NodeJS%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90%EF%BC%88%E4%B8%8B%EF%BC%89/">NodeJS常见漏洞总结（下）</a>
-            </div>
-          </li>
-        
-          
-          <li class="post-item" data-aos="fade-left">
-            
-            <div class="post-img-box">
-              <a href="/2023/02/05/NodeJS%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90%EF%BC%88%E4%B8%8A%EF%BC%89/" class="post-img " style="background-size: cover; 
-                background-position: center center;">
-                <img class="lazyload lazyload placeholder" src="/medias/img1.jpg" class="lazyload placeholder" data-srcset="/medias/img1.jpg" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="">
-              </a>
-            </div>
-            <div class="post-date-title">
-              <div>
-                <span class="post-date">02-05</span>
-              </div>
-              <a class="post-title" href="/2023/02/05/NodeJS%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90%EF%BC%88%E4%B8%8A%EF%BC%89/">NodeJS常见漏洞总结（上）</a>
-            </div>
-          </li>
-        
-          
-          <li class="post-item" data-aos="fade-left">
-            
-            <div class="post-img-box">
-              <a href="/2023/01/31/%E6%B5%85%E8%B0%88RSA/" class="post-img " style="background-size: cover; 
-                background-position: center center;">
-                <img class="lazyload lazyload placeholder" src="/medias/img4.jpg" class="lazyload placeholder" data-srcset="/medias/img4.jpg" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="">
-              </a>
-            </div>
-            <div class="post-date-title">
-              <div>
-                <span class="post-date">01-31</span>
-              </div>
-              <a class="post-title" href="/2023/01/31/%E6%B5%85%E8%B0%88RSA/">浅谈RSA加密</a>
-            </div>
-          </li>
-        
-      </ul>
-    </div>
-  </section>
-  <div class="w-70">
-    
-  <!-- <nav class="page-nav">
-    <a class="extend prev" rel="prev" href="/archives/">Prev</a><a class="page-number" href="/archives/">1</a><span class="page-number current">2</span><a class="page-number" href="/archives/page/3/">3</a><a class="page-number" href="/archives/page/4/">4</a><a class="extend next" rel="next" href="/archives/page/3/">Next</a>
-  </nav> -->
-  <div class="page-nav">
-    
-      <a href="/archives/"
-         class="page-nav-pre">
-         <i class="fas fa-angle-left"></i><span class="ml-5">Prev</span>
-      </a>
-    
-    <div class="page-info">
-        <div class="page-info-text">2 / 4</div>
-    </div>
-    
-      <a href="/archives/page/3/"
-         class="page-nav-next">
-          <span class="mr-5">Next</span><i class="fas fa-angle-right"></i>
-      </a>
-      
-  </div>
-
-  </div>
-</div>
 
       </main>
     </div>
