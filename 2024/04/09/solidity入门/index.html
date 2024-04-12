@@ -666,7 +666,16 @@
 <h3 id="5、枚举enum"><a href="#5、枚举enum" class="headerlink" title="5、枚举enum"></a>5、枚举enum</h3><p>比较冷门的一个类型</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">enum listset &#123;buy,sell,confrim&#125;</span><br><span class="line">listset set1 = listset.buy;</span><br><span class="line">//一般用来枚举用户身份比较多</span><br></pre></td></tr></table></figure>
 
-<h2 id="0x03函数类型"><a href="#0x03函数类型" class="headerlink" title="0x03函数类型"></a>0x03函数类型</h2><p>在solidity中，函数的表达式为</p>
+<h3 id="6、部分全局变量"><a href="#6、部分全局变量" class="headerlink" title="6、部分全局变量"></a>6、部分全局变量</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">msg.sender	// 调用这个函数的地址是什么  address msg.sender</span><br><span class="line">block.timestamp // 区块的时间戳				 uint256 block.timestamp</span><br><span class="line">block.number    // 当前区块的编号      uint256 block.number</span><br></pre></td></tr></table></figure>
+
+<h3 id="7、默认值"><a href="#7、默认值" class="headerlink" title="7、默认值"></a>7、默认值</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">bool public f // false</span><br><span class="line">uint public num // 0</span><br><span class="line">int public num1 // 0</span><br><span class="line">address public addr // 0x0000000000000000000000000000000000000000  40个0</span><br><span class="line">bytes32 public by32 // 0x0000000000000000000000000000000000000000000000000000000000000000 64个0</span><br></pre></td></tr></table></figure>
+
+<p>8、常量</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">uint256 public const NUM // 定义常量，一般为大写命名</span><br><span class="line">// 消耗的gas会低于非常量</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="0x03函数"><a href="#0x03函数" class="headerlink" title="0x03函数"></a>0x03函数</h2><p>在solidity中，函数的表达式为</p>
 <p>function [name] (params type) {public|private|internal|external} [pure|view|payable] [return value type]</p>
 <p>分析下这条表达式写了什么</p>
 <p>首先定义了一个函数，之后接着函数名，函数中可以携带参数和参数的类型(params type)，之后有一个关键字，用来修饰这个函数的可见性，在0x01部分已经讲过这个可见性的作用，同样适用于函数。</p>
@@ -705,6 +714,31 @@
 <p>storage定义时，实际上创建了一个新的引用，什么意思，就是改变新的变量会影响原来的变量</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">uint[] x = [1,2,3,4,5];</span><br><span class="line">  function store111() public &#123;</span><br><span class="line">    uint[] storage test = x;</span><br><span class="line">    test[0] = 100;</span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>
 
+<h2 id="0x06条件语句"><a href="#0x06条件语句" class="headerlink" title="0x06条件语句"></a>0x06条件语句</h2><h3 id="if"><a href="#if" class="headerlink" title="if"></a>if</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">if (条件) &#123;&#125;</span><br><span class="line">else if (条件)&#123;&#125;</span><br><span class="line">else &#123;&#125;</span><br></pre></td></tr></table></figure>
+
+<p>solidity可以使用三元运算符</p>
+<p>条件 ? 结果一 : 结果二</p>
+<h2 id="0x07循环"><a href="#0x07循环" class="headerlink" title="0x07循环"></a>0x07循环</h2><h3 id="for"><a href="#for" class="headerlink" title="for"></a>for</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">for (addition) &#123;&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="while"><a href="#while" class="headerlink" title="while"></a>while</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">while(addition)&#123;&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="do-while"><a href="#do-while" class="headerlink" title="do-while"></a>do-while</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">do&#123;&#125;</span><br><span class="line">while(addition)</span><br></pre></td></tr></table></figure>
+
+<h2 id="0x08报错控制"><a href="#0x08报错控制" class="headerlink" title="0x08报错控制"></a>0x08报错控制</h2><p>在solidit8.0中，有三种错误控制的形式，require、revert、assert</p>
+<h3 id="require"><a href="#require" class="headerlink" title="require"></a>require</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">// require(检查条件，&quot;异常的描述&quot;)  gas费随着异常描述的字符串长度增加而增加</span><br><span class="line">function testRequire(uint _i) public pure &#123;</span><br><span class="line">    require(_i &lt;= 10,&quot;i &gt; 10&quot;);</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="revert"><a href="#revert" class="headerlink" title="revert"></a>revert</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">function testRevert(uint _i) public  pure &#123;</span><br><span class="line">    if (_i &gt; 10)&#123;</span><br><span class="line">      revert(&quot;i &gt;10&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="assert"><a href="#assert" class="headerlink" title="assert"></a>assert</h3><p>assert一般用于调试使用，与其他两者不同的是，它不会解释抛出异常的原因，与require相比就是少了异常描述字符串参数</p>
+<p>在0.8.0之前的版本抛出的是一个panic exception，会把剩余的gas消耗完毕，不会返还</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">function testAssert(uint _num) public pure&#123;</span><br><span class="line">    assert(_num == 123);</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+
+<p>可以看到三者中<strong>require</strong>消耗的gas费是最多的</p>
+<p><img src="https://cdn.jsdelivr.net/gh/wh1t3zer/recordCTF/blockchain/202404121727158.png" class="lazyload placeholder" data-srcset="https://cdn.jsdelivr.net/gh/wh1t3zer/recordCTF/blockchain/202404121727158.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"></p>
+<h3 id="自定义错误（error）"><a href="#自定义错误（error）" class="headerlink" title="自定义错误（error）"></a>自定义错误（error）</h3><p>error是在solidity的0.8.4中引入，在这几种中是最省gas费的，用error类型定义的函数可以携带参数并且需要搭配revert回退函数一起使用</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">error TransferNotOwner(address sender); // 自定义的带参数的error</span><br></pre></td></tr></table></figure>
+
+<p>一般常用error，省gas费，又能解释抛出异常的原因</p>
 
       </div>
       <div class="post-tags-categories">
@@ -762,7 +796,7 @@
 3、Pow
 4、Pos
 5、dPow
-0x02Powpow在区块
+0x02POWpow在区块
       </div> -->
     </a>
   </div>
