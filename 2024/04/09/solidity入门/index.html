@@ -644,12 +644,13 @@
 <p>||  逻辑或</p>
 <p>&#x3D;&#x3D; 等于</p>
 <p>!&#x3D;  不等于</p>
+<p>solidity中同样支持短路规则</p>
 <h3 id="2、整型"><a href="#2、整型" class="headerlink" title="2、整型"></a>2、整型</h3><p>用的最多也是最常见的</p>
 <p>int    整数，有符号，负数</p>
 <p>uint  正整数，无符号</p>
 <p>uint256 256位正整数</p>
 <h3 id="3、地址类型"><a href="#3、地址类型" class="headerlink" title="3、地址类型"></a>3、地址类型</h3><p>地址类型是用来存储20位的以太坊地址大小</p>
-<p>有个修饰符得讲一讲，payable</p>
+<p>有个修饰符得讲一讲，payable，可以接收转账</p>
 <p>在地址类型中使用payable()，则此地址会比普通地址多两个成员，一个是transfer，一个是send</p>
 <p>send执行失败不会影响当前合约的执行，但是会返回false值。balance和transfer()可以用来查询eth的余额，transfer()内含安全转账（也就是内置了执行失败的一个处理）</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">address public _address = xxx; // 20位的以太坊地址</span><br><span class="line"> address payable public _address1 = payable(_address);</span><br><span class="line"> uint256 public balance =  _address1.balance;</span><br><span class="line"> </span><br><span class="line">//这里对原有地址_address用了payable()修饰，让_address1有了transfer和send方法，还有一个balance成员</span><br></pre></td></tr></table></figure>
@@ -729,7 +730,7 @@
 
 <h3 id="revert"><a href="#revert" class="headerlink" title="revert"></a>revert</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">function testRevert(uint _i) public  pure &#123;</span><br><span class="line">    if (_i &gt; 10)&#123;</span><br><span class="line">      revert(&quot;i &gt;10&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
 
-<h3 id="assert"><a href="#assert" class="headerlink" title="assert"></a>assert</h3><p>assert一般用于调试使用，与其他两者不同的是，它不会解释抛出异常的原因，与require相比就是少了异常描述字符串参数</p>
+<h3 id="assert"><a href="#assert" class="headerlink" title="assert"></a>assert</h3><p>assert翻译过来是断言，一般用于调试使用，与其他两者不同的是，它不会解释抛出异常的原因，与require相比就是少了异常描述字符串参数</p>
 <p>在0.8.0之前的版本抛出的是一个panic exception，会把剩余的gas消耗完毕，不会返还</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">function testAssert(uint _num) public pure&#123;</span><br><span class="line">    assert(_num == 123);</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
 
