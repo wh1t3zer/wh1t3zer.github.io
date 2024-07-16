@@ -654,6 +654,14 @@
 
 <h3 id="4、查看Docker服务状态"><a href="#4、查看Docker服务状态" class="headerlink" title="4、查看Docker服务状态"></a>4、查看Docker服务状态</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">systyemctl status docker</span><br></pre></td></tr></table></figure>
 
+<h3 id="5、Docker-compose的配置"><a href="#5、Docker-compose的配置" class="headerlink" title="5、Docker-compose的配置"></a>5、Docker-compose的配置</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo curl -L &quot;https://github.com/docker/compose/releases/download/v2.2.2/docker-compose-$(uname -s)-$(uname -m)&quot; -o /usr/local/bin/docker-compose</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo chmod +x /usr/local/bin/docker-compose</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">docker-compose version</span><br><span class="line">version 1.24.1, build 4667896b</span><br></pre></td></tr></table></figure>
+
 <h2 id="0x02Mysql"><a href="#0x02Mysql" class="headerlink" title="0x02Mysql"></a>0x02Mysql</h2><h3 id="1、拉取mysql镜像"><a href="#1、拉取mysql镜像" class="headerlink" title="1、拉取mysql镜像"></a>1、拉取mysql镜像</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker pull mysql</span><br></pre></td></tr></table></figure>
 
 <p>或者查询可安装的Mysql版本</p>
