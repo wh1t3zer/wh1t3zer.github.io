@@ -622,7 +622,8 @@
   <div class="main-content">
     <article class="post post-detail">
       <div class="post-content">
-        <h2 id="0x00前言"><a href="#0x00前言" class="headerlink" title="0x00前言"></a>0x00前言</h2><h2 id="0x01算法盘点"><a href="#0x01算法盘点" class="headerlink" title="0x01算法盘点"></a>0x01算法盘点</h2><p>1、Pbft</p>
+        <h2 id="0x00前言"><a href="#0x00前言" class="headerlink" title="0x00前言"></a>0x00前言</h2><p>区块链自诞生以来就以去中心化、公开公平透明、不可追踪完全匿名化的特点吸引了大量的人前来研究和追捧。作为区块链，是如何实现去中心化的？又是如何做到公平的？其实无异于以下的几种算法</p>
+<h2 id="0x01算法盘点"><a href="#0x01算法盘点" class="headerlink" title="0x01算法盘点"></a>0x01算法盘点</h2><p>1、Pbft</p>
 <p>2、Raft</p>
 <p>3、Pow</p>
 <p>4、Pos</p>
@@ -648,7 +649,7 @@
 <p>完整攻击后区块链容易失去价值，这里注意一点(完整)，具体的原因没讲得很清晰，有空补上这里点</p>
 <p>代表代币：ETH2.0</p>
 <p><em>*<em>以太坊</em>网络已于2022 年9 月15 日完成了与信标链的合并（The Merge），由PoW 共识机制成功*升级</em>为<em>PoS</em> 共识机制**</p>
-<h2 id="0x04Raft"><a href="#0x04Raft" class="headerlink" title="0x04Raft"></a>0x04Raft</h2><p>这个也是比较经典的算法了，无论是区块链还是微服务分布式，还是负载均衡。</p>
+<h2 id="0x04RAFT"><a href="#0x04RAFT" class="headerlink" title="0x04RAFT"></a>0x04RAFT</h2><p>这个也是比较经典的算法了，无论是区块链还是微服务分布式，还是负载均衡。</p>
 <p>在这个算法中，服务器节点有三种状态：</p>
 <p>1、跟随状态</p>
 <p>2、候选状态</p>
@@ -656,7 +657,29 @@
 <p>动画演示网站：	<a target="_blank" rel="noopener" href="https://raft.github.io/raftscope/">https://raft.github.io/raftscope/</a></p>
 <h2 id="0x05PBFT"><a href="#0x05PBFT" class="headerlink" title="0x05PBFT"></a>0x05PBFT</h2><p>PBFT算法全称为实用拜占庭容错算法(practical byzantine fault tolerance)</p>
 <p>是一个升级的算法，用来解决原来的原始拜占庭容错算法效率不高的问题</p>
-<h2 id="0x06DPOW"><a href="#0x06DPOW" class="headerlink" title="0x06DPOW"></a>0x06DPOW</h2>
+<p>​	1.	<strong>预准备（Pre-prepare）</strong>：主节点（Primary）向所有副本节点（Replica）广播交易提案。</p>
+<p>​	2.	<strong>准备（Prepare）</strong>：副本节点验证提案并互相广播准备信息。</p>
+<p>​	3.	<strong>提交（Commit）</strong>：节点确认收到足够的准备信息后，广播提交信息。</p>
+<p>​	4.	<strong>决议</strong>：当节点收到足够的提交信息后，认为提案达成共识并提交交易。</p>
+<p>通俗来讲就是</p>
+<p>预热：大哥先跟小弟说清楚自己的行动命令</p>
+<p>准备：小弟给他们自己的手下发出命令，并小弟之间互相确认大哥下发的命令是否一致</p>
+<p>提交：小弟的手下完成了所有的任务后向小弟们进行汇报确认，当一定数量的小弟都收集到他们手下的信息后一起向老大反馈情况</p>
+<p>决议：老大听取所有小弟的汇报后再做下一步行动</p>
+<p>PBFT能容忍1&#x2F;3的恶意节点存在</p>
+<p>常见币种：</p>
+<p>​	1.	Hyperledger Fabric - 一个用于企业区块链解决方案的平台，广泛应用于企业级应用中。</p>
+<p>​	2.	Zilliqa (ZIL) - 通过分片技术提高扩展性，使用 PBFT 达成共识。</p>
+<p>​	3.	Algorand (ALGO) - 采用 PBFT 变体来实现快速、低成本的交易。</p>
+<p>​	4.	Stellar (XLM) - 虽然主要使用 SCP 共识，但在特定情况下借鉴了 PBFT 原理。</p>
+<h2 id="0x06DPOW"><a href="#0x06DPOW" class="headerlink" title="0x06DPOW"></a>0x06DPOW</h2><p>DPOW全称是delay proof of work，是一个在POW的基础上再次创新的算法。</p>
+<p>原理是将小型区块链的区块哈希嵌入到更大的更安全区块哈希中，通常是比特币。</p>
+<p>一般来说小型区块链的区块验证速度都比较快，因为数据少，但是缺少了安全性，因为是一种小型链，而把它嵌入到POW这种大型区块链中会大大提高安全性，且不用频繁进行POW运算，拖慢时间，而是周期性的进行，一般用来抵抗双花攻击。</p>
+<p>常见币种：</p>
+<p>​	1.	Komodo (KMD): Komodo 是 dPoW 的发明者和主要使用者。</p>
+<p>​	2.	Verus (VRSC): 使用 dPoW 提供额外的安全层。</p>
+<p>​	3.	Pirate Chain (ARRR): 一种隐私币，利用 dPoW 保护其区块链。</p>
+
       </div>
       <div class="post-tags-categories">
         

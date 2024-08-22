@@ -11,7 +11,7 @@
   <!-- Global site tag (gtag.js) - Google Analytics -->
 
 
-  <title>category: struts2| RCE | wh1t3zer</title>
+  <title>Tag: Springboot | wh1t3zer</title>
 
   <link rel="icon" type="image/x-icon, image/vnd.microsoft.icon" href="/favicon.ico">
   <link rel="stylesheet" href="https://at.alicdn.com/t/font_1911880_c1nvbyezg17.css">
@@ -564,19 +564,19 @@
         
 
 <div class="bg-dark-floor" style="position: fixed;left: 0;top: 0;width: 100%;height: 100%;z-index: -2;"></div>
-<div class="bg-light-floor-categoryDetail" style="position: fixed;left: 0;top: 0;width: 100%;height: 100%;z-index: -3;"></div>
+<div class="bg-light-floor-tagDetail" style="position: fixed;left: 0;top: 0;width: 100%;height: 100%;z-index: -3;"></div>
 
-<div class="category-header"  style="background-image:url('https://pic3.zhimg.com/80/v2-98dcd81cb0d1fee52a807c13cedb8338_1440w.jpg?source=1940ef5c')">
-  <div class="category-header-title">
-    category
+<div class="tag-header" style="background-image: url('https://pic1.zhimg.com/80/v2-604a15cef201cf177943af2d915eb2e7_1440w.jpg?source=1940ef5c');">
+  <div class="tag-header-title">
+    tag
   </div>
-  <div class="category-header-desc">
-    
-      <span class="title" id="category-header-desc"></span>
-      <script>
+  <div class="tag-header-desc">
+  
+    <span class="title" id="tag-header-desc"></span>
+    <script>
   function typedFn() {
-    const el = '#category-header-desc';
-    const type = 'categoryDetail';
+    const el = '#tag-header-desc';
+    const type = 'tagDetail';
     let desc = '愿你如风，被人温柔以待'
     var typed = new Typed(el, {
       strings: [desc],
@@ -589,15 +589,16 @@
   }
   typedFn();
 </script>
-      
+    
   </div>
   <div class="mask-box"></div>
 </div>
 
 
-<div class="category">
-  <div class="category-name">
-    <div class="name" style="background-color: #D7BDE2;">struts2| RCE category</div>
+
+<div class="tag">
+  <div class="tag-name">
+    <div class="name" style="background-color: #D5F5E3;">Springboot category</div>
   </div>
   <!-- 每一篇文章卡片 -->
   <!-- hash算法 -->
@@ -610,17 +611,17 @@
         <div class="post-info">
           <div class="post-time">
             <i class="fas fa-clock" aria-hidden="true"></i>
-            <span class="post-time">2023-07-05</span>
+            <span class="post-time">2024-08-17</span>
           </div>
           <div class="post-title">
-            <a class="post-title-link" href="/2023/07/05/struts2%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0/">struts2RCE漏洞复现</a>
+            <a class="post-title-link" href="/2024/08/17/springboot%E7%BB%BC%E5%90%88%E6%BC%8F%E6%B4%9E%E5%88%A9%E7%94%A8%E4%B8%AA%E6%80%BB%E7%BB%93/">Springboot综合利用总结</a>
           </div>
           <div class="post-meta">
             <div class="post-tags">
               <!-- 文章详情页的标签 -->
 
     <i class="iconfont icontag"></i>
-    <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/struts2/" rel="tag">struts2</a></li></ul>
+    <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Springboot/" rel="tag">Springboot</a></li></ul>
 
             </div>
             <div class="post-categories">
@@ -628,39 +629,40 @@
 
 <div class="article-category">
   <i class="iconfont iconbookmark1"></i>
-  <a class="article-category-link" href="/categories/struts2-RCE/">struts2| RCE</a>
+  <a class="article-category-link" href="/categories/Springboot/">Springboot</a>
 </div>
 
 
             </div>
           </div>
           <div class="post-img-mobile">
-            <a href="/2023/07/05/struts2%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0/" style="background-size: cover; 
+            <a href="/2024/08/17/springboot%E7%BB%BC%E5%90%88%E6%BC%8F%E6%B4%9E%E5%88%A9%E7%94%A8%E4%B8%AA%E6%80%BB%E7%BB%93/" style="background-size: cover; 
               background-position: center center;">
-              <img class="lazyload lazyload placeholder" src="/medias/img16.jpg" class="lazyload placeholder" data-srcset="/medias/img16.jpg" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="">
+              <img class="lazyload lazyload placeholder" src="/medias/img3.jpg" class="lazyload placeholder" data-srcset="/medias/img3.jpg" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="">
             </a>
           </div>
           <div class="post-content">
-            0x00简介struts2是一个基于java开源的安全中间件，其中
-0x010x02
+            0x00前言最近有机会作为红队（混子）参加了HW，还是碰到很多企业系统用的都是springboot框架，并且还有可多可少的漏洞可以进行利用，对这个springboot做一个记录复盘。
+0x01漏洞集合1、有关端点和接口的信息泄露这些端点或者
           </div>
         </div>
         <div class="post-more">
-          <a href="/2023/07/05/struts2%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0/">
+          <a href="/2024/08/17/springboot%E7%BB%BC%E5%90%88%E6%BC%8F%E6%B4%9E%E5%88%A9%E7%94%A8%E4%B8%AA%E6%80%BB%E7%BB%93/">
             <i class="iconfont iconmore" pointer style="float: right;  " title="阅读更多"></i>
           </a>
         </div>
       </div>
       <div class="post-img">
-        <a href="/2023/07/05/struts2%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0/" style="background-size: cover; 
+        <a href="/2024/08/17/springboot%E7%BB%BC%E5%90%88%E6%BC%8F%E6%B4%9E%E5%88%A9%E7%94%A8%E4%B8%AA%E6%80%BB%E7%BB%93/" style="background-size: cover; 
           background-position: center center;">
-          <img class="lazyload lazyload placeholder" src="/medias/img16.jpg" class="lazyload placeholder" data-srcset="/medias/img16.jpg" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="">
+          <img class="lazyload lazyload placeholder" src="/medias/img3.jpg" class="lazyload placeholder" data-srcset="/medias/img3.jpg" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="">
         </a>
       </div>
     </article>
   
 </section>
 </div>
+
 <div class="w-70">
   
 </div>

