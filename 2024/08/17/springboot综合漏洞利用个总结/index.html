@@ -808,7 +808,7 @@
 <p>根据需要修改目标地址，RMI 地址、端口等信息，然后在自己控制的服务器上运行</p>
 <h3 id="11、H2数据库设置query属性的RCE-x2F-restart"><a href="#11、H2数据库设置query属性的RCE-x2F-restart" class="headerlink" title="11、H2数据库设置query属性的RCE  &#x2F;restart"></a>11、H2数据库设置query属性的RCE  &#x2F;restart</h3><p>1、可以 POST 请求目标网站的&#x2F;env&#96;接口设置属性</p>
 <p>2、可以 POST 请求目标网站的 &#x2F;restart接口重启应用</p>
-<p>3、存在com.h2database.h2依赖（版本要求暂未知）</p>
+<p>3、存在com.h2database依赖（版本要求暂未知）</p>
 <p><strong>设置 spring.datasource.hikari.connection-test-query 属性</strong></p>
 <p><strong>均无回显</strong></p>
 <p>spring 1.x</p>
@@ -826,7 +826,7 @@
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">POST /actuator/restart</span><br><span class="line">Content-Type: application/json</span><br></pre></td></tr></table></figure>
 
 <p><img src="https://cdn.jsdelivr.net/gh/wh1t3zer/recordCTF/common/202408241610544.png" class="lazyload placeholder" data-srcset="https://cdn.jsdelivr.net/gh/wh1t3zer/recordCTF/common/202408241610544.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"></p>
-<h3 id="12、h2数据库的控制台基于JNDI注入的RCE"><a href="#12、h2数据库的控制台基于JNDI注入的RCE" class="headerlink" title="12、h2数据库的控制台基于JNDI注入的RCE"></a>12、h2数据库的控制台基于JNDI注入的RCE</h3><p>1、存在com.h2database.h2&#96;依赖（版本要求暂未知）</p>
+<h3 id="12、h2数据库的控制台基于JNDI注入的RCE"><a href="#12、h2数据库的控制台基于JNDI注入的RCE" class="headerlink" title="12、h2数据库的控制台基于JNDI注入的RCE"></a>12、h2数据库的控制台基于JNDI注入的RCE</h3><p>1、存在com.h2database&#96;依赖（版本要求暂未知）</p>
 <p>2、spring 配置中启用 h2 console spring.h2.console.enabled&#x3D;true</p>
 <p>3、目标可以请求攻击者的服务器（请求可出外网）</p>
 <p>4、JNDI 注入受目标 JDK 版本影响，jdk &lt; 6u201&#x2F;7u191&#x2F;8u182&#x2F;11.0.1（LDAP 方式）</p>
