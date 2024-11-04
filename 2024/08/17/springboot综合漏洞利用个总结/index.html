@@ -764,7 +764,7 @@
 
 
 <h3 id="9、jolokia中logback基于JNDI注入的RCE"><a href="#9、jolokia中logback基于JNDI注入的RCE" class="headerlink" title="9、jolokia中logback基于JNDI注入的RCE"></a>9、jolokia中logback基于JNDI注入的RCE</h3><p>1、目标网站存在&#x2F;jolokia或&#x2F;actuator&#x2F;jolokia&#96;接口</p>
-<p>2、目标使用了jolokia-core&#96;依赖（版本要求暂未知）并且环境中存在相关 MBean</p>
+<p>2、目标使用了jolokia-core依赖（版本要求暂未知）并且环境中存在相关 MBean</p>
 <p>3、目标可以请求攻击者的 HTTP 服务器（请求可出外网）</p>
 <p>4、普通 JNDI 注入受目标 JDK 版本影响，jdk &lt; 6u201&#x2F;7u191&#x2F;8u182&#x2F;11.0.1(LDAP)，但相关环境可绕过</p>
 <p><strong>查看已存在的 MBeans</strong></p>
