@@ -818,9 +818,9 @@
 <p>（2）java做sql注入的防御？</p>
 <p>同上</p>
 <h4 id="四、腾讯安全"><a href="#四、腾讯安全" class="headerlink" title="四、腾讯安全"></a>四、腾讯安全</h4><p>（1）sql注入过waf了解吗，若一个sql注入过滤了information关键词，怎么绕过？</p>
-<p>mysql.innodb_table_stats</p>
-<p>sys.schema_table_statistics</p>
-<p>sys.x$statement_analysis</p>
+<p><strong>mysql.innodb_table_stats</strong></p>
+<p><strong>sys.schema_table_statistics</strong></p>
+<p><strong>sys.x$statement_analysis</strong></p>
 <p>（2）sql注入了解吗，讲一讲二次注入的原理？</p>
 <p>黑客对数据库插入了脏数据，恶意查询语句，尽管在插入时进行了转义等处理，但再次调用查询语句时里面的脏数据没有经过处理直接返回，导致二次注入</p>
 <h4 id="五、58同城"><a href="#五、58同城" class="headerlink" title="五、58同城"></a>五、58同城</h4><p>（1）假如说有个SQL注入如下</p>
@@ -831,7 +831,12 @@
 <li>1s就超时了，直接返回404页面</li>
 </ol>
 <p>这种情况下如何注入?</p>
-<p>这个暂时没看到比较官方标准答案，可以拓展下思路</p>
+<p>这个一般是时间盲注和布尔盲注结合</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">1 AND 1=1 -- 返回结果正常</span><br><span class="line">1 AND 1=2 -- 返回404</span><br><span class="line">这种情况说明可能是布尔盲注</span><br></pre></td></tr></table></figure>
+
+<p>然后使用延时注入去测试，不同的数据库所写的延时函数不同，可以容易判断出是什么数据库</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">1 AND SLEEP(5)  mysql 延时盲注</span><br><span class="line">1 AND pg_sleep(5) pgsql 延时盲注</span><br><span class="line">1 AND WAITFOR DELAY &#x27;0:0:5&#x27; sqlserver 延时盲注</span><br></pre></td></tr></table></figure>
+
 <h4 id="六、京东"><a href="#六、京东" class="headerlink" title="六、京东"></a>六、京东</h4><p>（1）sql注入的简单原理及其如何防御？</p>
 <p>同上</p>
 <h2 id="0x06总结"><a href="#0x06总结" class="headerlink" title="0x06总结"></a>0x06总结</h2><p>SQL注入的姿势千变万化，在每次学习到一条新bypass payload时还是多记一记。根本上还是要多学SQL语法和特点，几乎所有的Bypass无非就是基于SQL特点去操作的。</p>
@@ -874,6 +879,24 @@
 <div class="post-nav">
 
 
+
+  
+  <div class="post-nav-prev post-nav-item">
+    <div class="post-nav-img" style="background-size: cover; 
+      background-position: center center;">
+      <img class="lazyload lazyload placeholder" src="/medias/img13.jpg" class="lazyload placeholder" data-srcset="/medias/img13.jpg" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="">
+    </div>
+    <a href="/2025/07/30/%E4%B8%BB%E6%B5%81c2%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90(Sliver%E7%AF%87)/" class="post-nav-link">
+      <div class="title">
+        <i class="fas fa-angle-left"></i> Prev:
+        <div class="title-text">主流c2代码分析(Sliver篇)</div>
+      </div>
+      
+      <!-- <div class="content">
+        0x00前言一直忙于工作，没时间写blog，最近时间闲得无事就捣鼓起远控，其实说起远控都有比较久的历史了，不管是以前基于
+      </div> -->
+    </a>
+  </div>
 
 
 
