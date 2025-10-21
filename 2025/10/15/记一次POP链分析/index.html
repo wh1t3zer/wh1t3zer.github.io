@@ -11,7 +11,7 @@
   <!-- Global site tag (gtag.js) - Google Analytics -->
 
 
-  <title>服务及环境变量配置(Docker版) | wh1t3zer</title>
+  <title>记一次POP链分析 | wh1t3zer</title>
 
   <link rel="icon" type="image/x-icon, image/vnd.microsoft.icon" href="/favicon.ico">
   <link rel="stylesheet" href="https://at.alicdn.com/t/font_1911880_c1nvbyezg17.css">
@@ -518,21 +518,21 @@
 
 
 <div class="post-detail-header" id="thumbnail_canvas" style="background-repeat: no-repeat; background-size: cover; 
-  background-position: center center;position: relative;background-image:url('/medias/img70.jpg')">
+  background-position: center center;position: relative;background-image:url('/medias/img51.jpg')">
   <div class="post-detail-header-mask"></div>
   <canvas id="header_canvas"style="position:absolute;bottom:0;pointer-events:none;"></canvas>
   
   <div class="post-detail-header_info-box">
     <div class="title-box">
       <span class="title">
-        服务及环境变量配置(Docker版)
+        记一次POP链分析
       </span>
     </div>
     
     
       
         <span class="post-detail-header_date">
-          <i class="fas fa-calendar"></i> Published in：2023-08-18 |
+          <i class="fas fa-calendar"></i> Published in：2025-10-15 |
         </span>
       
 
@@ -540,8 +540,8 @@
         <span class="post-detail-header_categories">
           <i class="iconfont iconbookmark1"></i> category：
           
-            <a href="/categories/Docker/" class="post-detail-header_category">
-              Docker
+            <a href="/categories/PHP/" class="post-detail-header_category">
+              PHP
             </a>
           
         </span>
@@ -565,147 +565,24 @@
   <div class="main-content">
     <article class="post post-detail">
       <div class="post-content">
-        <h2 id="0x00前言"><a href="#0x00前言" class="headerlink" title="0x00前言"></a>0x00前言</h2><p>最近服务器在做迁移，有的服务需要重新安装，有些命令太久没使用也忘掉些许，每次迁移都得重新查百度，这样比较麻烦，所以还是花点时间把平时常见的服务安装的流程总结一下，本次总结的是Docker版本的服务安装过</p>
-<h2 id="0x01Docker安装及配置"><a href="#0x01Docker安装及配置" class="headerlink" title="0x01Docker安装及配置"></a>0x01Docker安装及配置</h2><h3 id="1、安装Docker"><a href="#1、安装Docker" class="headerlink" title="1、安装Docker"></a>1、安装Docker</h3><p>在Windows上可直接访问Dockerhub下载，一般不使用Windows环境</p>
-<p>在Linux上，以Centos7为例</p>
-<p>先更新下yum</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">yum -y update	<span class="comment">//这里要注意，在生产环境下慎重，用于学习可随意</span></span><br><span class="line"><span class="comment">//yum -y update：升级所有包同时也升级软件和系统内核；​ </span></span><br><span class="line"><span class="comment">//yum -y upgrade：只升级所有包，不升级软件和系统内核</span></span><br></pre></td></tr></table></figure>
-
-<p>移除曾经安装过的Docker版本</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum remove docker  docker-common docker-selinux docker-engine</span><br></pre></td></tr></table></figure>
-
-<p>安装Docker所需依赖</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum install -y yum-utils device-mapper-persistent-data lvm2</span><br></pre></td></tr></table></figure>
-
-<p>查看可安装的Docker版本</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum list docker-ce --showduplicates | sort -r</span><br></pre></td></tr></table></figure>
-
-<p>安装Docker所选版本</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum -y install docker-ce-<span class="number">18.03</span><span class="number">.1</span>.ce</span><br></pre></td></tr></table></figure>
-
-<p>启动Docker设置开机自启</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">systemctl start docker</span><br><span class="line">systemctl enable docker</span><br></pre></td></tr></table></figure>
-
-<h3 id="2、镜像源"><a href="#2、镜像源" class="headerlink" title="2、镜像源"></a>2、镜像源</h3><p>一般来说，docker的镜像源是国外的，使用国内网络下载镜像速度会比较慢，所以首先要更改下镜像源，这里有国内的比较常用的镜像源</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">网易：http:<span class="comment">//hub-mirror.c.163.com</span></span><br><span class="line">中科大镜像地址：http:<span class="comment">//mirrors.ustc.edu.cn/</span></span><br><span class="line">中科大github地址：https:<span class="comment">//github.com/ustclug/mirrorrequest</span></span><br><span class="line">Azure中国镜像地址：http:<span class="comment">//mirror.azure.cn/</span></span><br><span class="line">Azure中国github地址：https:<span class="comment">//github.com/Azure/container-service-for-azure-china</span></span><br><span class="line">DockerHub镜像仓库: https:<span class="comment">//hub.docker.com/ </span></span><br><span class="line">阿里云镜像仓库： https:<span class="comment">//cr.console.aliyun.com </span></span><br><span class="line">google镜像仓库： https:<span class="comment">//console.cloud.google.com/gcr/images/google-containers/GLOBAL （如果你本地可以翻墙的话是可以连上去的 ）</span></span><br><span class="line">coreos镜像仓库： https:<span class="comment">//quay.io/repository/ </span></span><br><span class="line">RedHat镜像仓库： https:<span class="comment">//access.redhat.com/containers</span></span><br></pre></td></tr></table></figure>
-
-<p>修改镜像源</p>
-<p>vi &#x2F;etc&#x2F;docker&#x2F;daemon.json文件，若没有则创建该文件，添加以下内容：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="string">&quot;registry-mirrors&quot;</span>: [<span class="string">&quot;https://ckdhnbk9.mirror.aliyuncs.com&quot;</span>]	<span class="comment">//这里可修改自己的镜像源</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h3 id="3、重启Docker"><a href="#3、重启Docker" class="headerlink" title="3、重启Docker"></a>3、重启Docker</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo systemctl daemon-reload</span><br><span class="line">sudo systemctl restart docker</span><br></pre></td></tr></table></figure>
-
-<h3 id="4、查看Docker服务状态"><a href="#4、查看Docker服务状态" class="headerlink" title="4、查看Docker服务状态"></a>4、查看Docker服务状态</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">systyemctl status docker</span><br></pre></td></tr></table></figure>
-
-<h3 id="5、Docker-compose的配置"><a href="#5、Docker-compose的配置" class="headerlink" title="5、Docker-compose的配置"></a>5、Docker-compose的配置</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo curl -L &quot;https://github.com/docker/compose/releases/download/v2.2.2/docker-compose-$(uname -s)-$(uname -m)&quot; -o /usr/local/bin/docker-compose</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo chmod +x /usr/local/bin/docker-compose</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">docker-compose version</span><br><span class="line">Docker Compose version v2.28.0</span><br></pre></td></tr></table></figure>
-
-<h2 id="0x02Mysql"><a href="#0x02Mysql" class="headerlink" title="0x02Mysql"></a>0x02Mysql</h2><h3 id="1、拉取mysql镜像"><a href="#1、拉取mysql镜像" class="headerlink" title="1、拉取mysql镜像"></a>1、拉取mysql镜像</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker pull mysql</span><br></pre></td></tr></table></figure>
-
-<p>或者查询可安装的Mysql版本</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker search mysql</span><br></pre></td></tr></table></figure>
-
-<h3 id="2、查看mysql镜像"><a href="#2、查看mysql镜像" class="headerlink" title="2、查看mysql镜像"></a>2、查看mysql镜像</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker images -a </span><br></pre></td></tr></table></figure>
-
-<h3 id="3、启动mysql容器"><a href="#3、启动mysql容器" class="headerlink" title="3、启动mysql容器"></a>3、启动mysql容器</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run -p <span class="number">3306</span>:<span class="number">3306</span> --name mysql --restart=always --network common-network -v /mydata/mysql/log:/<span class="keyword">var</span>/log/mysql -v /mydata/mysql/data:/<span class="keyword">var</span>/lib/mysql -v /mydata/mysql/conf:/etc/mysql -e MYSQL_ROOT_PASSWORD=<span class="number">123456</span> -d mysql:<span class="number">5.7</span></span><br></pre></td></tr></table></figure>
-
-<p>说明：</p>
-<p>-p 指定在容器内部的端口 以及对外暴露的端口</p>
-<p>–name 设置服务器名称</p>
-<p>–restart 是否运行跟随docker一起启动</p>
-<p>–network 容器之间内部通信网络</p>
-<p>-v 挂载命令 将容器中的配置挂载在外部来方便修改</p>
-<p>-d 指定版本</p>
-<p>-e 修改配置</p>
-<p>-e 指定root的密码</p>
-<h3 id="4、进入到mysql容器中"><a href="#4、进入到mysql容器中" class="headerlink" title="4、进入到mysql容器中"></a>4、进入到mysql容器中</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker exec -it mysql /bin/bash   <span class="comment">//mysql可以改成容器id</span></span><br></pre></td></tr></table></figure>
-
-<h3 id="5、修改mysql配置"><a href="#5、修改mysql配置" class="headerlink" title="5、修改mysql配置"></a>5、修改mysql配置</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cd /mydata/mysql/conf</span><br></pre></td></tr></table></figure>
-
-<h3 id="6、创建my-cnf文件"><a href="#6、创建my-cnf文件" class="headerlink" title="6、创建my.cnf文件"></a>6、创建my.cnf文件</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">[client]</span><br><span class="line"></span><br><span class="line">default-character-set=utf8</span><br><span class="line"></span><br><span class="line">[mysql]</span><br><span class="line"></span><br><span class="line">default-character-set=utf8</span><br><span class="line"></span><br><span class="line">[mysqld]</span><br><span class="line"></span><br><span class="line">init_connect=&#x27;SET collation_connection = utf8_unicode_ci&#x27;</span><br><span class="line"></span><br><span class="line">init_connect=&#x27;SET NAMES utf8&#x27;</span><br><span class="line"></span><br><span class="line">character-set-server=utf8</span><br><span class="line"></span><br><span class="line">collation-server=utf8_unicode_ci</span><br><span class="line"></span><br><span class="line">skip-character-set-client-handshake</span><br><span class="line"></span><br><span class="line">skip-name-resolve</span><br></pre></td></tr></table></figure>
-
-<h3 id="7-重启mysql服务-使其配置生效"><a href="#7-重启mysql服务-使其配置生效" class="headerlink" title="7.重启mysql服务 使其配置生效"></a>7.重启mysql服务 使其配置生效</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker restart mysql</span><br></pre></td></tr></table></figure>
-
-<h3 id="8、授权远程访问"><a href="#8、授权远程访问" class="headerlink" title="8、授权远程访问"></a>8、授权远程访问</h3><p><strong>进入mysql</strong></p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mysql -u root -p</span><br></pre></td></tr></table></figure>
-
-<p><strong>进入mysql库中</strong></p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">use mysql;</span><br></pre></td></tr></table></figure>
-
-<p><strong>查询库中的账号和允许连接的host</strong></p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">select user,host from user;</span><br></pre></td></tr></table></figure>
-
-<p><strong>给root 用户授权所有的权限以及能访问的ip</strong></p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">grant all privileges on *.* to root@&quot;ip&quot; identified by &quot;root&quot;;</span><br></pre></td></tr></table></figure>
-
-<p><strong>刷新权限生效</strong></p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">flush privileges;</span><br></pre></td></tr></table></figure>
-
-<h2 id="0x03Jdk"><a href="#0x03Jdk" class="headerlink" title="0x03Jdk"></a>0x03Jdk</h2><h3 id="1、查看可用jdk版本"><a href="#1、查看可用jdk版本" class="headerlink" title="1、查看可用jdk版本"></a>1、查看可用jdk版本</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker search jdk</span><br></pre></td></tr></table></figure>
-
-<h3 id="2、拉取jdk镜像"><a href="#2、拉取jdk镜像" class="headerlink" title="2、拉取jdk镜像"></a>2、拉取jdk镜像</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker pull jdk</span><br></pre></td></tr></table></figure>
-
-<h3 id="3、查看jdk镜像是否下载"><a href="#3、查看jdk镜像是否下载" class="headerlink" title="3、查看jdk镜像是否下载"></a>3、查看jdk镜像是否下载</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker images </span><br></pre></td></tr></table></figure>
-
-<h3 id="4、启动java容器"><a href="#4、启动java容器" class="headerlink" title="4、启动java容器"></a>4、启动java容器</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run -d -it --name java java</span><br></pre></td></tr></table></figure>
-
-<p>说明：</p>
-<p>run：启动一个镜像容器</p>
-<p>-d：指定容器运行于后台</p>
-<p>-it：-i 和 -t 的缩写；</p>
-<ul>
-<li>-i：以交互模式运行容器，通常与 -t 同时使用</li>
-<li>-t：为容器重新分配一个伪输入终端，通常与 -i 同时使用</li>
-</ul>
-<p>–name：指定容器名字，后续可以通过名字进行容器管理</p>
-<h2 id="0x04Python3"><a href="#0x04Python3" class="headerlink" title="0x04Python3"></a>0x04Python3</h2><p>Linux默认安装了Python2，若需要Python3则另外单独安装</p>
-<h3 id="1、拉取python3镜像"><a href="#1、拉取python3镜像" class="headerlink" title="1、拉取python3镜像"></a>1、拉取python3镜像</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker pull python:<span class="number">3.7</span></span><br></pre></td></tr></table></figure>
-
-<h3 id="2、挂载目录"><a href="#2、挂载目录" class="headerlink" title="2、挂载目录"></a>2、挂载目录</h3><p>其作用是可借容器环境运行宿主机的脚本</p>
-<p>-v &#x2F;opt&#x2F;python_home:&#x2F;home&#x2F;python_home</p>
-<p>就是将主机上的&#x2F;opt&#x2F;python_home目录挂载到容器内&#x2F;home&#x2F;python_home目录里</p>
-<h3 id="3、运行python容器"><a href="#3、运行python容器" class="headerlink" title="3、运行python容器"></a>3、运行python容器</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run -itd --name python37 -v /opt/python_home:/home/python_home python:<span class="number">3.7</span></span><br></pre></td></tr></table></figure>
-
-<h3 id="4、进入python容器"><a href="#4、进入python容器" class="headerlink" title="4、进入python容器"></a>4、进入python容器</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker exec -it python37 /bin/bash</span><br></pre></td></tr></table></figure>
-
-<h2 id="0x05Redis"><a href="#0x05Redis" class="headerlink" title="0x05Redis"></a>0x05Redis</h2><h3 id="1、拉取最新redis镜像"><a href="#1、拉取最新redis镜像" class="headerlink" title="1、拉取最新redis镜像"></a>1、拉取最新redis镜像</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker pull redis:latest</span><br></pre></td></tr></table></figure>
-
-<h3 id="2、准备redis-conf文件"><a href="#2、准备redis-conf文件" class="headerlink" title="2、准备redis.conf文件"></a>2、准备redis.conf文件</h3><p>可以到redis的官网下载压缩包，拿出里面的redis.conf文件</p>
-<p><a target="_blank" rel="noopener" href="http://www.redis.cn/">http://www.redis.cn/</a></p>
-<h3 id="3、配置文件"><a href="#3、配置文件" class="headerlink" title="3、配置文件"></a>3、配置文件</h3><p> <code>bind 127.0.0.1</code> 	注释掉这部分，使redis可以外部访问 </p>
-<p><code>daemonize no</code>		用守护线程的方式启动 </p>
-<p><code>requirepass 你的密码</code>		给redis设置密码 </p>
-<p><code>appendonly yes</code>		redis持久化　　默认是no </p>
-<p><code>tcp-keepalive 300</code> 		防止出现远程主机强迫关闭了一个现有的连接的错误 默认是300</p>
-<h3 id="4、选择从本地挂载到redis容器内的路径"><a href="#4、选择从本地挂载到redis容器内的路径" class="headerlink" title="4、选择从本地挂载到redis容器内的路径"></a>4、选择从本地挂载到redis容器内的路径</h3><p>在本地某个位置创建文件夹，把配置文件存放到文件夹里</p>
-<p>我这里选择&#x2F;usr&#x2F;local&#x2F;redis</p>
-<h3 id="5、启动容器"><a href="#5、启动容器" class="headerlink" title="5、启动容器"></a>5、启动容器</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run -itd -p <span class="number">6379</span>:<span class="number">6379</span> --name redis -v /usr/local/redis/redis.conf:/etc/redis/redis.conf -v /usr/local/redis/data:/data -d redis redis-server /etc/redis/redis.conf --appendonly yes</span><br></pre></td></tr></table></figure>
-
-<p> 说明：</p>
-<p>-p 6379:6379		把容器内的6379端口映射到<a target="_blank" rel="noopener" href="https://cloud.tencent.com/product/cdh?from_column=20065&from=20065">宿主机</a>6379端口 </p>
-<p>-v &#x2F;data&#x2F;redis&#x2F;redis.conf:&#x2F;etc&#x2F;redis&#x2F;redis.conf		把宿主机配置好的redis.conf放到容器内的这个位置中 </p>
-<p>-v &#x2F;data&#x2F;redis&#x2F;data:&#x2F;data		把redis持久化的数据在宿主机内显示，做<a target="_blank" rel="noopener" href="https://cloud.tencent.com/solution/backup?from_column=20065&from=20065">数据备份</a> </p>
-<p>redis-server &#x2F;etc&#x2F;redis&#x2F;redis.conf		这个是关键配置，让redis不是无配置启动，而是按照这个redis.conf的配置启动 </p>
-<p>–appendonly yes		redis启动后数据持久化</p>
-<h2 id="0x06Node"><a href="#0x06Node" class="headerlink" title="0x06Node"></a>0x06Node</h2><h3 id="1、拉取最新镜像"><a href="#1、拉取最新镜像" class="headerlink" title="1、拉取最新镜像"></a>1、拉取最新镜像</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker pull node</span><br></pre></td></tr></table></figure>
-
-<h3 id="2、运行容器"><a href="#2、运行容器" class="headerlink" title="2、运行容器"></a>2、运行容器</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run -it --name node node</span><br></pre></td></tr></table></figure>
-
-<h3 id="3、其他"><a href="#3、其他" class="headerlink" title="3、其他"></a>3、其他</h3><p>其中npm命令也会跟随镜像一起安装，命令行npm -version查询npm版本，若返回版本号则安装成功</p>
-<h2 id="0x07补充"><a href="#0x07补充" class="headerlink" title="0x07补充"></a>0x07补充</h2><p>以后有其余常见服务会持续记录到本文章，对学习服务的一个总结，还有一份Windows和Linux的主机版的有空再写一下</p>
+        <h2 id="0x01前言"><a href="#0x01前言" class="headerlink" title="0x01前言"></a>0x01前言</h2><p>TP5反序列化入口都是在Windows类的析构方法，通过<code>file_exists()</code>函数触发<code>__toString</code> 魔术方法，然后以<code>__toString</code>为中间跳板寻找代码执行点，造成反序列化任意命令执行。有关TP5的分析可以看挖掘暗藏thinkphp中的反序列利用链这篇文章，感觉分析的思路比较好。</p>
+<p>TP6的不同之处就是没有了Windows类，也就无法利用其中的析构方法作为反序列化入口，需要重新挖掘其他入口点。</p>
+<h2 id="0x02补充知识"><a href="#0x02补充知识" class="headerlink" title="0x02补充知识"></a>0x02补充知识</h2><p>call	调用不可访问或不存在的方法时被调用<br>__callStatic	调用不可访问或不存在的静态方法时被调用<br>__clone	进行对象clone时被调用，用来调整对象的克隆行为<br>__constuct	构建对象的时被调用<br>__debuginfo	当调用var_dump()打印对象时被调用（当你不想打印所有属性）适用于PHP5.6版本<br>__destruct	明确销毁对象或脚本结束时被调用<br>___get	读取不可访问或不存在属性时被调用<br>__invoke	当以函数方式调用对象时被调用<br>__isset	对不可访问或不存在的属性调用isset()或empty()时被调用<br>__set	当给不可访问或不存在属性赋值时被调用<br>__set_state	当调用var_export()导出类时,此静态方法被调用,用__set_state的返回值做为var_export的返回值<br>__sleep	当使用serialize时被调用,当你不需要保存大对象的所有数据时很有用<br>__toString	当一个类被转换成字符串时被调用</p>
+<p>__unset	对不可访问或不存在的属性进行unset时被调用<br>wakeup	当使用unserialize时被调用,可用于做些对象的初始化操作</p>
+<h2 id="0x02分析"><a href="#0x02分析" class="headerlink" title="0x02分析"></a>0x02分析</h2><p>ThinkPHP存在反序列化的漏洞利用链</p>
+<p>查看版本</p>
+<p>是5.1.39LTS</p>
+<p>通过网上了解到TP5的POP链入口是Windows.php中的_destruct()函数，</p>
+<p>看到有个removeFiles()函数，继续跳转，发现该函数的功能是当filename存在的时候，执行unlink()函数删除文件名，该变量是可控的。</p>
+<p>跳转到file_exists()</p>
 
       </div>
       <div class="post-tags-categories">
         
         <div class="tags">
           
-            <a href="/tags/Docker/" class="">
-              Docker
+            <a href="/tags/PHP/" class="">
+              PHP
             </a>
           
         </div>
@@ -719,7 +596,7 @@
     </li>
     <li class="post-copyright-link">
     <strong>link:  </strong>
-    <a href="/2023/08/18/服务及环境变量配置(Docker版)/" target="_blank" title="服务及环境变量配置(Docker版)">https://wh1t3zer.github.io/2023/08/18/服务及环境变量配置(Docker版)/</a>
+    <a href="/2025/10/15/记一次POP链分析/" target="_blank" title="记一次POP链分析">https://wh1t3zer.github.io/2025/10/15/记一次POP链分析/</a>
     </li>
     <li class="post-copyright-license">
       <strong>Copyright notice:   </strong>
@@ -741,16 +618,17 @@
   <div class="post-nav-prev post-nav-item">
     <div class="post-nav-img" style="background-size: cover; 
       background-position: center center;">
-      <img class="lazyload lazyload placeholder" src="/medias/img95.jpg" class="lazyload placeholder" data-srcset="/medias/img95.jpg" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="">
+      <img class="lazyload lazyload placeholder" src="/medias/img84.jpg" class="lazyload placeholder" data-srcset="/medias/img84.jpg" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="">
     </div>
-    <a href="/2023/08/19/%E6%9C%8D%E5%8A%A1%E5%8F%8A%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F%E9%85%8D%E7%BD%AE(%E4%B8%BB%E6%9C%BA%E7%89%88)/" class="post-nav-link">
+    <a href="/2025/10/15/java%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E9%93%BE%E6%80%BB%E7%BB%93/" class="post-nav-link">
       <div class="title">
         <i class="fas fa-angle-left"></i> Prev:
-        <div class="title-text">服务及环境变量配置(主机版)</div>
+        <div class="title-text">java反序列化链总结</div>
       </div>
       
       <!-- <div class="content">
-        0x00前言昨天总结整理了Docker版本的环境配置，这次主要整合的是Windows和Linux系统下的服务环境配置，本
+        0x00 前言有时间复现下java反序列化漏洞各个利用链，顺便再强化一下记忆并再学习一遍细节
+java序列化就是将jav
       </div> -->
     </a>
   </div>
@@ -761,15 +639,15 @@
   <div class="post-nav-next post-nav-item">
     <div class="post-nav-img" style="background-size: cover; 
       background-position: center center;">
-      <img class="lazyload lazyload placeholder" src="/medias/img37.jpg" class="lazyload placeholder" data-srcset="/medias/img37.jpg" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" src="" alt="">
+      <img class="lazyload lazyload placeholder" src="/medias/img15.jpg" class="lazyload placeholder" data-srcset="/medias/img15.jpg" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" src="" alt="">
     </div>
-    <a href="/2023/07/05/shiro%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0/" class="post-nav-link">
+    <a href="/2025/07/30/%E4%B8%BB%E6%B5%81c2%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90(Sliver%E7%AF%87)/" class="post-nav-link">
       <div class="title">
         Next: <i class="fas fa-angle-right"></i>
-        <div class="title-text">shiro反序列化漏洞复现</div>
+        <div class="title-text">主流c2代码分析(Sliver篇)</div>
       </div>
       <!-- <div class="content">
-        0x00前言Apache Shiro是一个强大且易用的Java安全框架,执行身份验证、授权、密码和会话管理。使用Shir
+        0x00前言一直忙于工作，没时间写blog，最近时间闲得无事就捣鼓起远控，其实说起远控都有比较久的历史了，不管是以前基于
       </div> -->
     </a>
   </div>
