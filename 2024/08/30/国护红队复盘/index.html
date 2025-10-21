@@ -1,0 +1,5407 @@
+<!DOCTYPE html>
+<html>
+  <!-- meta/link... -->
+  
+
+
+
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+
+
+  <title>某HW红队复盘 | wh1t3zer</title>
+
+  <link rel="icon" type="image/x-icon, image/vnd.microsoft.icon" href="/favicon.ico">
+  <link rel="stylesheet" href="https://at.alicdn.com/t/font_1911880_c1nvbyezg17.css">
+  <link href="https://unpkg.com/@fortawesome/fontawesome-free/css/all.min.css" rel="stylesheet">
+  <link href="/js/swiper/swiper@5.4.1.min.css" rel="stylesheet">
+  
+  
+  
+  
+<link rel="stylesheet" href="/css/animate.min.css">
+
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+  
+    
+<link rel="stylesheet" href="/js/fancybox/jquery.fancybox.min.css">
+
+  
+  
+    
+<link rel="stylesheet" href="/js/shareJs/share.min.css">
+
+  
+  <style>
+        @media (max-width: 992px) {
+            #waifu {
+                display: none;
+            }
+        }
+    </style>
+    <script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+    <link href="//cdn.bootcss.com/pace/1.0.2/themes/pink/pace-theme-flash.css" rel="stylesheet">
+
+    
+
+    <!-- import link -->
+    
+        
+            
+        
+            
+        
+    
+    <!-- import script -->
+    
+        
+            
+        
+            
+        
+    
+
+<meta name="generator" content="Hexo 6.2.0"></head>
+
+  
+  <!-- 依赖于jquery和vue -->
+  
+    
+<script src="https://unpkg.com/jquery@3.5.1/dist/jquery.min.js"></script>
+
+  
+
+  
+    
+<script src="https://unpkg.com/vue@2.6.11/dist/vue.min.js"></script>
+
+  
+  
+  <body>
+    <!-- 预加载动画 -->
+    <!-- 页面预加载动画 -->
+
+<div id='loader'>
+  <link rel="stylesheet" href="/js/loaded/index.css" >
+  <div class="loading-left-bg"></div>
+  <div class="loading-right-bg"></div>
+  <div class="spinner-box">
+    <div class="configure-border-1">
+      <div class="configure-core"></div>
+    </div>
+    <div class="configure-border-2">
+      <div class="configure-core"></div>
+    </div>
+    <div class="loading-word">loading...</div>
+  </div>
+</div>
+
+<script>
+  var endLoading = function () {
+    document.body.style.overflow = 'auto';
+    document.getElementById('loader').classList.add("loading");
+  }
+  window.addEventListener('DOMContentLoaded',endLoading);
+  
+</script>
+
+    
+    <!-- 判断是否为暗黑风格 -->
+    <!-- 判断是否为黑夜模式 -->
+<script>
+  let isDark = JSON.parse(localStorage.getItem('dark')) || JSON.parse('false');
+
+  if (isDark) {
+    $(document.body).addClass('darkModel');
+  }
+</script>
+
+    <!-- 需要在上面加载的js -->
+    <script>
+  function loadScript(src, cb) {
+    return new Promise(resolve => {
+      setTimeout(function () {
+        var HEAD = document.getElementsByTagName("head")[0] || document.documentElement;
+        var script = document.createElement("script");
+        script.setAttribute("type", "text/javascript");
+        if (cb) {
+          if (JSON.stringify(cb)) {
+            for (let p in cb) {
+              if (p == "onload") {
+                script[p] = () => {
+                  cb[p]()
+                  resolve()
+                }
+              } else {
+                script[p] = cb[p]
+                script.onload = resolve
+              }
+            }
+          } else {
+            script.onload = () => {
+              cb()
+              resolve()
+            };
+          }
+        } else {
+          script.onload = resolve
+        }
+        script.setAttribute("src", src);
+        HEAD.appendChild(script);
+      });
+    });
+  }
+
+  //https://github.com/filamentgroup/loadCSS
+  var loadCSS = function (href, before, media, attributes) {
+    return new Promise(resolve => {
+      setTimeout(function () {
+        var link = document.createElement('link');
+        link.rel = "stylesheet";
+        link.href = src;
+        link.onload = resolve;
+        document.getElementsByTagName("head")[0].appendChild(link);
+      });
+    });
+  };
+
+</script> 
+
+<!-- 轮播图所需要的js -->
+<script src="/js/swiper/swiper.min.js"></script>
+<script src="/js/swiper/vue-awesome-swiper.js"></script>
+<script src="/js/swiper/swiper.animate1.0.3.min.js"></script>
+
+<script type="text/javascript">
+  Vue.use(window.VueAwesomeSwiper)
+</script>
+
+
+  <script src="/js/vue-typed-js/index.js"></script>
+
+
+<!-- 首页的公告滚动插件的js需要重新加载 -->
+<script src="/js/vue-seamless-scroll/index.js"></script>
+
+<!-- 打字机效果js -->
+<script src="https://unpkg.com/typed.js@2.0.11"></script>
+
+
+    <div id="safearea">
+      <main class="main" id="pjax-container">
+        <!-- 头部导航 -->
+        
+<header class="header   " 
+  id="navHeader"
+  style="position: fixed;
+  left: 0; top: 0; z-index: 10;width: 100%;"
+>
+  <div class="header-content">
+    <div class="bars">
+      <div id="appDrawer" class="sidebar-image">
+  <div class="drawer-box-icon">
+    <i class="fas fa-bars" aria-hidden="true" @click="showDialogDrawer"></i>
+  </div>
+  
+  <transition name="fade">
+    <div class="drawer-box_mask" v-cloak style="display: none;" v-show="visible" @click.self="cancelDialogDrawer">
+    </div>
+  </transition>
+  <div class="drawer-box" :class="{'active': visible}">
+    <div class="drawer-box-head bg-color">
+      <img class="drawer-box-head_logo lazyload placeholder" src="/medias/logo.png" class="lazyload placeholder" data-srcset="/medias/logo.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="logo">
+      <h3 class="drawer-box-head_title">wh1t3zer</h3>
+      <h5 class="drawer-box-head_desc"></h5>
+    </div>
+    
+    <div class="drawer-box-content">
+      <ul class="drawer-box-content_menu">
+        
+          
+            <li class="drawer-box-content_item" style="position: relative;">
+              
+                <a href="/" class="drawer-menu-item-link">
+                  
+                    <i class="fas fa-home" aria-hidden="true"></i>
+                  
+                  <span class="name">首页</span>
+                </a>
+              
+            </li>
+          
+            <li class="drawer-box-content_item" style="position: relative;">
+              
+                <a href="/archives" class="drawer-menu-item-link">
+                  
+                    <i class="fas fa-archive" aria-hidden="true"></i>
+                  
+                  <span class="name">归档</span>
+                </a>
+              
+            </li>
+          
+            <li class="drawer-box-content_item" style="position: relative;">
+              
+                <a href="/tags" class="drawer-menu-item-link">
+                  
+                    <i class="fas fa-tags" aria-hidden="true"></i>
+                  
+                  <span class="name">Tags</span>
+                </a>
+              
+            </li>
+          
+            <li class="drawer-box-content_item" style="position: relative;">
+              
+                <a href="/categories" class="drawer-menu-item-link">
+                  
+                    <i class="fas fa-bookmark" aria-hidden="true"></i>
+                  
+                  <span class="name">分类</span>
+                </a>
+              
+            </li>
+          
+            <li class="drawer-box-content_item" style="position: relative;">
+              
+                <a href="/about" class="drawer-menu-item-link">
+                  
+                    <i class="fas fa-user" aria-hidden="true"></i>
+                  
+                  <span class="name">关于</span>
+                </a>
+              
+            </li>
+          
+            <li class="drawer-box-content_item" style="position: relative;">
+              
+                <a href="/friends" class="drawer-menu-item-link">
+                  
+                  <span class="name">友链</span>
+                </a>
+              
+            </li>
+          
+            <li class="drawer-box-content_item" style="position: relative;">
+              
+                <a href="javascript:;" class="drawer-menu-item-link has-children" @click="openOrCloseMenu(6)">
+                  <span>
+                    
+                      <i class="fas fa-link"></i>
+                    
+                    <span class="name">更多</span>
+                  </span>
+                  <i class="fas fa-chevron-left arrow " :class="{'icon-rotate': isOpen(6)}" aria-hidden="true"></i>
+                </a>
+                <ul class="drawer-sub-menu" v-if="isOpen(6)">
+                  
+                  <li>
+                    <a href="/gallery">
+                      
+                      <i class="fas fa-music" style="margin-top: -20px;"></i>
+                      
+                      <span>图库</span>
+                    </a>
+                  </li>
+                  
+                  <li>
+                    <a href="/huoban">
+                      
+                      <i class="fas fa-film" style="margin-top: -20px;"></i>
+                      
+                      <span>友情连接</span>
+                    </a>
+                  </li>
+                  
+                  <li>
+                    <a href="/homepage/index.html">
+                      
+                      <i class="fas fa-paper-plane" style="margin-top: -20px;"></i>
+                      
+                      <span>关于我</span>
+                    </a>
+                  </li>
+                  
+                </ul>
+              
+            </li>
+          
+        
+        
+          <li class="drawer-box-content_item">
+            <a target="_blank" rel="noopener" href="https://github.com/wh1t3zer">
+              <i class="fas fa-github" aria-hidden="true"></i>
+              <span>Github</span>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</div>
+
+<script>
+  var body = document.body || document.documentElement || window;
+  var vm = new Vue({
+    el: '#appDrawer',
+    data: {
+      visible: false,
+      top: 0,
+      openArr: [],
+    },
+    computed: {
+    },
+    mounted() {
+    },
+    methods: {
+      isOpen(index) {
+        if (this.openArr.includes(index)) {
+          return true;
+        } else {
+          return false;
+        }
+      },
+      openOrCloseMenu(curIndex) {
+        const index = this.openArr.indexOf(curIndex);
+        if (index !== -1) {
+          this.openArr.splice(index, 1);
+        } else {
+          this.openArr.push(curIndex);
+        }
+      },
+      showDialogDrawer() {
+        this.visible = true;
+        // 防止页面滚动，只能让弹框滚动
+        this.top = $(document).scrollTop()
+        body.style.cssText = 'width: 100%; height: 100%;overflow: hidden;';
+      },
+      cancelDialogDrawer() {
+        this.visible = false;
+        body.removeAttribute('style');
+        $(document).scrollTop(this.top)
+      }
+    },
+    created() {}
+  })
+</script>
+
+    </div>
+    <div class="blog-title" id="author-avatar">
+      
+        <div class="avatar">
+          <img src="/medias/logo.png" class="lazyload placeholder" data-srcset="/medias/logo.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="logo">
+        </div>
+      
+      <a href="/" class="logo">wh1t3zer</a>
+    </div>
+    <nav class="navbar">
+      <ul class="menu">
+        
+          
+            <li class="menu-item" style="position: relative;">
+              
+                <a href="/" class="menu-item-link" title="首页">
+                  
+                    <i class="fas fa-home" aria-hidden="true"></i>
+                  
+                  <span class="name">首页</span>
+                </a>
+              
+            </li>
+          
+            <li class="menu-item" style="position: relative;">
+              
+                <a href="/archives" class="menu-item-link" title="归档">
+                  
+                    <i class="fas fa-archive" aria-hidden="true"></i>
+                  
+                  <span class="name">归档</span>
+                </a>
+              
+            </li>
+          
+            <li class="menu-item" style="position: relative;">
+              
+                <a href="/tags" class="menu-item-link" title="Tags">
+                  
+                    <i class="fas fa-tags" aria-hidden="true"></i>
+                  
+                  <span class="name">Tags</span>
+                </a>
+              
+            </li>
+          
+            <li class="menu-item" style="position: relative;">
+              
+                <a href="/categories" class="menu-item-link" title="分类">
+                  
+                    <i class="fas fa-bookmark" aria-hidden="true"></i>
+                  
+                  <span class="name">分类</span>
+                </a>
+              
+            </li>
+          
+            <li class="menu-item" style="position: relative;">
+              
+                <a href="/about" class="menu-item-link" title="关于">
+                  
+                    <i class="fas fa-user" aria-hidden="true"></i>
+                  
+                  <span class="name">关于</span>
+                </a>
+              
+            </li>
+          
+            <li class="menu-item" style="position: relative;">
+              
+                <a href="/friends" class="menu-item-link" title="友链">
+                  
+                  <span class="name">友链</span>
+                </a>
+              
+            </li>
+          
+            <li class="menu-item" style="position: relative;">
+              
+                <a href="javascript:;" class="menu-item-link" title="更多">
+                  
+                    <i class="fas fa-link"></i>
+                  
+                  <span class="name">更多</span>
+                  <i class="fas fa-chevron-down arrow" aria-hidden="true"></i>
+                </a>
+                <ul class="sub-menu">
+                  
+                  <li>
+                    <a href="/gallery">
+                      
+                      <i class="fas fa-music" style="margin-top: -20px;"></i>
+                      
+                      <span>图库</span>
+                    </a>
+                  </li>
+                  
+                  <li>
+                    <a href="/huoban">
+                      
+                      <i class="fas fa-film" style="margin-top: -20px;"></i>
+                      
+                      <span>友情连接</span>
+                    </a>
+                  </li>
+                  
+                  <li>
+                    <a href="/homepage/index.html">
+                      
+                      <i class="fas fa-paper-plane" style="margin-top: -20px;"></i>
+                      
+                      <span>关于我</span>
+                    </a>
+                  </li>
+                  
+                </ul>
+              
+            </li>
+          
+        
+      </ul>
+      
+      
+
+    </nav>
+  </div>
+  
+    <a target="_blank" rel="noopener" href="https://github.com/wh1t3zer" class="github-corner color-primary" aria-label="View source on GitHub"><svg width="60" height="60" viewBox="0 0 250 250" style="fill:#fff; position: absolute; top: 0; border: 0; right: 0;" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a><style>.github-corner:hover .octo-arm{animation:octocat-wave 560ms ease-in-out}@keyframes octocat-wave{0%,100%{transform:rotate(0)}20%,60%{transform:rotate(-25deg)}40%,80%{transform:rotate(10deg)}}@media (max-width:500px){.github-corner:hover .octo-arm{animation:none}.github-corner .octo-arm{animation:octocat-wave 560ms ease-in-out}}</style>
+  
+  
+</header>
+        <!-- 内容区域 -->
+        
+ <!-- prismjs 代码高亮 -->
+ 
+
+
+<div class="bg-dark-floor" style="position: fixed;left: 0;top: 0;width: 100%;height: 100%;z-index: -1;"></div>
+
+
+  <!-- 文章详情页顶部图片和标题 -->
+
+
+
+
+<div class="post-detail-header" id="thumbnail_canvas" style="background-repeat: no-repeat; background-size: cover; 
+  background-position: center center;position: relative;background-image:url('/medias/img8.jpg')">
+  <div class="post-detail-header-mask"></div>
+  <canvas id="header_canvas"style="position:absolute;bottom:0;pointer-events:none;"></canvas>
+  
+  <div class="post-detail-header_info-box">
+    <div class="title-box">
+      <span class="title">
+        某HW红队复盘
+      </span>
+    </div>
+    
+    
+      
+        <span class="post-detail-header_date">
+          <i class="fas fa-calendar"></i> Published in：2024-08-30 |
+        </span>
+      
+
+      
+        <span class="post-detail-header_categories">
+          <i class="iconfont iconbookmark1"></i> category：
+          
+            <a href="/categories/HW/" class="post-detail-header_category">
+              HW
+            </a>
+          
+        </span>
+      
+
+      
+    
+  </div>
+  
+  
+    <script src="/js/bubble/bubble.js"></script>
+  
+</div>
+
+
+
+
+
+<div class="row justify-position" 
+  style="padding-top: 0px;">
+  <div class="main-content">
+    <article class="post post-detail">
+      <div class="post-content">
+        <h2 id="0x00前言"><a href="#0x00前言" class="headerlink" title="0x00前言"></a>0x00前言</h2><p>本次HW作为红队方，负责外围打点，这次HW共有近百个单位参与攻击和防守。</p>
+<h2 id="0x01搜集"><a href="#0x01搜集" class="headerlink" title="0x01搜集"></a>0x01搜集</h2><p>开始时上级发了一份靶标信息，分量都很重。找到一个企业后，先在企查查查看了下该公司的所有信息。</p>
+<p>重点关注了企业的分支机构，因为HW举办了这么长时间，一般从主站入手基本不可能，甚至可能分支机构都不太会有明显突破口。</p>
+<p>其次是关注了备案的域名信息，这些可以放到子域名工具去跑，或者用鹰图平台、FOFA这些引擎去检索下有没有值得关注的服务。</p>
+<p>后面从关系图上入手，找规模比较小的二、三级单位，这些单位可能会在内网中与一级单位保持信任连接，通过这些漏洞打进去或者利用了VPN可以通到一级单位去。</p>
+<p>最后还可以去考虑供应商和客户这些企业单位，某些系统可能是两边网络直连，或者有弱口令、员工信息互通。</p>
+<p>之后去搜索引擎上查相关信息，一般会将服务器IP或者域名放上去，FOFA会检测是不是CDN，或者用CDN判断和绕过工具来获得IP。</p>
+<h2 id="0x02漏洞利用"><a href="#0x02漏洞利用" class="headerlink" title="0x02漏洞利用"></a>0x02漏洞利用</h2><h3 id="1、SpringBlade利用-逻辑缺陷"><a href="#1、SpringBlade利用-逻辑缺陷" class="headerlink" title="#1、SpringBlade利用+逻辑缺陷"></a>#1、SpringBlade利用+逻辑缺陷</h3><p>后面跑到了个子域名，是一个某企业信息共享平台，是一个spring—blade框架二开的CMS，查到网上有一个漏洞是硬编码密钥漏洞。<a target="_blank" rel="noopener" href="https://www.wanganke.com/web/article/show/4433">https://www.wanganke.com/web/article/show/4433</a></p>
+<p>此外还有好几个SQL注入，有一个是在获得用户列表的接口上实现的报错注入，报错函数是updatexml。有一个在发请求包的时候显示是某云WAF，被挡住了，后面是根据鹰图平台引擎查到了几个月前的解析IP，尝试去访问这个IP，发现是现在的页面，判断这个是真实IP，从而直接绕过了WAF，可以直接写payload。</p>
+<p>因为有第一个漏洞，所以可以直接伪造身份，有个添加用户的接口，添加后，发现密码没有的，需要重置密码，但是多次使用重置的api，还是会密码错误。</p>
+<p>后面抓包，改后端返回状态和msg，抓了两次，绕过前两步，短信+微信公众号扫码认证，直接到第三部重置了密码</p>
+<h3 id="2、Druid弱口令"><a href="#2、Druid弱口令" class="headerlink" title="#2、Druid弱口令"></a>#2、Druid弱口令</h3><p>不得不说，这些单位的资产太多，很多都存在了弱口令，难以完全覆盖暴露面，可以查看数据库、账号</p>
+<p>有一个平台可以进行对session的替换，绕过进入后台，不过这个后台可用的功能点比较少，发现员工一些数据</p>
+<p>此外这个可以根据显示的依赖，jdbc反序列化RCE也是可以值得一试</p>
+<h3 id="3、Spring-Cloud-rce"><a href="#3、Spring-Cloud-rce" class="headerlink" title="#3、Spring Cloud rce"></a>#3、Spring Cloud rce</h3><p>一个二级单位的RCE，当时用的时候还是有点惊讶，一度怀疑是个交互式蜜罐（bushi），因为这种危险级别的漏洞一般会在日常期间会加固，可能是资产面比较宽，且搜索的方法做了很多限制和fuzz，找到了这么一个平台，也是毫无疑问getshell</p>
+<h3 id="4、SQL注入"><a href="#4、SQL注入" class="headerlink" title="#4、SQL注入"></a>#4、SQL注入</h3><p>在某粮单位有个springblade的框架服务，但是似乎不是nday（当时没找到可用的poc），根据挖掘是挖到了一个sql注入。不过利用过程中还是遇到了waf，用了%0a和&#x2F;**&#x2F;可以正常的绕过，拿到数据，可惜不是root权限不能，security_priv也没有，尽管报错时返回了绝对路径也写不到shell，告一段落。其中有个漏洞是mssql，开始打算是用xp_cmdshell，没想到是各种踩坑。后来也是顺道学习了mssql提权的各种姿势，比如sp_oacreate函数</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">EXEC sp_configure &#x27;show advanced options&#x27;, 1;  </span><br><span class="line">RECONFIGURE WITH OVERRIDE;  </span><br><span class="line">EXEC sp_configure &#x27;Ole Automation Procedures&#x27;, 1;  </span><br><span class="line">RECONFIGURE WITH OVERRIDE;  </span><br><span class="line">EXEC sp_configure &#x27;show advanced options&#x27;, 0;</span><br></pre></td></tr></table></figure>
+
+<p>sp_oacreate是一个非常危险的存储过程可以删除、复制、移动文件 还能配合sp_oamethod 来写文件执行cmd</p>
+<p>查看sp_oacreate状态</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">select count(*) from master.dbo.sysobjects where xtype=&#x27;x&#x27; and name=&#x27;SP_OACREATE&#x27;;</span><br></pre></td></tr></table></figure>
+
+<p>开启存储过程</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">exec sp_configure &#x27;show advanced options&#x27;, 1;</span><br><span class="line">RECONFIGURE;</span><br><span class="line">exec sp_configure &#x27;Ole Automation Procedures&#x27;,1;</span><br><span class="line">RECONFIGURE;</span><br></pre></td></tr></table></figure>
+
+<p>执行命令</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">declare @shell int exec sp_oacreate &#x27;wscript.shell&#x27;,@shell output exec sp_oamethod @shell,&#x27;run&#x27;,null,&#x27;whoami&#x27;</span><br></pre></td></tr></table></figure>
+
+<p>如果xp_cmdshell被删除可以上传xplog70.dll进行恢复删除的xp_cmdshell</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Exec master.dbo.sp_addextendedproc &#x27;xp_cmdshell&#x27;,&#x27;D:\\xplog70.dll&#x27;</span><br></pre></td></tr></table></figure>
+
+<p>执行命令</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">exec master..xp_cmdshell &#x27;whoami&#x27;</span><br></pre></td></tr></table></figure>
+
+<p>当时这个只能使用xp_dirtree来简单查看当前文件，不能看里面内容，只能说，水平还有待提高</p>
+<p>mssql系列文章放一个，以后有空可以多看两眼</p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/st3pby/article/details/128492244">https://blog.csdn.net/st3pby/article/details/128492244</a></p>
+<h3 id="5、弱口令"><a href="#5、弱口令" class="headerlink" title="#5、弱口令"></a>#5、弱口令</h3><p>每次HW都离不开弱口令，弱口令yyds，每次都有单位因为弱口令被打进去后台，好几个即使没拿到shell，也好说歹说拿到一堆数据，拿到一点数据分。说到弱口令，我这放出一个安全设备常见的弱口令，一般还是配合指纹来进行识别爆破。</p>
+<table>
+<thead>
+<tr>
+<th><strong>产品</strong></th>
+<th><strong>默认用户</strong></th>
+<th><strong>默认密码</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>资产灯塔系统</td>
+<td>admin</td>
+<td>arlpass</td>
+</tr>
+<tr>
+<td>重庆普天 CP ADSL03</td>
+<td>root</td>
+<td>root</td>
+</tr>
+<tr>
+<td>中远麒麟堡垒机审计用户</td>
+<td>audit</td>
+<td>12345678</td>
+</tr>
+<tr>
+<td>中远麒麟堡垒机</td>
+<td>admin</td>
+<td>12345678</td>
+</tr>
+<tr>
+<td>中兴adsl841</td>
+<td>admin</td>
+<td>private</td>
+</tr>
+<tr>
+<td>中新金盾硬件防火墙</td>
+<td>admin</td>
+<td>123</td>
+</tr>
+<tr>
+<td>中新金盾信息安全管理系统</td>
+<td>admin</td>
+<td>zxsoft1234!@#$</td>
+</tr>
+<tr>
+<td>中控考勤机web3.0</td>
+<td>administrator</td>
+<td>123456</td>
+</tr>
+<tr>
+<td>中国移动 禹路由</td>
+<td>(none)</td>
+<td>admin</td>
+</tr>
+<tr>
+<td>致远 OA 协同办公系统</td>
+<td>system</td>
+<td>system</td>
+</tr>
+<tr>
+<td>group-admin admin1 audit-admin</td>
+<td>123456</td>
+<td></td>
+</tr>
+<tr>
+<td>长虹 ch-500E</td>
+<td>root</td>
+<td>root</td>
+</tr>
+<tr>
+<td>佑友邮件系统</td>
+<td>admin</td>
+<td>hicomadmin</td>
+</tr>
+<tr>
+<td>佑友防火墙</td>
+<td>admin</td>
+<td>hicomadmin</td>
+</tr>
+<tr>
+<td>亿邮邮件网关</td>
+<td>eyouuser&#x2F;leyougw&#x2F;admin</td>
+<td>eyou_admin&#x2F;admin@(eyou)&#x2F;cyouadmin&#x2F;+-ccccc</td>
+</tr>
+<tr>
+<td>伊泰克</td>
+<td>supervisor</td>
+<td>12345</td>
+</tr>
+<tr>
+<td>信呼协同办公(OA)系统</td>
+<td>admin</td>
+<td>123456</td>
+</tr>
+<tr>
+<td>信呼协同办公(OA)系统</td>
+<td>zhangfei</td>
+<td>123456</td>
+</tr>
+<tr>
+<td>协众OA Mysql</td>
+<td>root</td>
+<td>cnoa.cn2010password</td>
+</tr>
+<tr>
+<td>文网卫士 路由器</td>
+<td>wwws</td>
+<td>admin</td>
+</tr>
+<tr>
+<td>网御星云安全网关</td>
+<td>administrator&#x2F;admin</td>
+<td>leadsec@7766、administrator</td>
+</tr>
+<tr>
+<td>网御事件服务器</td>
+<td>admin</td>
+<td>admin123</td>
+</tr>
+<tr>
+<td>网御上网行为管理系统</td>
+<td>admin</td>
+<td>leadsec</td>
+</tr>
+<tr>
+<td>网御入侵检测系统V3.2.72.0</td>
+<td>adm&#x2F;admin</td>
+<td>leadsec32</td>
+</tr>
+<tr>
+<td>网御漏洞扫描系统</td>
+<td>leadsec</td>
+<td>leadsec</td>
+</tr>
+<tr>
+<td>网御安全日志审计管理系统</td>
+<td>useradmin&#x2F;auditor</td>
+<td>leadsec.useradmin&#x2F;leadsec.auditor</td>
+</tr>
+<tr>
+<td>网御WAF集中控制中心(V3.0R5.0)</td>
+<td>admin&#x2F;Audit&#x2F;adm</td>
+<td>leadsec.waf</td>
+</tr>
+<tr>
+<td>网御星云防火墙</td>
+<td>administrator</td>
+<td>administrator</td>
+</tr>
+<tr>
+<td>网域科技下一代防火墙</td>
+<td>admin</td>
+<td>admin*PWD</td>
+</tr>
+<tr>
+<td>网域科技上网行为管理</td>
+<td>admin</td>
+<td>admin*PWD</td>
+</tr>
+<tr>
+<td>网神防火墙</td>
+<td>firewall</td>
+<td>firewall</td>
+</tr>
+<tr>
+<td>网络卫士入侵检测系统</td>
+<td>ladmin</td>
+<td>talent</td>
+</tr>
+<tr>
+<td>网络安全审计系统(中科新业)</td>
+<td>admin</td>
+<td>123456</td>
+</tr>
+<tr>
+<td>网康日志中心</td>
+<td>ns25000</td>
+<td>ns25000</td>
+</tr>
+<tr>
+<td>同维 DSL699E</td>
+<td>ROOT</td>
+<td>ROOT</td>
+</tr>
+<tr>
+<td>天天期网络安全审计系统</td>
+<td>Admin</td>
+<td>cyberaudit</td>
+</tr>
+<tr>
+<td>天融信数据库审计系统</td>
+<td>superman</td>
+<td>telent</td>
+</tr>
+<tr>
+<td>天融信防火墙NGFW4000</td>
+<td>superman</td>
+<td>talent</td>
+</tr>
+<tr>
+<td>天融信 Reporter</td>
+<td>guest</td>
+<td>guest*PWD</td>
+</tr>
+<tr>
+<td>天清汉马USG防火墙</td>
+<td>admin&#x2F;Audit&#x2F;useradmin</td>
+<td>venus.fw&#x2F;venus.audit&#x2F;venus.user</td>
+</tr>
+<tr>
+<td>天迈科技网络视频监控系统</td>
+<td>admin</td>
+<td>admin</td>
+</tr>
+<tr>
+<td>台湾突破 EA110 RS232:38400</td>
+<td>SL</td>
+<td>SL</td>
+</tr>
+<tr>
+<td>锁群管理系统v2.0</td>
+<td>admin</td>
+<td>123456</td>
+</tr>
+<tr>
+<td>梭子鱼邮件存储网关</td>
+<td>admin</td>
+<td>admin</td>
+</tr>
+<tr>
+<td>斯威特</td>
+<td>root</td>
+<td>root</td>
+</tr>
+<tr>
+<td>斯威特</td>
+<td>user</td>
+<td>user</td>
+</tr>
+<tr>
+<td>思福迪堡垒机</td>
+<td>admin</td>
+<td>safetybase</td>
+</tr>
+<tr>
+<td>水星 MW150R</td>
+<td>admin</td>
+<td>admin</td>
+</tr>
+<tr>
+<td>实达2110EH ROUTER</td>
+<td>root</td>
+<td>grouter</td>
+</tr>
+<tr>
+<td>实达2110EH ROUTER</td>
+<td>user</td>
+<td>password</td>
+</tr>
+<tr>
+<td>实达 V5.4</td>
+<td>root</td>
+<td>grouter</td>
+</tr>
+<tr>
+<td>实达 V3.2</td>
+<td>root</td>
+<td>root</td>
+</tr>
+<tr>
+<td>狮子鱼社区团购系统</td>
+<td>admin</td>
+<td>admin888</td>
+</tr>
+<tr>
+<td>神州数码6010RA</td>
+<td>adsl</td>
+<td>adsl1234</td>
+</tr>
+<tr>
+<td>神行者路由</td>
+<td>admin</td>
+<td>sxzros</td>
+</tr>
+<tr>
+<td>深圳锐明行驶记录仪</td>
+<td>admin</td>
+<td>120223</td>
+</tr>
+<tr>
+<td>深信服上网行为管理设备数据中心</td>
+<td>Admin</td>
+<td>(none)</td>
+</tr>
+<tr>
+<td>深信服负载均衡 AD3.6</td>
+<td>admin</td>
+<td>admin</td>
+</tr>
+<tr>
+<td>深信服产品 AD</td>
+<td>sangfor</td>
+<td>dlanrecover</td>
+</tr>
+<tr>
+<td>深信服产品</td>
+<td>sangfor</td>
+<td>sangfor&#x2F;sangfor@2018&#x2F;sangfor@2019</td>
+</tr>
+<tr>
+<td>深信服WAC （WNS V2.6）</td>
+<td>admin</td>
+<td>admin</td>
+</tr>
+<tr>
+<td>深信服V-P-N</td>
+<td>Admin</td>
+<td>Admin</td>
+</tr>
+<tr>
+<td>深信服SANGFOR防火墙</td>
+<td>admin</td>
+<td>sangfor</td>
+</tr>
+<tr>
+<td>深信服NGAF下一代应用防火墙(NGAF V4.3)</td>
+<td>admin</td>
+<td>admin</td>
+</tr>
+<tr>
+<td>深信服IPSEC V-P-N SSL (5.5)</td>
+<td>Admin</td>
+<td>Admin</td>
+</tr>
+<tr>
+<td>深信服AF(NGAF V2.2)</td>
+<td>admin</td>
+<td>sangfor</td>
+</tr>
+<tr>
+<td>深信服AD3.9</td>
+<td>admin</td>
+<td>admin</td>
+</tr>
+<tr>
+<td>深信服AC 6.0</td>
+<td>admin</td>
+<td>admin</td>
+</tr>
+<tr>
+<td>深信服 EDR</td>
+<td>root</td>
+<td>edr@sangfor</td>
+</tr>
+<tr>
+<td>深信服 EDR</td>
+<td>admin(初始化用户)</td>
+<td>admin</td>
+</tr>
+<tr>
+<td>上海中达</td>
+<td>任意</td>
+<td>12345</td>
+</tr>
+<tr>
+<td>山石网科</td>
+<td>hillstone</td>
+<td>hillstone</td>
+</tr>
+<tr>
+<td>锐捷WALL1600下一代防火墙</td>
+<td>admin</td>
+<td>firewall</td>
+</tr>
+<tr>
+<td>锐捷Smartweb管理系统</td>
+<td>guest</td>
+<td>guest</td>
+</tr>
+<tr>
+<td>Ruijie-RG-UAC</td>
+<td>admin</td>
+<td>ruijie@123</td>
+</tr>
+<tr>
+<td>全向QL1680</td>
+<td>admin</td>
+<td>qxcomm1680&#x2F;qxcommsupport&#x2F;root&#x2F; qxcomm1688</td>
+</tr>
+<tr>
+<td>全向 qxcomm1680</td>
+<td>(none)</td>
+<td>qxcomm1680&#x2F;qxcommsuport</td>
+</tr>
+<tr>
+<td>启明天玥运维安全网关（堡垒机）</td>
+<td>sysuseradmin</td>
+<td>sua_password$123</td>
+</tr>
+<tr>
+<td>启明天玥运维安全网关（堡垒机）</td>
+<td>sysauditor</td>
+<td>sa_password$123</td>
+</tr>
+<tr>
+<td>启明天玥运维安全网关（堡垒机）</td>
+<td>sysadmin</td>
+<td>password$123</td>
+</tr>
+<tr>
+<td>启明天阗入侵检测与管理系统V7.0</td>
+<td>Admin&#x2F;Audit&#x2F;adm</td>
+<td>venus70</td>
+</tr>
+<tr>
+<td>启明天阗入侵检测与管理系统V6.0</td>
+<td>Admin&#x2F;Audit&#x2F;adm</td>
+<td>venus60</td>
+</tr>
+<tr>
+<td>启明OSM-3600天玥网络安全审计系统</td>
+<td>sysadm</td>
+<td>sys$admin@028</td>
+</tr>
+<tr>
+<td>启明星辰</td>
+<td>admin</td>
+<td>bane@7766&#x2F;admin@123</td>
+</tr>
+<tr>
+<td>启莱OA</td>
+<td>admin</td>
+<td>admin</td>
+</tr>
+<tr>
+<td>麒麟堡垒机</td>
+<td>freesvr</td>
+<td>freesvr</td>
+</tr>
+<tr>
+<td>奇安信云管平台(osmp)</td>
+<td>sysadmin</td>
+<td>csmp@CLOUD987</td>
+</tr>
+<tr>
+<td>奇安信网神SecFox运维安全管理与审计系统</td>
+<td>admin</td>
+<td>!1fw@2soc#3v-p-n</td>
+</tr>
+<tr>
+<td>奇安信网神SecFox运维安全管理与审计系统</td>
+<td>admin</td>
+<td>!1fw@2soc#3vpn</td>
+</tr>
+<tr>
+<td>奇安信网神SecADS 3600</td>
+<td>useradmin</td>
+<td>useradmin</td>
+</tr>
+<tr>
+<td>奇安信所有产品</td>
+<td>Admin</td>
+<td>!1ws</td>
+</tr>
+<tr>
+<td>明御运维审计与册风险控制系统</td>
+<td>admin&#x2F;system&#x2F;auditor&#x2F;operator</td>
+<td>1q2w3e&#x2F;1q2w3e4r</td>
+</tr>
+<tr>
+<td>明御网站卫士</td>
+<td>sysmanager</td>
+<td>sysmanager888</td>
+</tr>
+<tr>
+<td>明御攻防实验室平台</td>
+<td>root</td>
+<td>123456</td>
+</tr>
+<tr>
+<td>明御安全网关</td>
+<td>admin</td>
+<td>adminadmin</td>
+</tr>
+<tr>
+<td>明御WEB应用防火墙</td>
+<td>admin</td>
+<td>admin&#x2F;adminadmin</td>
+</tr>
+<tr>
+<td>马强OA协同办公管理系统</td>
+<td>maqiang</td>
+<td>mq123456</td>
+</tr>
+<tr>
+<td>绿盟产品</td>
+<td>空用户</td>
+<td>nsfocus123&#x2F;nsf0cus</td>
+</tr>
+<tr>
+<td>绿盟安全审计系统</td>
+<td>weboper&#x2F;webaudit&#x2F;conadmin&#x2F;admin&#x2F;shell</td>
+<td>weboper&#x2F;webaudit&#x2F;conadmin&#x2F;admin&#x2F;shell</td>
+</tr>
+<tr>
+<td>绿盟IPS&#x2F;IDS</td>
+<td>admin</td>
+<td>Nsfocus@123</td>
+</tr>
+<tr>
+<td>绿盟 UTS综合威胁探针</td>
+<td>admin</td>
+<td>Nsfocus@123</td>
+</tr>
+<tr>
+<td>auditor</td>
+<td>auditor</td>
+<td></td>
+</tr>
+<tr>
+<td>联想网御入侵检测系统IDS</td>
+<td>root&#x2F;admin</td>
+<td>111111&#x2F;admin123</td>
+</tr>
+<tr>
+<td>联想网御入侵检测系统</td>
+<td>lenovo</td>
+<td>default</td>
+</tr>
+<tr>
+<td>联想网御防火墙PowerV</td>
+<td>administrator</td>
+<td>administrator</td>
+</tr>
+<tr>
+<td>联想网御公众号网络安全新视界</td>
+<td>administrator</td>
+<td>administrator</td>
+</tr>
+<tr>
+<td>联通友华光猫PT952G</td>
+<td>admin</td>
+<td>123456</td>
+</tr>
+<tr>
+<td>联软IT安全运维管理系统</td>
+<td>admin</td>
+<td>Tiaolc@lv7000</td>
+</tr>
+<tr>
+<td>联软IT安全运维管理系统</td>
+<td>audit</td>
+<td>Tiaolc@lv7000</td>
+</tr>
+<tr>
+<td>蓝凌 OA 协同办公系统</td>
+<td>luor</td>
+<td>26012345</td>
+</tr>
+<tr>
+<td>科迈易通 km300A-G</td>
+<td>root</td>
+<td>root</td>
+</tr>
+<tr>
+<td>科迈易通 km300A-A</td>
+<td>root</td>
+<td>123456</td>
+</tr>
+<tr>
+<td>科迈易通 km300A-A</td>
+<td>admin</td>
+<td>123456</td>
+</tr>
+<tr>
+<td>科迈易通 km300A-1</td>
+<td>空用户</td>
+<td>password</td>
+</tr>
+<tr>
+<td>科来网络回溯分析系统</td>
+<td>csadmin</td>
+<td>colasoft</td>
+</tr>
+<tr>
+<td>开源OA系统 o2oa</td>
+<td>xadmin</td>
+<td>o2</td>
+</tr>
+<tr>
+<td>景云网络防病毒系统</td>
+<td>super</td>
+<td>super123</td>
+</tr>
+<tr>
+<td>金山 V8 终端安全系统</td>
+<td>admin</td>
+<td>admin</td>
+</tr>
+<tr>
+<td>金合OA</td>
+<td>admin</td>
+<td>0</td>
+</tr>
+<tr>
+<td>佳发巡查指挥系统</td>
+<td>test</td>
+<td>123456</td>
+</tr>
+<tr>
+<td>霍尼韦尔接警机设备</td>
+<td>admin</td>
+<td>admin</td>
+</tr>
+<tr>
+<td>华夏ERP</td>
+<td>jsh</td>
+<td>123456</td>
+</tr>
+<tr>
+<td>华为FusionCompute</td>
+<td>sysadmin secadmin secauditor</td>
+<td>Sysadmin# Secadmin# Secauditor#</td>
+</tr>
+<tr>
+<td>admin</td>
+<td>IaaS@PORTAL-CLOUD8! Huawei@CLOUD8! Huawei12#$</td>
+<td></td>
+</tr>
+<tr>
+<td>root gandalf</td>
+<td>Iaas@0S-CLOUD8! Iaas@0S-CLOUD9!</td>
+<td></td>
+</tr>
+<tr>
+<td>华为FusionCloud</td>
+<td>root arbiter</td>
+<td>Liiw@2Wb tNsZg@123 Sy@1#315-0C6</td>
+</tr>
+<tr>
+<td>华为应用安全(WAF)</td>
+<td>admin</td>
+<td>Admin@123</td>
+</tr>
+<tr>
+<td>root</td>
+<td>Changeme@321</td>
+<td></td>
+</tr>
+<tr>
+<td>华为应用安全(UMA)</td>
+<td>admin</td>
+<td>Admin@storage</td>
+</tr>
+<tr>
+<td>superman</td>
+<td>Changeme@321</td>
+<td></td>
+</tr>
+<tr>
+<td>root</td>
+<td>Changeme@321</td>
+<td></td>
+</tr>
+<tr>
+<td>Administrator</td>
+<td>Changeme@321</td>
+<td></td>
+</tr>
+<tr>
+<td>华为应用安全(SecoManager)</td>
+<td>admin</td>
+<td>Changeme_123</td>
+</tr>
+<tr>
+<td>admin</td>
+<td>Admin123</td>
+<td></td>
+</tr>
+<tr>
+<td>swift</td>
+<td>Huawei12#$</td>
+<td></td>
+</tr>
+<tr>
+<td>root</td>
+<td>Huawei12#$</td>
+<td></td>
+</tr>
+<tr>
+<td>root</td>
+<td>Changeme_123</td>
+<td></td>
+</tr>
+<tr>
+<td>readdbuser</td>
+<td>Changeme_123</td>
+<td></td>
+</tr>
+<tr>
+<td>ossdbuser</td>
+<td>Changeme_123</td>
+<td></td>
+</tr>
+<tr>
+<td>dbuser</td>
+<td>Admin@123</td>
+<td></td>
+</tr>
+<tr>
+<td>–</td>
+<td>Admin@9000</td>
+<td></td>
+</tr>
+<tr>
+<td>Administrator</td>
+<td>Admin@9000</td>
+<td></td>
+</tr>
+<tr>
+<td>admin</td>
+<td>Changeme123</td>
+<td></td>
+</tr>
+<tr>
+<td>华为应用安全(AVE)</td>
+<td>–</td>
+<td>O&amp;m15213</td>
+</tr>
+<tr>
+<td>admin</td>
+<td>Admin@123</td>
+<td></td>
+</tr>
+<tr>
+<td>华为无线局域网</td>
+<td>admin</td>
+<td><a href="mailto:&#x61;&#100;&#x6d;&#x69;&#110;&#64;&#104;&#x75;&#x61;&#119;&#101;&#x69;&#46;&#x63;&#111;&#109;">&#x61;&#100;&#x6d;&#x69;&#110;&#64;&#104;&#x75;&#x61;&#119;&#101;&#x69;&#46;&#x63;&#111;&#109;</a></td>
+</tr>
+<tr>
+<td>华为网络管理(eSight Network)</td>
+<td>admin</td>
+<td>Changeme123</td>
+</tr>
+<tr>
+<td>ossuser</td>
+<td>Changeme_123</td>
+<td></td>
+</tr>
+<tr>
+<td>dbadmin</td>
+<td>Changeme_123</td>
+<td></td>
+</tr>
+<tr>
+<td>cyg_server</td>
+<td>hangeme_123</td>
+<td></td>
+</tr>
+<tr>
+<td>sshd</td>
+<td>Changeme_123</td>
+<td></td>
+</tr>
+<tr>
+<td>admin</td>
+<td>Changeme_123</td>
+<td></td>
+</tr>
+<tr>
+<td>sys</td>
+<td>Changeme123</td>
+<td></td>
+</tr>
+<tr>
+<td>JsonName</td>
+<td>Changeme_123</td>
+<td></td>
+</tr>
+<tr>
+<td>admin</td>
+<td>eSight@123</td>
+<td></td>
+</tr>
+<tr>
+<td>openApiUser</td>
+<td>Changeme_123</td>
+<td></td>
+</tr>
+<tr>
+<td>华为摄像头SDK</td>
+<td>空用户</td>
+<td>HuaWei123</td>
+</tr>
+<tr>
+<td>华为入侵检测系统</td>
+<td>-</td>
+<td>Admin@huawei</td>
+</tr>
+<tr>
+<td>admin</td>
+<td>Admin@123</td>
+<td></td>
+</tr>
+<tr>
+<td>audit-admin</td>
+<td>Admin@123</td>
+<td></td>
+</tr>
+<tr>
+<td>-</td>
+<td>O&amp;m15213</td>
+<td></td>
+</tr>
+<tr>
+<td>华为敏捷控制器</td>
+<td>sa</td>
+<td>无</td>
+</tr>
+<tr>
+<td>ftp</td>
+<td>Ftp12345</td>
+<td></td>
+</tr>
+<tr>
+<td>ideploySftp</td>
+<td>Ftp12345</td>
+<td></td>
+</tr>
+<tr>
+<td>breeze</td>
+<td>Derby123</td>
+<td></td>
+</tr>
+<tr>
+<td>无</td>
+<td>defaultCertPwd@12</td>
+<td></td>
+</tr>
+<tr>
+<td>root</td>
+<td>sek123</td>
+<td></td>
+</tr>
+<tr>
+<td>kafka_common</td>
+<td>无</td>
+<td></td>
+</tr>
+<tr>
+<td>quagga</td>
+<td>无</td>
+<td></td>
+</tr>
+<tr>
+<td>arbiter</td>
+<td>无</td>
+<td></td>
+</tr>
+<tr>
+<td>controller</td>
+<td>无</td>
+<td></td>
+</tr>
+<tr>
+<td>puppet</td>
+<td>无</td>
+<td></td>
+</tr>
+<tr>
+<td>dmq</td>
+<td>无</td>
+<td></td>
+</tr>
+<tr>
+<td>kafka_external</td>
+<td>无</td>
+<td></td>
+</tr>
+<tr>
+<td>db_root</td>
+<td>无</td>
+<td></td>
+</tr>
+<tr>
+<td>root</td>
+<td>Huawei12#$</td>
+<td></td>
+</tr>
+<tr>
+<td>swift</td>
+<td>Huawei13#$</td>
+<td></td>
+</tr>
+<tr>
+<td>testRadiusConnection</td>
+<td>无</td>
+<td></td>
+</tr>
+<tr>
+<td>admin</td>
+<td>Changeme123</td>
+<td></td>
+</tr>
+<tr>
+<td>bin</td>
+<td>无</td>
+<td></td>
+</tr>
+<tr>
+<td>daemon</td>
+<td>无</td>
+<td></td>
+</tr>
+<tr>
+<td>ftp</td>
+<td>无</td>
+<td></td>
+</tr>
+<tr>
+<td>ftpsecure</td>
+<td>无</td>
+<td></td>
+</tr>
+<tr>
+<td>games</td>
+<td>无</td>
+<td></td>
+</tr>
+<tr>
+<td>ldap</td>
+<td>无</td>
+<td></td>
+</tr>
+<tr>
+<td>lp</td>
+<td>无</td>
+<td></td>
+</tr>
+<tr>
+<td>mail</td>
+<td>无</td>
+<td></td>
+</tr>
+<tr>
+<td>man</td>
+<td>无</td>
+<td></td>
+</tr>
+<tr>
+<td>messagebus</td>
+<td>无</td>
+<td></td>
+</tr>
+<tr>
+<td>news</td>
+<td>无</td>
+<td></td>
+</tr>
+<tr>
+<td>nobody</td>
+<td>无</td>
+<td></td>
+</tr>
+<tr>
+<td>nscd</td>
+<td>无</td>
+<td></td>
+</tr>
+<tr>
+<td>ntp</td>
+<td>无</td>
+<td></td>
+</tr>
+<tr>
+<td>rpc</td>
+<td>无</td>
+<td></td>
+</tr>
+<tr>
+<td>sshd</td>
+<td>无</td>
+<td></td>
+</tr>
+<tr>
+<td>statd</td>
+<td>无</td>
+<td></td>
+</tr>
+<tr>
+<td>systemd-bus-proxy</td>
+<td>无</td>
+<td></td>
+</tr>
+<tr>
+<td>systemd-timesync</td>
+<td>无</td>
+<td></td>
+</tr>
+<tr>
+<td>uucp</td>
+<td>无</td>
+<td></td>
+</tr>
+<tr>
+<td>wwwrun</td>
+<td>无</td>
+<td></td>
+</tr>
+<tr>
+<td>hwacadmin</td>
+<td>随机生成</td>
+<td></td>
+</tr>
+<tr>
+<td>hwac</td>
+<td>随机生成</td>
+<td></td>
+</tr>
+<tr>
+<td>db_root_local</td>
+<td>随机生成</td>
+<td></td>
+</tr>
+<tr>
+<td>hwacshell</td>
+<td>随机生成</td>
+<td></td>
+</tr>
+<tr>
+<td>db_root_loacl</td>
+<td>无</td>
+<td></td>
+</tr>
+<tr>
+<td>db_root</td>
+<td>用户设置</td>
+<td></td>
+</tr>
+<tr>
+<td>admin</td>
+<td>Admin123</td>
+<td></td>
+</tr>
+<tr>
+<td>无</td>
+<td>Wo#a*Vk%._88</td>
+<td></td>
+</tr>
+<tr>
+<td>ftp</td>
+<td>Ftp12345</td>
+<td></td>
+</tr>
+<tr>
+<td>ideploySftp</td>
+<td>Ftp12345</td>
+<td></td>
+</tr>
+<tr>
+<td>breeze</td>
+<td>Derby123</td>
+<td></td>
+</tr>
+<tr>
+<td>administrator&#x2F;SWMaster</td>
+<td>Changeme123</td>
+<td></td>
+</tr>
+<tr>
+<td>AgileControllerMCDBA</td>
+<td>Changeme123（预安装）&#x2F;安装时自行设置（自行安装）</td>
+<td></td>
+</tr>
+<tr>
+<td>controller</td>
+<td>Changeme123</td>
+<td></td>
+</tr>
+<tr>
+<td>oracle</td>
+<td>Changeme123</td>
+<td></td>
+</tr>
+<tr>
+<td>华为交换机(CloudEngine)</td>
+<td>-</td>
+<td><a href="mailto:&#x41;&#x64;&#x6d;&#x69;&#110;&#64;&#x68;&#117;&#x61;&#x77;&#x65;&#x69;&#x2e;&#x63;&#x6f;&#109;">&#x41;&#x64;&#x6d;&#x69;&#110;&#64;&#x68;&#117;&#x61;&#x77;&#x65;&#x69;&#x2e;&#x63;&#x6f;&#109;</a></td>
+</tr>
+<tr>
+<td>admin</td>
+<td><a href="mailto:&#97;&#x64;&#x6d;&#x69;&#110;&#x40;&#104;&#117;&#x61;&#119;&#x65;&#x69;&#46;&#x63;&#x6f;&#109;">&#97;&#x64;&#x6d;&#x69;&#110;&#x40;&#104;&#117;&#x61;&#119;&#x65;&#x69;&#46;&#x63;&#x6f;&#109;</a></td>
+<td></td>
+</tr>
+<tr>
+<td>admin</td>
+<td>admin</td>
+<td></td>
+</tr>
+<tr>
+<td>-</td>
+<td>huawei</td>
+<td></td>
+</tr>
+<tr>
+<td>-</td>
+<td><a href="mailto:&#x41;&#100;&#x6d;&#x69;&#x6e;&#x40;&#104;&#117;&#x61;&#119;&#101;&#x69;&#x2e;&#99;&#111;&#x6d;">&#x41;&#100;&#x6d;&#x69;&#x6e;&#x40;&#104;&#117;&#x61;&#119;&#101;&#x69;&#x2e;&#99;&#111;&#x6d;</a></td>
+<td></td>
+</tr>
+<tr>
+<td>华为高级威胁防御(LogCenter)</td>
+<td>loguser</td>
+<td>Changeme123</td>
+</tr>
+<tr>
+<td>root</td>
+<td>Changeme123</td>
+<td></td>
+</tr>
+<tr>
+<td>commonuser</td>
+<td>Changeme123</td>
+<td></td>
+</tr>
+<tr>
+<td>admin</td>
+<td>Changeme123</td>
+<td></td>
+</tr>
+<tr>
+<td>-</td>
+<td>Huawei12#$</td>
+<td></td>
+</tr>
+<tr>
+<td>root</td>
+<td>Huawei12#$</td>
+<td></td>
+</tr>
+<tr>
+<td>华为高级威胁防御(FireHunter6000)</td>
+<td>Administrator</td>
+<td>Admin@9000</td>
+</tr>
+<tr>
+<td>root</td>
+<td>Changeme123</td>
+<td></td>
+</tr>
+<tr>
+<td>backupssl</td>
+<td>Changeme_123</td>
+<td></td>
+</tr>
+<tr>
+<td>commonuser</td>
+<td>Changeme123</td>
+<td></td>
+</tr>
+<tr>
+<td>dbadmin</td>
+<td>Changeme_123</td>
+<td></td>
+</tr>
+<tr>
+<td>omm</td>
+<td>Bigdata123@</td>
+<td></td>
+</tr>
+<tr>
+<td>admin</td>
+<td>Changeme123</td>
+<td></td>
+</tr>
+<tr>
+<td>root</td>
+<td>Huawei12#$</td>
+<td></td>
+</tr>
+<tr>
+<td>root</td>
+<td>Admin@123</td>
+<td></td>
+</tr>
+<tr>
+<td>sandbox</td>
+<td>Admin@123</td>
+<td></td>
+</tr>
+<tr>
+<td>admin</td>
+<td>Admin@123</td>
+<td></td>
+</tr>
+<tr>
+<td>-</td>
+<td>Huawei12#$</td>
+<td></td>
+</tr>
+<tr>
+<td>root</td>
+<td>Huawei12#$</td>
+<td></td>
+</tr>
+<tr>
+<td>华为高级威胁防御(eLog)</td>
+<td>omm</td>
+<td>Changeme123</td>
+</tr>
+<tr>
+<td>root</td>
+<td>Changeme123</td>
+<td></td>
+</tr>
+<tr>
+<td>commonuser</td>
+<td>Changeme123</td>
+<td></td>
+</tr>
+<tr>
+<td>dbadmin</td>
+<td>Changeme_123</td>
+<td></td>
+</tr>
+<tr>
+<td>admin</td>
+<td>Changeme123</td>
+<td></td>
+</tr>
+<tr>
+<td>-</td>
+<td>Admin@9000</td>
+<td></td>
+</tr>
+<tr>
+<td>Administrator</td>
+<td>Admin@9000</td>
+<td></td>
+</tr>
+<tr>
+<td>华为防火墙(USG) 华为安全接入网关(SVN)</td>
+<td>api-admin</td>
+<td>admin@123</td>
+</tr>
+<tr>
+<td>-</td>
+<td>WWW@HUAWEI</td>
+<td></td>
+</tr>
+<tr>
+<td>admin</td>
+<td>Admin@123</td>
+<td></td>
+</tr>
+<tr>
+<td>admin</td>
+<td>Admin@123</td>
+<td></td>
+</tr>
+<tr>
+<td>audit-admin</td>
+<td>Admin@123</td>
+<td></td>
+</tr>
+<tr>
+<td>admin</td>
+<td>Admin@123</td>
+<td></td>
+</tr>
+<tr>
+<td>-</td>
+<td>O&amp;m15213</td>
+<td></td>
+</tr>
+<tr>
+<td>telnetuser</td>
+<td>telnetpwd</td>
+<td></td>
+</tr>
+<tr>
+<td>ftpuser</td>
+<td>ftppwd</td>
+<td></td>
+</tr>
+<tr>
+<td>华为WDM</td>
+<td>admin</td>
+<td>Changeme_123</td>
+</tr>
+<tr>
+<td>root</td>
+<td>Changeme_123</td>
+<td></td>
+</tr>
+<tr>
+<td>szhw</td>
+<td>Changeme_123</td>
+<td></td>
+</tr>
+<tr>
+<td>lct</td>
+<td>Changeme_123</td>
+<td></td>
+</tr>
+<tr>
+<td>华为SMARTAX MT800</td>
+<td>admin</td>
+<td>admin</td>
+</tr>
+<tr>
+<td>华为POL 华为OLT 华为ONT</td>
+<td>root</td>
+<td>admin123</td>
+</tr>
+<tr>
+<td>Epuser</td>
+<td>userEp</td>
+<td></td>
+</tr>
+<tr>
+<td>root</td>
+<td>adminHW</td>
+<td></td>
+</tr>
+<tr>
+<td>user</td>
+<td>*****</td>
+<td></td>
+</tr>
+<tr>
+<td>root</td>
+<td>admin</td>
+<td></td>
+</tr>
+<tr>
+<td>华为NE路由器</td>
+<td>root</td>
+<td>Changeme_123</td>
+</tr>
+<tr>
+<td>-</td>
+<td>WWW@HUAWEI</td>
+<td></td>
+</tr>
+<tr>
+<td>-</td>
+<td>WWW@HUAWEI</td>
+<td></td>
+</tr>
+<tr>
+<td>华为MDU</td>
+<td>-</td>
+<td>mduadmin</td>
+</tr>
+<tr>
+<td>root</td>
+<td>mduadmin</td>
+<td></td>
+</tr>
+<tr>
+<td>root</td>
+<td>mduadmin</td>
+<td></td>
+</tr>
+<tr>
+<td>root</td>
+<td>admin123</td>
+<td></td>
+</tr>
+<tr>
+<td>华为AR路由器</td>
+<td>-</td>
+<td>Admin@huawei</td>
+</tr>
+<tr>
+<td>admin</td>
+<td><a href="mailto:&#x61;&#x64;&#x6d;&#x69;&#110;&#64;&#104;&#117;&#x61;&#119;&#101;&#x69;&#46;&#x63;&#x6f;&#x6d;">&#x61;&#x64;&#x6d;&#x69;&#110;&#64;&#104;&#117;&#x61;&#119;&#101;&#x69;&#46;&#x63;&#x6f;&#x6d;</a></td>
+<td></td>
+</tr>
+<tr>
+<td>admin</td>
+<td><a href="mailto:&#65;&#x64;&#109;&#x69;&#x6e;&#64;&#104;&#117;&#x61;&#119;&#101;&#105;&#46;&#x63;&#111;&#x6d;">&#65;&#x64;&#109;&#x69;&#x6e;&#64;&#104;&#117;&#x61;&#119;&#101;&#105;&#46;&#x63;&#111;&#x6d;</a></td>
+<td></td>
+</tr>
+<tr>
+<td>admin</td>
+<td>admin</td>
+<td></td>
+</tr>
+<tr>
+<td>华为AntiDDoS网关</td>
+<td>admin</td>
+<td>Admin@123</td>
+</tr>
+<tr>
+<td>ddosatic</td>
+<td>Admin_123</td>
+<td></td>
+</tr>
+<tr>
+<td>admin</td>
+<td>Admin@123</td>
+<td></td>
+</tr>
+<tr>
+<td>•如果操作系统未安全加固，请使用帐号名“administrator”。•如果操作系统已安全加固，请使用帐号名“SWMaster”。</td>
+<td>Changeme123</td>
+<td></td>
+</tr>
+<tr>
+<td>admin</td>
+<td>Admin@123</td>
+<td></td>
+</tr>
+<tr>
+<td>-</td>
+<td>WWW@HUAWEI</td>
+<td></td>
+</tr>
+<tr>
+<td>华为VPN</td>
+<td>root</td>
+<td>mduadmin</td>
+</tr>
+<tr>
+<td>华硕</td>
+<td>adsl</td>
+<td>adsl1234</td>
+</tr>
+<tr>
+<td>黑盾防火墙</td>
+<td>admin&#x2F;rule&#x2F;audit</td>
+<td>admin&#x2F;abc123</td>
+</tr>
+<tr>
+<td>合勤 zyxel 642</td>
+<td>(none)</td>
+<td>1234</td>
+</tr>
+<tr>
+<td>海纳CMS-HituxCMS</td>
+<td>admin</td>
+<td>admin</td>
+</tr>
+<tr>
+<td>海康威视联网网关</td>
+<td>admin</td>
+<td>12345</td>
+</tr>
+<tr>
+<td>海康威视 流媒体</td>
+<td>admin</td>
+<td>12345</td>
+</tr>
+<tr>
+<td>飞塔防火墙</td>
+<td>admin</td>
+<td>(none)</td>
+</tr>
+<tr>
+<td>方正防火墙</td>
+<td>admin</td>
+<td>admin</td>
+</tr>
+<tr>
+<td>泛微 OA 协同办公系统</td>
+<td>sysadmin</td>
+<td>1</td>
+</tr>
+<tr>
+<td>泛德</td>
+<td>admin</td>
+<td>conexant</td>
+</tr>
+<tr>
+<td>动网论坛</td>
+<td>admin</td>
+<td>admin888&#x2F;admin</td>
+</tr>
+<tr>
+<td>东信 Ea700</td>
+<td>(none)</td>
+<td>password</td>
+</tr>
+<tr>
+<td>电信网关配置管理</td>
+<td>admin</td>
+<td>admin</td>
+</tr>
+<tr>
+<td>电信ZXHN F450A网关</td>
+<td>telecomadmin</td>
+<td>nE7jA%5m</td>
+</tr>
+<tr>
+<td>大亚DB102</td>
+<td>admin</td>
+<td>dare</td>
+</tr>
+<tr>
+<td>大亚 DB102</td>
+<td>admin</td>
+<td>dare</td>
+</tr>
+<tr>
+<td>大唐</td>
+<td>admin</td>
+<td>1234</td>
+</tr>
+<tr>
+<td>大恒</td>
+<td>admin</td>
+<td>admin</td>
+</tr>
+<tr>
+<td>成都天逸</td>
+<td>admin</td>
+<td>epicrouter</td>
+</tr>
+<tr>
+<td>畅捷通 T+ 数据库</td>
+<td>TPlusDBAdmin</td>
+<td>tplus_12345</td>
+</tr>
+<tr>
+<td>博华网龙一体机</td>
+<td>admin</td>
+<td>bravo_2008</td>
+</tr>
+<tr>
+<td>碧海云盒</td>
+<td>admin</td>
+<td>admin123</td>
+</tr>
+<tr>
+<td>碧海威产品</td>
+<td>admin</td>
+<td>admin&#x2F;admin123</td>
+</tr>
+<tr>
+<td>北电</td>
+<td>anonymous</td>
+<td>12345</td>
+</tr>
+<tr>
+<td>百卓网络Smart多业务安全网关</td>
+<td>admin</td>
+<td>admin</td>
+</tr>
+<tr>
+<td>百傲瑞达V5000</td>
+<td>admin</td>
+<td>admin</td>
+</tr>
+<tr>
+<td>安网科技-智能路由系统</td>
+<td>admin</td>
+<td>admin</td>
+</tr>
+<tr>
+<td>爱快(iKuai)</td>
+<td>admin</td>
+<td>admin</td>
+</tr>
+<tr>
+<td>艾泰网络管理系统</td>
+<td>admin</td>
+<td>admin</td>
+</tr>
+<tr>
+<td>艾玛 701H</td>
+<td>admin</td>
+<td>epicrouter</td>
+</tr>
+<tr>
+<td>艾玛 701g</td>
+<td>admin&#x2F;SZIM</td>
+<td>admin&#x2F;SZIM</td>
+</tr>
+<tr>
+<td>阿姆瑞特智能DNS</td>
+<td>idnsadmin</td>
+<td>admin</td>
+</tr>
+<tr>
+<td>阿姆瑞特防火墙</td>
+<td>admin</td>
+<td>manager</td>
+</tr>
+<tr>
+<td>阿里巴巴otter manager</td>
+<td>admin</td>
+<td>admin</td>
+</tr>
+<tr>
+<td>阿里巴巴 NACOS</td>
+<td>nacos</td>
+<td>nacos</td>
+</tr>
+<tr>
+<td>阿尔卡特</td>
+<td>(none)</td>
+<td>(none)</td>
+</tr>
+<tr>
+<td>阿尔法</td>
+<td>admin</td>
+<td>admin</td>
+</tr>
+<tr>
+<td>Zyxel NWA&#x2F;NAP&#x2F;WAC wireless access point series</td>
+<td>devicehaecived</td>
+<td>1234</td>
+</tr>
+<tr>
+<td>anonymous</td>
+<td>1234</td>
+<td></td>
+</tr>
+<tr>
+<td>zyfwp</td>
+<td>PrOw!aN_fXp</td>
+<td></td>
+</tr>
+<tr>
+<td>1234</td>
+<td>1234</td>
+<td></td>
+</tr>
+<tr>
+<td>192.168.1.1 60020</td>
+<td>@dsl_xilno</td>
+<td></td>
+</tr>
+<tr>
+<td>无</td>
+<td>1234</td>
+<td></td>
+</tr>
+<tr>
+<td>无</td>
+<td>admin</td>
+<td></td>
+</tr>
+<tr>
+<td>Admin</td>
+<td>atc456</td>
+<td></td>
+</tr>
+<tr>
+<td>admin</td>
+<td>0</td>
+<td></td>
+</tr>
+<tr>
+<td>admin</td>
+<td>1234</td>
+<td></td>
+</tr>
+<tr>
+<td>admin</td>
+<td>无</td>
+<td></td>
+</tr>
+<tr>
+<td>admin</td>
+<td>admin</td>
+<td></td>
+</tr>
+<tr>
+<td>root</td>
+<td>1234</td>
+<td></td>
+</tr>
+<tr>
+<td>webadmin</td>
+<td>1234</td>
+<td></td>
+</tr>
+<tr>
+<td>ZTE中兴</td>
+<td>admin</td>
+<td>admin</td>
+</tr>
+<tr>
+<td>ZXDSL</td>
+<td>ZXDSL</td>
+<td></td>
+</tr>
+<tr>
+<td>user</td>
+<td>user</td>
+<td></td>
+</tr>
+<tr>
+<td>on</td>
+<td>on</td>
+<td></td>
+</tr>
+<tr>
+<td>root</td>
+<td>Zte521</td>
+<td></td>
+</tr>
+<tr>
+<td>root</td>
+<td>W!n0&amp;oO7.</td>
+<td></td>
+</tr>
+<tr>
+<td>ADSL</td>
+<td>expert03</td>
+<td></td>
+</tr>
+<tr>
+<td>Zoom</td>
+<td>admin</td>
+<td>zoomadsl</td>
+</tr>
+<tr>
+<td>ZEOS</td>
+<td>无</td>
+<td>zeosx</td>
+</tr>
+<tr>
+<td>Zenith</td>
+<td>无</td>
+<td>3098z</td>
+</tr>
+<tr>
+<td>无</td>
+<td>Zenith</td>
+<td></td>
+</tr>
+<tr>
+<td>zenitel</td>
+<td>admin</td>
+<td>alphaadmin</td>
+</tr>
+<tr>
+<td>ADMIN</td>
+<td>alphacom</td>
+<td></td>
+</tr>
+<tr>
+<td>无</td>
+<td>1851</td>
+<td></td>
+</tr>
+<tr>
+<td>无</td>
+<td>1234</td>
+<td></td>
+</tr>
+<tr>
+<td>Zebra Technologies</td>
+<td>admin</td>
+<td>1234</td>
+</tr>
+<tr>
+<td>Zcomax</td>
+<td>admin</td>
+<td>password</td>
+</tr>
+<tr>
+<td>Zcom</td>
+<td>root</td>
+<td>admin</td>
+</tr>
+<tr>
+<td>Zabbix</td>
+<td>Admin</td>
+<td>zabbix</td>
+</tr>
+<tr>
+<td>Yuxin</td>
+<td>User</td>
+<td>1234</td>
+</tr>
+<tr>
+<td>User</td>
+<td>19750407</td>
+<td></td>
+</tr>
+<tr>
+<td>Yokogawa</td>
+<td>&lt;N&#x2F;A&gt;</td>
+<td>727</td>
+</tr>
+<tr>
+<td>Yokogawa</td>
+<td>admin</td>
+<td>!admin</td>
+</tr>
+<tr>
+<td>Yakumo</td>
+<td>admin</td>
+<td>admin</td>
+</tr>
+<tr>
+<td>Xyplex</td>
+<td>无</td>
+<td>access</td>
+</tr>
+<tr>
+<td>无</td>
+<td>system</td>
+<td></td>
+</tr>
+<tr>
+<td>setpriv</td>
+<td>system</td>
+<td></td>
+</tr>
+<tr>
+<td>Xylan</td>
+<td>admin</td>
+<td>switch</td>
+</tr>
+<tr>
+<td>diag</td>
+<td>switch</td>
+<td></td>
+</tr>
+<tr>
+<td>X-Micro</td>
+<td>1502</td>
+<td>1502</td>
+</tr>
+<tr>
+<td>super</td>
+<td>super</td>
+<td></td>
+</tr>
+<tr>
+<td>Xinit Systems Ltd.</td>
+<td>openfiler</td>
+<td>password</td>
+</tr>
+<tr>
+<td>Xerox</td>
+<td>11111</td>
+<td>无</td>
+</tr>
+<tr>
+<td>XEROX</td>
+<td>admin</td>
+<td>1111</td>
+</tr>
+<tr>
+<td>Xerox</td>
+<td>11111</td>
+<td>x-admin</td>
+</tr>
+<tr>
+<td>无</td>
+<td>11111</td>
+<td></td>
+</tr>
+<tr>
+<td>&lt;N&#x2F;A&gt;</td>
+<td>0</td>
+<td></td>
+</tr>
+<tr>
+<td>Administrator</td>
+<td>Fiery.1</td>
+<td></td>
+</tr>
+<tr>
+<td>NSA</td>
+<td>nsa</td>
+<td></td>
+</tr>
+<tr>
+<td>admin</td>
+<td>2222</td>
+<td></td>
+</tr>
+<tr>
+<td>admin</td>
+<td>22222</td>
+<td></td>
+</tr>
+<tr>
+<td>admin</td>
+<td>无</td>
+<td></td>
+</tr>
+<tr>
+<td>admin</td>
+<td>admin</td>
+<td></td>
+</tr>
+<tr>
+<td>admin</td>
+<td>x-admin</td>
+<td></td>
+</tr>
+<tr>
+<td>savelogs</td>
+<td>crash</td>
+<td></td>
+</tr>
+<tr>
+<td>&lt;N&#x2F;A&gt;</td>
+<td>admin</td>
+<td></td>
+</tr>
+<tr>
+<td>xd</td>
+<td>xd</td>
+<td>xd</td>
+</tr>
+<tr>
+<td>Xavi</td>
+<td>admin</td>
+<td>admin</td>
+</tr>
+<tr>
+<td>XAMPP</td>
+<td>newuser</td>
+<td>wampp</td>
+</tr>
+<tr>
+<td>Wyse</td>
+<td>无</td>
+<td>Fireport</td>
+</tr>
+<tr>
+<td>&lt;N&#x2F;A&gt;</td>
+<td>password</td>
+<td></td>
+</tr>
+<tr>
+<td>VNC</td>
+<td>winterm</td>
+<td></td>
+</tr>
+<tr>
+<td>rapport</td>
+<td>r@p8p0r+</td>
+<td></td>
+</tr>
+<tr>
+<td>root</td>
+<td>无</td>
+<td></td>
+</tr>
+<tr>
+<td>root</td>
+<td>wyse</td>
+<td></td>
+</tr>
+<tr>
+<td>WWWBoard</td>
+<td>WebAdmin</td>
+<td>WebBoard</td>
+</tr>
+<tr>
+<td>WST RT1080</td>
+<td>root</td>
+<td>root</td>
+</tr>
+<tr>
+<td>WST ART18CX</td>
+<td>admin&#x2F;user</td>
+<td>conexant&#x2F;password</td>
+</tr>
+<tr>
+<td>WorldClient</td>
+<td>WebAdmin</td>
+<td>Admin</td>
+</tr>
+<tr>
+<td>Wonderware Historian</td>
+<td>aaAdmin</td>
+<td>pwAdmin</td>
+</tr>
+<tr>
+<td>aaPower</td>
+<td>pwPower</td>
+<td></td>
+</tr>
+<tr>
+<td>aaUser</td>
+<td>pwUser</td>
+<td></td>
+</tr>
+<tr>
+<td>aadbo</td>
+<td>pwddbo</td>
+<td></td>
+</tr>
+<tr>
+<td>wwUser</td>
+<td>wwUser</td>
+<td></td>
+</tr>
+<tr>
+<td>wwPower</td>
+<td>wwPower</td>
+<td></td>
+</tr>
+<tr>
+<td>wwAdmin</td>
+<td>wwAdmin</td>
+<td></td>
+</tr>
+<tr>
+<td>wwdbo</td>
+<td>wwdbo</td>
+<td></td>
+</tr>
+<tr>
+<td>wline</td>
+<td>admin</td>
+<td>1234</td>
+</tr>
+<tr>
+<td>WLAN_3D</td>
+<td>Administrator</td>
+<td>admin</td>
+</tr>
+<tr>
+<td>WiseGrid慧敏应用交付网关</td>
+<td>admin</td>
+<td>sinogrid</td>
+</tr>
+<tr>
+<td>Wireless, Inc.</td>
+<td>root</td>
+<td>rootpass</td>
+</tr>
+<tr>
+<td>winwork</td>
+<td>operator</td>
+<td>无</td>
+</tr>
+<tr>
+<td>Websense邮件安全网关</td>
+<td>administrator</td>
+<td>admin</td>
+</tr>
+<tr>
+<td>Webramp</td>
+<td>wradmin</td>
+<td>trancell</td>
+</tr>
+<tr>
+<td>Webmin</td>
+<td>admin</td>
+<td>hp.com</td>
+</tr>
+<tr>
+<td>Weblogic</td>
+<td>weblogic</td>
+<td>weblogic1</td>
+</tr>
+<tr>
+<td>system</td>
+<td>manager</td>
+<td></td>
+</tr>
+<tr>
+<td>WEBLOGIC</td>
+<td>WEBLOGIC</td>
+<td></td>
+</tr>
+<tr>
+<td>PUBLIC</td>
+<td>PUBLIC</td>
+<td></td>
+</tr>
+<tr>
+<td>EXAMPLES</td>
+<td>EXAMPLES</td>
+<td></td>
+</tr>
+<tr>
+<td>system</td>
+<td>password</td>
+<td></td>
+</tr>
+<tr>
+<td>weblogic</td>
+<td>welcome(1)</td>
+<td></td>
+</tr>
+<tr>
+<td>system</td>
+<td>welcome(1)</td>
+<td></td>
+</tr>
+<tr>
+<td>operator</td>
+<td>weblogic</td>
+<td></td>
+</tr>
+<tr>
+<td>operator</td>
+<td>password</td>
+<td></td>
+</tr>
+<tr>
+<td>system</td>
+<td>Passw0rd</td>
+<td></td>
+</tr>
+<tr>
+<td>monitor</td>
+<td>password</td>
+<td></td>
+</tr>
+<tr>
+<td>system</td>
+<td>weblogic</td>
+<td></td>
+</tr>
+<tr>
+<td>Web Wiz</td>
+<td>Administrator</td>
+<td>letmein</td>
+</tr>
+<tr>
+<td>WD-wdCP云主机管理系统</td>
+<td>admin</td>
+<td>wdlinux.cn</td>
+</tr>
+<tr>
+<td>WAYOS维盟路由器</td>
+<td>root</td>
+<td>admin&#x2F;admin888</td>
+</tr>
+<tr>
+<td>WatchGuard</td>
+<td>无</td>
+<td>wg</td>
+</tr>
+<tr>
+<td>admin</td>
+<td>admin</td>
+<td></td>
+</tr>
+<tr>
+<td>admin</td>
+<td>readwrite</td>
+<td></td>
+</tr>
+<tr>
+<td>status</td>
+<td>readonly</td>
+<td></td>
+</tr>
+<tr>
+<td>无</td>
+<td>wg</td>
+<td></td>
+</tr>
+<tr>
+<td>admin</td>
+<td>无</td>
+<td></td>
+</tr>
+<tr>
+<td>user</td>
+<td>pass</td>
+<td></td>
+</tr>
+<tr>
+<td>warraCorp</td>
+<td>pepino</td>
+<td>pepino</td>
+</tr>
+<tr>
+<td>Wang公众号网络安全新视界</td>
+<td>CSG</td>
+<td>SESAME</td>
+</tr>
+<tr>
+<td>Wanco, Inc.</td>
+<td>无</td>
+<td>ABCD</td>
+</tr>
+<tr>
+<td>无</td>
+<td>Guest</td>
+<td></td>
+</tr>
+<tr>
+<td>无</td>
+<td>NTCIP</td>
+<td></td>
+</tr>
+<tr>
+<td>无</td>
+<td>Public</td>
+<td></td>
+</tr>
+<tr>
+<td>Wanadoo</td>
+<td>admin</td>
+<td>admin</td>
+</tr>
+<tr>
+<td>WAAV</td>
+<td>admin</td>
+<td>waav</td>
+</tr>
+<tr>
+<td>VxWorks</td>
+<td>admin</td>
+<td>admin</td>
+</tr>
+<tr>
+<td>guest</td>
+<td>guest</td>
+<td></td>
+</tr>
+<tr>
+<td>VPASP</td>
+<td>admin</td>
+<td>admin</td>
+</tr>
+<tr>
+<td>vpasp</td>
+<td>vpasp</td>
+<td></td>
+</tr>
+<tr>
+<td>Vonage</td>
+<td>user</td>
+<td>user</td>
+</tr>
+<tr>
+<td>VoiceObjects Germany</td>
+<td>voadmin</td>
+<td>manager</td>
+</tr>
+<tr>
+<td>VoiceGenie Technologies</td>
+<td>pw</td>
+<td>pw</td>
+</tr>
+<tr>
+<td>Vobis</td>
+<td>无</td>
+<td>merlin</td>
+</tr>
+<tr>
+<td>vnc</td>
+<td>无</td>
+<td>123456</td>
+</tr>
+<tr>
+<td>无</td>
+<td>FELDTECH_VNC</td>
+<td></td>
+</tr>
+<tr>
+<td>无</td>
+<td>vnc_pcc</td>
+<td></td>
+</tr>
+<tr>
+<td>无</td>
+<td>elux</td>
+<td></td>
+</tr>
+<tr>
+<td>无</td>
+<td>Passwort</td>
+<td></td>
+</tr>
+<tr>
+<td>无</td>
+<td>visam</td>
+<td></td>
+</tr>
+<tr>
+<td>无</td>
+<td>password</td>
+<td></td>
+</tr>
+<tr>
+<td>无</td>
+<td>Amx1234!</td>
+<td></td>
+</tr>
+<tr>
+<td>无</td>
+<td>1988</td>
+<td></td>
+</tr>
+<tr>
+<td>无</td>
+<td>admin</td>
+<td></td>
+</tr>
+<tr>
+<td>无</td>
+<td>Vision2</td>
+<td></td>
+</tr>
+<tr>
+<td>无</td>
+<td>ADMIN</td>
+<td></td>
+</tr>
+<tr>
+<td>无</td>
+<td>TOUCHLON</td>
+<td></td>
+</tr>
+<tr>
+<td>无</td>
+<td>EltakoFVS</td>
+<td></td>
+</tr>
+<tr>
+<td>无</td>
+<td>Wyse#123</td>
+<td></td>
+</tr>
+<tr>
+<td>无</td>
+<td>muster</td>
+<td></td>
+</tr>
+<tr>
+<td>无</td>
+<td>passwd11</td>
+<td></td>
+</tr>
+<tr>
+<td>无</td>
+<td>qwasyx21</td>
+<td></td>
+</tr>
+<tr>
+<td>无</td>
+<td>Administrator</td>
+<td></td>
+</tr>
+<tr>
+<td>无</td>
+<td>ripnas</td>
+<td></td>
+</tr>
+<tr>
+<td>无</td>
+<td>eyevis</td>
+<td></td>
+</tr>
+<tr>
+<td>无</td>
+<td>fidel123</td>
+<td></td>
+</tr>
+<tr>
+<td>无</td>
+<td>Admin#1</td>
+<td></td>
+</tr>
+<tr>
+<td>无</td>
+<td>default</td>
+<td></td>
+</tr>
+<tr>
+<td>无</td>
+<td>sigmatek</td>
+<td></td>
+</tr>
+<tr>
+<td>无</td>
+<td>hapero</td>
+<td></td>
+</tr>
+<tr>
+<td>无</td>
+<td>1234</td>
+<td></td>
+</tr>
+<tr>
+<td>无</td>
+<td>pass</td>
+<td></td>
+</tr>
+<tr>
+<td>无</td>
+<td>raspberry</td>
+<td></td>
+</tr>
+<tr>
+<td>无</td>
+<td>user</td>
+<td></td>
+</tr>
+<tr>
+<td>无</td>
+<td>solarfocus</td>
+<td></td>
+</tr>
+<tr>
+<td>无</td>
+<td>AVStumpfl</td>
+<td></td>
+</tr>
+<tr>
+<td>无</td>
+<td>m9ff.QW</td>
+<td></td>
+</tr>
+<tr>
+<td>无</td>
+<td>maryland-dstar</td>
+<td></td>
+</tr>
+<tr>
+<td>无</td>
+<td>pass1</td>
+<td></td>
+</tr>
+<tr>
+<td>无</td>
+<td>pass2</td>
+<td></td>
+</tr>
+<tr>
+<td>无</td>
+<td>instrument</td>
+<td></td>
+</tr>
+<tr>
+<td>无</td>
+<td>beijer</td>
+<td></td>
+</tr>
+<tr>
+<td>无</td>
+<td>vnc</td>
+<td></td>
+</tr>
+<tr>
+<td>无</td>
+<td>yesco</td>
+<td></td>
+</tr>
+<tr>
+<td>无</td>
+<td>protech</td>
+<td></td>
+</tr>
+<tr>
+<td>无</td>
+<td>Wyse</td>
+<td></td>
+</tr>
+<tr>
+<td>Visual Networks</td>
+<td>admin</td>
+<td>visual</td>
+</tr>
+<tr>
+<td>Visa VAP</td>
+<td>root</td>
+<td>QNX</td>
+</tr>
+<tr>
+<td>Virtual Programming</td>
+<td>admin</td>
+<td>admin</td>
+</tr>
+<tr>
+<td>vpasp</td>
+<td>vpasp</td>
+<td></td>
+</tr>
+<tr>
+<td>viking</td>
+<td>adsl</td>
+<td>adsl1234</td>
+</tr>
+<tr>
+<td>root</td>
+<td>grouter</td>
+<td></td>
+</tr>
+<tr>
+<td>VieNuke</td>
+<td>admin</td>
+<td>admin</td>
+</tr>
+<tr>
+<td>videoiq</td>
+<td>supervisor</td>
+<td>supervisor</td>
+</tr>
+<tr>
+<td>Video Web Server</td>
+<td>admin</td>
+<td>admin</td>
+</tr>
+<tr>
+<td>Video Insight</td>
+<td>sa</td>
+<td>V4in$ight</td>
+</tr>
+<tr>
+<td>Vextrec Technology</td>
+<td>无</td>
+<td>Vextrex</td>
+</tr>
+<tr>
+<td>vertex</td>
+<td>root</td>
+<td>vertex25</td>
+</tr>
+<tr>
+<td>Verizon</td>
+<td>admin</td>
+<td>password</td>
+</tr>
+<tr>
+<td>Verity</td>
+<td>admin</td>
+<td>admin</td>
+</tr>
+<tr>
+<td>Veritas</td>
+<td>admin</td>
+<td>password</td>
+</tr>
+<tr>
+<td>Verifone</td>
+<td>无</td>
+<td>166816</td>
+</tr>
+<tr>
+<td>Veramark</td>
+<td>admin</td>
+<td>password</td>
+</tr>
+<tr>
+<td>VBrick Systems</td>
+<td>admin</td>
+<td>admin</td>
+</tr>
+<tr>
+<td>VASCO</td>
+<td>admin</td>
+<td>无</td>
+</tr>
+<tr>
+<td>Various</td>
+<td>root</td>
+<td>admin</td>
+</tr>
+<tr>
+<td>vacron</td>
+<td>admin</td>
+<td>admin</td>
+</tr>
+<tr>
+<td>UTStarcom</td>
+<td>dbase</td>
+<td>dbase</td>
+</tr>
+<tr>
+<td>field</td>
+<td>field</td>
+<td></td>
+</tr>
+<tr>
+<td>guru</td>
+<td>*3noguru</td>
+<td></td>
+</tr>
+<tr>
+<td>snmp</td>
+<td>snmp</td>
+<td></td>
+</tr>
+<tr>
+<td>UTStar ut-300R</td>
+<td>root</td>
+<td>utstar</td>
+</tr>
+<tr>
+<td>admin</td>
+<td>utstar</td>
+<td></td>
+</tr>
+<tr>
+<td>UTC FCWnx</td>
+<td>sa</td>
+<td>SecurityMaster08</td>
+</tr>
+<tr>
+<td>UT Lexar</td>
+<td>lexar</td>
+<td>无</td>
+</tr>
+<tr>
+<td>USRobotics</td>
+<td>admin</td>
+<td>admin</td>
+</tr>
+<tr>
+<td>Any</td>
+<td>12345</td>
+<td></td>
+</tr>
+<tr>
+<td>UniWAN智能流量管控系统</td>
+<td>admin</td>
+<td>admin@123</td>
+</tr>
+<tr>
+<td>United Technologies Corporation</td>
+<td>admin</td>
+<td>1234</td>
+</tr>
+<tr>
+<td>Unisys</td>
+<td>ADMINISTRATOR</td>
+<td>ADMINISTRATOR</td>
+</tr>
+<tr>
+<td>HTTP</td>
+<td>HTTP</td>
+<td></td>
+</tr>
+<tr>
+<td>NAU</td>
+<td>NAU</td>
+<td></td>
+</tr>
+<tr>
+<td>Union</td>
+<td>root</td>
+<td>root</td>
+</tr>
+<tr>
+<td>Unify</td>
+<td>无</td>
+<td>123456</td>
+</tr>
+<tr>
+<td>UniFi设备 ubiquiti</td>
+<td>ubnt</td>
+<td>ubnt</td>
+</tr>
+<tr>
+<td>root</td>
+<td>root</td>
+<td></td>
+</tr>
+<tr>
+<td>Unidesk</td>
+<td>Administrator</td>
+<td>Unidesk1</td>
+</tr>
+<tr>
+<td>UNEX</td>
+<td>&lt;N&#x2F;A&gt;</td>
+<td>password</td>
+</tr>
+<tr>
+<td>Typo3 Association</td>
+<td>admin</td>
+<td>password</td>
+</tr>
+<tr>
+<td>无</td>
+<td>joh316</td>
+<td></td>
+</tr>
+<tr>
+<td>TVT System</td>
+<td>无</td>
+<td>enter</td>
+</tr>
+<tr>
+<td>craft</td>
+<td>无</td>
+<td></td>
+</tr>
+<tr>
+<td>TurboStore</td>
+<td>admin</td>
+<td>admin321</td>
+</tr>
+<tr>
+<td>Tumbleweed</td>
+<td>Admin</td>
+<td>SECRET123</td>
+</tr>
+<tr>
+<td>Tsunami</td>
+<td>managers</td>
+<td>managers</td>
+</tr>
+<tr>
+<td>Troy</td>
+<td>admin</td>
+<td>extendnet</td>
+</tr>
+<tr>
+<td>Triumph-Adler</td>
+<td>admin</td>
+<td>0</td>
+</tr>
+<tr>
+<td>Tripp Lite</td>
+<td>root</td>
+<td>TrippLite</td>
+</tr>
+<tr>
+<td>Trintech</td>
+<td>t3admin</td>
+<td>Trintech</td>
+</tr>
+<tr>
+<td>TRENDnet Internet Camera</td>
+<td>admin</td>
+<td>admin</td>
+</tr>
+<tr>
+<td>TrendNET</td>
+<td>admin</td>
+<td>password</td>
+</tr>
+<tr>
+<td>TrendMicro</td>
+<td>admin</td>
+<td>imss7.0</td>
+</tr>
+<tr>
+<td>admin</td>
+<td>admin</td>
+<td></td>
+</tr>
+<tr>
+<td>admin</td>
+<td>imsa7.0</td>
+<td></td>
+</tr>
+<tr>
+<td>root</td>
+<td>trendimsa1.0</td>
+<td></td>
+</tr>
+<tr>
+<td>admin</td>
+<td>admin</td>
+<td></td>
+</tr>
+<tr>
+<td>admin</td>
+<td>imsa7.0</td>
+<td></td>
+</tr>
+<tr>
+<td>root</td>
+<td>trendimsa1.0</td>
+<td></td>
+</tr>
+<tr>
+<td>TP-LINK 通用型号&#x2F;TD-8800</td>
+<td>admin</td>
+<td>admin</td>
+</tr>
+<tr>
+<td>TOTOLINK</td>
+<td>onlime_r</td>
+<td>12345</td>
+</tr>
+<tr>
+<td>root</td>
+<td>12345</td>
+<td></td>
+</tr>
+<tr>
+<td>Toshiba</td>
+<td>无</td>
+<td>24Banc81</td>
+</tr>
+<tr>
+<td>无</td>
+<td>Toshiba</td>
+<td></td>
+</tr>
+<tr>
+<td>无</td>
+<td>toshy99</td>
+<td></td>
+</tr>
+<tr>
+<td>Admin</td>
+<td>123456</td>
+<td></td>
+</tr>
+<tr>
+<td>admin</td>
+<td>123456</td>
+<td></td>
+</tr>
+<tr>
+<td>super</td>
+<td>superpass</td>
+<td></td>
+</tr>
+<tr>
+<td>topsec</td>
+<td>superman</td>
+<td>talent</td>
+</tr>
+<tr>
+<td>topnet</td>
+<td>topadmin</td>
+<td>topadmin</td>
+</tr>
+<tr>
+<td>TopLayer</td>
+<td>siteadmin</td>
+<td>toplayer</td>
+</tr>
+<tr>
+<td>Topcom</td>
+<td>admin</td>
+<td>admin</td>
+</tr>
+<tr>
+<td>TongWeb(东方通) Server</td>
+<td>thanos</td>
+<td>thanos123.com</td>
+</tr>
+<tr>
+<td>cli</td>
+<td>cli123.com</td>
+<td></td>
+</tr>
+<tr>
+<td>twns</td>
+<td>twns</td>
+<td></td>
+</tr>
+<tr>
+<td>Tomcat</td>
+<td>admin</td>
+<td>admin&#x2F;root&#x2F;tomcat&#x2F;role1&#x2F;changethis&#x2F;j5Brn9</td>
+</tr>
+<tr>
+<td>root</td>
+<td>admin&#x2F;root&#x2F;tomcat&#x2F;role1&#x2F;changethis&#x2F;j5Brn9</td>
+<td></td>
+</tr>
+<tr>
+<td>tomcat</td>
+<td>admin&#x2F;root&#x2F;tomcat&#x2F;role1&#x2F;changethis&#x2F;j5Brn9</td>
+<td></td>
+</tr>
+<tr>
+<td>both</td>
+<td>admin&#x2F;root&#x2F;tomcat&#x2F;role1&#x2F;changethis&#x2F;j5Brn9</td>
+<td></td>
+</tr>
+<tr>
+<td>role1</td>
+<td>admin&#x2F;root&#x2F;tomcat&#x2F;role1&#x2F;changethis&#x2F;j5Brn9</td>
+<td></td>
+</tr>
+<tr>
+<td>TimeTools</td>
+<td>admin</td>
+<td>admin</td>
+</tr>
+<tr>
+<td>TimeForce</td>
+<td>sa</td>
+<td>Dr8gedog</td>
+</tr>
+<tr>
+<td>Tim Schaab</td>
+<td>theman</td>
+<td>changeit</td>
+</tr>
+<tr>
+<td>TIBCO</td>
+<td>admin</td>
+<td>admin</td>
+</tr>
+<tr>
+<td>admin</td>
+<td>changeit</td>
+<td></td>
+</tr>
+<tr>
+<td>Tiara Networks</td>
+<td>&lt;N&#x2F;A&gt;</td>
+<td>tiara</td>
+</tr>
+<tr>
+<td>tiara</td>
+<td>tiaranet</td>
+<td></td>
+</tr>
+<tr>
+<td>Thomson</td>
+<td>无</td>
+<td>admin</td>
+</tr>
+<tr>
+<td>&lt;N&#x2F;A&gt;</td>
+<td>admin</td>
+<td></td>
+</tr>
+<tr>
+<td>admin</td>
+<td>admin</td>
+<td></td>
+</tr>
+<tr>
+<td>admin</td>
+<td>password</td>
+<td></td>
+</tr>
+<tr>
+<td>admin</td>
+<td>admin</td>
+<td></td>
+</tr>
+<tr>
+<td>admin</td>
+<td>password</td>
+<td></td>
+</tr>
+<tr>
+<td>ThinkAdmin v6</td>
+<td>admin</td>
+<td>admin</td>
+</tr>
+<tr>
+<td>Thecus Tech</td>
+<td>admin</td>
+<td>admin</td>
+</tr>
+<tr>
+<td>TextPortal</td>
+<td>god1</td>
+<td>12345</td>
+</tr>
+<tr>
+<td>TexBox</td>
+<td>无</td>
+<td>123</td>
+</tr>
+<tr>
+<td>tert</td>
+<td>james</td>
+<td>james</td>
+</tr>
+<tr>
+<td>Terayon</td>
+<td>admin</td>
+<td>password</td>
+</tr>
+<tr>
+<td>Telus</td>
+<td>(created)</td>
+<td>telus00</td>
+</tr>
+<tr>
+<td>Telus</td>
+<td>(created)</td>
+<td>telus99</td>
+</tr>
+<tr>
+<td>TELTRONIC S.A.U.</td>
+<td>admin</td>
+<td>tetra</td>
+</tr>
+<tr>
+<td>Tellabs</td>
+<td>root</td>
+<td>admin_1</td>
+</tr>
+<tr>
+<td>Tellabs</td>
+<td>tellabs</td>
+<td>tellabs#1</td>
+</tr>
+<tr>
+<td>Telindus</td>
+<td>admin</td>
+<td>admin</td>
+</tr>
+<tr>
+<td>Telewell</td>
+<td>admin</td>
+<td>admin</td>
+</tr>
+<tr>
+<td>Telewell</td>
+<td>admin</td>
+<td>password</td>
+</tr>
+<tr>
+<td>Teletronics</td>
+<td>admin</td>
+<td>1234</td>
+</tr>
+<tr>
+<td>Telestream Vantage</td>
+<td>sa</td>
+<td>vantage12!</td>
+</tr>
+<tr>
+<td>Teleopti WFM</td>
+<td><a href="mailto:&#97;&#100;&#x6d;&#105;&#110;&#x40;&#x63;&#111;&#109;&#112;&#x61;&#x6e;&#121;&#x2e;&#x63;&#x6f;&#109;">&#97;&#100;&#x6d;&#105;&#110;&#x40;&#x63;&#111;&#109;&#112;&#x61;&#x6e;&#121;&#x2e;&#x63;&#x6f;&#109;</a></td>
+<td>admin</td>
+</tr>
+<tr>
+<td>Telelec</td>
+<td>eagle</td>
+<td>eagle</td>
+</tr>
+<tr>
+<td>Teledat</td>
+<td>admin</td>
+<td>1234</td>
+</tr>
+<tr>
+<td>telecom</td>
+<td>operator</td>
+<td>无</td>
+</tr>
+<tr>
+<td>Telebit</td>
+<td>setup</td>
+<td>setup</td>
+</tr>
+<tr>
+<td>Telebit</td>
+<td>snmp</td>
+<td>nopasswd</td>
+</tr>
+<tr>
+<td>Telco Systems</td>
+<td>telco</td>
+<td>telco</td>
+</tr>
+<tr>
+<td>Telappliant</td>
+<td>admin</td>
+<td>1234</td>
+</tr>
+<tr>
+<td>Teklogix</td>
+<td>Administrator</td>
+<td>无</td>
+</tr>
+<tr>
+<td>Tegile</td>
+<td>admin</td>
+<td>tegile</td>
+</tr>
+<tr>
+<td>technology</td>
+<td>root</td>
+<td>无</td>
+</tr>
+<tr>
+<td>technicolor</td>
+<td>admin</td>
+<td>admin</td>
+</tr>
+<tr>
+<td>TeamCity 9 Guest</td>
+<td>无</td>
+<td>无</td>
+</tr>
+<tr>
+<td>Team Xodus</td>
+<td>xbox</td>
+<td>xbox</td>
+</tr>
+<tr>
+<td>T-Comfort</td>
+<td>Administrator</td>
+<td>无</td>
+</tr>
+<tr>
+<td>T-com</td>
+<td>veda</td>
+<td>12871</td>
+</tr>
+<tr>
+<td>Solar网络管理系统</td>
+<td>sobey</td>
+<td>sobey</td>
+</tr>
+<tr>
+<td>SolarWinds</td>
+<td>LocalAdministrator</td>
+<td>#l@$ak#.lk;0@P</td>
+</tr>
+<tr>
+<td>SeedDMS - 文档管理系统</td>
+<td>admin</td>
+<td>admin</td>
+</tr>
+<tr>
+<td>OneFish 蜜罐</td>
+<td>admin</td>
+<td>OneFish2021</td>
+</tr>
+<tr>
+<td>LogBase日志管理综合审计系统</td>
+<td>admin</td>
+<td>safetybase</td>
+</tr>
+<tr>
+<td>IP-COM深度上网行为管理</td>
+<td>admin</td>
+<td>admin</td>
+</tr>
+<tr>
+<td>Hillstone安全审计平台</td>
+<td>hillstone</td>
+<td>hillstone</td>
+</tr>
+<tr>
+<td>hikvision</td>
+<td>admin</td>
+<td>12345</td>
+</tr>
+<tr>
+<td>Harbor Registry 服务器</td>
+<td>admin</td>
+<td>Harbor12345</td>
+</tr>
+<tr>
+<td>Haivision Makito X Decoder</td>
+<td>admin</td>
+<td>manager</td>
+</tr>
+<tr>
+<td>H3C</td>
+<td>admin</td>
+<td>admin</td>
+</tr>
+<tr>
+<td>system</td>
+<td>admin</td>
+<td></td>
+</tr>
+<tr>
+<td>test</td>
+<td>123</td>
+<td></td>
+</tr>
+<tr>
+<td>admin</td>
+<td>adminer3260</td>
+<td></td>
+</tr>
+<tr>
+<td>admin</td>
+<td>adminer3200</td>
+<td></td>
+</tr>
+<tr>
+<td>admin</td>
+<td>adminer3100</td>
+<td></td>
+</tr>
+<tr>
+<td>admin</td>
+<td>123456&#x2F;admin</td>
+<td></td>
+</tr>
+<tr>
+<td>admin&#x2F;h3c</td>
+<td>adminer&#x2F;admin&#x2F;h3capadmin&#x2F;h3c</td>
+<td></td>
+</tr>
+<tr>
+<td>Grafana</td>
+<td>admin Admin</td>
+<td>admin</td>
+</tr>
+<tr>
+<td>F5-BIG-IQ</td>
+<td>admin</td>
+<td>admin</td>
+</tr>
+<tr>
+<td>root</td>
+<td>default</td>
+<td></td>
+</tr>
+<tr>
+<td>eyou(易优)cms</td>
+<td>admin</td>
+<td>admin</td>
+</tr>
+<tr>
+<td>EasyNVS 后台管理系统</td>
+<td>admin</td>
+<td>admin</td>
+</tr>
+<tr>
+<td>360天擎</td>
+<td>admin</td>
+<td>admin</td>
+</tr>
+<tr>
+<td>360 Systems</td>
+<td>factory</td>
+<td>factory</td>
+</tr>
+<tr>
+<td>天行光闸</td>
+<td>super</td>
+<td>TopFGAP123</td>
+</tr>
+<tr>
+<td>admin</td>
+<td>Topwalkadmin123</td>
+<td></td>
+</tr>
+<tr>
+<td>迪普</td>
+<td>admin</td>
+<td>admin_default</td>
+</tr>
+<tr>
+<td>安恒明御</td>
+<td>admin</td>
+<td>adminadmin</td>
+</tr>
+<tr>
+<td>天融信NGTOS系列</td>
+<td>superman</td>
+<td>Talent@123456</td>
+</tr>
+<tr>
+<td>百川智能S150管理平台</td>
+<td>admin</td>
+<td>b3f9t8k7</td>
+</tr>
+<tr>
+<td>Oms呼叫中心</td>
+<td></td>
+<td>KXTsoft2010</td>
+</tr>
+<tr>
+<td>Glodon控制台</td>
+<td></td>
+<td>admin</td>
+</tr>
+<tr>
+<td>MOBOTIX-视频监控</td>
+<td>admin</td>
+<td>meinsm</td>
+</tr>
+<tr>
+<td>DRS</td>
+<td>admin</td>
+<td>1234</td>
+</tr>
+<tr>
+<td>安迅士Axis</td>
+<td>root</td>
+<td>pass</td>
+</tr>
+<tr>
+<td>金砖通讯Brickcom</td>
+<td>admin</td>
+<td>admin</td>
+</tr>
+<tr>
+<td>佳能Canon</td>
+<td>root</td>
+<td>camera</td>
+</tr>
+<tr>
+<td>ShowDoc</td>
+<td>showdoc</td>
+<td>123456</td>
+</tr>
+<tr>
+<td>walle Devops代码部署平台</td>
+<td><a href="mailto:&#x73;&#117;&#x70;&#101;&#x72;&#x40;&#119;&#97;&#x6c;&#x6c;&#101;&#45;&#119;&#x65;&#x62;&#x2e;&#x69;&#x6f;">&#x73;&#117;&#x70;&#101;&#x72;&#x40;&#119;&#97;&#x6c;&#x6c;&#101;&#45;&#119;&#x65;&#x62;&#x2e;&#x69;&#x6f;</a> <a href="mailto:&#111;&#119;&#110;&#x65;&#x72;&#x40;&#119;&#97;&#x6c;&#108;&#x65;&#45;&#x77;&#101;&#x62;&#x2e;&#105;&#111;">&#111;&#119;&#110;&#x65;&#x72;&#x40;&#119;&#97;&#x6c;&#108;&#x65;&#45;&#x77;&#101;&#x62;&#x2e;&#105;&#111;</a> <a href="mailto:&#x6d;&#x61;&#x73;&#x74;&#x65;&#114;&#64;&#x77;&#x61;&#108;&#x6c;&#x65;&#45;&#119;&#101;&#x62;&#46;&#x69;&#x6f;">&#x6d;&#x61;&#x73;&#x74;&#x65;&#114;&#64;&#x77;&#x61;&#108;&#x6c;&#x65;&#45;&#119;&#101;&#x62;&#46;&#x69;&#x6f;</a> <a href="mailto:&#x64;&#101;&#x76;&#101;&#x6c;&#111;&#112;&#x65;&#114;&#64;&#119;&#x61;&#x6c;&#x6c;&#101;&#45;&#x77;&#101;&#98;&#x2e;&#x69;&#x6f;">&#x64;&#101;&#x76;&#101;&#x6c;&#111;&#112;&#x65;&#114;&#64;&#119;&#x61;&#x6c;&#x6c;&#101;&#45;&#x77;&#101;&#98;&#x2e;&#x69;&#x6f;</a> <a href="mailto:&#x72;&#x65;&#x70;&#x6f;&#x72;&#116;&#x65;&#x72;&#64;&#x77;&#x61;&#x6c;&#108;&#101;&#45;&#119;&#101;&#98;&#46;&#105;&#111;">&#x72;&#x65;&#x70;&#x6f;&#x72;&#116;&#x65;&#x72;&#64;&#x77;&#x61;&#x6c;&#108;&#101;&#45;&#119;&#101;&#98;&#46;&#105;&#111;</a></td>
+<td>Walle123</td>
+</tr>
+<tr>
+<td>凌风认证计费系统</td>
+<td>admin</td>
+<td>lflflf</td>
+</tr>
+<tr>
+<td>浙江大华DSS安防监控系统</td>
+<td>admin</td>
+<td>123456</td>
+</tr>
+<tr>
+<td>Apollo配置中心</td>
+<td>apollo</td>
+<td>admin</td>
+</tr>
+<tr>
+<td>Banggoo-ADC般固服务器负载均衡</td>
+<td>admin</td>
+<td>admin</td>
+</tr>
+<tr>
+<td>Geoserver</td>
+<td>admin</td>
+<td>admin</td>
+</tr>
+<tr>
+<td>Avigilon-VideoIQ-Camera</td>
+<td>supervisor</td>
+<td>supervisor</td>
+</tr>
+<tr>
+<td>Lepus天兔数据库监控系统默认口令</td>
+<td>admin</td>
+<td>Lepusadmin</td>
+</tr>
+<tr>
+<td>OpenKM文档管理系统</td>
+<td>okmAdmin</td>
+<td>admin</td>
+</tr>
+<tr>
+<td>Opencast Matterhorn</td>
+<td>admin</td>
+<td>opencast</td>
+</tr>
+<tr>
+<td>SequoiaDB数据管理后台</td>
+<td>admin</td>
+<td>admin</td>
+</tr>
+<tr>
+<td>smartadmin-简致微信管理系统</td>
+<td>smartwx</td>
+<td>smartwx</td>
+</tr>
+<tr>
+<td>金蝶云星空管理中心</td>
+<td>administrator</td>
+<td>888888</td>
+</tr>
+<tr>
+<td>碧海网络-碧海云盒软路由</td>
+<td>admin</td>
+<td>admin123</td>
+</tr>
+<tr>
+<td>腾狐TOS行为管理系统</td>
+<td>admin</td>
+<td>admin</td>
+</tr>
+<tr>
+<td>netcallServer 管理控制台</td>
+<td>admin</td>
+<td>admin</td>
+</tr>
+<tr>
+<td>华御上网行为管理系统</td>
+<td>admin</td>
+<td>bjhuayu</td>
+</tr>
+<tr>
+<td>guest</td>
+<td>guest*PWD</td>
+<td></td>
+</tr>
+<tr>
+<td>reporter</td>
+<td>reporter*PWD</td>
+<td></td>
+</tr>
+<tr>
+<td>奥托温室物联网系统</td>
+<td>admin</td>
+<td>12345</td>
+</tr>
+<tr>
+<td>锁群管理系统</td>
+<td>admin</td>
+<td>123456</td>
+</tr>
+<tr>
+<td>神行者路由</td>
+<td>admin</td>
+<td>sxzros</td>
+</tr>
+<tr>
+<td>LanProxy</td>
+<td>Admin</td>
+<td>admin</td>
+</tr>
+<tr>
+<td>神州数码DCN路由器</td>
+<td>admin</td>
+<td>admin</td>
+</tr>
+<tr>
+<td>Yearning开源SQL语句审核平台</td>
+<td>admin</td>
+<td>admin</td>
+</tr>
+<tr>
+<td>SQ-WEBCAM摄像机</td>
+<td>Admin</td>
+<td>admin</td>
+</tr>
+<tr>
+<td>广州安普达视频监控</td>
+<td>system</td>
+<td>system</td>
+</tr>
+<tr>
+<td>AirCam IP-150CAM摄像头</td>
+<td>admin</td>
+<td>airlive</td>
+</tr>
+<tr>
+<td>喜恩碧电子有限公司CNB</td>
+<td>root</td>
+<td>admin</td>
+</tr>
+<tr>
+<td>助友煤炭运销管理系统</td>
+<td>manager</td>
+<td>zhuyosoft.do zhuyousoft.com</td>
+</tr>
+<tr>
+<td>Storwize V7000存储管理</td>
+<td>superuser</td>
+<td>passw0rd</td>
+</tr>
+<tr>
+<td>apc系统管理员</td>
+<td>apc</td>
+<td>apc</td>
+</tr>
+<tr>
+<td>北恩网络设备</td>
+<td>admin</td>
+<td>admin</td>
+</tr>
+<tr>
+<td>kibana</td>
+<td>admin</td>
+<td>admin</td>
+</tr>
+<tr>
+<td>ERG2-1350W 路由器</td>
+<td>admin</td>
+<td>admin</td>
+</tr>
+<tr>
+<td>Ceph分布式文件系统</td>
+<td>admin</td>
+<td>admin</td>
+</tr>
+<tr>
+<td>六方云工业网闸</td>
+<td>secadmin</td>
+<td>zxas6cld</td>
+</tr>
+<tr>
+<td>EPON 网络管理系统</td>
+<td>Admin</td>
+<td>123456</td>
+</tr>
+<tr>
+<td>OfficeTen上网行为管理</td>
+<td>Useradmin</td>
+<td>admin!@#$%^</td>
+</tr>
+<tr>
+<td>中创中间件(InforSuite AS)</td>
+<td>admin</td>
+<td>Cvicse@as123</td>
+</tr>
+<tr>
+<td>猎鹰安全-金山V8+终端安全系统&#x2F;Kingsoft V8</td>
+<td>admin</td>
+<td>admin</td>
+</tr>
+<tr>
+<td>艾泰科技(UTT-Device)</td>
+<td>admin</td>
+<td>admin</td>
+</tr>
+<tr>
+<td>KubePi</td>
+<td>admin</td>
+<td>kubepi</td>
+</tr>
+<tr>
+<td>Kuboard</td>
+<td>admin</td>
+<td>kuboard123</td>
+</tr>
+<tr>
+<td>致远OA</td>
+<td>system</td>
+<td>system</td>
+</tr>
+<tr>
+<td>group-admin admin1 audit-admin</td>
+<td>123456</td>
+<td></td>
+</tr>
+<tr>
+<td>EudemonJuniper防火墙</td>
+<td>netscreen</td>
+<td>netscreen</td>
+</tr>
+<tr>
+<td>kill防火墙(冠群金辰)</td>
+<td>admin</td>
+<td>sys123</td>
+</tr>
+</tbody></table>
+<h3 id="6、蜜罐之旅"><a href="#6、蜜罐之旅" class="headerlink" title="#6、蜜罐之旅"></a>#6、蜜罐之旅</h3><p>hunter查某单位的时候，访问到一个网址，没注意后面点了下那个识别的插件，好家伙，一堆溯源接口，还好纯干净虚拟机和高匿IP。说到这个插件，也分享一下</p>
+<p>蜜罐这个还是有点研究，以后开篇文章讲讲蜜罐细节和最大程度避免蜜罐</p>
+<p><a target="_blank" rel="noopener" href="https://github.com/Ghr07h/Heimdallr">https://github.com/Ghr07h/Heimdallr</a></p>
+<p><img src="https://cdn.jsdelivr.net/gh/wh1t3zer/recordCTF/common/202409112315768.png" class="lazyload placeholder" data-srcset="https://cdn.jsdelivr.net/gh/wh1t3zer/recordCTF/common/202409112315768.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"></p>
+<h2 id="0x03云上利用"><a href="#0x03云上利用" class="headerlink" title="0x03云上利用"></a>0x03云上利用</h2><p>后面成功利用创建的账户进来后台，发现有很多功能。比如一般的CMS功能都有，此外还有一个定时爬虫，但是不是代码，是通过配置文件来调用，这里暂时没想到如何利用，或者利用不了。后面在信息配置和存储配置中找到了好几个key，根据key的特征判断是阿里云的oss桶。用CF工具可以进行云环境的渗透，可以跑通整条线。其中查看了下，有三台服务器，全是root权限，此外存储桶里超过10w条数据。用CF创建了一个test123用户，接管了控制台，里面看到资产很多，有大一个数据库，存在大量表，有几个域名和IP，还有云redis、企业网这些。不足的是，在告警事件中发现了刚才我们利用cf渗透时的威胁时间，猜测大概率是判断了流量，这里还需要改进，以后云渗透的时候看看能不能学习下修改CF流量，到这里基本上已经是控制了三台服务器，鉴于这个是个云服务器，网卡有三个，发现有个docker，用docker差看了下容器，发现有20几个容器，可以说基本上是拿到20多个服务，内网也没有什么可以渗透的了，到此一段落。</p>
+<h2 id="0x04总结"><a href="#0x04总结" class="headerlink" title="0x04总结"></a>0x04总结</h2><p>这次HW，金融单位没记错就掉了一个，是某卡拉。提到N倍积分都没队伍打下一家金融单位，不得不说，这金融的防守确实🐂🍺，做了几个免杀马，可惜没用上用途，暂时还没看到文件上传的点可以利用。拿到一堆数据，算是没白来~</p>
+
+      </div>
+      <div class="post-tags-categories">
+        
+        <div class="tags">
+          
+            <a href="/tags/HW/" class="">
+              HW
+            </a>
+          
+        </div>
+        
+      </div>
+      
+        <div class="copyright">
+  <ul class="post-copyright">
+    <li class="post-copyright-author">
+    <strong>author:  </strong>wh1t3zer</a>
+    </li>
+    <li class="post-copyright-link">
+    <strong>link:  </strong>
+    <a href="/2024/08/30/国护红队复盘/" target="_blank" title="某HW红队复盘">https://wh1t3zer.github.io/2024/08/30/国护红队复盘/</a>
+    </li>
+    <li class="post-copyright-license">
+      <strong>Copyright notice:   </strong>
+      All articles on this website, unless otherwise stated, adopt <a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank" title="Attribution-NonCommercial-NoDerivatives 4.0 International (CC BY-NC-ND 4.0)">CC BY-NC-ND 4.0</a>
+      reprint policy. If reproduced, please indicate source!
+    </li>
+  </ul>
+<div>
+      
+    </article>
+    <!-- 上一篇文章和下一篇文章 -->
+    
+      <!-- 文章详情页的上一页和下一页 -->
+<div class="post-nav">
+
+
+
+  
+  <div class="post-nav-prev post-nav-item">
+    <div class="post-nav-img" style="background-size: cover; 
+      background-position: center center;">
+      <img class="lazyload lazyload placeholder" src="/medias/img89.jpg" class="lazyload placeholder" data-srcset="/medias/img89.jpg" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="">
+    </div>
+    <a href="/2024/10/26/webshell%E5%85%8D%E6%9D%80%E5%88%9D%E6%8E%A2/" class="post-nav-link">
+      <div class="title">
+        <i class="fas fa-angle-left"></i> Prev:
+        <div class="title-text">webshell免杀的一些思考</div>
+      </div>
+      
+      <!-- <div class="content">
+        0x00前言之前hw遇到多挺多次waf，想最初还是找大哥要来多个webshell的免杀样本去绕，随着次数增多，开始也有意
+      </div> -->
+    </a>
+  </div>
+
+
+
+  
+  <div class="post-nav-next post-nav-item">
+    <div class="post-nav-img" style="background-size: cover; 
+      background-position: center center;">
+      <img class="lazyload lazyload placeholder" src="/medias/img83.jpg" class="lazyload placeholder" data-srcset="/medias/img83.jpg" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" src="" alt="">
+    </div>
+    <a href="/2024/08/17/springboot%E7%BB%BC%E5%90%88%E6%BC%8F%E6%B4%9E%E5%88%A9%E7%94%A8%E4%B8%AA%E6%80%BB%E7%BB%93/" class="post-nav-link">
+      <div class="title">
+        Next: <i class="fas fa-angle-right"></i>
+        <div class="title-text">Springboot综合利用总结</div>
+      </div>
+      <!-- <div class="content">
+        0x00前言最近有机会作为红队（混子）参加了HW，还是碰到很多企业系统用的都是springboot框架，并且还有可多可少
+      </div> -->
+    </a>
+  </div>
+
+</div>
+
+    
+    
+
+    <!-- 打赏 -->
+    
+      <div id="appDonate" class="post-donate">
+  <div id="donate_board" class="donate_bar center" ref="donate">
+    <a id="btn_donate" class="btn_donate" href="javascript:;" title="打赏" @click="showDialogDrawer()"></a>
+  </div>
+  <transition name="fade">
+    <div 
+      class="donate-box-mask"
+      v-cloak 
+      v-show="visible"
+      @click="cancelDialogDrawer()"
+    >
+    </div>
+  </transition>
+  <transition name="bounce">
+    <div class="donate-box" v-cloak v-show="visible">
+      <div class="donate-box_close">
+        <i class="fas fa-times" aria-hidden="true" @click="cancelDialogDrawer" pointer></i>
+      </div>
+      <div class="donate-box_title">
+        <h4>
+          你的赏识是我前进的动力
+        </h4>
+      </div>
+      <div class="donate-box_tab">
+        <div class="Alipay" pointer :class="{'active': tabActive === 'Alipay'}" @click="changeTabActive('Alipay')">
+          支付宝
+        </div>
+        <div class="WeChatpay" pointer :class="{'active': tabActive === 'WeChatpay'}" @click="changeTabActive('WeChatpay')">
+          微信
+        </div>
+      </div>
+      <div class="donate-box_img">
+        <div class="AlipayImg" v-show="tabActive === 'Alipay'">
+          <img src="/medias/1.jpg" class="lazyload placeholder" data-srcset="/medias/1.jpg" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="支付宝打赏" />
+        </div> 
+        <div class="WeChatpayImg" v-show="tabActive === 'WeChatpay'">
+          <img src="/medias/2.jpg" class="lazyload placeholder" data-srcset="/medias/2.jpg" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="微信打赏" />
+        </div>
+      </div>
+    </div>
+  </transition>
+</div>
+
+<script>
+  var body = document.body || document.documentElement || window;
+  var vm = new Vue({
+    el: '#appDonate',
+    data: {
+      visible: false,
+      tabActive: 'Alipay',
+      top: 0,
+    },
+    computed: {
+    },
+    mounted() {
+    },
+    methods: {
+      showDialogDrawer() {
+        this.visible = true;
+        // 防止页面滚动，只能让弹框滚动
+        // function getScroll() {
+        //   return {
+        //     left: window.pageXOffset || document.documentElement.scrollLeft || document.body.scrollLeft || 0,
+        //     top: window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0
+        //   };
+        // }
+        this.top = $(document).scrollTop() // or getScroll().top
+        // console.log('aa', $('.main-content'));
+        body.style.cssText = 'overflow: hidden;';
+      },
+      cancelDialogDrawer() {
+        this.visible = false;
+        body.removeAttribute('style');
+        $(document).scrollTop(this.top)
+      },
+      changeTabActive(name) {
+        this.tabActive = name;
+      }
+    },
+    created() {}
+  })
+</script>
+    
+
+    <!-- 分享 -->
+    
+      <!-- https://github.com/overtrue/share.js -->
+<!-- 文章详情页的分享 -->
+<div class="social-share" data-sites="twitter,facebook,google,qq,qzone,wechat,weibo,douban,linkedin" data-wechat-qrcode-helper="<p>微信扫一扫即可分享！</p>"></div>
+
+<script src="/js/shareJs/social-share.min.js"></script>
+</script>
+
+<style>
+  .social-share {
+    margin: 20px 0;
+  }
+</style>
+
+
+    
+    
+    <!-- 评论 -->
+    <!-- 评论 -->
+
+  <div id="myComment">
+    
+      <div id="gitment-container"></div>
+
+    
+  </div>
+
+<!-- comment script in themes\hexo-theme-bamboo\layout\_partial\scripts\index.ejs -->
+
+
+  </div>
+
+  <!-- 目录 -->
+  <!-- 文章详情页右侧目录 -->
+
+  <div class="toc-aside">
+    <div class="toc-main">
+      <div class="toc-aside-title">
+        <i class="fas fa-list-ul" aria-hidden="true"></i><span>catalog</span>
+        
+          <div class="toc-open-close">catalog</div>
+        
+      </div>
+      <div class="toc-content">
+        <div class="toc"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 手机端目录按钮 -->
+  <div id="toc-mobile-btn">
+    <i class="fas fa-list-ul" aria-hidden="true"></i>
+  </div>
+
+
+<script>
+  function closeToc(init) {
+    $(".toc-aside").css({'width': 0, 'padding': 0, 'transition': init ?  'noe' : 'width 0.3s' });
+    $(".toc-content").css({'width': 0});
+    $(".toc-aside-title span, .toc-aside-title i").css({'display': 'none'});
+    $(".main-content").css({'width': '75%', 'margin': '10px auto'});
+  };
+  function openToc() {
+    $(".main-content").css({'width': '65%', 'margin-right': '10px', 'margin-left': 'calc(35% - 350px)'});
+    $(".toc-aside").css({'width': '300px', 'padding': '0 10px', 'transition': 'width 0.3s'});
+    $(".toc-content").css({'width': '300px'});
+    $(".toc-aside-title span, .toc-aside-title i").css({'display': 'inline-block'});
+  }
+  function openBtnClickFn () {
+    let openOrCloseBtn = $('.toc-aside .toc-aside-title .toc-open-close');
+    let open = eval('' || 'true');
+    openOrCloseBtn.click(function() {
+      if (open) {
+        closeToc();
+        open = false;
+      } else {
+        openToc();
+        open = true;
+      }
+    });
+  };
+  openBtnClickFn();
+  initCloseTocWidth(true);
+
+  function initCloseTocWidth(init) {
+    if (window.innerWidth >= 992) {
+      let isClose = false;
+      isClose && closeToc(init)
+    }
+  }
+
+  document.addEventListener('pjax:complete', function () {
+    $(".toc-aside").css({'transition': 'no'});
+  })
+  document.addEventListener('pjax:complete', function () {
+    openBtnClickFn();
+  })
+  
+</script>
+
+  <!-- 图片放大 Wrap images with fancybox support -->
+  <script src="/js/wrapImage.js"></script>
+</div>
+
+<!-- 文章详情页背景图 -->
+<div id="appBgSwiper" style="position: fixed;left: 0;top: 0;width: 100%;height: 100%;z-index: -2;"
+	:style="{'background-color': bgColor ? bgColor : 'transparent'}">
+	<transition-group tag="ul" :name="names">
+		<li v-for='(image,index) in img' :key='index' v-show="index === mark" class="bg-swiper-box">
+			<img :src="image" class="bg-swiper-img no-lazy">
+		</li>
+	</transition-group>
+</div>
+<script>
+	var vm = new Vue({
+		el: '#appBgSwiper',
+		data: {
+			names: '' || 'fade' || 'fade', // translate-fade fade
+			mark: 0,
+			img: [],
+			bgColor: '',
+			time: null
+		},
+		methods: {   //添加方法
+			change(i, m) {
+				if (i > m) {
+					// this.names = 'fade';
+				} else if (i < m) {
+					// this.names = 'fade';
+				} else {
+					return;
+				}
+				this.mark = i;
+			},
+			prev() {
+				// this.names = 'fade';
+				this.mark--;
+				if (this.mark === -1) {
+					this.mark = 3;
+					return
+				}
+			},
+			next() {
+				// this.names = 'fade';
+				this.mark++;
+				if (this.mark === this.img.length) {
+					this.mark = 0;
+					return
+				}
+			},
+			autoPlay() {
+				// this.names = 'fade';
+				this.mark++;
+				if (this.mark === this.img.length) {
+					this.mark = 0;
+					return
+				}
+			},
+			play() {
+				let bgImgDelay = '' || '180000'
+				let delay = parseInt(bgImgDelay) || 180000;
+				this.time = setInterval(this.autoPlay, delay);
+			},
+			enter() {
+				clearInterval(this.time);
+			},
+			leave() {
+				this.play();
+			}
+		},
+		created() {
+			this.play()
+		},
+		beforeDestroy() {
+			clearInterval(this.time);
+		},
+		mounted() {
+			let prop = '' || '';
+			let isImg = prop.includes('.bmp') || prop.includes('.jpg') || prop.includes('.png') || prop.includes('.tif') || prop.includes('.gif') || prop.includes('.pcx') || prop.includes('.tga') || prop.includes('.exif') || prop.includes('.fpx') || prop.includes('.psd') || prop.includes('.cdr') || prop.includes('.pcd') || prop.includes('.dxf') || prop.includes('.ufo') || prop.includes('.eps') || prop.includes('.ai') || prop.includes('.raw') || prop.includes('.WMF') || prop.includes('.webp') || prop.includes('.jpeg') || prop.includes('http://') || prop.includes('https://')
+			if (isImg) {
+				let img = prop.split(',');
+				let configRoot = '/'
+				let arrImg = [];
+				img.forEach(el => {
+					var Expression = /http(s)?:\/\/([\w-]+\.)+[\w-]+(\/[\w- .\/?%&=]*)?/;
+					var objExp = new RegExp(Expression);
+
+					if (objExp.test(el)) {
+						// http or https
+						arrImg.push(el);
+					} else {
+						// 非http or https开头
+						// 本地文件
+						let firstStr = el.charAt(0);
+						if (firstStr == '/') {
+							el = el.substr(1); // 删除第一个字符 '/',因为 configRoot最后一个字符为 /
+						}
+						el = configRoot + el;
+						arrImg.push(el);
+					}
+				})
+				this.img = arrImg;
+			} else {
+				this.bgColor = prop;
+			}
+		}
+	})
+</script>
+
+<style>
+	.bg-swiper-box {
+		position: absolute;
+		display: block;
+		width: 100%;
+		height: 100%;
+	}
+
+	.bg-swiper-img {
+		object-fit: cover;
+		width: 100%;
+		height: 100%;
+	}
+</style>
+
+
+
+
+  <script>
+  function loadMermaid() {
+    if (document.getElementsByClassName('mermaid').length) {
+      if (window.mermaidJsLoad) mermaid.init()
+      else {
+        loadScript('https://unpkg.com/mermaid/dist/mermaid.min.js').then(() => {
+          window.mermaidJsLoad = true
+          mermaid.initialize({
+            theme: 'default',
+          })
+          if ('true') {
+            mermaid.init();
+          }
+        })
+      }
+    }
+  };
+  document.addEventListener("DOMContentLoaded", function () {
+    loadMermaid();
+  })
+
+  document.addEventListener('pjax:complete', function () {
+    loadMermaid();
+  })
+  
+</script>
+
+
+      </main>
+    </div>
+
+    <!-- 页脚 -->
+    
+  
+  <!-- 底部鱼儿跳动效果，依赖于jquery-->
+<div id="j-fish-skip" style=" position: relative;height: 153px;width: auto;"></div>
+<script>
+  var RENDERER = {
+    POINT_INTERVAL: 5,
+    FISH_COUNT: 3,
+    MAX_INTERVAL_COUNT: 50,
+    INIT_HEIGHT_RATE: .5,
+    THRESHOLD: 50,
+    FISH_COLOR: '',
+    init: function () {
+      this.setFishColor(); this.setParameters(), this.reconstructMethods(), this.setup(), this.bindEvent(), this.render()
+    },
+    setFishColor: function () {
+      let isDark = JSON.parse(localStorage.getItem('dark')) || JSON.parse('false');
+      if (isDark) {
+        this.FISH_COLOR = '#222'; // 暗黑色，有时间把这整成一个变量
+      } else {
+        this.FISH_COLOR = '' || '#42b983';
+      }
+    },
+    setParameters: function () {
+      this.$window = $(window), this.$container = $("#j-fish-skip"), this.$canvas = $("<canvas />"), this.context = this.$canvas.appendTo(this.$container).get(0).getContext("2d"), this.points = [], this.fishes = [], this.watchIds = []
+    },
+    createSurfacePoints: function () {
+      var t = Math.round(this.width / this.POINT_INTERVAL);
+      this.pointInterval = this.width / (t - 1), this.points.push(new SURFACE_POINT(this, 0));
+      for (var i = 1; i < t; i++) {
+        var e = new SURFACE_POINT(this, i * this.pointInterval),
+          h = this.points[i - 1];
+        e.setPreviousPoint(h), h.setNextPoint(e), this.points.push(e)
+      }
+    },
+    reconstructMethods: function () {
+      this.watchWindowSize = this.watchWindowSize.bind(this), this.jdugeToStopResize = this.jdugeToStopResize.bind(this), this.startEpicenter = this.startEpicenter.bind(this), this.moveEpicenter = this.moveEpicenter.bind(this), this.reverseVertical = this.reverseVertical.bind(this), this.render = this.render.bind(this)
+    },
+    setup: function () {
+      this.points.length = 0, this.fishes.length = 0, this.watchIds.length = 0, this.intervalCount = this.MAX_INTERVAL_COUNT, this.width = this.$container.width(), this.height = this.$container.height(), this.fishCount = this.FISH_COUNT * this.width / 500 * this.height / 500, this.$canvas.attr({
+        width: this.width,
+        height: this.height
+      }), this.reverse = !1, this.fishes.push(new FISH(this)), this.createSurfacePoints()
+    },
+    watchWindowSize: function () {
+      this.clearTimer(), this.tmpWidth = this.$window.width(), this.tmpHeight = this.$window.height(), this.watchIds.push(setTimeout(this.jdugeToStopResize, this.WATCH_INTERVAL))
+    },
+    clearTimer: function () {
+      for (; this.watchIds.length > 0;) clearTimeout(this.watchIds.pop())
+    },
+    jdugeToStopResize: function () {
+      var t = this.$window.width(),
+        i = this.$window.height(),
+        e = t == this.tmpWidth && i == this.tmpHeight;
+      this.tmpWidth = t, this.tmpHeight = i, e && this.setup()
+    },
+    bindEvent: function () {
+      this.$window.on("resize", this.watchWindowSize), this.$container.on("mouseenter", this.startEpicenter), this.$container.on("mousemove", this.moveEpicenter)
+    },
+    getAxis: function (t) {
+      var i = this.$container.offset();
+      return {
+        x: t.clientX - i.left + this.$window.scrollLeft(),
+        y: t.clientY - i.top + this.$window.scrollTop()
+      }
+    },
+    startEpicenter: function (t) {
+      this.axis = this.getAxis(t)
+    },
+    moveEpicenter: function (t) {
+      var i = this.getAxis(t);
+      this.axis || (this.axis = i), this.generateEpicenter(i.x, i.y, i.y - this.axis.y), this.axis = i
+    },
+    generateEpicenter: function (t, i, e) {
+      if (!(i < this.height / 2 - this.THRESHOLD || i > this.height / 2 + this.THRESHOLD)) {
+        var h = Math.round(t / this.pointInterval);
+        h < 0 || h >= this.points.length || this.points[h].interfere(i, e)
+      }
+    },
+    reverseVertical: function () {
+      this.reverse = !this.reverse;
+      for (var t = 0, i = this.fishes.length; t < i; t++) this.fishes[t].reverseVertical()
+    },
+    controlStatus: function () {
+      for (var t = 0, i = this.points.length; t < i; t++) this.points[t].updateSelf();
+      for (t = 0, i = this.points.length; t < i; t++) this.points[t].updateNeighbors();
+      this.fishes.length < this.fishCount && 0 == --this.intervalCount && (this.intervalCount = this.MAX_INTERVAL_COUNT, this.fishes.push(new FISH(this)))
+    },
+    render: function () {
+      requestAnimationFrame(this.render), this.controlStatus(), this.context.clearRect(0, 0, this.width, this.height), this.context.fillStyle = this.FISH_COLOR;
+      for (var t = 0, i = this.fishes.length; t < i; t++) this.fishes[t].render(this.context);
+      this.context.save(), this.context.globalCompositeOperation = "xor", this.context.beginPath(), this.context.moveTo(0, this.reverse ? 0 : this.height);
+      for (t = 0, i = this.points.length; t < i; t++) this.points[t].render(this.context);
+      this.context.lineTo(this.width, this.reverse ? 0 : this.height), this.context.closePath(), this.context.fill(), this.context.restore()
+    }
+  },
+  SURFACE_POINT = function (t, i) {
+    this.renderer = t, this.x = i, this.init()
+  };
+  SURFACE_POINT.prototype = {
+    SPRING_CONSTANT: .03,
+    SPRING_FRICTION: .9,
+    WAVE_SPREAD: .3,
+    ACCELARATION_RATE: .01,
+    init: function () {
+      this.initHeight = this.renderer.height * this.renderer.INIT_HEIGHT_RATE, this.height = this.initHeight, this.fy = 0, this.force = {
+        previous: 0,
+        next: 0
+      }
+    },
+    setPreviousPoint: function (t) {
+      this.previous = t
+    },
+    setNextPoint: function (t) {
+      this.next = t
+    },
+    interfere: function (t, i) {
+      this.fy = this.renderer.height * this.ACCELARATION_RATE * (this.renderer.height - this.height - t >= 0 ? -1 : 1) * Math.abs(i)
+    },
+    updateSelf: function () {
+      this.fy += this.SPRING_CONSTANT * (this.initHeight - this.height), this.fy *= this.SPRING_FRICTION, this.height += this.fy
+    },
+    updateNeighbors: function () {
+      this.previous && (this.force.previous = this.WAVE_SPREAD * (this.height - this.previous.height)), this.next && (this.force.next = this.WAVE_SPREAD * (this.height - this.next.height))
+    },
+    render: function (t) {
+      this.previous && (this.previous.height += this.force.previous, this.previous.fy += this.force.previous), this.next && (this.next.height += this.force.next, this.next.fy += this.force.next), t.lineTo(this.x, this.renderer.height - this.height)
+    }
+  };
+  var FISH = function (t) {
+    this.renderer = t, this.init()
+  };
+  FISH.prototype = {
+    GRAVITY: .4,
+    init: function () {
+      this.direction = Math.random() < .5, this.x = this.direction ? this.renderer.width + this.renderer.THRESHOLD : -this.renderer.THRESHOLD, this.previousY = this.y, this.vx = this.getRandomValue(4, 10) * (this.direction ? -1 : 1), this.renderer.reverse ? (this.y = this.getRandomValue(1 * this.renderer.height / 10, 4 * this.renderer.height / 10), this.vy = this.getRandomValue(2, 5), this.ay = this.getRandomValue(.05, .2)) : (this.y = this.getRandomValue(6 * this.renderer.height / 10, 9 * this.renderer.height / 10), this.vy = this.getRandomValue(-5, -2), this.ay = this.getRandomValue(-.2, -.05)), this.isOut = !1, this.theta = 0, this.phi = 0
+    },
+    getRandomValue: function (t, i) {
+      return t + (i - t) * Math.random()
+    },
+    reverseVertical: function () {
+      this.isOut = !this.isOut, this.ay *= -1
+    },
+    controlStatus: function (t) {
+      this.previousY = this.y, this.x += this.vx, this.y += this.vy, this.vy += this.ay, this.renderer.reverse ? this.y > this.renderer.height * this.renderer.INIT_HEIGHT_RATE ? (this.vy -= this.GRAVITY, this.isOut = !0) : (this.isOut && (this.ay = this.getRandomValue(.05, .2)), this.isOut = !1) : this.y < this.renderer.height * this.renderer.INIT_HEIGHT_RATE ? (this.vy += this.GRAVITY, this.isOut = !0) : (this.isOut && (this.ay = this.getRandomValue(-.2, -.05)), this.isOut = !1), this.isOut || (this.theta += Math.PI / 20, this.theta %= 2 * Math.PI, this.phi += Math.PI / 30, this.phi %= 2 * Math.PI), this.renderer.generateEpicenter(this.x + (this.direction ? -1 : 1) * this.renderer.THRESHOLD, this.y, this.y - this.previousY), (this.vx > 0 && this.x > this.renderer.width + this.renderer.THRESHOLD || this.vx < 0 && this.x < -this.renderer.THRESHOLD) && this.init()
+    },
+    render: function (t) {
+      t.save(), t.translate(this.x, this.y), t.rotate(Math.PI + Math.atan2(this.vy, this.vx)), t.scale(1, this.direction ? 1 : -1), t.beginPath(), t.moveTo(-30, 0), t.bezierCurveTo(-20, 15, 15, 10, 40, 0), t.bezierCurveTo(15, -10, -20, -15, -30, 0), t.fill(), t.save(), t.translate(40, 0), t.scale(.9 + .2 * Math.sin(this.theta), 1), t.beginPath(), t.moveTo(0, 0), t.quadraticCurveTo(5, 10, 20, 8), t.quadraticCurveTo(12, 5, 10, 0), t.quadraticCurveTo(12, -5, 20, -8), t.quadraticCurveTo(5, -10, 0, 0), t.fill(), t.restore(), t.save(), t.translate(-3, 0), t.rotate((Math.PI / 3 + Math.PI / 10 * Math.sin(this.phi)) * (this.renderer.reverse ? -1 : 1)), t.beginPath(), this.renderer.reverse ? (t.moveTo(5, 0), t.bezierCurveTo(10, 10, 10, 30, 0, 40), t.bezierCurveTo(-12, 25, -8, 10, 0, 0)) : (t.moveTo(-5, 0), t.bezierCurveTo(-10, -10, -10, -30, 0, -40), t.bezierCurveTo(12, -25, 8, -10, 0, 0)), t.closePath(), t.fill(), t.restore(), t.restore(), this.controlStatus(t)
+    }
+  }, $(function () {
+    RENDERER.init()
+    $('.dark').click(function () {
+      setTimeout(() => {
+        RENDERER.setFishColor();
+        RENDERER.context.fill();
+      });
+    })
+  });
+</script>
+  <div class="footer bg-color">
+    <div class="footer-main">
+      
+        
+          <div class="link">
+            
+          </div>
+        
+      
+        
+          <div class="footer-copyright">
+            <p>Copyright © 2022 - 2025 <a target="_blank" rel="noopener" href="https://github.com/yuang01">yuang01</a> | Powered by <a target="_blank" rel="noopener" href="https://hexo.io/zh-cn/docs/">Hexo</a> | Theme <a target="_blank" rel="noopener" href="https://github.com/yuang01/theme">Bamboo</a> </p>
+
+          </div>
+        
+      
+        
+          
+            <!-- 不蒜子统计 -->
+            <!-- 不蒜子统计 -->
+<span id="busuanzi_container_site_pv">
+      <i class="fas fa-eye" aria-hidden="true"></i>Total visits：<span id="busuanzi_value_site_pv"></span> times
+</span>
+<span class="post-meta-divider">|</span>
+<span id="busuanzi_container_site_uv" style='display:none'>
+      <i class="fas fa-users" aria-hidden="true"></i>Number of visitors：<span id="busuanzi_value_site_uv"></span> people
+</span>
+
+          
+        
+      
+        
+          <div class="footer-custom">
+            
+          </div>
+        
+      
+    </div>
+  </div>
+
+
+
+    <!-- 渲染暗黑按钮 -->
+    
+      <div class="dark">
+  <div class="dark-content">
+    <i class="fas fa-moon" aria-hidden="true"></i>
+    <!-- <span>关灯</span> -->
+  </div>
+  
+</div>
+
+<script>
+  $(function() {
+    let isDark = JSON.parse(localStorage.getItem('dark'))  || JSON.parse('false');
+    if (isDark) {
+      $(".dark-content").replaceWith(
+          `
+          <div class='dark-content'>
+            <i class="fas fa-lightbulb" aria-hidden="true"></i>
+          </div>
+          `
+        );
+    }
+    $('.dark').click(function() {
+      if ($(document.body).is('.darkModel')) {
+        $(document.body).removeClass('darkModel');
+        localStorage.setItem('dark', false);
+        $(".dark-content").replaceWith(
+          `
+          <div class='dark-content'>
+            <i class="fas fa-moon" aria-hidden="true"></i>
+          </div>
+          `
+        );
+      } else {
+        $(document.body).addClass('darkModel');
+        localStorage.setItem('dark', true);
+        $(".dark-content").replaceWith(
+          `
+          <div class='dark-content'>
+            <i class="fas fa-lightbulb" aria-hidden="true"></i>
+          </div>
+          `
+        );
+      }
+    })
+  })
+</script>
+    
+    <!-- 渲染回到顶部按钮 -->
+    
+      <div class="goTop top-btn-color" pointer>
+  <i class="fas fa-arrow-up" aria-hidden="true"></i>
+</div>
+<script src="/js/goTop.js"></script>
+
+    
+    <!-- 渲染左下角音乐播放器 -->
+    
+      <link rel="stylesheet" href="/js/aplayer/APlayer@1.10.1.min.css">
+<style>
+.aplayer .aplayer-lrc p {
+  
+  display: none;
+  
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 16px !important;
+}
+
+.aplayer .aplayer-lrc p.aplayer-lrc-current {
+  
+  display: none;
+  
+  font-size: 15px;
+  color: #42b983;
+}
+
+
+.aplayer.aplayer-fixed.aplayer-narrow .aplayer-body {
+  left: -66px !important;
+}
+
+.aplayer.aplayer-fixed.aplayer-narrow .aplayer-body:hover {
+  left: 0px !important;
+}
+
+
+</style>
+<meting-js  
+  class=""
+  server="netease"
+  type="playlist"
+  id="3116359624"
+  fixed='true'
+  autoplay='false'
+  theme='#42b983'
+  loop='all'
+  order='random'
+  preload='auto'
+  volume='0.7'
+  list-folded='true'
+>
+</meting-js>
+
+<!-- <style>
+  #aplayer {
+    position: fixed;
+    left: 0;
+    bottom: 300px;
+  }
+</style> -->
+<script src="https://unpkg.com/aplayer@1.10.1/dist/APlayer.min.js"></script>
+<script src="https://unpkg.com/meting@2/dist/Meting.min.js"></script>
+    
+
+    <!-- 图片放大 -->
+    
+      <script src="/js/fancybox/jquery.fancybox.min.js"></script>
+    
+
+    <!-- 百度解析 -->
+    <!-- Baidu Analytics -->
+
+    <!-- Baidu Push -->
+
+<script>
+    (function () {
+        var bp = document.createElement('script');
+        var curProtocol = window.location.protocol.split(':')[0];
+        if (curProtocol === 'https') {
+            bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+        } else {
+            bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+        }
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(bp, s);
+    })();
+</script>
+
+    
+    <!-- 背景彩带 -->
+    
+      <script type="text/javascript" size="100" alpha='0.4' zIndex="-1" src="/js/ribbon.min.js"></script>
+    
+
+    <script src="/js/utils/index.js"></script>
+    <script src="/js/app.js"></script>
+    
+    <!-- 文章目录所需js -->
+<link href="/js/tocbot/tocbot.css" rel="stylesheet">
+<script src="/js/tocbot/tocbot.min.js"></script>
+
+<script>
+  var headerEl = 'h2, h3, h4',  //headers 
+    content = '.post-detail',//文章容器
+    idArr = {};  //标题数组以确定是否增加索引id
+  //add #id
+  var option = {
+    // Where to render the table of contents.
+    tocSelector: '.toc',
+    // Where to grab the headings to build the table of contents.
+    contentSelector: content,
+    // Which headings to grab inside of the contentSelector element.
+    headingSelector: headerEl,
+    scrollSmooth: true,
+    scrollSmoothOffset: -80,
+    headingsOffset: -($(window).height() * 0.4 - 45),
+    positionFixedSelector: '.toc-main',
+    positionFixedClass: 'is-position-fixed',
+    fixedSidebarOffset: 'auto',
+    activeLinkClass: 'is-active-link',
+    // onClick: function (e) {},
+  }
+  if ($('.toc').length > 0) {
+
+    $(content).children(headerEl).each(function () {
+      //去除空格以及多余标点
+      var headerId = $(this).text().replace(/[\s|\~|`|\!|\@|\#|\$|\%|\^|\&|\*|\(|\)|\_|\+|\=|\||\|\[|\]|\{|\}|\;|\:|\"|\'|\,|\<|\.|\>|\/|\?|\：|\，|\。]/g, '');
+
+      headerId = headerId.toLowerCase();
+      if (idArr[headerId]) {
+        //id已经存在
+        $(this).attr('id', headerId + '-' + idArr[headerId]);
+        idArr[headerId]++;
+      }
+      else {
+        //id未存在
+        idArr[headerId] = 1;
+        $(this).attr('id', headerId);
+      }
+    });
+
+    document.addEventListener("DOMContentLoaded", function () {
+      tocbot.init(option);
+      mobileTocClick();
+    });
+
+  }
+
+  window.tocScrollFn = function () {
+    return bamboo.throttle(function () {
+      findHeadPosition();
+    }, 100)()
+  }
+  window.addEventListener('scroll', tocScrollFn);
+
+  const findHeadPosition = function (top) {
+    if ($('.toc-list').length <= 0) {
+      return false;
+    }
+    setTimeout(() => {  // or DOMContentLoaded 
+      autoScrollToc();
+    }, 0);
+  }
+
+  const autoScrollToc = function () {
+    const $activeItem = document.querySelector('.is-active-link');
+    const $cardToc = document.querySelector('.toc-content');
+    const activePosition = $activeItem.getBoundingClientRect().top
+    const sidebarScrollTop = $cardToc.scrollTop
+    if (activePosition > (document.documentElement.clientHeight - 100)) {
+      $cardToc.scrollTop = sidebarScrollTop + 150
+    }
+    if (activePosition < 100) {
+      $cardToc.scrollTop = sidebarScrollTop - 150
+    }
+  }
+
+  document.addEventListener('pjax:send', function () {
+    if ($('.toc').length) {
+      tocbot.destroy();
+    }
+  });
+
+  document.addEventListener('pjax:complete', function () {
+    if ($('.toc').length) {
+      tocbot.init(option);
+      mobileTocClick();
+    }
+  });
+  
+  // 手机端toc按钮点击出现目录
+  const mobileTocClick = function () {
+    const $cardTocLayout = document.getElementsByClassName('toc-aside')[0];
+    const $cardToc = $cardTocLayout.getElementsByClassName('toc-content')[0];
+    let right = '45px';
+    if (window.innerWidth >= 551 && window.innerWidth <= 992) {
+      right = '100px'
+    }
+    const mobileToc = {
+      open: () => {
+        $cardTocLayout.style.cssText = 'animation: toc-open .3s; opacity: 1; right: ' + right
+      },
+
+      close: () => {
+        $cardTocLayout.style.animation = 'toc-close .2s'
+        setTimeout(() => {
+          $cardTocLayout.style.cssText = "opacity:''; animation: ''; right: ''"
+        }, 100)
+      }
+    }
+    document.getElementById('toc-mobile-btn').addEventListener('click', () => {
+      if (window.getComputedStyle($cardTocLayout).getPropertyValue('opacity') === '0') mobileToc.open()
+      else mobileToc.close()
+    })
+
+    $cardToc.addEventListener('click', (e) => {
+      if (window.innerWidth < 992) { // 小于992px的时候
+        mobileToc.close()
+      }
+    })
+  }
+</script>
+
+<style>
+  .is-position-fixed {
+    position: sticky !important;
+    top: 74px;
+  }
+
+  .toc-main ul {
+    counter-reset: show-list;
+  }
+
+  .toc-main ul li::before {
+    content: counter(item)".";
+    display: block;
+    position: absolute;
+    left: 12px;
+    top: 0;
+  }
+</style> 
+
+<!-- 设置导航背景 -->
+<script>
+  let setHeaderClass = () => {
+    const headerMenuTransparent = true;
+    if (!headerMenuTransparent) { return; }
+    const nav = $('#navHeader');
+    const navTop = nav.outerHeight();
+    const winTop = $(window).scrollTop();
+    if(winTop > navTop) {
+      nav.addClass('header-bg-color');
+    }
+    else {
+      nav.removeClass('header-bg-color');
+    }
+  };
+
+  let scrollCollect = () => {
+    return bamboo.throttle(function (e) {
+      setHeaderClass();
+    }, 200)()
+  }
+
+  let initHeaderBg = () => {
+    setHeaderClass();
+  }
+
+  setHeaderClass();
+  window.addEventListener('scroll', scrollCollect);
+
+  document.addEventListener('pjax:send', function () {
+    window.removeEventListener('scroll', scrollCollect)
+  })
+  document.addEventListener('pjax:complete', function () {
+    window.addEventListener('scroll', scrollCollect);
+    setHeaderClass();
+  })
+</script> 
+
+<!-- 渲染issues标签里的内容 -->
+<script>
+  function loadIssuesJS() {
+    if ($(".post-detail").find(".issues-api").length == 0) {
+      return;
+    } 
+    loadScript('/js/issues/index.js');
+  };
+  $(function () {
+    loadIssuesJS();
+  });
+  document.addEventListener('pjax:complete', function () {
+    if (typeof IssuesAPI == "undefined") {
+      loadIssuesJS();
+    }
+  })
+</script>
+
+<!-- 输入框打字特效 -->
+<!-- 输入框打字特效 -->
+
+  <script src="/js/activate-power-mode.js"></script>
+  <script>
+    POWERMODE.colorful = true;  // 打开随机颜色特效
+    POWERMODE.shake = false;    // 关闭输入框抖动
+    document.body.addEventListener('input', POWERMODE);//监听打字事件
+  </script>
+
+
+<!-- markdown代码一键复制功能 -->
+
+  <link rel="stylesheet" href="https://unpkg.com/v-plugs-ayu/lib/ayu.css">
+  <script src="https://unpkg.com/v-plugs-ayu/lib/ayu.umd.min.js"></script>
+  <script src="/js/clipboard/clipboard.min.js"></script>
+  <div id="appCopy">
+  </div>
+  <script data-pjax>
+    var vm = new Vue({
+      el: '#appCopy',
+      data: {
+      },
+      computed: {
+      },
+      mounted() {
+        const that = this;
+        var copy = 'copy';
+        /* code */
+        var initCopyCode = function () {
+          var copyHtml = '';
+          copyHtml += '<button class="btn-copy" data-clipboard-snippet="" style="position:absolute;top:0;right:0;z-index:1;">';
+          copyHtml += '<i class="fas fa-copy"></i><span>' + copy + '</span>';
+          copyHtml += '</button>';
+          $(".post-detail pre").not('.gutter pre').wrap("<div class='codeBox' style='position:relative;width:100%;'></div>")
+          $(".post-detail pre").not('.gutter pre').before(copyHtml);
+          new ClipboardJS('.btn-copy', {
+            target: function (trigger) {
+              return trigger.nextElementSibling;
+            }
+          });
+        }
+        initCopyCode();
+        $('.btn-copy').unbind('click').bind('click', function () {
+          doSomething();
+        })
+        $(document).unbind('keypress').bind('keypress', function (e) {
+          if (e.ctrlKey && e.keyCode == 67) {
+            doSomething();
+          }
+        })
+
+        function doSomething() {
+          that.$notify({
+            title: "成功",
+            content: "代码已复制，请遵守相关授权协议。",
+            type: 'success'
+          })
+        }
+      },
+      methods: {
+      },
+      created() { }
+    })
+  </script>
+  
+
+<!-- 图片懒加载 -->
+<script defer src="https://unpkg.com/vanilla-lazyload@17.1.0/dist/lazyload.min.js"></script>
+<script>
+  // https://www.npmjs.com/package/vanilla-lazyload
+  // Set the options globally
+  // to make LazyLoad self-initialize
+  window.lazyLoadOptions = {
+    elements_selector: ".lazyload",
+    threshold: 0
+  };
+  // Listen to the initialization event
+  // and get the instance of LazyLoad
+  window.addEventListener(
+    "LazyLoad::Initialized",
+    function (event) {
+      window.lazyLoadInstance = event.detail.instance;
+    },
+    false
+  );
+  document.addEventListener('DOMContentLoaded', function () {
+    lazyLoadInstance.update();
+  });
+  document.addEventListener('pjax:complete', function () {
+    lazyLoadInstance.update();
+  });
+</script>
+
+
+<!-- 卡片滚动动画 -->
+   
+
+<!-- 评论所需js -->
+
+  
+    <script type="text/javascript">
+  var utteranceCommon = {};
+
+  function check_utterance() {
+    let isDark = JSON.parse(localStorage.getItem('dark')) || JSON.parse('false');
+    if (isDark) {
+      utteranceCommon.Theme = 'github-dark';
+    } else {
+      utteranceCommon.Theme = 'github-light';
+    }
+
+    return document.getElementById("gitment-container");
+  }
+  comment_el = '#gitment-container';
+  load_utterance = function () {
+    if ($(comment_el).length) {
+      // 匿名函数，防止污染全局变量
+      const HEAD = check_utterance();
+
+      var utterances = document.createElement('script');
+      utterances.type = 'text/javascript';
+      utterances.async = true;
+      utterances.setAttribute('issue-term', 'pathname')
+      utterances.setAttribute('theme', utteranceCommon.Theme)
+      utterances.setAttribute('repo', '')
+      utterances.crossorigin = 'anonymous';
+      utterances.src = 'https://utteranc.es/client.js';
+      // content 是要插入评论的地方
+      document.getElementById('gitment-container').appendChild(utterances);
+
+    }
+  }
+
+  function dark_utterance() {
+    const HEAD = check_utterance();
+    if (!HEAD) return;
+    const message = {
+      type: 'set-theme',
+      theme: utteranceCommon.Theme
+    };
+    const utteranceIframe = document.querySelector('iframe');
+    utteranceIframe.contentWindow.postMessage(message, 'https://utteranc.es');
+  }
+
+  $(document).ready(load_utterance);
+  document.addEventListener('pjax:complete', function () {
+    load_utterance();
+  });
+
+  $('.dark').click(function () {
+    setTimeout(() => {
+      dark_utterance();
+    });
+  })
+
+</script>
+
+<style>
+  .utterances {
+    max-width: inherit !important;
+  }
+</style>
+  
+
+
+<!-- 鼠标点击特效 -->
+<!-- 爱心点击 -->
+
+  
+    <script src="/js/cursor/text.js"></script>
+  
+
+
+
+
+  <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" data-pjax></script>
+
+
+    <!-- pjax -->
+    
+
+<!-- pjax -->
+
+
+  <script src="/js/pjax@0.2.8/index.js"></script>
+  
+    <!-- 样式位于：source/css/_third-party/pjaxanimate.styl -->
+
+<div class="pjax-animate">
+  
+    <div class="loading-circle"><div id="loader-circle"></div></div>
+    <script>
+      window.ShowLoading = function() {
+        $(".loading-circle").css("display", "block");
+      };
+      window.HideLoading = function() {
+        $(".loading-circle").css("display", "none");
+      }
+    </script>
+  
+	<script>
+    document.addEventListener('pjax:complete', function () {
+      window.HideLoading();
+    })
+    document.addEventListener('pjax:send', function () {
+      window.ShowLoading();
+    })
+    document.addEventListener('pjax:error', function () {
+      window.HideLoading();
+    })
+	</script>
+</div>
+
+  
+
+  <script>
+    var pjax = new Pjax({
+      elements: 'a[href]:not([href^="#"]):not([href="javascript:void(0)"]):not([no-pjax])',   // 拦截正常带链接的 a 标签
+      selectors: ["#pjax-container","title"],                                   // 根据实际需要确认重载区域
+      cacheBust: false,   // url 地址追加时间戳，用以避免浏览器缓存
+      timeout: 5000
+    });
+
+    document.addEventListener('pjax:send', function (e) {
+
+      try {
+        var currentUrl = window.location.pathname;
+        var targetUrl = e.triggerElement.href;
+        var banUrl = [""];
+        if (banUrl[0] != "") {
+          banUrl.forEach(item => {
+            if(currentUrl.indexOf(item) != -1 || targetUrl.indexOf(item) != -1) {
+              window.location.href = targetUrl;
+            }
+          });
+        }
+      } catch (error) {}
+
+      $(window).unbind('resize');
+      $(window).unbind('scroll');
+      $(document).unbind('scroll');
+      $(document).unbind('click');
+      $('body').unbind('click');
+
+    })
+    
+    document.addEventListener('pjax:complete', function () {
+      $('script[data-pjax], .pjax-reload script').each(function () {
+        $(this).parent().append($(this).remove());
+      });
+    });
+
+    document.addEventListener('pjax:error', function (e) {
+      window.location.href = e.triggerElement.href;
+    })
+    
+    // 刷新不从顶部开始
+    document.addEventListener("DOMContentLoaded", function () {
+      history.scrollRestoration = 'auto';
+    })
+  </script>
+
+
+
+  </body>
+</html>

