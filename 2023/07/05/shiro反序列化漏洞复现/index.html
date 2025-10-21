@@ -680,7 +680,7 @@
 <p>与shiro550不同的是这个漏洞触发需要一个已知的账号且处于登录状态</p>
 <h2 id="0x02漏洞复现"><a href="#0x02漏洞复现" class="headerlink" title="0x02漏洞复现"></a>0x02漏洞复现</h2><h3 id="I-shiro550-1"><a href="#I-shiro550-1" class="headerlink" title="I.shiro550"></a>I.shiro550</h3><p>1、从vulhub下载漏洞环境</p>
 <p>2、判断是否是shiro，在登录框部分会有一个rememberMe勾选，勾选成功通过bp抓包，里面有一个set-cookies：rememberMe&#x3D;deleteMe，可以判断使用了shiro框架。</p>
-<p><img src="https://cdn.jsdelivr.net/gh/wh1t3zer/recordCTF/common/202408172041118.png" class="lazyload placeholder" data-srcset="https://cdn.jsdelivr.net/gh/wh1t3zer/recordCTF/common/202408172041118.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="image-20240817204147971"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/wh1t3zer/recordCTF/common/202408172041118.png" class="lazyload placeholder" data-srcset="https://cdn.jsdelivr.net/gh/wh1t3zer/recordCTF/common/202408172041118.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"></p>
 <p>3、确认是否存在漏洞，使用URLDNS链。从dnslog上面复制网址到payload上，可以使用ysoserial工具构造链</p>
 <p>4、将payload进行aes加密编码</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">java -jar ysoserial URLDNS <span class="string">&#x27;http://xxx.dnslog.cn&#x27;</span>&gt;<span class="number">1.</span>txt</span><br></pre></td></tr></table></figure>
