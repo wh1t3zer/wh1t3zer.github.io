@@ -522,8 +522,12 @@
         <span class="post-detail-header_categories">
           <i class="iconfont iconbookmark1"></i> category：
           
-            <a href="/categories/webshell-CTF/" class="post-detail-header_category">
-              webshell | CTF
+            <a href="/categories/webshell/" class="post-detail-header_category">
+              webshell
+            </a>
+          
+            <a href="/categories/webshell/CTF/" class="post-detail-header_category">
+              CTF
             </a>
           
         </span>
@@ -547,11 +551,11 @@
   <div class="main-content">
     <article class="post post-detail">
       <div class="post-content">
-        <h2 id="1-编写一句话木马"><a href="#1-编写一句话木马" class="headerlink" title="1.编写一句话木马"></a>1.编写一句话木马</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&lt;?php</span><br><span class="line">@eval([&#x27;jacky&#x27;]);</span><br><span class="line">?&gt;</span><br></pre></td></tr></table></figure>
-<h2 id="2-寻找服务器上传点"><a href="#2-寻找服务器上传点" class="headerlink" title="2.寻找服务器上传点"></a>2.寻找服务器上传点</h2><p>以我的博客为例<br>如图<br><img src="/upload/2021/09/upload-0867395d4dde41298a60b2ba2048e3f2.png" class="lazyload placeholder" data-srcset="/upload/2021/09/upload-0867395d4dde41298a60b2ba2048e3f2.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"><br>我的博客里有一个上传附件的功能</p>
-<h2 id="3-利用文件上传漏洞（检查有无文件上传格式过滤、大小限制）"><a href="#3-利用文件上传漏洞（检查有无文件上传格式过滤、大小限制）" class="headerlink" title="3.利用文件上传漏洞（检查有无文件上传格式过滤、大小限制）"></a>3.利用文件上传漏洞（检查有无文件上传格式过滤、大小限制）</h2><p>发现里面没有做过滤，直接上传一句话木马(假如进了别人网站需注意上传文件是否限制php或者jpg格式的大小)</p>
-<h2 id="4-打开中国蚁剑"><a href="#4-打开中国蚁剑" class="headerlink" title="4.打开中国蚁剑"></a>4.打开中国蚁剑</h2><p>中国蚁剑在资源中心，安全无后门，可到[资源中心]下载(<a target="_blank" rel="noopener" href="http://www.jacky666.top:8090/s/download">http://www.jacky666.top:8090/s/download</a>)<br><img src="/upload/2021/09/%E4%B8%AD%E5%9B%BD%E8%9A%81%E5%89%91-86a940737c6c4c019d7f4c74703cc52d.png" class="lazyload placeholder" data-srcset="/upload/2021/09/%E4%B8%AD%E5%9B%BD%E8%9A%81%E5%89%91-86a940737c6c4c019d7f4c74703cc52d.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"></p>
-<h2 id="5-右键添加数据"><a href="#5-右键添加数据" class="headerlink" title="5.右键添加数据"></a>5.右键添加数据</h2><p><img src="/upload/2021/09/%E6%B7%BB%E5%8A%A0%E6%95%B0%E6%8D%AE-d8b874b47db0433ea8c6fb0e273cdb5a.png" class="lazyload placeholder" data-srcset="/upload/2021/09/%E6%B7%BB%E5%8A%A0%E6%95%B0%E6%8D%AE-d8b874b47db0433ea8c6fb0e273cdb5a.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"></p>
+        <h2 id="0x01编写一句话木马"><a href="#0x01编写一句话木马" class="headerlink" title="0x01编写一句话木马"></a>0x01编写一句话木马</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&lt;?php</span><br><span class="line">@eval([&#x27;jacky&#x27;]);</span><br><span class="line">?&gt;</span><br></pre></td></tr></table></figure>
+<h2 id="0x02寻找服务器上传点"><a href="#0x02寻找服务器上传点" class="headerlink" title="0x02寻找服务器上传点"></a>0x02寻找服务器上传点</h2><p>以我的博客为例<br>如图<br><img src="/upload/2021/09/upload-0867395d4dde41298a60b2ba2048e3f2.png" class="lazyload placeholder" data-srcset="/upload/2021/09/upload-0867395d4dde41298a60b2ba2048e3f2.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"><br>我的博客里有一个上传附件的功能</p>
+<h2 id="0x03利用文件上传漏洞（检查有无文件上传格式过滤、大小限制）"><a href="#0x03利用文件上传漏洞（检查有无文件上传格式过滤、大小限制）" class="headerlink" title="0x03利用文件上传漏洞（检查有无文件上传格式过滤、大小限制）"></a>0x03利用文件上传漏洞（检查有无文件上传格式过滤、大小限制）</h2><p>发现里面没有做过滤，直接上传一句话木马(假如进了别人网站需注意上传文件是否限制php或者jpg格式的大小)</p>
+<h2 id="0x04打开中国蚁剑"><a href="#0x04打开中国蚁剑" class="headerlink" title="0x04打开中国蚁剑"></a>0x04打开中国蚁剑</h2><p>中国蚁剑在资源中心，安全无后门，可到[资源中心]下载(<a target="_blank" rel="noopener" href="http://www.jacky666.top:8090/s/download">http://www.jacky666.top:8090/s/download</a>)<br><img src="/upload/2021/09/%E4%B8%AD%E5%9B%BD%E8%9A%81%E5%89%91-86a940737c6c4c019d7f4c74703cc52d.png" class="lazyload placeholder" data-srcset="/upload/2021/09/%E4%B8%AD%E5%9B%BD%E8%9A%81%E5%89%91-86a940737c6c4c019d7f4c74703cc52d.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"></p>
+<h2 id="0x05右键添加数据"><a href="#0x05右键添加数据" class="headerlink" title="0x05右键添加数据"></a>0x05右键添加数据</h2><p><img src="/upload/2021/09/%E6%B7%BB%E5%8A%A0%E6%95%B0%E6%8D%AE-d8b874b47db0433ea8c6fb0e273cdb5a.png" class="lazyload placeholder" data-srcset="/upload/2021/09/%E6%B7%BB%E5%8A%A0%E6%95%B0%E6%8D%AE-d8b874b47db0433ea8c6fb0e273cdb5a.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"></p>
 <h4 id="输入url地址，url指的是一句话木马上传点的绝对路径"><a href="#输入url地址，url指的是一句话木马上传点的绝对路径" class="headerlink" title="输入url地址，url指的是一句话木马上传点的绝对路径"></a>输入url地址，url指的是一句话木马上传点的绝对路径</h4><p><img src="/upload/2021/09/%E8%BE%93%E5%85%A5url-8cd2087daf3542afa9aff45ff89f11b2.png" class="lazyload placeholder" data-srcset="/upload/2021/09/%E8%BE%93%E5%85%A5url-8cd2087daf3542afa9aff45ff89f11b2.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"></p>
 <h4 id="输入连接密码，连接密码指的是一句话木马里面-的字符"><a href="#输入连接密码，连接密码指的是一句话木马里面-的字符" class="headerlink" title="输入连接密码，连接密码指的是一句话木马里面[ ]的字符"></a>输入连接密码，连接密码指的是一句话木马里面[ ]的字符</h4><h4 id="连接类型为php（若为jsp、asp木马，可选择对应的类型）"><a href="#连接类型为php（若为jsp、asp木马，可选择对应的类型）" class="headerlink" title="连接类型为php（若为jsp、asp木马，可选择对应的类型）"></a>连接类型为php（若为jsp、asp木马，可选择对应的类型）</h4><h4 id="连接成功，已经通过木马获得服务器的权限（但是有些权限不足，需要通过其他方法进行提权）"><a href="#连接成功，已经通过木马获得服务器的权限（但是有些权限不足，需要通过其他方法进行提权）" class="headerlink" title="连接成功，已经通过木马获得服务器的权限（但是有些权限不足，需要通过其他方法进行提权）"></a>连接成功，已经通过木马获得服务器的权限（但是有些权限不足，需要通过其他方法进行提权）</h4>
       </div>
@@ -559,8 +563,8 @@
         
         <div class="tags">
           
-            <a href="/tags/webshell-ctf/" class="">
-              webshell | ctf
+            <a href="/tags/webshell/" class="">
+              webshell
             </a>
           
         </div>
@@ -624,7 +628,7 @@
         <div class="title-text">浅谈游戏服务器匹配算法机制</div>
       </div>
       <!-- <div class="content">
-        导言如今在游戏市场，越来越多的游戏都加入了多人匹配系统，如data2,lol,守望先锋等竞技型游戏所有的战斗都是典型的多
+        0x01导言如今在游戏市场，越来越多的游戏都加入了多人匹配系统，如data2,lol,守望先锋等竞技型游戏所有的战斗都是
       </div> -->
     </a>
   </div>
