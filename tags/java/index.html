@@ -642,9 +642,8 @@
             </a>
           </div>
           <div class="post-content">
-            0x00 前言有时间复现下java反序列化漏洞各个利用链，顺便再强化一下记忆并再学习一遍细节
-java序列化就是将java对象转化为字节流
-而反序列化是字节流转化为原来的java对象，这里会有一个关键点，就是在反序列化时重写readObje
+            0x00 前言java序列化就是将java对象转化为字节流
+而反序列化是字节流转化为原来的java对象，这里会有一个关键点，就是在反序列化时重写readObject()，java会自动调用readObject方法，如果里面有恶意代码就会执行
           </div>
         </div>
         <div class="post-more">

@@ -1403,9 +1403,8 @@
             </a>
           </div>
           <div class="post-content">
-            0x00 前言有时间复现下java反序列化漏洞各个利用链，顺便再强化一下记忆并再学习一遍细节
-java序列化就是将java对象转化为字节流
-而反序列化是字节流转化为原来的java对象，这里会有一个关键点，就是在反序列化时重写readObje
+            0x00 前言java序列化就是将java对象转化为字节流
+而反序列化是字节流转化为原来的java对象，这里会有一个关键点，就是在反序列化时重写readObject()，java会自动调用readObject方法，如果里面有恶意代码就会执行
           </div>
         </div>
         <div class="post-more">
@@ -2483,8 +2482,8 @@ java序列化就是将java对象转化为字节流
         <div class="webinfo-item">
           <div>最后活动时间：</div>
           
-            <div id="last-update" style="display: none;">Sun Oct 26 2025 11:12:34 GMT+0800 (香港标准时间)</div>
-            <div id="last-update-show">2025-10-26 日</div>
+            <div id="last-update" style="display: none;">Wed Oct 29 2025 11:19:56 GMT+0800 (香港标准时间)</div>
+            <div id="last-update-show">2025-10-29 日</div>
           
         </div>
         
@@ -2534,7 +2533,7 @@ java序列化就是将java对象转化为字节流
           try {
             document.getElementById('last-update-show').innerHTML = timeago(new Date(lastUpDate));
           } catch (error) {
-            document.getElementById('last-update-show').innerHTML = '2025-10-26 日';
+            document.getElementById('last-update-show').innerHTML = '2025-10-29 日';
           }
         </script>
         
