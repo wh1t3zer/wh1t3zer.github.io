@@ -631,7 +631,7 @@
     <article class="post post-detail">
       <div class="post-content">
         <h2 id="0x00前言"><a href="#0x00前言" class="headerlink" title="0x00前言"></a>0x00前言</h2><p>Apache Shiro是一个强大且易用的Java安全框架,执行身份验证、授权、密码和会话管理。使用Shiro的易于理解的API,可以快速、轻松地获得任何应用程序,从最小的移动应用程序到最大的网络和企业应用程序。</p>
-<h2 id="0x01原理"><a href="#0x01原理" class="headerlink" title="0x01原理"></a>0x01原理</h2><h3 id="I-shiro550"><a href="#I-shiro550" class="headerlink" title="I.shiro550"></a>I.shiro550</h3><p>漏洞原理</p>
+<h2 id="0x01原理"><a href="#0x01原理" class="headerlink" title="0x01原理"></a>0x01原理</h2><h3 id="I-shiro550"><a href="#I-shiro550" class="headerlink" title="I.shiro550"></a>I.shiro550</h3><p><strong>漏洞原理</strong></p>
 <p>shiro会在cookie中生成一个rememberMe字段，里面的值是输入的内容通过系列操作写入的。一般的流程为：从前端传入值，序列化后传到cookies，进行AES加密，之后通过java模块的base64加密。</p>
 <p>而反序列化漏洞的时候，进行base64解密。之后AES解密，这个是shiro默认加密方式，其中AES的key存在密钥泄露，之后反序列化，这里是漏洞的成因。</p>
 <p>入口点在Usercontroller.class的doLoginPage()</p>
@@ -684,8 +684,44 @@
 <p><img src="https://cdn.jsdelivr.net/gh/wh1t3zer/recordCTF/javaser/202510180520534.png" class="lazyload placeholder" data-srcset="https://cdn.jsdelivr.net/gh/wh1t3zer/recordCTF/javaser/202510180520534.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"></p>
 <p>利用步骤</p>
 <p>使用ysoserial工具生成调用链，一般使用CC6，因为通用性相较于其他较强，不太受环境限制。或通过TemplatesImpl加载字节码和JRMPClient与远程RMI协议交互，前者绕过InvokerTransformer限制或数组类加载的问题，一般用于内存马注入，后者可用于不出网环境探测</p>
-<h3 id="II-shiro721"><a href="#II-shiro721" class="headerlink" title="II.shiro721"></a>II.shiro721</h3><p>其入口点还是跟shiro550一样，都是从rememberMe字段进去，这个漏洞是基于shiro在1.4.2版本之前使用的是AES-128-CBC加密方式，容易受到Padding Oracle Attack 影响，如果填充不正确，系统的响应可能不一样，攻击者会根据系统响应的数据来逐字块解密</p>
-<p>与shiro550不同的是这个漏洞触发需要一个已知的账号且处于登录状态</p>
+<h3 id="II-shiro721"><a href="#II-shiro721" class="headerlink" title="II.shiro721"></a>II.shiro721</h3><p>其入口点还是跟shiro550一样，都是从rememberMe字段进去，shiro在1.4.2版本之前使用的是AES-128-CBC加密方式，容易受到Padding Oracle Attack 影响，如果填充不正确，系统的响应可能不一样，攻击者会根据系统响应的数据来逐字块解密，与shiro550不同的是这个漏洞触发需要一个已知的账号且处于登录状态</p>
+<p><strong>Padding Oracle Attack</strong></p>
+<p>填充提示攻击，Padding的含义是“填充”，在解密时，如果算法发现解密后得到的结果，它的填充方式不符合规则，那么表示输入数据有问题，对于解密的类库来说，往往便会抛出一个异常，提示Padding不正确</p>
+<p>密码学里的iv，并没有保密性的要求，所以对于使用CBC Mode的加密算法来说，iv经常会随着密文一起发送。常见的做法是将iv作为一个前缀，附着在密文的前面。对于CBC Mode来说，iv的长度必须与分组的长度相等</p>
+<p><strong>密钥生成</strong></p>
+<p>可以看到550的是生成静态key而721之后是使用AES-CBC模式生成</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// shiro &lt; 1.2.4</span></span><br><span class="line"><span class="keyword">public</span> <span class="title function_">AbstractRememberMeManager</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.serializer = <span class="keyword">new</span> <span class="title class_">DefaultSerializer</span>&lt;PrincipalCollection&gt;();</span><br><span class="line">        <span class="built_in">this</span>.cipherService = <span class="keyword">new</span> <span class="title class_">AesCipherService</span>();</span><br><span class="line">        setCipherKey(DEFAULT_CIPHER_KEY_BYTES);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 1.2.4 ≤ shiro &lt; 1.4.2</span></span><br><span class="line"><span class="keyword">public</span> <span class="title function_">AbstractRememberMeManager</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.serializer = <span class="keyword">new</span> <span class="title class_">DefaultSerializer</span>&lt;PrincipalCollection&gt;();</span><br><span class="line">        <span class="type">AesCipherService</span> <span class="variable">cipherService</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">AesCipherService</span>();</span><br><span class="line">        <span class="built_in">this</span>.cipherService = cipherService;</span><br><span class="line">        setCipherKey(cipherService.generateNewKey().getEncoded());</span><br><span class="line">   		&#125;</span><br></pre></td></tr></table></figure>
+
+<p>漏洞原理</p>
+<p>进入generateNewKey函数看看</p>
+<p><img src="https://cdn.jsdelivr.net/gh/wh1t3zer/recordCTF/javaser/202510302137161.png" class="lazyload placeholder" data-srcset="https://cdn.jsdelivr.net/gh/wh1t3zer/recordCTF/javaser/202510302137161.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"></p>
+<p>继续查看init函数，传入的是要生成的密钥的位长度和一个随机数生成器</p>
+<p><img src="https://cdn.jsdelivr.net/gh/wh1t3zer/recordCTF/javaser/202510302143726.png" class="lazyload placeholder" data-srcset="https://cdn.jsdelivr.net/gh/wh1t3zer/recordCTF/javaser/202510302143726.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"></p>
+<p>然后调用kg.generateKey函数，跟进</p>
+<p><img src="https://cdn.jsdelivr.net/gh/wh1t3zer/recordCTF/javaser/202510302146440.png" class="lazyload placeholder" data-srcset="https://cdn.jsdelivr.net/gh/wh1t3zer/recordCTF/javaser/202510302146440.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"></p>
+<p>跟进到engineGenerateKey函数，可以发现这里会生成16字节随机序列，并返回var1，var1是SecretKeySpec对象，最后就是在上面AbstractRememberMeManager代码里面调用getEncoded()，结束密钥生成流程</p>
+<p><img src="https://cdn.jsdelivr.net/gh/wh1t3zer/recordCTF/javaser/202510302147869.png" class="lazyload placeholder" data-srcset="https://cdn.jsdelivr.net/gh/wh1t3zer/recordCTF/javaser/202510302147869.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"></p>
+<p>所以为什么会失败，这里跟进下shiro判断cookie解密失败的流程</p>
+<p>在AbstractRememberMeManager.decrypt函数</p>
+<p><img src="https://cdn.jsdelivr.net/gh/wh1t3zer/recordCTF/javaser/202510302202558.png" class="lazyload placeholder" data-srcset="https://cdn.jsdelivr.net/gh/wh1t3zer/recordCTF/javaser/202510302202558.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"></p>
+<p>继续跟进函数cipherService.decrypt(encrypted, getDecryptionCipherKey())</p>
+<p><img src="https://cdn.jsdelivr.net/gh/wh1t3zer/recordCTF/javaser/202510302204209.png" class="lazyload placeholder" data-srcset="https://cdn.jsdelivr.net/gh/wh1t3zer/recordCTF/javaser/202510302204209.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"></p>
+<p>这里有2个套娃crypt函数，一直跟进</p>
+<p><img src="https://cdn.jsdelivr.net/gh/wh1t3zer/recordCTF/javaser/202510302214701.png" class="lazyload placeholder" data-srcset="https://cdn.jsdelivr.net/gh/wh1t3zer/recordCTF/javaser/202510302214701.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"></p>
+<p>跟进这个doFinal，发现这里会抛出2个异常类IllegalBlockSizeException，BadPaddingException</p>
+<p><img src="https://cdn.jsdelivr.net/gh/wh1t3zer/recordCTF/javaser/202510302215195.png" class="lazyload placeholder" data-srcset="https://cdn.jsdelivr.net/gh/wh1t3zer/recordCTF/javaser/202510302215195.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"></p>
+<p>抛出的异常会一直往上传递，一直到AbstractRememberMeManager类的getRememberedPrincipals函数捕捉，并会调用onRememberedPrincipalFailure函数，跟进查看</p>
+<p><img src="https://cdn.jsdelivr.net/gh/wh1t3zer/recordCTF/javaser/202510302219440.png" class="lazyload placeholder" data-srcset="https://cdn.jsdelivr.net/gh/wh1t3zer/recordCTF/javaser/202510302219440.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/wh1t3zer/recordCTF/javaser/202510302220710.png" class="lazyload placeholder" data-srcset="https://cdn.jsdelivr.net/gh/wh1t3zer/recordCTF/javaser/202510302220710.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"></p>
+<p>进入到forgetIdentity函数，又是一个套娃</p>
+<p><img src="https://cdn.jsdelivr.net/gh/wh1t3zer/recordCTF/javaser/202510302220511.png" class="lazyload placeholder" data-srcset="https://cdn.jsdelivr.net/gh/wh1t3zer/recordCTF/javaser/202510302220511.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/wh1t3zer/recordCTF/javaser/202510302221563.png" class="lazyload placeholder" data-srcset="https://cdn.jsdelivr.net/gh/wh1t3zer/recordCTF/javaser/202510302221563.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"></p>
+<p>进入removeFrom函数</p>
+<p><img src="https://cdn.jsdelivr.net/gh/wh1t3zer/recordCTF/javaser/202510302221619.png" class="lazyload placeholder" data-srcset="https://cdn.jsdelivr.net/gh/wh1t3zer/recordCTF/javaser/202510302221619.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"></p>
+<p>可以看到有个addCookieHeader函数，可以看到addHeader里面就是设置了请求头Set-Cookie</p>
+<p><img src="https://cdn.jsdelivr.net/gh/wh1t3zer/recordCTF/javaser/202510302222010.png" class="lazyload placeholder" data-srcset="https://cdn.jsdelivr.net/gh/wh1t3zer/recordCTF/javaser/202510302222010.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"></p>
+<p>这里已经是结束了，因为上面代码有一个deletecookie的值，总的来说就是当shiro校验cookie解密如果不符合填充就会发送一个请求头Set-Cookie: deleteMe</p>
+<p>这个漏洞是AES的CBC加密模式缺陷和shiro的错误返回与正确返回内容不同形成了一个类似SQL注入的<strong>布尔盲注</strong>，并且需要不断发包去碰撞，个人感觉从防守角度来看攻击太过于明显，一般不太常用这个漏洞去做渗透</p>
 <h2 id="0x02漏洞复现"><a href="#0x02漏洞复现" class="headerlink" title="0x02漏洞复现"></a>0x02漏洞复现</h2><h3 id="I-shiro550-1"><a href="#I-shiro550-1" class="headerlink" title="I.shiro550"></a>I.shiro550</h3><p>1、从vulhub下载漏洞环境</p>
 <p>2、判断是否是shiro，在登录框部分会有一个rememberMe勾选，勾选成功通过bp抓包，里面有一个set-cookies：rememberMe&#x3D;deleteMe，可以判断使用了shiro框架。</p>
 <p><img src="https://cdn.jsdelivr.net/gh/wh1t3zer/recordCTF/common/202408172041118.png" class="lazyload placeholder" data-srcset="https://cdn.jsdelivr.net/gh/wh1t3zer/recordCTF/common/202408172041118.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"></p>
@@ -712,14 +748,15 @@
 <p><a target="_blank" rel="noopener" href="https://github.com/safe6Sec/ShiroExp">https://github.com/safe6Sec/ShiroExp</a></p>
 <p>padding爆破脚本</p>
 <p><a target="_blank" rel="noopener" href="https://github.com/inspiringz/Shiro-721/blob/master/shiro_exp.py">https://github.com/inspiringz/Shiro-721/blob/master/shiro_exp.py</a></p>
-<h2 id="0X03总结"><a href="#0X03总结" class="headerlink" title="0X03总结"></a>0X03总结</h2><p>shiro反序列化的路径</p>
+<h2 id="0X03总结"><a href="#0X03总结" class="headerlink" title="0X03总结"></a>0X03总结</h2><p>shiro550反序列化的路径</p>
 <p>加密：payload——&gt;序列化——&gt;AES——&gt;base64</p>
 <p>解密：base64——&gt;AES——&gt;反序列化——&gt;payload</p>
-<p>1、对于shiro550，其版本低于shiro1.2.4</p>
-<p>2、对于shiro721，其版本低于shiro1.4.2</p>
-<h2 id="0x04修复"><a href="#0x04修复" class="headerlink" title="0x04修复"></a>0x04修复</h2><p>升级最新版本的shiro框架（shiro550 &gt;&#x3D; 1.2.4，shiro721 &gt;&#x3D; 1.4.2）</p>
-<p>限制rememberMe长度</p>
-<p>使用WAF</p>
+<p>1、对于shiro550，其版本低于1.2.4</p>
+<p>2、对于shiro721，其版本低于1.4.2并高于1.2.4</p>
+<h2 id="0x04修复"><a href="#0x04修复" class="headerlink" title="0x04修复"></a>0x04修复</h2><p>1、升级最新版本的shiro框架（shiro550 &gt;&#x3D; 1.2.4，shiro721 &gt;&#x3D; 1.4.2）</p>
+<p>2、限制rememberMe长度</p>
+<p>3、使用WAF</p>
+<p>4、避免默认密钥编码</p>
 
       </div>
       <div class="post-tags-categories">
