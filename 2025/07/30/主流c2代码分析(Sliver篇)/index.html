@@ -630,7 +630,7 @@
   <div class="main-content">
     <article class="post post-detail">
       <div class="post-content">
-        <h2 id="0x00前言"><a href="#0x00前言" class="headerlink" title="0x00前言"></a>0x00前言</h2><p>一直忙于工作，没时间写blog，最近时间闲得无事就捣鼓起远控，其实说起远控都有比较久的历史了，不管是以前基于MSF框架，还是现在windows的GUI远控，比如大灰狼、gh0st、Cobaltstrike等等，通信方式都有各自特点，甚至完全不同，其根本还是通过建立受害者主机与控制端主机连接从而实现控制。</p>
+        <h2 id="0x00前言"><a href="#0x00前言" class="headerlink" title="0x00前言"></a>0x00前言</h2><p>最近时间闲得无事就捣鼓起远控，其实说起远控都有比较久的历史了，不管是以前基于MSF框架，还是现在windows的GUI远控，比如大灰狼、gh0st、Cobaltstrike等等，通信方式都有各自特点，甚至运行机制不同，有的是c-s架构的，比如会有一个teamserver文件，用户只需在自己的电脑通过客户端操作C2，有的是其本身就是一个可部署到服务器的服务，直接在服务器操作，其根本还是通过建立受害者主机与控制端主机连接从而实现控制。</p>
 <p>现在远控基本都分两大类，一种基于sessions会话的连接方式，另一种基于beacon心跳的连接方式进行控制保持。其中sessions的代表就是MSF，beacon心跳的形式最为经典的还是cobaltstrike，但是由于cobaltstrike属于商用版，正版使用昂贵，破解的还需要去查后门，暂不讨论，今天简单分析下开源的C2框架——<a target="_blank" rel="noopener" href="https://github.com/BishopFox/sliver">sliver</a>。</p>
 <p>本文用于技术研究学习，不用做其他用途</p>
 <h2 id="0x01简介"><a href="#0x01简介" class="headerlink" title="0x01简介"></a>0x01简介</h2><p>sliver是基于Go语言写的跨平台开源远控框架，对比商用cobaltstrike，显得方便很多，cobaltstrike主要针对是windows。</p>
